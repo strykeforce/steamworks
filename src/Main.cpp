@@ -16,32 +16,32 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <unordered_map>
-
-std::unordered_map<int,CANTalon*> RU_AllTalons;
-std::vector<int> RU_CANTalonIDs;
-
 #include "UDPHandler.cpp"
 #include "JerrysGrapherInterface.h"
-#include "HAL/CanTalonSRX.h"
 
 #define Query(__String__)\
 	query((char*) __String__);
 
-#define ForEveryUsingTalon(__Command__)     \
-	for(int i = 0;i<Using.size();i++)   \
-	{                                   \
-		Using[i]->__Command__;      \
-	}
+#define ForEveryUsingTalon(__Command__)            \
+	for(int i = 0;i<TalonsCurrentlyUsing.size();i++)    \
+	{                                          \
+		TalonsCurrentlyUsing[i].TalonRef->__Command__;      \
+	}                                          \
 
-#define ForEveryUsingTalonMUTI(__Commands__) \
-	for(int i = 0;i<Using.size();i++)    \
-	{                                    \
-		CANTalon* Talon = Using[i];  \
-		__Commands__;                \
-	}
+#define ForEveryUsingTalonMUTI(__Commands__)        \
+	for(int i = 0;i<TalonsCurrentlyUsing.size();i++)     \
+	{                                           \
+		CANTalon* Talon = TalonsCurrentlyUsing[i].TalonRef;  \
+		__Commands__;                       \
+	}                                           \
+
+std::unordered_map<int,CANTalon*> RU_AllTalons;
+std::vector<CANTalonBundle> TalonsCurrentlyUsing;
 
 typedef void (*VoidFunction) (void);
+
 void menu(int length, char* options[], char* title, VoidFunction* funcs, bool loop);
+
 double query(char* name)
 {
 	fprintf(stderr, "%s: ", name);
@@ -49,9 +49,10 @@ double query(char* name)
 	std::cin >> d;
 	return d;
 }
-void inline Padding(int length, char c);
-std::vector<CANTalon*> Using;
-std::vector<int> UsingID;
+void inline Padding(int length, char c)
+{
+	for(int i = 0;i<length;i++) fprintf(stderr, "%c", c);
+}
 
 void ChangeTalons()
 {
@@ -70,7 +71,6 @@ void ChangeTalons()
 			t->SetIzone(0);
 			t->Set(0);
 			t->EnableControl();
-			RU_CANTalonIDs.push_back(ID);
 		}
 		else
 		{
@@ -78,22 +78,23 @@ void ChangeTalons()
 		}
 		uint32_t verison = t->GetFirmwareVersion();
 		fprintf(stderr, "version == %X\n", verison);
-		if(verison == 0)
+		if(verison == 0 && false)
 		{
 			fprintf(stderr, "CANTalon not availible, try again.\n");
 		}
 		else
 		{
-			Using.push_back(t);
-			UsingID.push_back(ID);
+			CANTalonBundle bun;
+			bun.TalonID = ID;
+			bun.TalonRef = t;
+			TalonsCurrentlyUsing.push_back(bun);
 			return;
 		}
 	}
 }
 void SingularTalon()
 {
-	Using.clear();
-	UsingID.clear();
+	TalonsCurrentlyUsing.clear();
 	ChangeTalons();
 }
 void SetControlModePV() { ForEveryUsingTalon(SetControlMode(CANTalon::ControlMode::kPercentVbus)); }
@@ -180,14 +181,14 @@ void SetControlLoop()
 }
 void GetPID()
 {
-	for(int i = 0;i<Using.size();i++)
+	for(int i = 0;i<TalonsCurrentlyUsing.size();i++)
 	{
-		fprintf(stderr, "Talon %i\n", UsingID[i]);
-		fprintf(stderr, "\tP:     %f\n", Using[i]->GetP());
-		fprintf(stderr, "\tI:     %f\n", Using[i]->GetI());
-		fprintf(stderr, "\tD:     %f\n", Using[i]->GetD());
-		fprintf(stderr, "\tF:     %f\n", Using[i]->GetF());
-		fprintf(stderr, "\tIZone: %i\n", Using[i]->GetIzone());
+		fprintf(stderr, "Talon %i\n", TalonsCurrentlyUsing[i].TalonID);
+		fprintf(stderr, "\tP:     %f\n", TalonsCurrentlyUsing[i].TalonRef->GetP());
+		fprintf(stderr, "\tI:     %f\n", TalonsCurrentlyUsing[i].TalonRef->GetI());
+		fprintf(stderr, "\tD:     %f\n", TalonsCurrentlyUsing[i].TalonRef->GetD());
+		fprintf(stderr, "\tF:     %f\n", TalonsCurrentlyUsing[i].TalonRef->GetF());
+		fprintf(stderr, "\tIZone: %i\n", TalonsCurrentlyUsing[i].TalonRef->GetIzone());
 	}
 }
 void Set()
@@ -286,9 +287,7 @@ class Robot : public SampleRobot
 	public:
 	Robot()
 	{
-		StartStatusThread();
-		int nullfd = open("/dev/null", O_WRONLY | O_CREAT);
-		dup2(nullfd, 1);
+		StartStatusThread(&TalonsCurrentlyUsing);
 	}
 	void OperatorControl()
 	{
@@ -328,15 +327,15 @@ void menu(int length, char* options[], char* title, VoidFunction* funcs, bool lo
 	do
 	{
 		#define SpacePadding 8
-		int BannerLength = strlen(title) + SpacePadding * 2 + 7 + UsingID.size();
+		int BannerLength = strlen(title) + SpacePadding * 2 + 7 + TalonsCurrentlyUsing.size();
 		Padding(BannerLength, '-');
 		fprintf(stderr, "----------\n");
 		Padding(SpacePadding, ' ');
 		fprintf(stderr, "%s (Talon ", title);
-		for(int i = 0;i<UsingID.size();i++)
+		for(int i = 0;i<TalonsCurrentlyUsing.size();i++)
 		{
-			fprintf(stderr, "%i", UsingID[i]);
-			if(i < UsingID.size() - 1)
+			fprintf(stderr, "%i", TalonsCurrentlyUsing[i].TalonID);
+			if(i < TalonsCurrentlyUsing.size() - 1)
 				fprintf(stderr, ",");
 		}
 		fprintf(stderr, ")\n");
@@ -364,9 +363,5 @@ void menu(int length, char* options[], char* title, VoidFunction* funcs, bool lo
 		funcs[OptionIndex-1]();
 	}
 	while(loop);
-}
-void inline Padding(int length, char c)
-{
-	for(int i = 0;i<length;i++) fprintf(stderr, "%c", c);
 }
 START_ROBOT_CLASS(Robot);
