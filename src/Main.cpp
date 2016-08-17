@@ -179,7 +179,7 @@ void SetDIO_Pin()
 	while(!(0 <= (ID = (int) query("DigitalOutput pin")) && ID <= 9));
 	printf("ID == %i\n", ID);
 	int value = (int) query("Value?");
-	DigitalOutput* t = PossiblyCreateDigitalOutput(&qGraphableDevices, &AllDigitalBoths, ID);
+	DigitalOutput* t = PossiblyCreateDigitalOutput(&GraphableDevices, &AllDigitalBoths, ID);
 	t->Set(value);
 	printf("Value == %i\n", value);
 }
