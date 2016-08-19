@@ -1,5 +1,5 @@
 RepoRoot := $(shell git rev-parse --show-toplevel)
-include $(RepoRoot)/Shared_Libs/Homemade_Libs/MakefileHeader
+include $(RepoRoot)/Shared_Libs/MakefileHeader
 
 Default: src/Main Upload
 	ssh admin@10.27.67.2
