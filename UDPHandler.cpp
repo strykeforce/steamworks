@@ -49,7 +49,7 @@ class UDPHandler
 		setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR,(const void *)&optval, sizeof(int));
 		return sockfd;
 	}
-	static SocketAddress* CreateSocketAddress(char* hostname, short portno)
+	static SocketAddress* CreateSocketAddress(const char* hostname, short portno)
 	{
 		//#if UDP_Printout
 			printf("UDPHandler::CreateSocketAddress(%s, %i)\n", hostname, portno);

@@ -116,8 +116,7 @@ int main(int argc, char** argv) {
   UDPSocket sock = UDPHandler::CreateUDPDataStreamNOBIND();
   printf("sock == %i\n", sock);
   while (sock_addr == NULL) {
-    sock_addr = UDPHandler::CreateSocketAddress("10.27.67.2",
-                                                NetworkP_Vision_Comm_Port);
+    sock_addr = UDPHandler::CreateSocketAddress("10.27.67.2", NetworkP_Vision_Comm_Port);
     usleep(1 * 1000000);
     printf("sock_addr== %p\n", sock_addr);
   }
@@ -179,10 +178,10 @@ int main(int argc, char** argv) {
     double BestSize = 0;
 
     // test for target is to find longest contour perimeter
-    for (int i = 0; i < contours.size(); i++) {
+    for (uint i = 0; i < contours.size(); i++) {
       // printf("counts[%i].size() == %i\n", i, contours[i].size());
       double CurrentSize = 0;
-      for (int KK = 0; KK < contours[i].size(); KK++) {
+      for (uint KK = 0; KK < contours[i].size(); KK++) {
         int index2 = (KK + 1) % contours[i].size();
         // accumulate distance between current and next point in contour
         CurrentSize += sqrt(pow(contours[i][index2].x - contours[i][KK].x, 2) +
@@ -212,10 +211,10 @@ int main(int argc, char** argv) {
       Point leftest = points[0], rightest = leftest, bottomest = leftest,
             topest = leftest;
       int leftestIndex = 0, rightestIndex = leftestIndex,
-          bottomestIndex = leftestIndex, topestIndex = leftestIndex;
+          bottomestIndex = leftestIndex;
 
 			// find left, top, right and bottom-most contour points
-      for (int i = 1; i < contours[BestIndex].size(); i++) {
+      for (uint i = 1; i < contours[BestIndex].size(); i++) {
         if (contours[BestIndex][i].x < leftest.x) {
           leftest = points[i];
           leftestIndex = i;
@@ -230,7 +229,6 @@ int main(int argc, char** argv) {
         }
         if (contours[BestIndex][i].y < topest.y) {
           topest = points[i];
-          topestIndex = i;
         }
       }
 
