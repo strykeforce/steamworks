@@ -116,7 +116,8 @@ int main(int argc, char** argv) {
   UDPSocket sock = UDPHandler::CreateUDPDataStreamNOBIND();
   printf("sock == %i\n", sock);
   while (sock_addr == NULL) {
-    sock_addr = UDPHandler::CreateSocketAddress("10.27.67.2", NetworkP_Vision_Comm_Port);
+    sock_addr = UDPHandler::CreateSocketAddress("10.27.67.2",
+                                                NetworkP_Vision_Comm_Port);
     usleep(1 * 1000000);
     printf("sock_addr== %p\n", sock_addr);
   }
@@ -213,7 +214,7 @@ int main(int argc, char** argv) {
       int leftestIndex = 0, rightestIndex = leftestIndex,
           bottomestIndex = leftestIndex;
 
-			// find left, top, right and bottom-most contour points
+      // find left, top, right and bottom-most contour points
       for (uint i = 1; i < contours[BestIndex].size(); i++) {
         if (contours[BestIndex][i].x < leftest.x) {
           leftest = points[i];
