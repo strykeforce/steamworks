@@ -4,16 +4,29 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <netdb.h>
+#include <netinet/in.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
 #include "spdlog/spdlog.h"
 #include "cpptoml.h"
 #include <opencv2/opencv.hpp>
 
 #include "constants.h"
+#include "message.h"
 #include "nvidia_utils.h"
 #include "target.h"
 #include "udp_handler.h"
 
 namespace spd = spdlog;
+namespace de = deadeye;
 using namespace cv;
 
 // 1280x720
@@ -36,13 +49,8 @@ int L_MAX = 75, L_MIN = 0;
 
 void start() {
   auto console = spd::get("console");
-  SocketAddress* sock_addr = NULL;
-  UDPSocket sock = CreateUDPDataStreamNOBIND();
-  console->debug("sock == {}", sock);
-  while (sock_addr == NULL) {
-    sock_addr = CreateSocketAddress("127.0.0.1", kNetworkVisionCommPort);
-    usleep(1 * 1000000);
-  }
+  auto message = new de::Message();
+  float packet[]{0.0, 0.0, 0.0};
 
   ConfigCameraV4L2();
 #define WIDTH 640.0
@@ -54,9 +62,8 @@ void start() {
   vcap.set(CV_CAP_PROP_BRIGHTNESS, 0.0);
   Mat m1, m2, m3, m4, m5;
 
-  float UDPPacket[3];
   struct timeval start, end;
-  while (true) {
+  for (;;) {
     gettimeofday(&end, NULL);
     console->debug("dt == {}", (double)(end.tv_sec - start.tv_sec) * 1000.0 +
                                    (end.tv_usec - start.tv_usec) / 1000.0);
@@ -145,13 +152,16 @@ void start() {
                           (tan(LineLength / 2 * PixelToThing * M_PI / 180));
       console->info("DistInches  == {}", DistInches);
       console->info("PixelToThing = {}", PixelToThing);
-      UDPPacket[0] = Center;
-      UDPPacket[1] = DistInches;
-      UDPPacket[2] = 0;
+      packet[0] = Center;
+      packet[1] = DistInches;
+      packet[2] = 0;
     } else {
-      UDPPacket[2] = 42;
+      packet[2] = 42;
     }
-    UDPSend(sock, UDPPacket, sizeof(float) * 3, sock_addr);
+    const char* dst =
+        inet_ntop(AF_INET, message->sock_addr, nullptr, INET_ADDRSTRLEN);
+    console->debug("PORT = {}", dst);
+    UDPSend(message->sock, &packet, sizeof(packet), message->sock_addr);
     // usleep(10 * 1000);
   }
 }
