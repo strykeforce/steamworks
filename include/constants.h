@@ -1,5 +1,5 @@
-#ifndef DEADEYE_CONSTANTS
-#define DEADEYE_CONSTANTS
+#ifndef DEADEYE_CONSTANTS_INC_
+#define DEADEYE_CONSTANTS_INC_
 
 const auto kNetworkBasePort = 5800;
 const auto kNetworkHeatDataStreamPort = kNetworkBasePort + 1;
@@ -12,4 +12,4 @@ const auto kNetworkDashboardPort = kNetworkBasePort + 6;
 const auto kNetworkRobotAddress = "10.27.67.2";
 const auto kNetworkNVIDIAAddress = "10.27.67.12";
 
-#endif /* end of include guard: DEADEYE_CONSTANTS */
+#endif /* end of include guard: DEADEYE_CONSTANTS_INC_ */

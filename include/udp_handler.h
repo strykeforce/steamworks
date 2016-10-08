@@ -1,5 +1,5 @@
-#ifndef DEADEYE_UDP_HANDLER
-#define DEADEYE_UDP_HANDLER
+#ifndef DEADEYE_UDP_HANDLER_INC_
+#define DEADEYE_UDP_HANDLER_INC_
 
 typedef int UDPSocket;
 typedef struct sockaddr_in SocketAddress;
@@ -26,4 +26,4 @@ int UDPPeekRecv(UDPSocket sockfd, void* where, int length);
 void SendPingsToWhere(UDPSocket sockfd, SocketAddress* where);
 
 SocketAddress* WaitForPingsFromWho(UDPSocket sockfd);
-#endif /* end of include guard: DEADEYE_UDP_HANDLER */
+#endif /* end of include guard: DEADEYE_UDP_HANDLER_INC_ */
