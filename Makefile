@@ -9,6 +9,8 @@ EXECUTABLE = deadeye
 CFLAGS += `pkg-config --cflags opencv`
 LDFLAGS += `pkg-config --libs opencv`
 
+CFLAGS += -Ivendor/include
+
 all: $(SOURCES) $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS)
