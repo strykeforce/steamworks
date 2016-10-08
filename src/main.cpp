@@ -34,31 +34,8 @@ int S_MAX = 190, S_MIN = 90;
 int L_MAX = 75, L_MIN = 0;
 #endif
 
-int main(int argc, char** argv) {
-  auto console = spd::stdout_logger_st("console", true);
-  auto config = cpptoml::parse_file("config/config.toml");
-  auto val = config->get_qualified_as<std::string>("logging.level");
-  if (val->compare("trace") == 0) {
-    console->set_level(spdlog::level::trace);
-  } else if (val->compare("debug") == 0) {
-    console->set_level(spdlog::level::debug);
-  } else if (val->compare("info") == 0) {
-    console->set_level(spdlog::level::info);
-  } else if (val->compare("warn") == 0) {
-    console->set_level(spdlog::level::warn);
-  } else if (val->compare("err") == 0) {
-    console->set_level(spdlog::level::err);
-  } else if (val->compare("critical") == 0) {
-    console->set_level(spdlog::level::critical);
-  } else {
-    console->warn("Unrecognized logging level {}, defaulting to warn", *val);
-    console->set_level(spdlog::level::warn);
-  }
-  console->info("Deadeye is taking aim...");
-  console->info("Logging level is {}", *val);
-  console->info("Deadeye PID == {}", getpid());
-
-  usleep(1 * 1000 * 1000);
+void start() {
+  auto console = spd::get("console");
   SocketAddress* sock_addr = NULL;
   UDPSocket sock = CreateUDPDataStreamNOBIND();
   console->debug("sock == {}", sock);
@@ -177,4 +154,32 @@ int main(int argc, char** argv) {
     UDPSend(sock, UDPPacket, sizeof(float) * 3, sock_addr);
     // usleep(10 * 1000);
   }
+}
+
+int main(int argc, char** argv) {
+  auto console = spd::stdout_logger_st("console", true);
+  auto config = cpptoml::parse_file("config/config.toml");
+  auto val = config->get_qualified_as<std::string>("logging.level");
+  if (val->compare("trace") == 0) {
+    console->set_level(spdlog::level::trace);
+  } else if (val->compare("debug") == 0) {
+    console->set_level(spdlog::level::debug);
+  } else if (val->compare("info") == 0) {
+    console->set_level(spdlog::level::info);
+  } else if (val->compare("warn") == 0) {
+    console->set_level(spdlog::level::warn);
+  } else if (val->compare("err") == 0) {
+    console->set_level(spdlog::level::err);
+  } else if (val->compare("critical") == 0) {
+    console->set_level(spdlog::level::critical);
+  } else {
+    console->warn("Unrecognized logging level {}, defaulting to warn", *val);
+    console->set_level(spdlog::level::warn);
+  }
+  console->info("Deadeye is taking aim...");
+  console->info("Logging level is {}", *val);
+  console->info("Deadeye PID == {}", getpid());
+
+  usleep(1 * 1000 * 1000);
+  start();
 }
