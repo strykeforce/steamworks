@@ -1,2 +1,4 @@
 -Ivendor/spdlog/include
 -Ivendor/cpptoml/include
+-Ivendor
+-Iinclude
