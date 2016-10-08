@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 
 #include "spdlog/spdlog.h"
+#include "cpptoml.h"
 #include <opencv2/opencv.hpp>
 
 #include "constants.h"
@@ -100,9 +101,29 @@ Scalar colors[] = {
     Scalar(255, 000, 255), Scalar(255, 000, 128)};
 
 int main(int argc, char** argv) {
-  auto console = spd::stdout_logger_mt("console", true);
+  auto console = spd::stdout_logger_st("console", true);
+  auto config = cpptoml::parse_file("config/config.toml");
+  auto val = config->get_qualified_as<std::string>("logging.level");
+  if (val->compare("trace") == 0) {
+    console->set_level(spdlog::level::trace);
+  } else if (val->compare("debug") == 0) {
+    console->set_level(spdlog::level::debug);
+  } else if (val->compare("info") == 0) {
+    console->set_level(spdlog::level::info);
+  } else if (val->compare("warn") == 0) {
+    console->set_level(spdlog::level::warn);
+  } else if (val->compare("err") == 0) {
+    console->set_level(spdlog::level::err);
+  } else if (val->compare("critical") == 0) {
+    console->set_level(spdlog::level::critical);
+  } else {
+    console->warn("Unrecognized logging level {}, defaulting to warn", *val);
+    console->set_level(spdlog::level::warn);
+  }
   console->info("Deadeye is taking aim...");
+  console->info("Logging level is {}", *val);
   console->info("Deadeye PID == {}", getpid());
+
   usleep(1 * 1000 * 1000);
   SocketAddress* sock_addr = NULL;
   UDPSocket sock = CreateUDPDataStreamNOBIND();
