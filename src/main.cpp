@@ -10,6 +10,7 @@
 
 #include "constants.h"
 #include "nvidia_utils.h"
+#include "target.h"
 #include "udp_handler.h"
 
 namespace spd = spdlog;
@@ -17,8 +18,6 @@ using namespace cv;
 
 // 1280x720
 
-#define ATAN2_DEG(__Y__, __X__) /*  Takes in slope, returns angle  */ \
-  atan2(__Y__, __X__) * 180 / M_PI
 #define CAMERA_NUMBERS 1
 #if CAMERA_NUMBERS
 int H_MAX = 125, H_MIN = 65;
@@ -34,63 +33,6 @@ int H_MAX = 140, H_MIN = 55;
 int S_MAX = 190, S_MIN = 90;
 int L_MAX = 75, L_MIN = 0;
 #endif
-void Scrollbar(int, void*) {}
-
-Point inter(Point p1,
-            double V11,
-            double V12,
-            Point p2,
-            double V21,
-            double V22) {
-#define X1 ((double)p1.x)
-#define Y1 ((double)p1.y)
-#define X2 ((double)p2.x)
-#define Y2 ((double)p2.y)
-  double num = -(V21 * Y1 - V22 * X1 - V21 * Y2 + V22 * X2);
-  double dom = (V21 * V12 - V22 * V11);
-  return Point(X1 + num / dom * V11, Y1 + num / dom * V12);
-}
-double AngleToFrom(double Direction, Point current, Point next) {
-  double angle = ATAN2_DEG(next.y - current.y, next.x - current.x);
-  angle = ((int)angle + 360) % 360;
-  double option1 = (Direction) - (angle);
-  double option2 = 360 - fabs(option1);
-  double best = (abs(option1) < abs(option2)) ? option1 : option2;
-  return best;
-}
-#define Tol 50
-#define Tol2 30
-#define Tol_Points 4
-
-Point everything(std::vector<Point> points,
-                 int StartingIndex,
-                 int Direction,
-                 int Travel) {
-  int NumberOfPoints = points.size();
-  for (int i = 0;
-       // i < 10;
-       true; i += Travel) {
-#define POINT_RELETIVE_TO(__INDEX__) \
-  points[(StartingIndex + __INDEX__ + NumberOfPoints) % NumberOfPoints]
-    double best = AngleToFrom(Direction, POINT_RELETIVE_TO(i),
-                              POINT_RELETIVE_TO(i + Travel));
-    bool yes = Tol > fabs(best);
-    if (!yes) {
-      int I = 0;
-      for (; I < Tol_Points; I++) {
-        double best2 = AngleToFrom(Direction, POINT_RELETIVE_TO(I * Travel + i),
-                                   POINT_RELETIVE_TO(I * Travel + i + Travel));
-        bool yes2 = Tol2 > fabs(best2);
-        if (yes2) {
-          i += I * Travel;
-          break;
-        }
-      }
-      if (I == Tol_Points)
-        return POINT_RELETIVE_TO(i);
-    }
-  }
-}
 
 int main(int argc, char** argv) {
   auto console = spd::stdout_logger_st("console", true);
@@ -139,8 +81,8 @@ int main(int argc, char** argv) {
   struct timeval start, end;
   while (true) {
     gettimeofday(&end, NULL);
-    console->info("dt == {}", (double)(end.tv_sec - start.tv_sec) * 1000.0 +
-                                  (end.tv_usec - start.tv_usec) / 1000.0);
+    console->debug("dt == {}", (double)(end.tv_sec - start.tv_sec) * 1000.0 +
+                                   (end.tv_usec - start.tv_usec) / 1000.0);
     gettimeofday(&start, NULL);
     vcap.read(m1);
     cv::inRange(m1, cv::Scalar(H_MIN / 1.0f, S_MIN / 1.0f, L_MIN / 1.0f),
@@ -168,10 +110,10 @@ int main(int argc, char** argv) {
         BestSize = CurrentSize;
         BestIndex = i;
       }
-      console->info("contours[{}].size() == {}", i, CurrentSize);
+      console->debug("contours[{}].size() == {}", i, CurrentSize);
     }  // done finding longest target perimeter
 
-    console->info("contours[{}].size() == {}", BestIndex, BestSize);
+    console->debug("contours[{}].size() == {}", BestIndex, BestSize);
 
     // punt on this frame if not large enough perimeter
     if (BestSize > 250) {
