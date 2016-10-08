@@ -1,16 +1,18 @@
-#include "spdlog/spdlog.h"
-
+#include <fcntl.h>
 #include <stdio.h>
 #include <sys/time.h>
-#include <opencv2/opencv.hpp>
-#include "UDPHandler.cpp"
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
+
+#include "spdlog/spdlog.h"
+#include <opencv2/opencv.hpp>
+
+#include "constants.h"
+#include "nvidia_utils.h"
+#include "udp_handler.h"
 
 namespace spd = spdlog;
 using namespace cv;
-#include "NVIDIAUtils.cpp"
 
 // 1280x720
 
@@ -103,15 +105,14 @@ int main(int argc, char** argv) {
   console->info("Deadeye PID == {}", getpid());
   usleep(1 * 1000 * 1000);
   SocketAddress* sock_addr = NULL;
-  UDPSocket sock = UDPHandler::CreateUDPDataStreamNOBIND();
+  UDPSocket sock = CreateUDPDataStreamNOBIND();
   console->debug("sock == {}", sock);
   while (sock_addr == NULL) {
-    sock_addr =
-        UDPHandler::CreateSocketAddress("127.0.0.1", NetworkP_Vision_Comm_Port);
+    sock_addr = CreateSocketAddress("127.0.0.1", NetworkP_Vision_Comm_Port);
     usleep(1 * 1000000);
   }
 
-  NVIDIAUtils::ConfigCameraV4L2();
+  ConfigCameraV4L2();
 #define WIDTH 640.0
 #define HEIGHT 480.0
 
@@ -218,7 +219,7 @@ int main(int argc, char** argv) {
     } else {
       UDPPacket[2] = 42;
     }
-    UDPHandler::UDPSend(sock, UDPPacket, sizeof(float) * 3, sock_addr);
+    UDPSend(sock, UDPPacket, sizeof(float) * 3, sock_addr);
     // usleep(10 * 1000);
   }
 }
