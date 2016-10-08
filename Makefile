@@ -13,7 +13,7 @@ SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -c -std=c++11 -g -Wall
 LDFLAGS := -lstdc++
-INC := -Ivendor/include -Iinclude
+INC := -Ivendor/spdlog/include -Iinclude
 
 # link to OpenCV
 CFLAGS += `pkg-config --cflags opencv`
