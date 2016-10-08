@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
   UDPSocket sock = CreateUDPDataStreamNOBIND();
   console->debug("sock == {}", sock);
   while (sock_addr == NULL) {
-    sock_addr = CreateSocketAddress("127.0.0.1", NetworkP_Vision_Comm_Port);
+    sock_addr = CreateSocketAddress("127.0.0.1", kNetworkVisionCommPort);
     usleep(1 * 1000000);
   }
 
