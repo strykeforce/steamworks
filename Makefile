@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -c -Wall -std=c++11 -g
 LDFLAGS = -lstdc++
 
-SOURCES = NetworkPorts.cpp NVIDIAUtils.cpp UDPHandler.cpp Main.cpp
+SOURCES = NVIDIAUtils.cpp UDPHandler.cpp Main.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 EXECUTABLE = deadeye
 
