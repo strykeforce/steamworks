@@ -17,8 +17,6 @@ using namespace cv;
 
 // 1280x720
 
-#define TAN_DEG(__NUMBER__) /*  Takes in angle, returns slope  */ \
-  tan(__NUMBER__ / 180.0 * M_PI)
 #define ATAN2_DEG(__Y__, __X__) /*  Takes in slope, returns angle  */ \
   atan2(__Y__, __X__) * 180 / M_PI
 #define CAMERA_NUMBERS 1
@@ -93,12 +91,6 @@ Point everything(std::vector<Point> points,
     }
   }
 }
-
-Scalar colors[] = {
-    Scalar(255, 000, 000), Scalar(255, 128, 000), Scalar(255, 255, 000),
-    Scalar(128, 255, 000), Scalar(000, 255, 128), Scalar(000, 255, 255),
-    Scalar(000, 128, 255), Scalar(000, 000, 255), Scalar(128, 000, 255),
-    Scalar(255, 000, 255), Scalar(255, 000, 128)};
 
 int main(int argc, char** argv) {
   auto console = spd::stdout_logger_st("console", true);
