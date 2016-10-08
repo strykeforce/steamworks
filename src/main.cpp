@@ -54,7 +54,7 @@ void start() {
   vcap.set(CV_CAP_PROP_BRIGHTNESS, 0.0);
   Mat m1, m2, m3, m4, m5;
 
-  float UDPPacket[3];
+  float udp_packet[3];
   struct timeval start, end;
   while (true) {
     gettimeofday(&end, NULL);
@@ -145,13 +145,13 @@ void start() {
                           (tan(LineLength / 2 * PixelToThing * M_PI / 180));
       console->info("DistInches  == {}", DistInches);
       console->info("PixelToThing = {}", PixelToThing);
-      UDPPacket[0] = Center;
-      UDPPacket[1] = DistInches;
-      UDPPacket[2] = 0;
+      udp_packet[0] = Center;
+      udp_packet[1] = DistInches;
+      udp_packet[2] = 0;
     } else {
-      UDPPacket[2] = 42;
+      udp_packet[2] = 42;
     }
-    UDPSend(sock, UDPPacket, sizeof(float) * 3, sock_addr);
+    UDPSend(sock, udp_packet, sizeof(float) * 3, sock_addr);
     // usleep(10 * 1000);
   }
 }
