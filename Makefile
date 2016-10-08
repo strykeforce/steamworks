@@ -1,23 +1,36 @@
-CC = g++
-CFLAGS = -c -Wall -std=c++11 -g
-LDFLAGS = -lstdc++
+#
+# Makefile for deadeye
+#
 
-SOURCES = NVIDIAUtils.cpp UDPHandler.cpp Main.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = deadeye
+CC := g++
+SRCDIR := src
+BUILDDIR := build
+BINDIR := bin
+TARGET := $(BINDIR)/deadeye
 
+SRCEXT := cpp
+SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+CFLAGS := -c -std=c++11 -g -Wall
+LDFLAGS := -lstdc++
+INC := -Ivendor/include -Iinclude
+
+# link to OpenCV
 CFLAGS += `pkg-config --cflags opencv`
 LDFLAGS += `pkg-config --libs opencv`
 
-CFLAGS += -Ivendor/include
 
-all: $(SOURCES) $(EXECUTABLE)
+$(TARGET): $(OBJECTS)
+	@echo " Linking..."
+	@mkdir -p $(BINDIR)
+	@echo " $(CC) $^ -o $(TARGET) $(LDFLAGS)"; $(CC) $^ -o $(TARGET) $(LDFLAGS)
 
-$(EXECUTABLE): $(OBJECTS)
-	$(CC) $(OBJECTS) -o $@ $(LDFLAGS)
-
-.cpp.o:
-	$(CC) $(CFLAGS) $< -o $@
+$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
+	@mkdir -p $(BUILDDIR)
+	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 clean:
-	rm $(OBJECTS) $(EXECUTABLE)
+	@echo " Cleaning...";
+	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+
+.PHONY: clean
