@@ -1,10 +1,9 @@
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
+#include "camera.h"
 #include "config.h"
-#include "constants.h"
 #include "message.h"
-#include "nvidia_utils.h"
 #include "target.h"
 
 namespace spd = spdlog;
@@ -14,16 +13,11 @@ void start(std::shared_ptr<deadeye::Config> config) {
   auto message = new deadeye::Message(config);
   float payload[3];
 
-  ConfigCameraV4L2();
-
-  cv::VideoCapture vcap(0);
-  vcap.set(CV_CAP_PROP_FRAME_WIDTH, kFrameWidth);
-  vcap.set(CV_CAP_PROP_FRAME_HEIGHT, kFrameHeight);
-  vcap.set(CV_CAP_PROP_BRIGHTNESS, 0.0);
   cv::Mat m1, m2, m3, m4, m5;
+  std::unique_ptr<deadeye::Camera> camera(new deadeye::Camera(config));
 
   for (;;) {
-    vcap.read(m1);
+    camera->Read(m1);
     cv::inRange(m1, config->range_lower, config->range_upper, m2);
     cv::dilate(m2, m3, cv::Mat(), cv::Point(-1, -1), 2, 1, 1);
     cv::erode(m3, m4, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
@@ -106,7 +100,7 @@ void start(std::shared_ptr<deadeye::Config> config) {
               bottom_a.x - bottom_b.x, bottom_a.y - bottom_b.y);
     int inter_ax = (left_bottom.x + right_bottom.x) / 2;
     console->info("inter_ax == {}", inter_ax);
-    double center = kFrameWidth / 2 - inter_ax;
+    double center = camera->framewidth / 2 - inter_ax;
     console->info("Dist To center == {}", center);
     double line_length = sqrt(pow(left_bottom.x - right_bottom.x, 2) +
                               pow(left_bottom.y - right_bottom.y, 2));
