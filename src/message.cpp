@@ -23,7 +23,7 @@ Message::Message(const std::string& host, const std::string& port)
   console->info("Sending targeting to {}:{}", host_, port_);
   struct addrinfo hints;
   memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_UNSPEC;
+  hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_DGRAM;
   hints.ai_protocol = 0;
   hints.ai_flags = AI_ADDRCONFIG;
@@ -38,6 +38,9 @@ Message::Message(const std::string& host, const std::string& port)
 }
 
 Message::~Message() {
+  if (close(fd_) == -1) {
+    spd::get("console")->error(strerror(errno));
+  }
   freeaddrinfo(addr_);
 }
 
