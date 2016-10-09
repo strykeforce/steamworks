@@ -82,7 +82,6 @@ void Config::ConfigureColor() {
     console->error("config error: color.upper");
   }
 
-  range_upper = cv::Scalar(125.0, 180.0, 90.0);
   console->debug("config->range_lower = ({}, {}, {})", range_lower[0],
                  range_lower[1], range_lower[2]);
   console->debug("config->range_upper = ({}, {}, {})", range_upper[0],
