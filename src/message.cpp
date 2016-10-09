@@ -12,22 +12,22 @@
 
 #include "spdlog/spdlog.h"
 
+#include "config.h"
+
 namespace spd = spdlog;
 
 // http://www.microhowto.info/howto/send_a_udp_datagram_in_c.html
 
 namespace deadeye {
-Message::Message(const std::string& host, const std::string& port)
-    : host_(host), port_(port) {
+Message::Message(std::shared_ptr<deadeye::Config> config) {
   auto console = spd::get("console");
-  console->info("Sending targeting to {}:{}", host_, port_);
   struct addrinfo hints;
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_DGRAM;
   hints.ai_protocol = 0;
   hints.ai_flags = AI_ADDRCONFIG;
-  auto err = getaddrinfo(host_.c_str(), port_.c_str(), &hints, &addr_);
+  auto err = getaddrinfo(config->host, config->port, &hints, &addr_);
   if (err != 0) {
     console->critical("failed to resolve remote socket address (err={})", err);
   }

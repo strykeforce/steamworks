@@ -1,7 +1,7 @@
-#include "spdlog/spdlog.h"
-#include "cpptoml.h"
 #include <opencv2/opencv.hpp>
+#include "spdlog/spdlog.h"
 
+#include "config.h"
 #include "constants.h"
 #include "message.h"
 #include "nvidia_utils.h"
@@ -27,11 +27,9 @@ int S_MAX = 190, S_MIN = 90;
 int L_MAX = 75, L_MIN = 0;
 #endif
 
-void start(std::shared_ptr<cpptoml::table> config) {
+void start(std::shared_ptr<deadeye::Config> config) {
   auto console = spd::get("console");
-  auto address = config->get_qualified_as<std::string>("message.address");
-  auto port = config->get_qualified_as<std::string>("message.port");
-  auto message = new deadeye::Message(*address, *port);
+  auto message = new deadeye::Message(config);
   float payload[3];
 
   ConfigCameraV4L2();
@@ -146,26 +144,13 @@ void start(std::shared_ptr<cpptoml::table> config) {
 
 int main(int argc, char** argv) {
   auto console = spd::stdout_logger_st("console", true);
-  auto config = cpptoml::parse_file("config/config.toml");
-  auto level = config->get_qualified_as<std::string>("logging.level");
-  if (level->compare("trace") == 0) {
-    console->set_level(spdlog::level::trace);
-  } else if (level->compare("debug") == 0) {
-    console->set_level(spdlog::level::debug);
-  } else if (level->compare("info") == 0) {
-    console->set_level(spdlog::level::info);
-  } else if (level->compare("warn") == 0) {
-    console->set_level(spdlog::level::warn);
-  } else if (level->compare("err") == 0) {
-    console->set_level(spdlog::level::err);
-  } else if (level->compare("critical") == 0) {
-    console->set_level(spdlog::level::critical);
-  } else {
-    console->warn("Unrecognized logging level {}, defaulting to warn", *level);
-    console->set_level(spdlog::level::warn);
+  std::shared_ptr<deadeye::Config> config;
+  try {
+    config = std::make_shared<deadeye::Config>(argc, argv);
+  } catch (const std::exception& e) {
+    console->critical("Config file error: {}", e.what());
+    return 1;
   }
   console->info("Deadeye is taking aim...");
-  console->info("Logging level is {}", *level);
-
   start(config);
 }

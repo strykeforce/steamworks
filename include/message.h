@@ -4,19 +4,21 @@
 #include <netdb.h>
 #include <string>
 
+#include "config.h"
+
 typedef int UDPSocket;
 typedef struct sockaddr_in SocketAddress;
 
 namespace deadeye {
 class Message {
-private:
+ private:
   std::string host_;
   std::string port_;
-  struct addrinfo *addr_ = nullptr;
+  struct addrinfo* addr_ = nullptr;
   int fd_;
 
-public:
-  Message(const std::string &host, const std::string &port);
+ public:
+  Message(std::shared_ptr<deadeye::Config> config);
   virtual ~Message();
 
   void send(const float payload[3]);
