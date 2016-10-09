@@ -3,14 +3,14 @@
 
 #include "camera.h"
 #include "config.h"
-#include "message.h"
+#include "robot.h"
 #include "target.h"
 
 namespace spd = spdlog;
 
 void start(std::shared_ptr<deadeye::Config> config) {
   auto console = spd::get("console");
-  auto message = new deadeye::Message(config);
+  auto robot = new deadeye::Robot(config);
   float payload[3];
 
   cv::Mat m1, m2, m3, m4, m5;
@@ -52,7 +52,7 @@ void start(std::shared_ptr<deadeye::Config> config) {
       payload[0] = 0.0;
       payload[1] = 0.0;
       payload[2] = 42.0;
-      message->send(payload);
+      robot->Send(payload);
       continue;
     }
 
@@ -113,7 +113,7 @@ void start(std::shared_ptr<deadeye::Config> config) {
     payload[0] = center;
     payload[1] = dist_inches;
     payload[2] = 0;
-    message->send(payload);
+    robot->Send(payload);
   }
 }
 

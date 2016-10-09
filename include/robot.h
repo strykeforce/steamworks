@@ -10,7 +10,7 @@ typedef int UDPSocket;
 typedef struct sockaddr_in SocketAddress;
 
 namespace deadeye {
-class Message {
+class Robot {
  private:
   std::string host_;
   std::string port_;
@@ -18,10 +18,10 @@ class Message {
   int fd_;
 
  public:
-  Message(std::shared_ptr<deadeye::Config> config);
-  virtual ~Message();
+  Robot(std::shared_ptr<deadeye::Config> config);
+  virtual ~Robot();
 
-  void send(const float payload[3]);
+  void Send(const float payload[3]);
 };
 } /* deadeye */
 

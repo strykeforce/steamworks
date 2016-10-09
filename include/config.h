@@ -9,7 +9,7 @@ class Config {
  private:
   std::shared_ptr<cpptoml::table> config_;
   void ConfigureLogger();
-  void ConfigureMessage();
+  void ConfigureRobot();
   void ConfigureColor();
 
  public:

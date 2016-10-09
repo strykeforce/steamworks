@@ -1,4 +1,4 @@
-#include "message.h"
+#include "robot.h"
 
 #include <cerrno>
 #include <cstring>
@@ -19,7 +19,7 @@ namespace spd = spdlog;
 // http://www.microhowto.info/howto/send_a_udp_datagram_in_c.html
 
 namespace deadeye {
-Message::Message(std::shared_ptr<deadeye::Config> config) {
+Robot::Robot(std::shared_ptr<deadeye::Config> config) {
   auto console = spd::get("console");
   struct addrinfo hints;
   memset(&hints, 0, sizeof(hints));
@@ -37,14 +37,14 @@ Message::Message(std::shared_ptr<deadeye::Config> config) {
   }
 }
 
-Message::~Message() {
+Robot::~Robot() {
   if (close(fd_) == -1) {
     spd::get("console")->error(strerror(errno));
   }
   freeaddrinfo(addr_);
 }
 
-void Message::send(const float payload[3]) {
+void Robot::Send(const float payload[3]) {
   if (sendto(fd_, payload, sizeof(float) * 3, 0, addr_->ai_addr,
              addr_->ai_addrlen) == -1) {
     spd::get("console")->critical(strerror(errno));

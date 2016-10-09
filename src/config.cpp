@@ -30,7 +30,7 @@ Config::Config(int argc, char** argv) {
     throw std::runtime_error(e.what());
   }
   ConfigureLogger();
-  ConfigureMessage();
+  ConfigureRobot();
   ConfigureColor();
 }
 
@@ -56,7 +56,7 @@ void Config::ConfigureLogger() {
   console->info("Logging level is {}", *level);
 }
 
-void Config::ConfigureMessage() {
+void Config::ConfigureRobot() {
   host = (config_->get_qualified_as<std::string>("robot.address"))->c_str();
   port = (config_->get_qualified_as<std::string>("robot.port"))->c_str();
 }
