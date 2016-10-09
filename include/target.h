@@ -12,7 +12,7 @@ cv::Point inter(cv::Point p1,
 
 double AngleToFrom(double direction, cv::Point current, cv::Point next);
 
-cv::Point everything(std::vector<cv::Point> points,
+cv::Point corner_point(std::vector<cv::Point> points,
                      int start_index,
                      int direction,
                      int travel);

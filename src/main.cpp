@@ -106,18 +106,17 @@ void start() {
       }
     }
 
-#define RECT_RADIUS 20
-
-    cv::Point left_a = everything(contours[best_index], leftest_index, 90, 1);
-    cv::Point left_b = everything(contours[best_index], leftest_index, 270, -1);
+    cv::Point left_a = corner_point(contours[best_index], leftest_index, 90, 1);
+    cv::Point left_b =
+        corner_point(contours[best_index], leftest_index, 270, -1);
     cv::Point right_a =
-        everything(contours[best_index], rightest_index, 270, 1);
+        corner_point(contours[best_index], rightest_index, 270, 1);
     cv::Point right_b =
-        everything(contours[best_index], rightest_index, 90, -1);
+        corner_point(contours[best_index], rightest_index, 90, -1);
     cv::Point bottom_a =
-        everything(contours[best_index], bottomest_index, 180, -1);
+        corner_point(contours[best_index], bottomest_index, 180, -1);
     cv::Point bottom_b =
-        everything(contours[best_index], bottomest_index, 0, 1);
+        corner_point(contours[best_index], bottomest_index, 0, 1);
     cv::Point left_bottom =
         inter(left_a, left_a.x - left_b.x, left_a.y - left_b.y, bottom_a,
               bottom_a.x - bottom_b.x, bottom_a.y - bottom_b.y);
