@@ -2,6 +2,7 @@
 
 #include <sys/stat.h>
 
+#include <opencv2/opencv.hpp>
 #include "cpptoml.h"
 #include "spdlog/spdlog.h"
 
@@ -30,6 +31,7 @@ Config::Config(int argc, char** argv) {
   }
   ConfigureLogger();
   ConfigureMessage();
+  ConfigureColor();
 }
 
 void Config::ConfigureLogger() {
@@ -55,8 +57,36 @@ void Config::ConfigureLogger() {
 }
 
 void Config::ConfigureMessage() {
-  host = (config_->get_qualified_as<std::string>("message.address"))->c_str();
-  port = (config_->get_qualified_as<std::string>("message.port"))->c_str();
+  host = (config_->get_qualified_as<std::string>("robot.address"))->c_str();
+  port = (config_->get_qualified_as<std::string>("robot.port"))->c_str();
+}
+
+void Config::ConfigureColor() {
+  auto console = spd::get("console");
+  auto color = config_->get_table("color");
+  auto hue = color->get_qualified_as<double>("lower.hue");
+  auto sat = color->get_qualified_as<double>("lower.saturation");
+  auto val = color->get_qualified_as<double>("lower.value");
+  if (hue && sat && val) {
+    range_lower = cv::Scalar(*hue, *sat, *val);
+  } else {
+    console->error("config error: color.lower");
+  }
+
+  hue = color->get_qualified_as<double>("upper.hue");
+  sat = color->get_qualified_as<double>("upper.saturation");
+  val = color->get_qualified_as<double>("upper.value");
+  if (hue && sat && val) {
+    range_upper = cv::Scalar(*hue, *sat, *val);
+  } else {
+    console->error("config error: color.upper");
+  }
+
+  range_upper = cv::Scalar(125.0, 180.0, 90.0);
+  console->debug("config->range_lower = ({}, {}, {})", range_lower[0],
+                 range_lower[1], range_lower[2]);
+  console->debug("config->range_upper = ({}, {}, {})", range_upper[0],
+                 range_upper[1], range_upper[2]);
 }
 
 Config::~Config() {}

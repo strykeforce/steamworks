@@ -9,24 +9,6 @@
 
 namespace spd = spdlog;
 
-// 1280x720
-
-#define CAMERA_NUMBERS 1
-#if CAMERA_NUMBERS
-int H_MAX = 125, H_MIN = 65;
-int S_MAX = 180, S_MIN = 105;
-int L_MAX = 90, L_MIN = 0;
-/*
-        int H_MAX = 108, H_MIN = 57;
-        int S_MAX = 161, S_MIN = 87;
-        int L_MAX =  70, L_MIN = 14;
-*/
-#else
-int H_MAX = 140, H_MIN = 55;
-int S_MAX = 190, S_MIN = 90;
-int L_MAX = 75, L_MIN = 0;
-#endif
-
 void start(std::shared_ptr<deadeye::Config> config) {
   auto console = spd::get("console");
   auto message = new deadeye::Message(config);
@@ -42,11 +24,10 @@ void start(std::shared_ptr<deadeye::Config> config) {
 
   for (;;) {
     vcap.read(m1);
-    cv::inRange(m1, cv::Scalar(H_MIN / 1.0f, S_MIN / 1.0f, L_MIN / 1.0f),
-                cv::Scalar(H_MAX / 1.0f, S_MAX / 1.0f, L_MAX / 1.0f), m2);
+    cv::inRange(m1, config->range_lower, config->range_upper, m2);
     cv::dilate(m2, m3, cv::Mat(), cv::Point(-1, -1), 2, 1, 1);
     cv::erode(m3, m4, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
-    std::vector<std::vector<cv::Point> > contours;
+    std::vector<std::vector<cv::Point>> contours;
     cv::findContours(m4.clone(), contours, CV_RETR_LIST,
                      CV_CHAIN_APPROX_SIMPLE);
     console->debug("counts.size() == {}", contours.size());
