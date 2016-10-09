@@ -1,5 +1,3 @@
-#include <sys/time.h>
-
 #include "spdlog/spdlog.h"
 #include "cpptoml.h"
 #include <opencv2/opencv.hpp>
@@ -10,7 +8,6 @@
 #include "target.h"
 
 namespace spd = spdlog;
-using namespace cv;
 
 // 1280x720
 
@@ -39,18 +36,13 @@ void start() {
 #define WIDTH 640.0
 #define HEIGHT 480.0
 
-  VideoCapture vcap(0);
+  cv::VideoCapture vcap(0);
   vcap.set(CV_CAP_PROP_FRAME_WIDTH, WIDTH);
   vcap.set(CV_CAP_PROP_FRAME_HEIGHT, HEIGHT);
   vcap.set(CV_CAP_PROP_BRIGHTNESS, 0.0);
-  Mat m1, m2, m3, m4, m5;
+  cv::Mat m1, m2, m3, m4, m5;
 
-  struct timeval start, end;
   for (;;) {
-    gettimeofday(&end, NULL);
-    console->debug("dt == {}", (double)(end.tv_sec - start.tv_sec) * 1000.0 +
-                                   (end.tv_usec - start.tv_usec) / 1000.0);
-    gettimeofday(&start, NULL);
     vcap.read(m1);
     cv::inRange(m1, cv::Scalar(H_MIN / 1.0f, S_MIN / 1.0f, L_MIN / 1.0f),
                 cv::Scalar(H_MAX / 1.0f, S_MAX / 1.0f, L_MAX / 1.0f), m2);
@@ -83,64 +75,72 @@ void start() {
     console->debug("contours[{}].size() == {}", best_index, best_size);
 
     // punt on this frame if not large enough perimeter
-    if (best_size > 250) {
-#define points contours[best_index]
-      Point leftest = points[0], rightest = leftest, bottomest = leftest,
-            topest = leftest;
-      int leftest_index = 0, rightest_index = leftest_index,
-          bottomest_index = leftest_index;
+    if (best_size < 250) {
+      payload[0] = 0.0;
+      payload[1] = 0.0;
+      payload[2] = 42.0;
+      message->send(payload);
+      continue;
+    }
 
-      // find left, top, right and bottom-most contour points
-      for (uint i = 1; i < contours[best_index].size(); i++) {
-        if (contours[best_index][i].x < leftest.x) {
-          leftest = points[i];
-          leftest_index = i;
-        }
-        if (contours[best_index][i].x > rightest.x) {
-          rightest = points[i];
-          rightest_index = i;
-        }
-        if (contours[best_index][i].y > bottomest.y) {
-          bottomest = points[i];
-          bottomest_index = i;
-        }
-        if (contours[best_index][i].y < topest.y) {
-          topest = points[i];
-        }
+    // #define points contours[best_index]
+    cv::Point leftest = contours[best_index][0], rightest = leftest,
+              bottomest = leftest, topest = leftest;
+    int leftest_index = 0, rightest_index = leftest_index,
+        bottomest_index = leftest_index;
+
+    // find left, top, right and bottom-most contour points
+    for (uint i = 1; i < contours[best_index].size(); i++) {
+      if (contours[best_index][i].x < leftest.x) {
+        leftest = contours[best_index][i];
+        leftest_index = i;
       }
+      if (contours[best_index][i].x > rightest.x) {
+        rightest = contours[best_index][i];
+        rightest_index = i;
+      }
+      if (contours[best_index][i].y > bottomest.y) {
+        bottomest = contours[best_index][i];
+        bottomest_index = i;
+      }
+      if (contours[best_index][i].y < topest.y) {
+        topest = contours[best_index][i];
+      }
+    }
 
 #define RECT_RADIUS 20
 
-      Point left_a = everything(points, leftest_index, 90, 1);
-      Point left_b = everything(points, leftest_index, 270, -1);
-      Point right_a = everything(points, rightest_index, 270, 1);
-      Point right_b = everything(points, rightest_index, 90, -1);
-      Point bottom_a = everything(points, bottomest_index, 180, -1);
-      Point bottom_b = everything(points, bottomest_index, 0, 1);
-      Point left_bottom =
-          inter(left_a, left_a.x - left_b.x, left_a.y - left_b.y, bottom_a,
-                bottom_a.x - bottom_b.x, bottom_a.y - bottom_b.y);
-      Point right_bottom =
-          inter(right_a, right_a.x - right_b.x, right_a.y - right_b.y, bottom_a,
-                bottom_a.x - bottom_b.x, bottom_a.y - bottom_b.y);
-      int inter_ax = (left_bottom.x + right_bottom.x) / 2;
-      console->info("inter_ax == {}", inter_ax);
-      double center = WIDTH / 2 - inter_ax;
-      console->info("Dist To center == {}", center);
-      double line_length = sqrt(pow(left_bottom.x - right_bottom.x, 2) +
-                                pow(left_bottom.y - right_bottom.y, 2));
-      console->info("Line Length == {}", line_length);
-      double pixel_to_thing = 0.085;
-      double dist_inches = (double)(20.0 / 2.0) /
-                           (tan(line_length / 2 * pixel_to_thing * M_PI / 180));
-      console->info("dist_inches  == {}", dist_inches);
-      console->info("pixel_to_thing = {}", pixel_to_thing);
-      payload[0] = center;
-      payload[1] = dist_inches;
-      payload[2] = 0;
-    } else {
-      payload[2] = 42;
-    }
+    cv::Point left_a = everything(contours[best_index], leftest_index, 90, 1);
+    cv::Point left_b = everything(contours[best_index], leftest_index, 270, -1);
+    cv::Point right_a =
+        everything(contours[best_index], rightest_index, 270, 1);
+    cv::Point right_b =
+        everything(contours[best_index], rightest_index, 90, -1);
+    cv::Point bottom_a =
+        everything(contours[best_index], bottomest_index, 180, -1);
+    cv::Point bottom_b =
+        everything(contours[best_index], bottomest_index, 0, 1);
+    cv::Point left_bottom =
+        inter(left_a, left_a.x - left_b.x, left_a.y - left_b.y, bottom_a,
+              bottom_a.x - bottom_b.x, bottom_a.y - bottom_b.y);
+    cv::Point right_bottom =
+        inter(right_a, right_a.x - right_b.x, right_a.y - right_b.y, bottom_a,
+              bottom_a.x - bottom_b.x, bottom_a.y - bottom_b.y);
+    int inter_ax = (left_bottom.x + right_bottom.x) / 2;
+    console->info("inter_ax == {}", inter_ax);
+    double center = WIDTH / 2 - inter_ax;
+    console->info("Dist To center == {}", center);
+    double line_length = sqrt(pow(left_bottom.x - right_bottom.x, 2) +
+                              pow(left_bottom.y - right_bottom.y, 2));
+    console->info("Line Length == {}", line_length);
+    double pixel_to_thing = 0.085;
+    double dist_inches = (double)(20.0 / 2.0) /
+                         (tan(line_length / 2 * pixel_to_thing * M_PI / 180));
+    console->info("dist_inches  == {}", dist_inches);
+    console->info("pixel_to_thing = {}", pixel_to_thing);
+    payload[0] = center;
+    payload[1] = dist_inches;
+    payload[2] = 0;
     message->send(payload);
   }
 }
