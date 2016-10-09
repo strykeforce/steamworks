@@ -33,12 +33,10 @@ void start() {
   float payload[3];
 
   ConfigCameraV4L2();
-#define WIDTH 640.0
-#define HEIGHT 480.0
 
   cv::VideoCapture vcap(0);
-  vcap.set(CV_CAP_PROP_FRAME_WIDTH, WIDTH);
-  vcap.set(CV_CAP_PROP_FRAME_HEIGHT, HEIGHT);
+  vcap.set(CV_CAP_PROP_FRAME_WIDTH, kFrameWidth);
+  vcap.set(CV_CAP_PROP_FRAME_HEIGHT, kFrameHeight);
   vcap.set(CV_CAP_PROP_BRIGHTNESS, 0.0);
   cv::Mat m1, m2, m3, m4, m5;
 
@@ -128,7 +126,7 @@ void start() {
               bottom_a.x - bottom_b.x, bottom_a.y - bottom_b.y);
     int inter_ax = (left_bottom.x + right_bottom.x) / 2;
     console->info("inter_ax == {}", inter_ax);
-    double center = WIDTH / 2 - inter_ax;
+    double center = kFrameWidth / 2 - inter_ax;
     console->info("Dist To center == {}", center);
     double line_length = sqrt(pow(left_bottom.x - right_bottom.x, 2) +
                               pow(left_bottom.y - right_bottom.y, 2));

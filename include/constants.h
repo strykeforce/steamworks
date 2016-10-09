@@ -12,4 +12,7 @@ const auto kNetworkDashboardPort = kNetworkBasePort + 6;
 const auto kNetworkRobotAddress = "10.27.67.2";
 const auto kNetworkNVIDIAAddress = "10.27.67.12";
 
+const auto kFrameWidth = 640;
+const auto kFrameHeight = 480;
+
 #endif /* end of include guard: DEADEYE_CONSTANTS_INC_ */
