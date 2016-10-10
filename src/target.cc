@@ -25,7 +25,7 @@ double AngleToFrom(double direction, cv::Point current, cv::Point next) {
   angle = ((int)angle + 360) % 360;
   double option1 = (direction) - (angle);
   double option2 = 360 - fabs(option1);
-  double best = (abs(option1) < abs(option2)) ? option1 : option2;
+  double best = (std::abs(option1) < std::abs(option2)) ? option1 : option2;
   return best;
 }
 
