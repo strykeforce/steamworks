@@ -1,9 +1,9 @@
-#include "frame_processor.h"
+#include "deadeye/frame_processor.h"
 
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
-#include "config.h"
+#include "deadeye/config.h"
 
 namespace spd = spdlog;
 

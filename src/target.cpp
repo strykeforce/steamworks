@@ -1,4 +1,4 @@
-#include "target.h"
+#include "deadeye/target.h"
 
 #include <opencv2/opencv.hpp>
 
@@ -34,9 +34,9 @@ double AngleToFrom(double direction, cv::Point current, cv::Point next) {
 #define Tol_Points 4
 
 cv::Point corner_point(std::vector<cv::Point> points,
-                     int start_index,
-                     int direction,
-                     int travel) {
+                       int start_index,
+                       int direction,
+                       int travel) {
   int NumberOfPoints = points.size();
   for (int i = 0;
        // i < 10;

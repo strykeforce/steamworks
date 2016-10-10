@@ -1,4 +1,4 @@
-#include "robot.h"
+#include "deadeye/robot.h"
 
 #include <cerrno>
 #include <cstring>
@@ -12,7 +12,7 @@
 
 #include "spdlog/spdlog.h"
 
-#include "config.h"
+#include "deadeye/config.h"
 
 namespace spd = spdlog;
 

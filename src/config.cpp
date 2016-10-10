@@ -1,4 +1,4 @@
-#include "config.h"
+#include "deadeye/config.h"
 
 #include <sys/stat.h>
 
