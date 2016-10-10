@@ -1,5 +1,7 @@
 #include "camera.h"
 
+#include <unistd.h>
+
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
@@ -37,7 +39,7 @@ void Camera::ConfigCameraV4L2() {
     console->debug("status4 == {}", status3);
     status4 = system("uvcdynctrl -s White\\ Balance\\ Temperature 4500");
     console->debug("status3 == {}", status4);
-    usleep(1 * 1000 * 1000);
+    sleep(1);
   } while (status1 | status2 | status3 | status4);
 }
 

@@ -1,4 +1,3 @@
--Ivendor/spdlog/include
--Ivendor/cpptoml/include
--Ivendor
+-I/usr/local/opt/opencv/include
+-Ivendor/include
 -Iinclude
