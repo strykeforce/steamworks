@@ -7,7 +7,7 @@ configure_file (
 # so that we will find deadeye_config.h
 include_directories("${PROJECT_BINARY_DIR}")
 
-file(GLOB DEADEYE_SRC_LIST "*.cpp" )
+file(GLOB DEADEYE_SRC_LIST "*.cc" )
 
 add_executable (deadeye ${DEADEYE_SRC_LIST})
 target_link_libraries(deadeye ${OpenCV_LIBS})
