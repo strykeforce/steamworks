@@ -29,9 +29,12 @@ Config::Config(int argc, char** argv) {
   } catch (const cpptoml::parse_exception& e) {
     throw std::runtime_error(e.what());
   }
+
   ConfigureLogger();
-  ConfigureRobot();
-  ConfigureColor();
+}
+
+std::shared_ptr<cpptoml::table> Config::GetTable(const std::string& table) {
+  return config_->get_table(table);
 }
 
 void Config::ConfigureLogger() {
@@ -54,38 +57,6 @@ void Config::ConfigureLogger() {
     console->set_level(spdlog::level::warn);
   }
   console->info("Logging level is {}", *level);
-}
-
-void Config::ConfigureRobot() {
-  host = (config_->get_qualified_as<std::string>("robot.address"))->c_str();
-  port = (config_->get_qualified_as<std::string>("robot.port"))->c_str();
-}
-
-void Config::ConfigureColor() {
-  auto console = spd::get("console");
-  auto color = config_->get_table("color");
-  auto hue = color->get_qualified_as<double>("lower.hue");
-  auto sat = color->get_qualified_as<double>("lower.saturation");
-  auto val = color->get_qualified_as<double>("lower.value");
-  if (hue && sat && val) {
-    range_lower = cv::Scalar(*hue, *sat, *val);
-  } else {
-    console->error("config error: color.lower");
-  }
-
-  hue = color->get_qualified_as<double>("upper.hue");
-  sat = color->get_qualified_as<double>("upper.saturation");
-  val = color->get_qualified_as<double>("upper.value");
-  if (hue && sat && val) {
-    range_upper = cv::Scalar(*hue, *sat, *val);
-  } else {
-    console->error("config error: color.upper");
-  }
-
-  console->debug("config->range_lower = ({}, {}, {})", range_lower[0],
-                 range_lower[1], range_lower[2]);
-  console->debug("config->range_upper = ({}, {}, {})", range_upper[0],
-                 range_upper[1], range_upper[2]);
 }
 
 Config::~Config() {}

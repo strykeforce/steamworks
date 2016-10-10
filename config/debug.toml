@@ -6,12 +6,7 @@ level = "debug"
 address = "192.168.1.69"
 port    = "5804"
 
-[color.lower]
-hue        = 65.0
-saturation = 105.0
-value      = 0.0
-
-[color.upper]
-hue        = 125.0
-saturation = 180.0
-value      = 90.0
+[target]
+HSV_lower = [65, 105, 0]
+HSV_upper = [125, 105, 0]
+perimeter = 250

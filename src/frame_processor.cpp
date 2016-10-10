@@ -9,8 +9,20 @@ namespace spd = spdlog;
 
 namespace deadeye {
 
-FrameProcessor::FrameProcessor(std::shared_ptr<deadeye::Config> config)
-    : upper_(config->range_upper), lower_(config->range_lower) {}
+FrameProcessor::FrameProcessor(std::shared_ptr<deadeye::Config> config) {
+  auto console = spd::get("console");
+  auto target = config->GetTable("target");
+
+  // TODO: validate returned arrays
+  auto hsv_l = target->get_array_of<int64_t>("HSV_lower");
+  auto hsv_u = target->get_array_of<int64_t>("HSV_upper");
+
+  lower_ = cv::Scalar((*hsv_l)[0], (*hsv_l)[1], (*hsv_l)[2]);
+  upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);
+
+  console->debug("range_lower = ({}, {}, {})", lower_[0], lower_[1], lower_[2]);
+  console->debug("range_upper = ({}, {}, {})", upper_[0], upper_[1], upper_[2]);
+}
 
 FrameProcessor::~FrameProcessor() {}
 

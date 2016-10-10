@@ -21,13 +21,18 @@ namespace spd = spdlog;
 namespace deadeye {
 Robot::Robot(std::shared_ptr<deadeye::Config> config) {
   auto console = spd::get("console");
+  auto table = config->GetTable("robot");
+  auto host = (table->get_as<std::string>("address"))->c_str();
+  auto port = (table->get_as<std::string>("port"))->c_str();
+  console->info("Robot is at {}:{}", host, port);
+
   struct addrinfo hints;
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_INET;
   hints.ai_socktype = SOCK_DGRAM;
   hints.ai_protocol = 0;
   hints.ai_flags = AI_ADDRCONFIG;
-  auto err = getaddrinfo(config->host, config->port, &hints, &addr_);
+  auto err = getaddrinfo(host, port, &hints, &addr_);
   if (err != 0) {
     console->critical("failed to resolve remote socket address (err={})", err);
   }
