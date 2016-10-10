@@ -17,6 +17,7 @@ class Config {
   const char* port;
   cv::Scalar range_lower;
   cv::Scalar range_upper;
+  int min_perimeter;
   Config(int argc, char** argv);
   virtual ~Config();
 };

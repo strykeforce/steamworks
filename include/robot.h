@@ -21,7 +21,8 @@ class Robot {
   Robot(std::shared_ptr<deadeye::Config> config);
   virtual ~Robot();
 
-  void Send(const float payload[3]);
+  void TargetAt(float const center, float const range);
+  void NoTarget();
 };
 } /* deadeye */
 

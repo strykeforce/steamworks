@@ -44,7 +44,16 @@ Robot::~Robot() {
   freeaddrinfo(addr_);
 }
 
-void Robot::Send(const float payload[3]) {
+void Robot::TargetAt(float const center, float const range) {
+  float payload[3] = {center, range, 0.0};
+  if (sendto(fd_, payload, sizeof(float) * 3, 0, addr_->ai_addr,
+             addr_->ai_addrlen) == -1) {
+    spd::get("console")->critical(strerror(errno));
+  }
+}
+
+void Robot::NoTarget() {
+  float payload[3] = {0.0, 0.0, 42.0};
   if (sendto(fd_, payload, sizeof(float) * 3, 0, addr_->ai_addr,
              addr_->ai_addrlen) == -1) {
     spd::get("console")->critical(strerror(errno));
