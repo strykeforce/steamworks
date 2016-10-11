@@ -1,6 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
+#include "deadeye_config.h"
 #include "deadeye/camera.h"
 #include "deadeye/config.h"
 #include "deadeye/frame_processor.h"
@@ -91,6 +92,6 @@ int main(int argc, char** argv) {
     console->critical("Config file error: {}", e.what());
     return 1;
   }
-  console->info("Deadeye is taking aim...");
+  console->info("Deadeye version {} is taking aim...", DEADEYE_VERSION);
   start(config);
 }
