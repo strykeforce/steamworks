@@ -1,5 +1,8 @@
 /build
 
+# Vagrant
+/.vagrant
+
 # Created by https://www.gitignore.io/api/c++
 
 ### C++ ###
