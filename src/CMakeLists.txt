@@ -7,7 +7,12 @@ configure_file (
 # so that we will find deadeye_config.h
 include_directories("${PROJECT_BINARY_DIR}")
 
-file(GLOB DEADEYE_SRC_LIST "*.cc" )
+file(GLOB deadeye_SRC_LIST "*.cc" )
 
-add_executable (deadeye ${DEADEYE_SRC_LIST})
-target_link_libraries(deadeye ${OpenCV_LIBS})
+add_executable(deadeye ${deadeye_SRC_LIST})
+target_include_directories(deadeye PRIVATE ${PROJECT_SOURCE_DIR}/include)
+target_link_libraries(deadeye ${OpenCV_LIBS} cpptoml spdlog)
+set_target_properties(deadeye PROPERTIES
+  CXX_STANDARD 11
+  CXX_EXTENSIONS OFF
+  CXX_STANDARD_REQUIRED YES)
