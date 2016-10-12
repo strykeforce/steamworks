@@ -1,0 +1,15 @@
+# deadeye configuration
+[logging]
+level = "info"
+
+[camera]
+# exposure = 10
+
+[robot]
+address = "127.0.0.1"
+port    = "5804"
+
+[target]
+HSV_lower = [1, 1, 1]
+HSV_upper = [254, 254, 254]
+perimeter = 250

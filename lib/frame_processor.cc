@@ -33,7 +33,6 @@ std::shared_ptr<std::vector<cv::Point>> FrameProcessor::TargetContour(
   // TODO: get rid of extra matrix variables
   // TODO: do this in HSV
   // TODO: get rid of morph. closing
-  cv::Mat in_range_frame, dilated_frame, eroded_frame;
   cv::inRange(frame, lower_, upper_, in_range_frame);
   cv::dilate(in_range_frame, dilated_frame, cv::Mat(), cv::Point(-1, -1), 2, 1,
              1);
@@ -73,6 +72,8 @@ std::shared_ptr<std::vector<cv::Point>> FrameProcessor::TargetContour(
     return nullptr;
   }
 
-  return std::shared_ptr<std::vector<cv::Point>>(&contours[best_index]);
+  return nullptr;
+  // FIXME: crasher
+  // return std::shared_ptr<std::vector<cv::Point>>(&contours[best_index]);
 }
 } /* deadeye */

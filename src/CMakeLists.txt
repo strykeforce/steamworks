@@ -1,10 +1,18 @@
+set(deadeye_linked_libs deadeye_core ${OpenCV_LIBS} cpptoml spdlog)
 # add the binary tree to the search path for include files
 # so that we will find deadeye_config.h
 include_directories("${PROJECT_BINARY_DIR}")
 
 add_executable(deadeye deadeye.cc)
-target_link_libraries(deadeye deadeye_core ${OpenCV_LIBS} cpptoml spdlog)
+target_link_libraries(deadeye ${deadeye_linked_libs})
 set_target_properties(deadeye PROPERTIES
   CXX_STANDARD 11
   CXX_EXTENSIONS OFF
   CXX_STANDARD_REQUIRED YES)
+
+  add_executable(pipeline pipeline.cc)
+  target_link_libraries(pipeline ${deadeye_linked_libs})
+  set_target_properties(pipeline PROPERTIES
+    CXX_STANDARD 11
+    CXX_EXTENSIONS OFF
+    CXX_STANDARD_REQUIRED YES)
