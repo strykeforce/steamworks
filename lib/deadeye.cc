@@ -1,4 +1,4 @@
-#include "deadeye/frame_processor.h"
+#include "deadeye/deadeye.h"
 
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
@@ -9,7 +9,7 @@ namespace spd = spdlog;
 
 namespace deadeye {
 
-FrameProcessor::FrameProcessor(std::shared_ptr<deadeye::Config> config) {
+Deadeye::Deadeye(std::shared_ptr<deadeye::Config> config) {
   auto console = spd::get("console");
   auto target = config->GetTable("target");
 
@@ -24,9 +24,9 @@ FrameProcessor::FrameProcessor(std::shared_ptr<deadeye::Config> config) {
   console->debug("range_upper = ({}, {}, {})", upper_[0], upper_[1], upper_[2]);
 }
 
-FrameProcessor::~FrameProcessor() {}
+Deadeye::~Deadeye() {}
 
-std::vector<cv::Point> FrameProcessor::TargetContour(const cv::Mat& frame) {
+std::vector<cv::Point> Deadeye::TargetContour(const cv::Mat& frame) {
   auto console = spd::get("console");
 
   // TODO: get rid of extra matrix variables

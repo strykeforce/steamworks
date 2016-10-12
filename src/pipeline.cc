@@ -3,7 +3,7 @@
 
 #include "deadeye/camera.h"
 #include "deadeye/config.h"
-#include "deadeye/frame_processor.h"
+#include "deadeye/deadeye.h"
 #include "deadeye/target.h"
 
 namespace spd = spdlog;
@@ -24,8 +24,7 @@ int main(int argc, char** argv) {
   }
 
   std::unique_ptr<deadeye::Camera> camera(new deadeye::Camera(config));
-  std::unique_ptr<deadeye::FrameProcessor> frame_processor(
-      new deadeye::FrameProcessor(config));
+  std::unique_ptr<deadeye::Deadeye> deadeye(new deadeye::Deadeye(config));
 
   namedWindow(window_name, cv::WINDOW_AUTOSIZE);
   console->info("Press <ESC> to exit.");
@@ -34,9 +33,9 @@ int main(int argc, char** argv) {
     cv::Mat frame;
     camera->Read(frame);
 
-    frame_processor->TargetContour(frame);
+    deadeye->TargetContour(frame);
 
-    cv::imshow(window_name, frame_processor->dilated_frame);
+    cv::imshow(window_name, deadeye->dilated_frame);
 
     auto c = (char)cvWaitKey(1);
     if (c == 27)

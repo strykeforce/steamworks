@@ -4,7 +4,7 @@
 #include "deadeye_config.h"
 #include "deadeye/camera.h"
 #include "deadeye/config.h"
-#include "deadeye/frame_processor.h"
+#include "deadeye/deadeye.h"
 #include "deadeye/robot.h"
 #include "deadeye/target.h"
 
@@ -15,14 +15,13 @@ void start(std::shared_ptr<deadeye::Config> config) {
 
   std::unique_ptr<deadeye::Robot> robot(new deadeye::Robot(config));
   std::unique_ptr<deadeye::Camera> camera(new deadeye::Camera(config));
-  std::unique_ptr<deadeye::FrameProcessor> frame_processor(
-      new deadeye::FrameProcessor(config));
+  std::unique_ptr<deadeye::Deadeye> deadeye(new deadeye::Deadeye(config));
 
   for (;;) {
     cv::Mat frame;
     // TODO: check result of Read
     camera->Read(frame);
-    auto target_contour = frame_processor->TargetContour(frame);
+    auto target_contour = deadeye->TargetContour(frame);
 
     if (target_contour.empty()) {
       robot->NoTarget();
