@@ -3,7 +3,7 @@
 level = "info"
 
 [camera]
-exposure = 10
+#exposure = 10
 
 [robot]
 address = "127.0.0.1"

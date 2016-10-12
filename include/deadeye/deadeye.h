@@ -4,13 +4,30 @@
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
-#include "config.h"
+#include "deadeye/camera.h"
+#include "deadeye/config.h"
+#include "deadeye/robot.h"
 
 namespace deadeye {
+struct BottomCorners {
+  cv::Point left, right;
+};
+
+struct AimPoint {
+  double center, dist_inches;
+};
+
 class Deadeye {
  private:
+  std::unique_ptr<deadeye::Robot> robot_;
+  std::unique_ptr<deadeye::Camera> camera_;
   cv::Scalar upper_, lower_;
-  // int min_perimeter_;
+
+  std::unique_ptr<BottomCorners> FindBottomCorners(
+      const std::vector<cv::Point>& target_contour);
+
+  std::unique_ptr<AimPoint> FindAimPoint(
+      std::unique_ptr<BottomCorners> corners);
 
  public:
   // note: these are only useful for development and debugging
@@ -19,6 +36,8 @@ class Deadeye {
   Deadeye(std::shared_ptr<deadeye::Config> config);
   virtual ~Deadeye();
   std::vector<cv::Point> TargetContour(const cv::Mat& frame);
+  void Start();
+  void Stop();
 };
 } /* deadeye */
 
