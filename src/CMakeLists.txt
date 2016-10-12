@@ -3,9 +3,9 @@ set(deadeye_linked_libs deadeye_core ${OpenCV_LIBS} cpptoml spdlog)
 # so that we will find deadeye_config.h
 include_directories("${PROJECT_BINARY_DIR}")
 
-add_executable(deadeye deadeye.cc)
-target_link_libraries(deadeye ${deadeye_linked_libs})
-set_target_properties(deadeye PROPERTIES
+add_executable(deadeyed deadeyed.cc)
+target_link_libraries(deadeyed ${deadeye_linked_libs})
+set_target_properties(deadeyed PROPERTIES
   CXX_STANDARD 11
   CXX_EXTENSIONS OFF
   CXX_STANDARD_REQUIRED YES)
