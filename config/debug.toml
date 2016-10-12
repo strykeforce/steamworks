@@ -2,6 +2,9 @@
 [logging]
 level = "debug"
 
+[camera]
+# exposure = 10
+
 [robot]
 address = "192.168.1.69"
 port    = "5804"

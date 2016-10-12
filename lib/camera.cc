@@ -12,8 +12,15 @@ namespace spd = spdlog;
 
 namespace deadeye {
 Camera::Camera(std::shared_ptr<deadeye::Config> config) {
+  auto console = spd::get("console");
+  auto table = config->GetTable("camera");
+  auto exposure = table->get_as<int>("exposure");
+  if (exposure) {
+    // TODO: pass exposure value to this
+    ConfigCameraV4L2();
+  }
+
   framewidth = kFrameWidth;
-  ConfigCameraV4L2();
 
   camera_ = std::unique_ptr<cv::VideoCapture>(new cv::VideoCapture(0));
   camera_->set(CV_CAP_PROP_FRAME_WIDTH, kFrameWidth);
