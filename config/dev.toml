@@ -3,13 +3,13 @@
 level = "info"
 
 [camera]
-# exposure = 10
+exposure = 10
 
 [robot]
 address = "127.0.0.1"
 port    = "5804"
 
 [target]
-HSV_lower = [1, 1, 1]
-HSV_upper = [254, 254, 254]
+HSV_lower = [86, 100, 100]
+HSV_upper = [96, 255, 255]
 perimeter = 250

@@ -42,6 +42,6 @@ int main(int argc, char** argv) {
     if (c == 27)
       break;
   }
-  cv::destroyWindow(window_name);
+  cv::destroyAllWindows();
   return 0;
 }

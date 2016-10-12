@@ -26,14 +26,13 @@ FrameProcessor::FrameProcessor(std::shared_ptr<deadeye::Config> config) {
 
 FrameProcessor::~FrameProcessor() {}
 
-std::shared_ptr<std::vector<cv::Point>> FrameProcessor::TargetContour(
-    const cv::Mat& frame) {
+std::vector<cv::Point> FrameProcessor::TargetContour(const cv::Mat& frame) {
   auto console = spd::get("console");
 
   // TODO: get rid of extra matrix variables
-  // TODO: do this in HSV
   // TODO: get rid of morph. closing
-  cv::inRange(frame, lower_, upper_, in_range_frame);
+  cv::cvtColor(frame, hsv_frame, CV_BGR2HSV);
+  cv::inRange(hsv_frame, lower_, upper_, in_range_frame);
   cv::dilate(in_range_frame, dilated_frame, cv::Mat(), cv::Point(-1, -1), 2, 1,
              1);
   cv::erode(dilated_frame, eroded_frame, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
@@ -65,15 +64,13 @@ std::shared_ptr<std::vector<cv::Point>> FrameProcessor::TargetContour(
                  best_size);
 
   if (best_index == -1) {
-    return nullptr;
+    return {};
   }
 
   if (cv::arcLength(contours[best_index], true) < 250) {
-    return nullptr;
+    return {};
   }
 
-  return nullptr;
-  // FIXME: crasher
-  // return std::shared_ptr<std::vector<cv::Point>>(&contours[best_index]);
+  return contours[best_index];
 }
 } /* deadeye */
