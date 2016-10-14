@@ -8,7 +8,8 @@
 
 namespace spd = spdlog;
 
-const char* window_name = "Deadeye";
+const char* frame_window = "Captured Frame";
+const char* mask_window = "Mask";
 
 int main(int argc, char** argv) {
   auto console = spd::stdout_logger_st("console", true);
@@ -23,24 +24,27 @@ int main(int argc, char** argv) {
     return 1;
   }
 
-  std::unique_ptr<deadeye::Camera> camera(new deadeye::Camera(config));
   std::unique_ptr<deadeye::Deadeye> deadeye(new deadeye::Deadeye(config));
-
-  namedWindow(window_name, cv::WINDOW_AUTOSIZE);
+  cv::namedWindow(frame_window, cv::WINDOW_AUTOSIZE);
+  cv::moveWindow(frame_window, 0, 0);
+  cv::namedWindow(mask_window, cv::WINDOW_AUTOSIZE);
+  cv::moveWindow(mask_window, 640, 0);
   console->info("Press <ESC> to exit.");
 
-  for (;;) {
-    cv::Mat frame;
-    camera->Read(frame);
+  deadeye->SetFrameCallback([](const cv::Mat& frame) -> bool {
+    cv::imshow(frame_window, frame);
+    auto c = (char)cv::waitKey(1);
+    return c == 27;
+  });
 
-    deadeye->TargetContour(frame);
+  deadeye->SetMaskCallback([](const cv::Mat& mask) -> bool {
+    cv::imshow(mask_window, mask);
+    auto c = (char)cv::waitKey(1);
+    return c == 27;
+  });
 
-    cv::imshow(window_name, deadeye->dilated_frame);
+  deadeye->Start();
 
-    auto c = (char)cvWaitKey(1);
-    if (c == 27)
-      break;
-  }
   cv::destroyAllWindows();
   return 0;
 }

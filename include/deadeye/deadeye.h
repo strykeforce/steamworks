@@ -18,10 +18,14 @@ struct AimPoint {
 };
 
 class Deadeye {
+ public:
+  typedef std::function<bool(const cv::Mat& img)> ImageCallbackFunc;
+
  private:
   std::unique_ptr<deadeye::Robot> robot_;
   std::unique_ptr<deadeye::Camera> camera_;
   cv::Scalar upper_, lower_;
+  cv::Mat hsv_frame_, in_range_frame_, dilated_frame_, eroded_frame_;
 
   std::unique_ptr<BottomCorners> FindBottomCorners(
       const std::vector<cv::Point>& target_contour);
@@ -29,15 +33,17 @@ class Deadeye {
   std::unique_ptr<AimPoint> FindAimPoint(
       std::unique_ptr<BottomCorners> corners);
 
+  ImageCallbackFunc frameCallback_, maskCallback_;
+
  public:
-  // note: these are only useful for development and debugging
-  cv::Mat hsv_frame, in_range_frame, dilated_frame, eroded_frame;
 
   Deadeye(std::shared_ptr<deadeye::Config> config);
   virtual ~Deadeye();
   std::vector<cv::Point> TargetContour(const cv::Mat& frame);
   void Start();
   void Stop();
+  void SetFrameCallback(ImageCallbackFunc func);
+  void SetMaskCallback(ImageCallbackFunc func);
 };
 } /* deadeye */
 

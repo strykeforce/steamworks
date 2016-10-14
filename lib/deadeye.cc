@@ -30,7 +30,18 @@ Deadeye::Deadeye(std::shared_ptr<deadeye::Config> config) {
   camera_ = std::unique_ptr<deadeye::Camera>(new deadeye::Camera(config));
 }
 
-Deadeye::~Deadeye() {}
+Deadeye::~Deadeye() {
+  spd::get("console")->debug("Releasing camera.");
+  camera_.release();
+}
+
+void Deadeye::SetFrameCallback(ImageCallbackFunc func) {
+  frameCallback_ = func;
+}
+
+void Deadeye::SetMaskCallback(ImageCallbackFunc func) {
+  maskCallback_ = func;
+}
 
 void Deadeye::Start() {
   auto console = spd::get("console");
@@ -38,7 +49,20 @@ void Deadeye::Start() {
     cv::Mat frame;
     // TODO: check result of Read
     camera_->Read(frame);
+
+    if (frameCallback_) {
+      if (frameCallback_(frame)) {  // returns true to quit
+        break;
+      }
+    }
+
     auto target_contour = TargetContour(frame);
+
+    if (maskCallback_) {
+      if (maskCallback_(eroded_frame_)) {  // returns true to quit
+        break;
+      }
+    }
 
     if (target_contour.empty()) {
       robot_->NoTarget();
@@ -56,13 +80,14 @@ std::vector<cv::Point> Deadeye::TargetContour(const cv::Mat& frame) {
 
   // TODO: get rid of extra matrix variables
   // TODO: get rid of morph. closing
-  cv::cvtColor(frame, hsv_frame, CV_BGR2HSV);
-  cv::inRange(hsv_frame, lower_, upper_, in_range_frame);
-  cv::dilate(in_range_frame, dilated_frame, cv::Mat(), cv::Point(-1, -1), 2, 1,
-             1);
-  cv::erode(dilated_frame, eroded_frame, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
+  cv::cvtColor(frame, hsv_frame_, CV_BGR2HSV);
+  cv::inRange(hsv_frame_, lower_, upper_, in_range_frame_);
+  cv::dilate(in_range_frame_, dilated_frame_, cv::Mat(), cv::Point(-1, -1), 2,
+             1, 1);
+  cv::erode(dilated_frame_, eroded_frame_, cv::Mat(), cv::Point(-1, -1), 1, 1,
+            1);
   std::vector<std::vector<cv::Point>> contours;
-  cv::findContours(eroded_frame.clone(), contours, CV_RETR_LIST,
+  cv::findContours(eroded_frame_.clone(), contours, CV_RETR_LIST,
                    CV_CHAIN_APPROX_SIMPLE);
   console->debug("counts.size() == {}", contours.size());
   int best_index = -1;
