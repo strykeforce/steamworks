@@ -24,9 +24,11 @@ class Deadeye {
  private:
   std::unique_ptr<deadeye::Robot> robot_;
   std::unique_ptr<deadeye::Camera> camera_;
+  cv::Size blur_size_;
   cv::Scalar upper_, lower_;
-  int min_perimeter_;
   cv::Mat mask_;
+  bool is_closing_;
+  int min_perimeter_;
 
   std::unique_ptr<BottomCorners> FindBottomCorners(
       const std::vector<cv::Point>& target_contour);

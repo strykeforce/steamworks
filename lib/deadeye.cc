@@ -17,6 +17,9 @@ Deadeye::Deadeye(std::shared_ptr<deadeye::Config> config) {
   auto target = config->GetTable("target");
 
   // TODO: validate returned parameters
+  auto blur_size = target->get_array_of<int64_t>("blur_size");
+  blur_size_ = cv::Size{(int)(*blur_size)[0], (int)(*blur_size)[1]};
+
   auto hsv_l = target->get_array_of<int64_t>("hsv_lower");
   auto hsv_u = target->get_array_of<int64_t>("hsv_upper");
 
@@ -24,9 +27,16 @@ Deadeye::Deadeye(std::shared_ptr<deadeye::Config> config) {
   upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);
 
   min_perimeter_ = *target->get_as<int>("min_perimeter");
+  is_closing_ = *target->get_as<bool>("closing");
 
-  console->debug("range_lower = ({}, {}, {})", lower_[0], lower_[1], lower_[2]);
-  console->debug("range_upper = ({}, {}, {})", upper_[0], upper_[1], upper_[2]);
+  console->info("frame: range_lower = ({}, {}, {})", lower_[0], lower_[1],
+                lower_[2]);
+  console->info("frame: range_upper = ({}, {}, {})", upper_[0], upper_[1],
+                upper_[2]);
+  console->info("frame: blur kernel size (w, h) = ({}, {})", blur_size_.width,
+                blur_size_.height);
+  console->info("frame: performing morphological closing: {}", is_closing_);
+  console->info("contour: perimeter threshold = {}", min_perimeter_);
 
   robot_ = std::unique_ptr<deadeye::Robot>(new deadeye::Robot(config));
   camera_ = std::unique_ptr<deadeye::Camera>(new deadeye::Camera(config));
@@ -82,9 +92,12 @@ std::vector<cv::Point> Deadeye::TargetContour(const cv::Mat& frame) {
 
   // TODO: get rid of morph. closing
   cv::cvtColor(frame, frame, CV_BGR2HSV);
+  cv::blur(frame, frame, blur_size_);
   cv::inRange(frame, lower_, upper_, mask_);
-  cv::dilate(mask_, mask_, cv::Mat(), cv::Point(-1, -1), 2, 1, 1);
-  cv::erode(mask_, mask_, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
+  if (is_closing_) {
+    cv::dilate(mask_, mask_, cv::Mat(), cv::Point(-1, -1), 2, 1, 1);
+    cv::erode(mask_, mask_, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
+  }
   std::vector<std::vector<cv::Point>> contours;
   cv::findContours(mask_.clone(), contours, CV_RETR_LIST,
                    CV_CHAIN_APPROX_SIMPLE);
