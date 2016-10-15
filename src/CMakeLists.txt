@@ -17,6 +17,13 @@ set_target_properties(pipeline PROPERTIES
   CXX_EXTENSIONS OFF
   CXX_STANDARD_REQUIRED YES)
 
-install(TARGETS deadeyed pipeline
+add_executable(deadeye-snap snap.cc)
+target_link_libraries(deadeye-snap ${deadeye_linked_libs})
+set_target_properties(deadeye-snap PROPERTIES
+  CXX_STANDARD 11
+  CXX_EXTENSIONS OFF
+  CXX_STANDARD_REQUIRED YES)
+
+install(TARGETS deadeyed pipeline deadeye-snap
   DESTINATION bin
   CONFIGURATIONS Release)
