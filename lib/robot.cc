@@ -22,6 +22,10 @@ namespace deadeye {
 Robot::Robot(std::shared_ptr<deadeye::Config> config) {
   auto console = spd::get("console");
   auto table = config->GetTable("robot");
+  if (!table) {
+    console->info("Robot not configured.");
+    return;
+  }
   auto host = (table->get_as<std::string>("address"))->c_str();
   auto port = (table->get_as<std::string>("port"))->c_str();
   console->info("Robot is at {}:{}", host, port);
@@ -40,9 +44,13 @@ Robot::Robot(std::shared_ptr<deadeye::Config> config) {
   if (fd_ == -1) {
     console->critical(strerror(errno));
   }
+  enabled_ = true;
 }
 
 Robot::~Robot() {
+  if (!enabled_) {
+    return;
+  }
   if (close(fd_) == -1) {
     spd::get("console")->error(strerror(errno));
   }
@@ -50,6 +58,9 @@ Robot::~Robot() {
 }
 
 void Robot::TargetAt(float const center, float const range) {
+  if (!enabled_) {
+    return;
+  }
   float payload[3] = {center, range, 0.0};
   if (sendto(fd_, payload, sizeof(float) * 3, 0, addr_->ai_addr,
              addr_->ai_addrlen) == -1) {
@@ -58,6 +69,9 @@ void Robot::TargetAt(float const center, float const range) {
 }
 
 void Robot::NoTarget() {
+  if (!enabled_) {
+    return;
+  }
   float payload[3] = {0.0, 0.0, 42.0};
   if (sendto(fd_, payload, sizeof(float) * 3, 0, addr_->ai_addr,
              addr_->ai_addrlen) == -1) {

@@ -12,6 +12,7 @@ typedef struct sockaddr_in SocketAddress;
 namespace deadeye {
 class Robot {
  private:
+  bool enabled_ = false;
   std::string host_;
   std::string port_;
   struct addrinfo* addr_ = nullptr;
