@@ -25,6 +25,7 @@ class Deadeye {
   std::unique_ptr<deadeye::Robot> robot_;
   std::unique_ptr<deadeye::Camera> camera_;
   cv::Scalar upper_, lower_;
+  int min_perimeter_;
   cv::Mat hsv_frame_, in_range_frame_, dilated_frame_, eroded_frame_;
 
   std::unique_ptr<BottomCorners> FindBottomCorners(
@@ -36,7 +37,6 @@ class Deadeye {
   ImageCallbackFunc frameCallback_, maskCallback_;
 
  public:
-
   Deadeye(std::shared_ptr<deadeye::Config> config);
   virtual ~Deadeye();
   std::vector<cv::Point> TargetContour(const cv::Mat& frame);
