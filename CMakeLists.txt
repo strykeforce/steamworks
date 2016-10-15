@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.1.0 FATAL_ERROR)
 project(Deadeye CXX)
-set (deadeye_VERSION 0.1.0)
+set (deadeye_VERSION 0.2.0)
 
 configure_file (
   "${PROJECT_SOURCE_DIR}/config/deadeye_config.h.in"
