@@ -58,6 +58,7 @@ void Deadeye::SetMaskCallback(ImageCallbackFunc func) {
 void Deadeye::Start() {
   auto console = spd::get("console");
   for (;;) {
+    double t = (double)cv::getTickCount();
     cv::Mat frame;
     // TODO: check result of Read
     camera_->Read(frame);
@@ -84,6 +85,9 @@ void Deadeye::Start() {
     auto corners = FindBottomCorners(target_contour);
     auto aim = FindAimPoint(std::move(corners));
     robot_->TargetAt(aim->center, aim->dist_inches);
+
+    t = ((double)cv::getTickCount() - t) / cv::getTickFrequency();
+    console->debug("Execution time (s) = {}", t);
   }
 }
 
