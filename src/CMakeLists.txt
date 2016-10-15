@@ -10,9 +10,13 @@ set_target_properties(deadeyed PROPERTIES
   CXX_EXTENSIONS OFF
   CXX_STANDARD_REQUIRED YES)
 
-  add_executable(pipeline pipeline.cc)
-  target_link_libraries(pipeline ${deadeye_linked_libs})
-  set_target_properties(pipeline PROPERTIES
-    CXX_STANDARD 11
-    CXX_EXTENSIONS OFF
-    CXX_STANDARD_REQUIRED YES)
+add_executable(pipeline pipeline.cc)
+target_link_libraries(pipeline ${deadeye_linked_libs})
+set_target_properties(pipeline PROPERTIES
+  CXX_STANDARD 11
+  CXX_EXTENSIONS OFF
+  CXX_STANDARD_REQUIRED YES)
+
+install(TARGETS deadeyed pipeline
+  DESTINATION bin
+  CONFIGURATIONS Release)
