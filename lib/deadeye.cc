@@ -17,8 +17,8 @@ Deadeye::Deadeye(std::shared_ptr<deadeye::Config> config) {
   auto target = config->GetTable("target");
 
   // TODO: validate returned parameters
-  auto hsv_l = target->get_array_of<int64_t>("HSV_lower");
-  auto hsv_u = target->get_array_of<int64_t>("HSV_upper");
+  auto hsv_l = target->get_array_of<int64_t>("hsv_lower");
+  auto hsv_u = target->get_array_of<int64_t>("hsv_upper");
 
   lower_ = cv::Scalar((*hsv_l)[0], (*hsv_l)[1], (*hsv_l)[2]);
   upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);

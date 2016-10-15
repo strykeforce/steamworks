@@ -7,6 +7,6 @@ address = "10.27.67.2"
 port    = "5804"
 
 [target]
-HSV_lower = [65, 105, 0]
-HSV_upper = [125, 105, 0]
+hsv_lower = [65, 105, 0]
+hsv_upper = [125, 105, 0]
 perimeter = 250
