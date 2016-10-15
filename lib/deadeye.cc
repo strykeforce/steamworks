@@ -61,7 +61,7 @@ void Deadeye::Start() {
     auto target_contour = TargetContour(frame);
 
     if (maskCallback_) {
-      if (maskCallback_(eroded_frame_)) {  // returns true to quit
+      if (maskCallback_(mask_)) {  // returns true to quit
         break;
       }
     }
@@ -80,16 +80,13 @@ void Deadeye::Start() {
 std::vector<cv::Point> Deadeye::TargetContour(const cv::Mat& frame) {
   auto console = spd::get("console");
 
-  // TODO: get rid of extra matrix variables
   // TODO: get rid of morph. closing
-  cv::cvtColor(frame, hsv_frame_, CV_BGR2HSV);
-  cv::inRange(hsv_frame_, lower_, upper_, in_range_frame_);
-  cv::dilate(in_range_frame_, dilated_frame_, cv::Mat(), cv::Point(-1, -1), 2,
-             1, 1);
-  cv::erode(dilated_frame_, eroded_frame_, cv::Mat(), cv::Point(-1, -1), 1, 1,
-            1);
+  cv::cvtColor(frame, frame, CV_BGR2HSV);
+  cv::inRange(frame, lower_, upper_, mask_);
+  cv::dilate(mask_, mask_, cv::Mat(), cv::Point(-1, -1), 2, 1, 1);
+  cv::erode(mask_, mask_, cv::Mat(), cv::Point(-1, -1), 1, 1, 1);
   std::vector<std::vector<cv::Point>> contours;
-  cv::findContours(eroded_frame_.clone(), contours, CV_RETR_LIST,
+  cv::findContours(mask_.clone(), contours, CV_RETR_LIST,
                    CV_CHAIN_APPROX_SIMPLE);
   console->debug("counts.size() == {}", contours.size());
   int best_index = -1;
