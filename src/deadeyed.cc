@@ -1,9 +1,8 @@
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
-#include "deadeye_config.h"
-#include "deadeye/config.h"
-#include "deadeye/deadeye.h"
+#include "lib/config.h"
+#include "lib/deadeye.h"
 
 namespace spd = spdlog;
 
@@ -16,7 +15,7 @@ int main(int argc, char** argv) {
     console->critical("Config file error: {}", e.what());
     return 1;
   }
-  console->info("Deadeye version {} is taking aim...", DEADEYE_VERSION);
+  console->info("Deadeye version {} is taking aim...", "0.2.0");
   std::unique_ptr<deadeye::Deadeye> deadeye(new deadeye::Deadeye(config));
   deadeye->Start();
 }

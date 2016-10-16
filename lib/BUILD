@@ -1,3 +1,5 @@
+# Description: core library for deadeye robot vision system
+
 cc_library(
   name = "deadeye-core",
   srcs = glob(["*.cc"]) + ["constants.h"],

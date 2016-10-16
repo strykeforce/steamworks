@@ -1,3 +1,5 @@
+workspace(name = "org_strykeforce_deadeye")
+
 new_local_repository(
   name = "opencv",
   path = "/usr/local/opt/opencv",
