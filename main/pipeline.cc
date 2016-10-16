@@ -1,8 +1,8 @@
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
-#include "lib/config.h"
-#include "lib/deadeye.h"
+#include "deadeye/config.h"
+#include "deadeye/deadeye.h"
 
 namespace spd = spdlog;
 

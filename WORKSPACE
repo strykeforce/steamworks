@@ -6,7 +6,7 @@ new_local_repository(
   build_file_content = """
 cc_library(
     name = "lib",
-    srcs = glob(["lib/*.dylib"]) + glob(["lib/*.so*"]),
+    srcs = glob(["lib/*.dylib"]),
     hdrs = glob(["include/**/*.hpp"]),
     includes = ["include"],
     visibility = ["//visibility:public"],

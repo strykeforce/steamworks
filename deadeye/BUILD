@@ -1,7 +1,7 @@
 # Description: core library for deadeye robot vision system
 
 cc_library(
-  name = "deadeye-core",
+  name = "lib",
   srcs = glob(["*.cc"]) + ["constants.h"],
   hdrs = glob(["*.h"], exclude = ["constants.h"]),
   deps = [
@@ -9,5 +9,6 @@ cc_library(
     "@spdlog//:lib",
     "@cpptoml//:lib",
   ],
-  visibility = ["//src:__pkg__"],
+  visibility = ["//main:__pkg__"],
+  linkstatic = 1,
 )

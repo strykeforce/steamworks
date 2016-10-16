@@ -1,6 +1,6 @@
 # Description: deadeye robot vision system apps
 
-DEADEYE_DEPS = ["@opencv//:lib", "//lib:deadeye-core", "@spdlog//:lib"]
+DEADEYE_DEPS = ["@opencv//:lib", "//deadeye:lib", "@spdlog//:lib"]
 
 cc_binary (
   name = "pipeline",
