@@ -18,6 +18,7 @@ cc_library(
 new_http_archive(
   name = "spdlog",
   url = "https://github.com/gabime/spdlog/archive/v0.11.0.tar.gz",
+  sha256 = "8c0f1810fb6b7d23fef70c2ea8b6fa6768ac8d18d6e0de39be1f48865e22916e",
   strip_prefix = "spdlog-0.11.0",
   build_file_content = """
 cc_library(
