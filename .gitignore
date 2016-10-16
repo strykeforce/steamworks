@@ -6,6 +6,9 @@
 
 # Created by https://www.gitignore.io/api/c++
 
+### Bazel ###
+/bazel-*
+
 ### C++ ###
 # Prerequisites
 *.d

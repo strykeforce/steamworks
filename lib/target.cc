@@ -1,4 +1,4 @@
-#include "deadeye/target.h"
+#include "target.h"
 
 #include <opencv2/opencv.hpp>
 

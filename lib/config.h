@@ -2,7 +2,7 @@
 #define DEADEYE_CONFIG_INC_
 
 #include <opencv2/opencv.hpp>
-#include "cpptoml/cpptoml.h"
+#include "cpptoml.h"
 
 namespace deadeye {
 class Config {
