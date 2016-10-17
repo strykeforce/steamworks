@@ -1,7 +1,7 @@
 workspace(name = "org_strykeforce_deadeye")
 
 new_local_repository(
-  name = "opencv",
+  name = "opencv_darwin",
   path = "/usr/local/opt/opencv",
   build_file_content = """
 cc_library(
@@ -13,6 +13,12 @@ cc_library(
     linkstatic = 1,
 )
 """,
+)
+
+new_local_repository(
+  name = "opencv_jetson_cross",
+  path = "/mnt",
+  build_file = "opencv_jetson_cross.BUILD",
 )
 
 new_http_archive(

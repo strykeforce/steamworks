@@ -1,6 +1,11 @@
 # Description: deadeye robot vision system apps
 
-DEADEYE_DEPS = ["@opencv//:lib", "//deadeye:lib", "@spdlog//:lib"]
+DEADEYE_OPENCV_DEP = select({
+  "//tools/crosstool:jetson_cross_compile": ["@opencv_jetson_cross//:lib"],
+  "//conditions:default": ["@opencv_darwin//:lib"],
+  })
+
+DEADEYE_DEPS = DEADEYE_OPENCV_DEP + ["//deadeye:lib", "@spdlog//:lib"]
 
 cc_binary (
   name = "pipeline",

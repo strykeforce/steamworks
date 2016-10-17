@@ -1,5 +1,10 @@
 package(default_visibility = ["//visibility:public"])
 
+config_setting(
+  name = "jetson_cross_compile",
+  values = {"crosstool_top": "//tools/crosstool:jetson"},
+  )
+
 cc_library(
     name = "malloc",
 )

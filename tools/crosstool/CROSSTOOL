@@ -55,9 +55,12 @@ toolchain {
   cxx_builtin_include_directory: "/usr/local/include"
   cxx_builtin_include_directory: "/usr/lib/gcc-cross/arm-linux-gnueabihf/4.8/include-fixed"
   cxx_builtin_include_directory: "/usr/arm-linux-gnueabihf/include"
+  cxx_builtin_include_directory: "/mnt/usr/include"
 
   linker_flag: "-lstdc++"
-  linker_flag: "-L/usr/arm-linux-gnueabihf/lib"
+#  linker_flag: "-lm"
+#  linker_flag: "-L/mnt/usr/lib"
+#  linker_flag: "-L/mnt/usr/local/cuda/lib"
   linker_flag: "-Wl,--dynamic-linker=/lib/ld-linux-armhf.so.3"
 
   # Anticipated future default.
