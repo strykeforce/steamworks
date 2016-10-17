@@ -5,7 +5,7 @@ DEADEYE_OPENCV_DEP = select({
   "//conditions:default": ["@opencv_darwin//:lib"],
   })
 
-DEADEYE_DEPS = DEADEYE_OPENCV_DEP + ["//deadeye:lib", "@spdlog//:lib"]
+DEADEYE_DEPS = DEADEYE_OPENCV_DEP + ["//deadeye", "@spdlog//:lib"]
 
 cc_binary (
   name = "pipeline",

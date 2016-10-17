@@ -9,7 +9,7 @@ DEADEYE_DEPS = DEADEYE_OPENCV_DEP + ["@spdlog//:lib", "@cpptoml//:lib"]
 
 
 cc_library(
-  name = "lib",
+  name = "deadeye",
   srcs = glob(["*.cc"]) + ["constants.h"],
   hdrs = glob(["*.h"], exclude = ["constants.h"]),
   deps = DEADEYE_DEPS,
