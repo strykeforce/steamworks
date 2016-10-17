@@ -1,0 +1,1 @@
+build:tk1 --crosstool_top=//tools/crosstool:jetson --cpu=armeabi-v7a

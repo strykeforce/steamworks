@@ -19,3 +19,8 @@ cc_binary (
   srcs = ["snap.cc"],
   deps = DEADEYE_DEPS,
 )
+
+cc_binary (
+  name = "hello",
+  srcs = ["hello.cc"],
+)
