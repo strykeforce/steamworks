@@ -1,5 +1,4 @@
 -I/usr/local/opt/opencv/include
 -Ivendor/include
--Ilib
+-Iinclude
 -Ibuild
--I.

@@ -4,7 +4,7 @@
 #include <netdb.h>
 #include <string>
 
-#include "config.h"
+#include "deadeye/config.h"
 
 typedef int UDPSocket;
 typedef struct sockaddr_in SocketAddress;

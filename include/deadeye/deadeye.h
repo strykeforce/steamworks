@@ -4,9 +4,9 @@
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
-#include "camera.h"
-#include "config.h"
-#include "robot.h"
+#include "deadeye/camera.h"
+#include "deadeye/config.h"
+#include "deadeye/robot.h"
 
 namespace deadeye {
 struct BottomCorners {

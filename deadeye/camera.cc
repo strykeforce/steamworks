@@ -1,12 +1,12 @@
-#include "camera.h"
+#include "deadeye/camera.h"
 
 #include <unistd.h>
 
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
-#include "config.h"
-#include "constants.h"
+#include "deadeye/config.h"
+#include "deadeye/constants.h"
 
 namespace spd = spdlog;
 

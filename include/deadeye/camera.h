@@ -3,7 +3,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include "config.h"
+#include "deadeye/config.h"
 
 namespace deadeye {
 class Camera {

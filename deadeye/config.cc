@@ -1,9 +1,9 @@
-#include "config.h"
+#include "deadeye/config.h"
 
 #include <sys/stat.h>
 
 #include <opencv2/opencv.hpp>
-#include "cpptoml.h"
+#include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
 namespace spd = spdlog;

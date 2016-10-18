@@ -1,12 +1,12 @@
-#include "deadeye.h"
+#include "deadeye/deadeye.h"
 
 #include <opencv2/opencv.hpp>
 #include "spdlog/spdlog.h"
 
-#include "camera.h"
-#include "config.h"
-#include "robot.h"
-#include "target.h"
+#include "deadeye/camera.h"
+#include "deadeye/config.h"
+#include "deadeye/robot.h"
+#include "deadeye/target.h"
 
 namespace spd = spdlog;
 
