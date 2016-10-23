@@ -12,3 +12,6 @@ add_subdirectory(vendor)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(main)
 add_subdirectory(deadeye)
+
+enable_testing(true)
+add_subdirectory(test)

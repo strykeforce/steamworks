@@ -9,28 +9,25 @@
 namespace spd = spdlog;
 
 namespace deadeye {
-bool file_exists(const char* path) {
+bool file_exists(const std::string path) {
   struct stat buf;
-  return (stat(path, &buf) == 0);
+  return (stat(path.c_str(), &buf) == 0);
+}
+
+Config::Config(std::string path) {
+  if (!file_exists(path)) {
+    throw std::runtime_error("config file not found.");
+  }
+  config_ = cpptoml::parse_file(path);
+
+  ConfigureLogger();
 }
 
 Config::Config(int argc, char** argv) {
   if (argc < 2) {
     throw std::runtime_error("must specify config file as argument.");
   }
-
-  auto path = argv[1];
-
-  if (!file_exists(path)) {
-    throw std::runtime_error("config file not found.");
-  }
-  try {
-    config_ = cpptoml::parse_file(path);
-  } catch (const cpptoml::parse_exception& e) {
-    throw std::runtime_error(e.what());
-  }
-
-  ConfigureLogger();
+  Config(std::string(argv[1]));
 }
 
 std::shared_ptr<cpptoml::table> Config::GetTable(const std::string& table) {
@@ -38,8 +35,11 @@ std::shared_ptr<cpptoml::table> Config::GetTable(const std::string& table) {
 }
 
 void Config::ConfigureLogger() {
-  auto level = config_->get_qualified_as<std::string>("logging.level");
   auto console = spd::get("console");
+  if (!console) {
+    return;
+  }
+  auto level = config_->get_qualified_as<std::string>("logging.level");
   if (level->compare("trace") == 0) {
     console->set_level(spdlog::level::trace);
   } else if (level->compare("debug") == 0) {

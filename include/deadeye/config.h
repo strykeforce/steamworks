@@ -9,10 +9,9 @@ class Config {
  private:
   std::shared_ptr<cpptoml::table> config_;
   void ConfigureLogger();
-  void ConfigureRobot();
-  void ConfigureColor();
 
  public:
+  Config(std::string path);
   Config(int argc, char** argv);
   virtual ~Config();
   std::shared_ptr<cpptoml::table> GetTable(const std::string& table);

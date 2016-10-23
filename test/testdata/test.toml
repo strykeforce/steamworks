@@ -1,0 +1,19 @@
+# deadeye configuration
+[logging]
+level = "info"
+
+[camera]
+# comment out the exposure to prevent setting
+exposure = 10
+
+# comment out the the robot table to disable robot comms
+[robot]
+address = "127.0.0.1"
+port    = "5804"
+
+[target]
+hsv_lower     = [86, 100, 100]
+hsv_upper     = [96, 255, 255]
+blur_size     = [3, 3]
+min_perimeter = 250
+closing       = true
