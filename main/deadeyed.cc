@@ -7,7 +7,7 @@
 namespace spd = spdlog;
 
 int main(int argc, char** argv) {
-  auto console = spd::stdout_logger_st("console", true);
+  auto console = spd::stdout_logger_st("console");
   std::shared_ptr<deadeye::Config> config;
   try {
     config = std::make_shared<deadeye::Config>(argc, argv);

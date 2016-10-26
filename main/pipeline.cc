@@ -10,7 +10,7 @@ const char* frame_window = "Captured Frame";
 const char* mask_window = "Mask";
 
 int main(int argc, char** argv) {
-  auto console = spd::stdout_logger_st("console", true);
+  auto console = spd::stdout_logger_st("console");
   // TODO: look at factory method for config, try/catch is clumsy
   std::shared_ptr<deadeye::Config> config;
 
