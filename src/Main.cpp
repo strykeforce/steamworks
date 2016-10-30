@@ -255,6 +255,11 @@ void SetStatusFrameRates_Q() {
 			CANTalon::StatusFrameRate::StatusFrameRateQuadEncoder,
 			set);
 	)
+  ForEveryUsingTalon(
+		SetStatusFrameRateMs(
+			CANTalon::StatusFrameRate::StatusFrameRatePulseWidthMeas,
+			set);
+	)
 }
 void SetStatusFrameRates_A() {
 	int set = static_cast<int>(query("New Frame Rate (Milliseconds)"));
