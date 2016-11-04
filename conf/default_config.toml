@@ -1,0 +1,46 @@
+# feedback device
+# quad         = 0
+# analog pot   = 2
+# analog enc   = 3
+# enc rising   = 4
+# enc falling  = 5
+# mag_relative = 6
+# mag_absolute = 7
+# pulse_width  = 8
+
+# neutral mode
+# jumper = 0
+# brake = 1
+# coast = 2
+
+# limit mode
+# only use switches for limits             = 0
+# use both switches and soft limits        = 1
+# disable switches and disable soft limits = 2
+[SIDEWINDER.AZIMUTH]
+feedback_device = 7
+neutral_mode    = 2
+limit_mode      = 2
+
+P      =   12.0
+I      =    0.0
+D      =  200.0
+F      =    0.0
+I_zone =      0
+
+voltage_ramp_rate           =  0.0 # v/s, 0 disables
+close_loop_ramp_rate        =  0.0 # v/s, 0 disables
+peak_output_voltage_forward =  9.0 # v
+peak_output_voltage_reverse = -9.0 # v
+nominal_forward =              0.0
+nominal_reverse =              0.0
+allowable_closed_loop_error =    0 # native units, mA for current
+encoder_reversed      = false
+output_reversed       = false
+
+# [SIDEWINDER.AZIMUTH.LEFT]
+# encoder_reversed      = true
+# output_reversed       = false
+# [SIDEWINDER.AZIMUTH.RIGHT]
+# left_encoder_reversed       = false
+# left_output_reversed        = false
