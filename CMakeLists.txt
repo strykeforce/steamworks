@@ -30,7 +30,6 @@ link_directories(
   "${WPI_LIBS}/lib"
 )
 
-
 # add_subdirectory(vendor/tools)
 add_subdirectory(src)
 add_subdirectory(examples)

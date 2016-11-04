@@ -1,2 +1,3 @@
-# add_subdirectory(sidewinder)
-add_subdirectory(talon)
+add_library(sidewinder "")
+
+include(talon/CMakeLists.txt)
