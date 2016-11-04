@@ -272,10 +272,10 @@ void GetTalonRegistors() {
 	#define logrow(_string_, _func_)\
 		printf("%s", _string_);\
 		ForEveryUsingTalonMUTI(printf("%f\t", Talon->_func_););\
-		printf("\n");\
-		printf("TalonID:   ");
+		printf("\n");
+		// printf("TalonID:   ");
 
-	ForEveryUsingTalonMUTI(printf("%8i\t", TalonID););
+	ForEveryUsingTalonMUTI(printf("Talon ID: %8i\t", TalonID););
 	printf("\n");
 	logrow("P:         ", GetP())
 	logrow("I:         ", GetI())
@@ -456,8 +456,8 @@ void SetStatusFrameRates() {
 
 void Set() {
 	char* FunctionNames[] = {
+    "Control Mode",
 		"P", "I", "D" , "F", "I Zone",
-		"Control Mode",
 		"Forward Peak Closed Loop Output",
 		"Reverse Peak Closed Loop Output",
 		"Forward Nominal Closed Loop Output",
@@ -478,8 +478,8 @@ void Set() {
 		"Status Frame Rates"
 	};
 	VoidFunction FunctionPointers[] = {
+    SetControlMode,
 		SetP, SetI, SetD, SetF, SetIzone,
-		SetControlMode,
 		SetPeakCloseLoopOutForward,
 		SetPeakCloseLoopOutReverse,
 		SetNominalCloseOutForward,
@@ -503,7 +503,7 @@ void Set() {
 }
 void Get() {
 	char* FunctionNames[] =	{
-		"All Talon Registors",
+		"All Talon Registers",
 		"DIO Pin",
 	};
 	VoidFunction FunctionPointers[] = {
