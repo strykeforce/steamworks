@@ -1,4 +1,5 @@
 /build
+/.vagrant
 
 # Created by https://www.gitignore.io/api/cmake,c++,osx
 
