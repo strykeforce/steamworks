@@ -2,18 +2,28 @@
 
 #include "WPILib.h"
 
+#include "sidewinder/talon_map.h"
+
 namespace sidewinder {
 
 class RobotMap {
  public:
+  // device ids for swerve drive talons
   enum Talons {
-    kLeftFrontDrive = 11,
-    kLeftFrontAzimuth = 1,
+    kRightFrontAzimuth = 1,
+    kRightFrontDrive = 11,
+    kLeftFrontAzimuth = 2,
+    kLeftFrontDrive = 12,
+    kRightRearAzimuth = 3,
+    kRightRearDrive = 13,
+    kLeftRearAzimuth = 4,
+    kLeftRearDrive = 14,
   };
 
-  static ::CANTalon* lf_drive_talon;
-  static ::CANTalon* lf_azimuth_talon;
+  // pointers to talons and azimuth encoder zero count
+  static TalonMap* swerve_talons;
 
+  // instantiate talons and read encoder zero count
   static void Init();
 };
 

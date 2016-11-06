@@ -17,5 +17,11 @@ void VoltageTalon::SetMode(::CANTalon* talon) const {
   talon->SetControlMode(::CANTalon::ControlMode::kVoltage);
   Talon::SetMode(talon);
 }
+
+void VoltageTalon::LogConfig(
+    const std::shared_ptr<spdlog::logger> logger) const {
+  logger->debug("control mode = voltage");
+  Talon::LogConfig(logger);
+}
 } /* talon */
 } /* sidewinder */

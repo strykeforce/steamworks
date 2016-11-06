@@ -18,7 +18,12 @@
 # use both switches and soft limits        = 1
 # disable switches and disable soft limits = 2
 [SIDEWINDER.AZIMUTH]
-feedback_device = 7
+lf_zero = 1030
+rf_zero = 1027
+lr_zero = 1032
+rr_zero = 1002
+
+feedback_device = 6
 neutral_mode    = 2
 limit_mode      = 2
 
@@ -28,15 +33,15 @@ D      =  200.0
 F      =    0.0
 I_zone =      0
 
-voltage_ramp_rate           =  0.0 # v/s, 0 disables
-close_loop_ramp_rate        =  0.0 # v/s, 0 disables
-peak_output_voltage_forward =  9.0 # v
-peak_output_voltage_reverse = -9.0 # v
-nominal_forward =              0.0
-nominal_reverse =              0.0
-allowable_closed_loop_error =    0 # native units, mA for current
-encoder_reversed      = false
-output_reversed       = false
+voltage_ramp_rate              =  0.0 # v/s, 0 disables
+close_loop_ramp_rate           =  0.0 # v/s, 0 disables
+peak_output_voltage_forward    =  9.0 # v
+peak_output_voltage_reverse    = -9.0 # v
+nominal_output_voltage_forward =  0.0
+nominal_output_voltage_reverse =  0.0
+allowable_closed_loop_error    =    0 # native units, mA for current
+encoder_reversed = false
+output_reversed  = false
 
 # [SIDEWINDER.AZIMUTH.LEFT]
 # encoder_reversed      = true

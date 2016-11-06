@@ -2,10 +2,11 @@
 
 #include "WPILib.h"
 
+#include "sidewinder/talon_map.h"
+
 namespace sidewinder {
 
-::CANTalon* RobotMap::lf_drive_talon = nullptr;
-::CANTalon* RobotMap::lf_azimuth_talon = nullptr;
+TalonMap* RobotMap::swerve_talons = new TalonMap();
 
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.
@@ -13,8 +14,17 @@ namespace sidewinder {
  * reference to each.
  */
 void RobotMap::Init() {
-  lf_drive_talon = new ::CANTalon(Talons::kLeftFrontDrive);
-  lf_azimuth_talon = new ::CANTalon(Talons::kLeftFrontAzimuth);
+  swerve_talons->lf_drive = new ::CANTalon(Talons::kLeftFrontDrive);
+  swerve_talons->lf_azimuth = new ::CANTalon(Talons::kLeftFrontAzimuth);
+
+  swerve_talons->rf_drive = new ::CANTalon(Talons::kRightFrontDrive);
+  swerve_talons->rf_azimuth = new ::CANTalon(Talons::kRightFrontAzimuth);
+
+  swerve_talons->lr_drive = new ::CANTalon(Talons::kLeftRearDrive);
+  swerve_talons->lr_azimuth = new ::CANTalon(Talons::kLeftRearAzimuth);
+
+  swerve_talons->rr_drive = new ::CANTalon(Talons::kRightRearDrive);
+  swerve_talons->rr_azimuth = new ::CANTalon(Talons::kRightRearAzimuth);
 }
 
 } /* sidewinder */

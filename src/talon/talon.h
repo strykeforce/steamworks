@@ -17,16 +17,11 @@ class Talon {
   bool output_reversed_;
 
  public:
-  //  double p, i, d, f;
-  //  uint32_t i_zone, allowable_closed_loop_error;
-  //  double close_loop_ramp_rate, peak_output_voltage_forward,
-  //      peak_output_voltage_reverse;
-
   Talon(const std::shared_ptr<cpptoml::table> config);
   virtual ~Talon();
   virtual void Configure(::CANTalon* talon) const;
   virtual void SetMode(::CANTalon* talon) const;
-  virtual void DumpToLog(const std::shared_ptr<spdlog::logger> logger) const;
+  virtual void LogConfig(const std::shared_ptr<spdlog::logger> logger) const;
 };
 
 } /* talon */

@@ -4,15 +4,15 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "talon.h"
+#include "pid_talon.h"
 
 namespace sidewinder {
 namespace talon {
 
-class VoltageTalon : public Talon {
+class PositionTalon : public PIDTalon {
  public:
-  VoltageTalon(const std::shared_ptr<cpptoml::table> config);
-  virtual ~VoltageTalon();
+  PositionTalon(const std::shared_ptr<cpptoml::table> config);
+  virtual ~PositionTalon();
   virtual void SetMode(::CANTalon* talon) const override;
   virtual void LogConfig(
       const std::shared_ptr<spdlog::logger> logger) const override;

@@ -37,11 +37,11 @@ void Talon::SetMode(::CANTalon* talon) const {
   talon->SetVoltageRampRate(voltage_ramp_rate_);
 }
 
-void Talon::DumpToLog(const std::shared_ptr<spdlog::logger> logger) const {
+void Talon::LogConfig(const std::shared_ptr<spdlog::logger> logger) const {
   logger->debug("feedback_device = {}", feedback_device_);
   logger->debug("neutral_mode = {}", neutral_mode_);
   logger->debug("limit_mode = {}", limit_mode_);
-  logger->debug("voltage_ramp_rate = {}", voltage_ramp_rate_);
+  logger->debug("voltage_ramp_rate = {} v/sec", voltage_ramp_rate_);
   logger->debug("encoder_reversed = {}", encoder_reversed_);
   logger->debug("output_reversed = {}", output_reversed_);
 }

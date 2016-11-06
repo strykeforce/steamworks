@@ -5,23 +5,21 @@
 #include "spdlog/spdlog.h"
 
 // #include "oi.h"
-// #include "subsystems/tank_drive.h"
+#include "sidewinder/swerve_drive.h"
 
 namespace sidewinder {
 
 class Robot : public ::IterativeRobot {
  private:
-  static const std::string config_path_;
-
   const std::shared_ptr<spdlog::logger> logger_;
   std::shared_ptr<cpptoml::table> config_;
 
-  void LogVersion();
   void LoadConfig();
+  void LogAbsoluteEncoders();
 
  public:
   // static const OI* oi;
-  // static subsystem::TankDrive* tank_drive;
+  static SwerveDrive* swerve_drive;
 
   Robot();
 
