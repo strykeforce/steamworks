@@ -11,6 +11,7 @@
 
 namespace sidewinder {
 
+OI* Robot::oi = nullptr;
 SwerveDrive* Robot::swerve_drive = nullptr;
 
 Robot::Robot()
@@ -22,8 +23,9 @@ void Robot::RobotInit() {
   LoadConfig();
   RobotMap::Init();
   LogAbsoluteEncoders();
+  oi = new OI(config_);
   swerve_drive = new SwerveDrive(config_->get_table("SIDEWINDER"),
-                                 RobotMap::swerve_talons);
+                                 RobotMap::swerve_talons, oi);
 }
 
 void Robot::DisabledInit() { logger_->trace("DisabledInit"); }

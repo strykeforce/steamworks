@@ -4,7 +4,7 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-// #include "oi.h"
+#include "sidewinder/oi.h"
 #include "sidewinder/swerve_drive.h"
 
 namespace sidewinder {
@@ -18,7 +18,7 @@ class Robot : public ::IterativeRobot {
   void LogAbsoluteEncoders();
 
  public:
-  // static const OI* oi;
+  static OI* oi;
   static SwerveDrive* swerve_drive;
 
   Robot();

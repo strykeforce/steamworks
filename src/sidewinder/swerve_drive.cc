@@ -5,16 +5,27 @@
 
 #include "talon/position_talon.h"
 #include "talon_map.h"
+#include "tele_drive.h"
 
 namespace sidewinder {
 
-void SwerveDrive::InitDefaultCommand() {}
+/** Initialize the Sidewinder tele drive command.
+ */
+void SwerveDrive::InitDefaultCommand() {
+  SetDefaultCommand(new TeleDrive(oi_, this));
+}
 
+/** Initialize the Sidewinder SwerveDrive.
+ * @param config cpptoml SIDEWINDER table
+ * @param tm talon map initialized with pointers to drive talons
+ * @oi sidewinder-specific operator input
+ */
 SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
-                         const TalonMap* tm)
+                         const TalonMap* tm, const OI* oi)
     : Subsystem("SwerveDrive"),
       logger_(spdlog::stdout_color_st(GetName())),
-      map_(tm) {
+      map_(tm),
+      oi_(oi) {
   logger_->set_level(spdlog::level::trace);
   logger_->trace("starting constructor");
 
@@ -46,31 +57,33 @@ void SwerveDrive::SetEncoderZero(const std::shared_ptr<cpptoml::table> config) {
   // int abs_pos = (talon->GetPulseWidthPosition() & 0xFFF) + 0xFFF;
   logger_->trace("setting azimuth zero");
 
-  auto pos = map_->lf_azimuth->GetPulseWidthPosition() -
-                 *config->get_as<int>("lf_zero") &
+  auto pos = (map_->lf_azimuth->GetPulseWidthPosition() -
+                 *config->get_as<int>("lf_zero")) &
              0xFFF;
   map_->lf_azimuth->SetEncPosition(pos);
   logger_->debug("set left front azimuth position = {}", pos);
 
-  pos = map_->rf_azimuth->GetPulseWidthPosition() -
-            *config->get_as<int>("rf_zero") &
+  pos = (map_->rf_azimuth->GetPulseWidthPosition() -
+            *config->get_as<int>("rf_zero")) &
         0xFFF;
   map_->rf_azimuth->SetEncPosition(pos);
   logger_->debug("set right front azimuth position = {}", pos);
 
-  pos = map_->lr_azimuth->GetPulseWidthPosition() -
-            *config->get_as<int>("lr_zero") &
+  pos = (map_->lr_azimuth->GetPulseWidthPosition() -
+            *config->get_as<int>("lr_zero")) &
         0xFFF;
   map_->lr_azimuth->SetEncPosition(pos);
   logger_->debug("set left rear azimuth position = {}", pos);
 
-  pos = map_->rr_azimuth->GetPulseWidthPosition() -
-            *config->get_as<int>("rr_zero") &
+  pos = (map_->rr_azimuth->GetPulseWidthPosition() -
+         *config->get_as<int>("rr_zero")) &
         0xFFF;
   map_->rr_azimuth->SetEncPosition(pos);
   logger_->debug("set right rear azimuth position = {}", pos);
 }
 
+/** Move all wheels to their home position.
+ */
 void SwerveDrive::ZeroAzimuth() {
   map_->lf_azimuth->Set(0.0);
   map_->rf_azimuth->Set(0.0);
@@ -78,8 +91,12 @@ void SwerveDrive::ZeroAzimuth() {
   map_->rr_azimuth->Set(0.0);
 }
 
-void SwerveDrive::CrabDrive(float forward, float azimuth) {
-  logger_->debug("crab driving forward = {}, azimith = {}", forward, azimuth);
+/** Drive in crab drive mode.
+ * @param forward command forward/backwards (Y-axis) motion
+ * @param strafe command left/right (X-axis) motion
+ */
+void SwerveDrive::CrabDrive(float forward, float strafe) {
+  logger_->debug("crab driving forward = {}, azimith = {}", forward, strafe);
 }
 
 } /* sidewinder */
