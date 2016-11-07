@@ -78,22 +78,22 @@ void SwerveDrive::SetEncoderZero(const std::shared_ptr<cpptoml::table> config) {
 
   auto pos = (map_->lf_azimuth->GetPulseWidthPosition() & 0xFFF) -
              *config->get_as<int>("lf_zero");
-  map_->lf_azimuth->SetEncPosition(pos);
+  map_->lf_azimuth->SetPosition(pos);
   logger_->debug("set left front azimuth position = {}", pos);
 
   pos = (map_->rf_azimuth->GetPulseWidthPosition() & 0xFFF) -
         *config->get_as<int>("rf_zero");
-  map_->rf_azimuth->SetEncPosition(pos);
+  map_->rf_azimuth->SetPosition(pos);
   logger_->debug("set right front azimuth position = {}", pos);
 
   pos = (map_->lr_azimuth->GetPulseWidthPosition() & 0xFFF) -
         *config->get_as<int>("lr_zero");
-  map_->lr_azimuth->SetEncPosition(pos);
+  map_->lr_azimuth->SetPosition(pos);
   logger_->debug("set left rear azimuth position = {}", pos);
 
   pos = (map_->rr_azimuth->GetPulseWidthPosition() & 0xFFF) -
         *config->get_as<int>("rr_zero");
-  map_->rr_azimuth->SetEncPosition(pos);
+  map_->rr_azimuth->SetPosition(pos);
   logger_->debug("set right rear azimuth position = {}", pos);
 }
 
