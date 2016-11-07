@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.2)
 project(Sidewinder)
 
+set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
+set(CMAKE_INSTALL_PREFIX /opt/sidewinder CACHE PATH "Sidewinder installation directory." FORCE)
+
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 1)
 set(VERSION_PATCH 0)
@@ -17,7 +20,6 @@ set(CMAKE_STRIP        /usr/bin/arm-frc-linux-gnueabi-strip)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -fstrict-aliasing -std=c++1y")
 
-set(WPI_LIBS /opt/wpilib)
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 
