@@ -4,6 +4,7 @@
 #include "cpptoml/cpptoml.h"
 
 #include "talon/position_talon.h"
+#include "talon/voltage_talon.h"
 #include "talon_map.h"
 #include "tele_drive.h"
 
@@ -29,13 +30,13 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   logger_->set_level(spdlog::level::trace);
   logger_->trace("starting constructor");
 
+  logger_->trace("configuring azimuth talons in position mode");
   auto azimuth_cfg_data = config->get_table("AZIMUTH");
   assert(azimuth_cfg_data);
   auto azimuth_talon_cfg = talon::PositionTalon(azimuth_cfg_data);
   logger_->debug("dumping azimuth talon configuration");
   azimuth_talon_cfg.LogConfig(logger_);
 
-  logger_->trace("configuring talons");
   azimuth_talon_cfg.Configure(map_->lf_azimuth);
   azimuth_talon_cfg.SetMode(map_->lf_azimuth);
   azimuth_talon_cfg.Configure(map_->rf_azimuth);
@@ -47,6 +48,24 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
 
   SetEncoderZero(azimuth_cfg_data);
 
+  logger_->trace("configuring drive talons in voltage mode");
+  auto drive_cfg_data = config->get_table("DRIVE");
+  assert(drive_cfg_data);
+  auto drive_talon_cfg = talon::VoltageTalon(drive_cfg_data);
+  logger_->debug("dumping drive talon configuration");
+  drive_talon_cfg.LogConfig(logger_);
+
+  drive_talon_cfg.Configure(map_->lf_drive);
+  drive_talon_cfg.SetMode(map_->lf_drive);
+  drive_talon_cfg.Configure(map_->rf_drive);
+  drive_talon_cfg.SetMode(map_->rf_drive);
+  drive_talon_cfg.Configure(map_->lr_drive);
+  drive_talon_cfg.SetMode(map_->lr_drive);
+  drive_talon_cfg.Configure(map_->rr_drive);
+  drive_talon_cfg.SetMode(map_->rr_drive);
+
+  max_voltage_ =
+      static_cast<float>(*drive_cfg_data->get_as<double>("max_voltage"));
   logger_->trace("done with constructor");
 }
 
@@ -58,19 +77,19 @@ void SwerveDrive::SetEncoderZero(const std::shared_ptr<cpptoml::table> config) {
   logger_->trace("setting azimuth zero");
 
   auto pos = (map_->lf_azimuth->GetPulseWidthPosition() -
-                 *config->get_as<int>("lf_zero")) &
+              *config->get_as<int>("lf_zero")) &
              0xFFF;
   map_->lf_azimuth->SetEncPosition(pos);
   logger_->debug("set left front azimuth position = {}", pos);
 
   pos = (map_->rf_azimuth->GetPulseWidthPosition() -
-            *config->get_as<int>("rf_zero")) &
+         *config->get_as<int>("rf_zero")) &
         0xFFF;
   map_->rf_azimuth->SetEncPosition(pos);
   logger_->debug("set right front azimuth position = {}", pos);
 
   pos = (map_->lr_azimuth->GetPulseWidthPosition() -
-            *config->get_as<int>("lr_zero")) &
+         *config->get_as<int>("lr_zero")) &
         0xFFF;
   map_->lr_azimuth->SetEncPosition(pos);
   logger_->debug("set left rear azimuth position = {}", pos);
@@ -96,7 +115,20 @@ void SwerveDrive::ZeroAzimuth() {
  * @param strafe command left/right (X-axis) motion
  */
 void SwerveDrive::CrabDrive(float forward, float strafe) {
-  logger_->debug("crab driving forward = {}, azimith = {}", forward, strafe);
+  int pos = std::round(2048 * strafe < 0 ? 2 - strafe : strafe);
+  map_->lf_azimuth->Set(pos);
+  map_->rf_azimuth->Set(pos);
+  map_->lr_azimuth->Set(pos);
+  map_->rr_azimuth->Set(pos);
+
+  float volts = forward * max_voltage_;
+  map_->lf_drive->Set(volts);
+  map_->rf_drive->Set(volts);
+  map_->lr_drive->Set(volts);
+  map_->rr_drive->Set(volts);
+  logger_->debug(
+      "crab driving forward = {}, azimith = {}, pos = {}, volts = {}", forward,
+      strafe, pos, volts);
 }
 
 } /* sidewinder */

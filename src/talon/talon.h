@@ -18,7 +18,7 @@ class Talon {
 
  public:
   Talon(const std::shared_ptr<cpptoml::table> config);
-  virtual ~Talon();
+  virtual ~Talon() = default;
   virtual void Configure(::CANTalon* talon) const;
   virtual void SetMode(::CANTalon* talon) const;
   virtual void LogConfig(const std::shared_ptr<spdlog::logger> logger) const;

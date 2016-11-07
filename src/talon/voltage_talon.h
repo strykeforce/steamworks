@@ -12,7 +12,7 @@ namespace talon {
 class VoltageTalon : public Talon {
  public:
   VoltageTalon(const std::shared_ptr<cpptoml::table> config);
-  virtual ~VoltageTalon();
+  virtual ~VoltageTalon() = default;
   virtual void SetMode(::CANTalon* talon) const override;
   virtual void LogConfig(
       const std::shared_ptr<spdlog::logger> logger) const override;

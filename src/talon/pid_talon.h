@@ -21,7 +21,7 @@ class PIDTalon : public Talon {
 
  public:
   PIDTalon(const std::shared_ptr<cpptoml::table> config);
-  virtual ~PIDTalon();
+  virtual ~PIDTalon() = default;
   virtual void SetMode(::CANTalon* talon) const override;
   virtual void LogConfig(
       const std::shared_ptr<spdlog::logger> logger) const override;

@@ -8,6 +8,7 @@ namespace sidewinder {
 namespace talon {
 
 Talon::Talon(const std::shared_ptr<cpptoml::table> config) {
+  assert(config);
   feedback_device_ = static_cast<::CANTalon::FeedbackDevice>(
       *config->get_as<int>("feedback_device"));
 
@@ -22,9 +23,8 @@ Talon::Talon(const std::shared_ptr<cpptoml::table> config) {
   output_reversed_ = *config->get_as<bool>("output_reversed");
 }
 
-Talon::~Talon() {}
-
 void Talon::Configure(::CANTalon* talon) const {
+  assert(talon);
   talon->SelectProfileSlot(0);
   talon->SetFeedbackDevice(feedback_device_);
   talon->ConfigNeutralMode(neutral_mode_);
@@ -34,10 +34,12 @@ void Talon::Configure(::CANTalon* talon) const {
 }
 
 void Talon::SetMode(::CANTalon* talon) const {
+  assert(talon);
   talon->SetVoltageRampRate(voltage_ramp_rate_);
 }
 
 void Talon::LogConfig(const std::shared_ptr<spdlog::logger> logger) const {
+  assert(logger);
   logger->debug("feedback_device = {}", feedback_device_);
   logger->debug("neutral_mode = {}", neutral_mode_);
   logger->debug("limit_mode = {}", limit_mode_);

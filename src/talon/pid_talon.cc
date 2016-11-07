@@ -33,9 +33,8 @@ PIDTalon::PIDTalon(const std::shared_ptr<cpptoml::table> config)
       config->get_as<double>("nominal_output_voltage_reverse").value_or(0.0);
 }
 
-PIDTalon::~PIDTalon() {}
-
 void PIDTalon::SetMode(::CANTalon* talon) const {
+  assert(talon);
   // override to set control mode
   Talon::SetMode(talon);
   talon->SetPID(p_, i_, d_, f_);
@@ -49,6 +48,7 @@ void PIDTalon::SetMode(::CANTalon* talon) const {
 }
 
 void PIDTalon::LogConfig(const std::shared_ptr<spdlog::logger> logger) const {
+  assert(logger);
   logger->debug("P = {}", p_);
   logger->debug("I = {}", i_);
   logger->debug("D = {}", d_);

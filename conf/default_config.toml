@@ -46,3 +46,14 @@ nominal_output_voltage_reverse =  0.0 # v
 allowable_closed_loop_error    =    0 # encoder ticks
 encoder_reversed = false
 output_reversed  = false
+
+[SIDEWINDER.DRIVE]
+max_voltage       = 12.0 # v
+
+feedback_device = 0 # quad
+neutral_mode    = 2 # coast
+limit_mode      = 2 # soft and hard disabled
+encoder_reversed = false
+output_reversed  = false
+
+voltage_ramp_rate = 24.0 # v/s, 0 disables

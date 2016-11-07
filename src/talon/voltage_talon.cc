@@ -11,8 +11,6 @@ namespace talon {
 VoltageTalon::VoltageTalon(const std::shared_ptr<cpptoml::table> config)
     : Talon(config) {}
 
-VoltageTalon::~VoltageTalon() {}
-
 void VoltageTalon::SetMode(::CANTalon* talon) const {
   talon->SetControlMode(::CANTalon::ControlMode::kVoltage);
   Talon::SetMode(talon);
