@@ -1,1 +1,1 @@
-add_subdirectory(benchtest)
+add_subdirectory(drivetest)
