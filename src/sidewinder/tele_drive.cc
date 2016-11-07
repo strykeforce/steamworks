@@ -27,10 +27,10 @@ void TeleDrive::Initialize() {
 
 void TeleDrive::Execute() {
   float forward = oi_->GetTeleDriveForwardAxis();
-  float azimuth = oi_->GetTeleDriveAzimuthAxis();
-  // swerve_drive_->ArcadeDrive(forward, azimuth);
+  float strafe = oi_->GetTeleDriveStrafeAxis();
+  swerve_drive_->CrabDrive(forward, strafe);
   if (print_timer_->HasPeriodPassed(2.0)) {
-    logger_->debug("driving with forward: {}, azimuth: {}", forward, azimuth);
+    logger_->debug("driving with forward: {}, strafe: {}", forward, strafe);
   }
 }
 
@@ -38,7 +38,7 @@ bool TeleDrive::IsFinished() { return false; }
 
 void TeleDrive::End() {
   logger_->debug("done driving.");
-  // swerve_drive_->ArcadeDrive(0.0, 0.0);
+  swerve_drive_->CrabDrive(0.0, 0.0);
 }
 
 void TeleDrive::Interrupted() {

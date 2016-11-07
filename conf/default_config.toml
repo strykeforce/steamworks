@@ -19,15 +19,15 @@
 # disable switches and disable soft limits = 2
 [SIDEWINDER]
 joystick_dead_zone  = 0.08
-joystick_expo_coeff = 0.5
+joystick_expo_coeff = 0.75
 
 [SIDEWINDER.AZIMUTH]
-lf_zero = 1030
+lf_zero = 3067
 rf_zero = 1027
-lr_zero = 1032
+lr_zero = 3036
 rr_zero = 1002
 
-feedback_device = 6 # mag relative
+feedback_device = 0 # mag relative
 neutral_mode    = 2 # coast
 limit_mode      = 2 # soft and hard disabled
 

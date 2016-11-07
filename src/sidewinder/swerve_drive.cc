@@ -76,27 +76,23 @@ void SwerveDrive::SetEncoderZero(const std::shared_ptr<cpptoml::table> config) {
   // int abs_pos = (talon->GetPulseWidthPosition() & 0xFFF) + 0xFFF;
   logger_->trace("setting azimuth zero");
 
-  auto pos = (map_->lf_azimuth->GetPulseWidthPosition() -
-              *config->get_as<int>("lf_zero")) &
-             0xFFF;
+  auto pos = (map_->lf_azimuth->GetPulseWidthPosition() & 0xFFF) -
+             *config->get_as<int>("lf_zero");
   map_->lf_azimuth->SetEncPosition(pos);
   logger_->debug("set left front azimuth position = {}", pos);
 
-  pos = (map_->rf_azimuth->GetPulseWidthPosition() -
-         *config->get_as<int>("rf_zero")) &
-        0xFFF;
+  pos = (map_->rf_azimuth->GetPulseWidthPosition() & 0xFFF) -
+        *config->get_as<int>("rf_zero");
   map_->rf_azimuth->SetEncPosition(pos);
   logger_->debug("set right front azimuth position = {}", pos);
 
-  pos = (map_->lr_azimuth->GetPulseWidthPosition() -
-         *config->get_as<int>("lr_zero")) &
-        0xFFF;
+  pos = (map_->lr_azimuth->GetPulseWidthPosition() & 0xFFF) -
+        *config->get_as<int>("lr_zero");
   map_->lr_azimuth->SetEncPosition(pos);
   logger_->debug("set left rear azimuth position = {}", pos);
 
-  pos = (map_->rr_azimuth->GetPulseWidthPosition() -
-         *config->get_as<int>("rr_zero")) &
-        0xFFF;
+  pos = (map_->rr_azimuth->GetPulseWidthPosition() & 0xFFF) -
+        *config->get_as<int>("rr_zero");
   map_->rr_azimuth->SetEncPosition(pos);
   logger_->debug("set right rear azimuth position = {}", pos);
 }
@@ -115,7 +111,9 @@ void SwerveDrive::ZeroAzimuth() {
  * @param strafe command left/right (X-axis) motion
  */
 void SwerveDrive::CrabDrive(float forward, float strafe) {
-  int pos = std::round(2048 * strafe < 0 ? 2 - strafe : strafe);
+  // int pos = std::round(2048 * (strafe < 0 ? 2 + strafe : strafe));
+  int pos = -std::round(2048 * strafe);
+  // float pos = 0.5 * strafe;
   map_->lf_azimuth->Set(pos);
   map_->rf_azimuth->Set(pos);
   map_->lr_azimuth->Set(pos);
@@ -126,9 +124,12 @@ void SwerveDrive::CrabDrive(float forward, float strafe) {
   map_->rf_drive->Set(volts);
   map_->lr_drive->Set(volts);
   map_->rr_drive->Set(volts);
-  logger_->debug(
-      "crab driving forward = {}, azimith = {}, pos = {}, volts = {}", forward,
-      strafe, pos, volts);
+  static int i;
+  if (++i == 15) {
+    logger_->debug("crab driving forward = {}, strafe = {}", forward, strafe);
+    logger_->debug("crab driving pos = {}, volts = {}", pos, volts);
+    i = 0;
+  }
 }
 
 } /* sidewinder */

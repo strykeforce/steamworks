@@ -15,7 +15,7 @@ OI* Robot::oi = nullptr;
 SwerveDrive* Robot::swerve_drive = nullptr;
 
 Robot::Robot()
-    : IterativeRobot(), logger_(spdlog::stdout_color_st("Benchtest")) {
+    : IterativeRobot(), logger_(spdlog::stdout_color_st("Drivetest")) {
   logger_->set_level(spdlog::level::trace);
 }
 
