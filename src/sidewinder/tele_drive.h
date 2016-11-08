@@ -1,13 +1,10 @@
 #pragma once
 
 #include "WPILib.h"
+#include "spdlog/spdlog.h"
 
 #include "oi.h"
 #include "swerve_drive.h"
-
-namespace spdlog {
-class logger;
-} /* spdlog */
 
 namespace sidewinder {
 
