@@ -33,6 +33,14 @@ class OI {
     kFlightSimLeftXAxis,
   };
 
+  enum FlightSimButtons {
+    kFlightSimLeftButton = 1,
+    kFlightSimRightCornerButton,
+    kFlightSimResetButton,
+    kFlightSimLeftCornerDownButton,
+    kFlightSimLeftCornerUpButton,
+  };
+
   OI(const std::shared_ptr<cpptoml::table> config);
   virtual ~OI() = default;
   float GetTeleDriveForwardAxis() const;
