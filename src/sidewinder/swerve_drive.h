@@ -8,6 +8,10 @@
 #include "talon_map.h"
 
 namespace sidewinder {
+
+/** SwerveDrive is a WPI command-based subsystem represents the Sidewinder
+ * swerve drive.
+ */
 class SwerveDrive : public ::Subsystem {
  private:
   const std::shared_ptr<spdlog::logger> logger_;

@@ -9,6 +9,8 @@
 namespace sidewinder {
 namespace talon {
 
+/** Represents a Talon configured for closed-loop position control.
+ */
 class PositionTalon : public PIDTalon {
  public:
   PositionTalon(const std::shared_ptr<cpptoml::table> config);

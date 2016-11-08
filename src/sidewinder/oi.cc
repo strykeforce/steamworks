@@ -7,6 +7,8 @@
 
 namespace sidewinder {
 
+/** Construct and configure Sidewinder operator input.
+ */
 OI::OI(const std::shared_ptr<cpptoml::table> config)
     : flight_sim_joystick_(kFlightSimJoystick) {
   auto c = config->get_table("SIDEWINDER");

@@ -7,6 +7,9 @@
 namespace sidewinder {
 namespace talon {
 
+/** Base class representing a Talon configuration.
+ * This class is not intended to be used directly, use a subclass.
+ */
 class Talon {
  private:
   ::CANTalon::FeedbackDevice feedback_device_;

@@ -9,6 +9,9 @@
 namespace sidewinder {
 namespace talon {
 
+/** Represents a Talon configured for closed-loop control.
+ * This class is not intended to be used directly, use a subclass.
+ */
 class PIDTalon : public Talon {
  private:
   double p_, i_, d_, f_;

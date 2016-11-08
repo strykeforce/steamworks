@@ -6,6 +6,7 @@
 
 namespace sidewinder {
 
+/** Holds pointers to the 8 swerve drive Talons.  */
 TalonMap* RobotMap::swerve_talons = new TalonMap();
 
 /** Initialize hardware design-specific components.

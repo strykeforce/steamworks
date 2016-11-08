@@ -4,6 +4,9 @@
 
 namespace sidewinder {
 
+/** The TalonMap stucture is used by the robot to pass Talon * pointers to the
+ * swerve drive.
+ */
 struct TalonMap {
   ::CANTalon* lf_drive;
   ::CANTalon* lf_azimuth;

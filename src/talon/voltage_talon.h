@@ -9,6 +9,8 @@
 namespace sidewinder {
 namespace talon {
 
+/** Represents a Talon configured for open-loop voltage compensation control.
+ */
 class VoltageTalon : public Talon {
  public:
   VoltageTalon(const std::shared_ptr<cpptoml::table> config);

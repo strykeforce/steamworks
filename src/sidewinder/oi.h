@@ -8,7 +8,9 @@
 namespace sidewinder {
 
 /** Sidewinder OI provides swerve drive operator inputs.
- * It should be subclassed by robots that have other inputs.
+ * It assumes the flight simulator joysticks and buttons are used for swerve
+ * drive operation. This class is intended to be subclassed by robots in order
+ * to implement other game inputs.
  */
 class OI {
  private:
