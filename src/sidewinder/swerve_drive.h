@@ -26,6 +26,7 @@ class SwerveDrive : public ::Subsystem {
               const OI* oi);
   void InitDefaultCommand() override;
   void ZeroAzimuth();
-  void CrabDrive(float forward, float azimuth);
+  void Drive(float forward, float strafe, float azimuth);
+  void CrabDrive(float forward, float strafe);
 };
 } /* sidewinder */
