@@ -63,8 +63,8 @@ void Robot::LogAbsoluteEncoders() {
 }
 
 void Robot::LoadConfig() {
-  logger_->info("loading configuration from: /home/lvuser/benchtest.toml");
-  config_ = cpptoml::parse_file("/home/lvuser/benchtest.toml");
+  logger_->info("loading configuration from: /home/lvuser/drivetest.toml");
+  config_ = cpptoml::parse_file("/home/lvuser/drivetest.toml");
 }
 
 } /* sidewinder */
