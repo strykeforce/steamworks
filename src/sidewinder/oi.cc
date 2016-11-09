@@ -35,14 +35,14 @@ float OI::GetTeleDriveForwardAxis() const {
  * input.
  */
 float OI::GetTeleDriveStrafeAxis() const {
-  float axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftXAxis);
+  float axis = -flight_sim_joystick_.GetRawAxis(kFlightSimLeftXAxis);
   return JoystickExpo(axis);
 }
 
 /** Returns flight simulator joystick CW and CCW azimuth (X-axis) input.
  */
 float OI::GetTeleDriveAzimuthAxis() const {
-  float axis = flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
+  float axis = -flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
   return JoystickExpo(axis);
 }
 
