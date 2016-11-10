@@ -9,10 +9,11 @@
 
 namespace sidewinder {
 
+/** helper function for swerve drive calculations.
+ *  https://www.chiefdelphi.com/media/papers/2426
+ */
 SwerveMath::SwerveMath() {}
 
-// helper function for swerve drive calculations.
-// https://www.chiefdelphi.com/media/papers/2426
 namespace {
 const int L = 1;
 const int W = 1;
@@ -20,6 +21,10 @@ const float R = std::sqrt(L * L + W * W);
 
 } /* namespace */
 
+/** Calculate drive wheel speeds and azimuth angles for all wheels. Inputs are
+ * joystick forward, strafe and azimuth. Outputs are wheel speeds in the range
+ * 0 to +1 and wheel angles in the range -180 to 180 degrees.
+ */
 void SwerveMath::Calc(DriveData& dd) {
   float a = dd.str - dd.rcw * (L / R);
   float b = dd.str + dd.rcw * (L / R);

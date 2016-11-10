@@ -65,18 +65,20 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   drive_talon_cfg.Configure(map_->rr_drive);
   drive_talon_cfg.SetMode(map_->rr_drive);
 
+  // this is how hard we will allow driving in voltage mode.
   max_voltage_ =
       static_cast<float>(*drive_cfg_data->get_as<double>("max_voltage"));
   logger_->trace("done with constructor");
 }
 
+/** Set the four azimuth quad encoders to match the current absolute offset
+ * from zero.
+ */
 void SwerveDrive::SetEncoderZero(const std::shared_ptr<cpptoml::table> config) {
-  // Encoder has 12-bit resolution so mask with 0xFFF. Add 4096 in case current
-  // encoder position is less than zero position. We mask delta again for cases
-  // where current encoder position was > zero.
-  // int abs_pos = (talon->GetPulseWidthPosition() & 0xFFF) + 0xFFF;
   logger_->trace("setting azimuth zero");
 
+  // Take lower 12-bits of current absolute encoder position (0-4096) and offset
+  // by our recorded zero position. Repeat for all four wheels.
   auto pos = (map_->lf_azimuth->GetPulseWidthPosition() & 0xFFF) -
              *config->get_as<int>("lf_zero");
   map_->lf_azimuth->SetPosition(pos);
