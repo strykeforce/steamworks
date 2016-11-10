@@ -5,6 +5,7 @@
 #include "spdlog/spdlog.h"
 
 #include "oi.h"
+#include "swerve_math.h"
 #include "talon_map.h"
 
 namespace sidewinder {
@@ -17,6 +18,7 @@ class SwerveDrive : public ::Subsystem {
   const std::shared_ptr<spdlog::logger> logger_;
   const TalonMap* map_;
   const OI* oi_;
+  SwerveMath swerve_math_;
   float max_voltage_ = 12.0;  // voltage limit in voltage mode
 
   void SetEncoderZero(const std::shared_ptr<cpptoml::table> config);

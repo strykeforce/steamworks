@@ -3,6 +3,7 @@
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
+#include "swerve_math.h"
 #include "talon/position_talon.h"
 #include "talon/voltage_talon.h"
 #include "talon_map.h"
@@ -106,44 +107,6 @@ void SwerveDrive::ZeroAzimuth() {
   map_->rr_azimuth->Set(0.0);
 }
 
-// helper function for swerve drive calculations.
-// https://www.chiefdelphi.com/media/papers/2426
-namespace {
-const int L = 1;
-const int W = 1;
-const float R = std::sqrt(L * L + W * W);
-
-struct DriveData {
-  float fwd, str, rcw;
-  float ws1, ws2, ws3, ws4;
-  float wa1, wa2, wa3, wa4;
-};
-
-void swerve_calc(DriveData& dd) {
-  float a = dd.str - dd.rcw * (L / R);
-  float b = dd.str + dd.rcw * (L / R);
-  float c = dd.fwd - dd.rcw * (W / R);
-  float d = dd.fwd + dd.rcw * (W / R);
-  dd.ws1 = std::sqrt(b * b + c * c);
-  dd.ws2 = std::sqrt(b * b + d * d);
-  dd.ws3 = std::sqrt(a * a + d * d);
-  dd.ws4 = std::sqrt(a * a + c * c);
-  dd.wa1 = std::atan2(b, c) * 180 / M_PI;
-  dd.wa2 = std::atan2(b, d) * 180 / M_PI;
-  dd.wa3 = std::atan2(a, d) * 180 / M_PI;
-  dd.wa4 = std::atan2(a, c) * 180 / M_PI;
-
-  // normalize wheel speed if needed
-  float max = std::max({dd.ws1, dd.ws2, dd.ws3, dd.ws4});
-  if (max > 1.0) {
-    dd.ws1 /= max;
-    dd.ws2 /= max;
-    dd.ws3 /= max;
-    dd.ws4 /= max;
-  }
-}
-} /* namespace */
-
 /** Drive in swerve drive mode.
  * @param forward command forward/backwards (Y-axis) motion
  * @param strafe command left/right (X-axis) motion
@@ -154,7 +117,7 @@ void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
   dd.fwd = forward;
   dd.str = strafe;
   dd.rcw = azimuth;
-  swerve_calc(dd);
+  swerve_math_.Calc(dd);
 
   // TODO: round? cast? ignore?
   map_->lf_azimuth->Set(std::round(dd.wa1 * 2048 / 180));
