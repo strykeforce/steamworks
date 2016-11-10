@@ -120,15 +120,15 @@ void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
   swerve_math_.Calc(dd);
 
   // TODO: round? cast? ignore?
-  map_->lf_azimuth->Set(std::round(dd.wa1 * 2048 / 180));
-  map_->rf_azimuth->Set(std::round(dd.wa2 * 2048 / 180));
-  map_->lr_azimuth->Set(std::round(dd.wa3 * 2048 / 180));
-  map_->rr_azimuth->Set(std::round(dd.wa4 * 2048 / 180));
+  map_->rf_azimuth->Set(std::round(dd.warf * 2048 / 180));
+  map_->lf_azimuth->Set(std::round(dd.walf * 2048 / 180));
+  map_->lr_azimuth->Set(std::round(dd.walr * 2048 / 180));
+  map_->rr_azimuth->Set(std::round(dd.warr * 2048 / 180));
 
-  map_->lf_drive->Set(dd.ws1 * max_voltage_);
-  map_->rf_drive->Set(dd.ws2 * max_voltage_);
-  map_->lr_drive->Set(dd.ws3 * max_voltage_);
-  map_->rr_drive->Set(dd.ws4 * max_voltage_);
+  map_->rf_drive->Set(dd.wsrf * max_voltage_);
+  map_->lf_drive->Set(dd.wslf * max_voltage_);
+  map_->lr_drive->Set(dd.wslr * max_voltage_);
+  map_->rr_drive->Set(dd.wsrr * max_voltage_);
 }
 
 /** Drive in crab drive mode.

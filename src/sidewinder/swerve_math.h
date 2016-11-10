@@ -1,11 +1,13 @@
 #pragma once
 
+#include <iostream>
+
 namespace sidewinder {
 
 struct DriveData {
   float fwd, str, rcw;
-  float ws1, ws2, ws3, ws4;
-  float wa1, wa2, wa3, wa4;
+  float wsrf, wslf, wslr, wsrr;
+  float warf, walf, walr, warr;
 };
 
 class SwerveMath {
