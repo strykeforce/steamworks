@@ -13,6 +13,16 @@ This repository needs to be checked out adjacent to two other repositories. Note
 |- 2017_Static (git@gitlab.com:strykeforce2767/2017_Static.git)
 ```
 
+[Vagrant](https://www.vagrantup.com) is recommended as it will provision the correct development environment automatically:
+
+```sh
+$ cd sidewinder
+$ vagrant up
+$ vagrant ssh
+$ # now logged into virtual build environment
+$ cd /vagrant
+```
+
 Compile the roboRIO shared libraries into the static library `librio.a`. We'll temporarily do this manually:
 
 ```sh
