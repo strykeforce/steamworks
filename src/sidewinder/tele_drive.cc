@@ -15,13 +15,12 @@ TeleDrive::TeleDrive(const OI* oi, SwerveDrive* sd)
       oi_(oi),
       swerve_drive_(sd) {
   Requires(swerve_drive_);
-  logger_->set_level(spdlog::level::debug);
+  logger_->set_level(spdlog::level::info);
   print_timer_->Start();
 }
 
 void TeleDrive::Initialize() {
   logger_->debug("start driving!");
-  // swerve_drive_->SetControlMode(subsystem::TankDrive::kVoltageMode);
   print_timer_->Reset();
 }
 

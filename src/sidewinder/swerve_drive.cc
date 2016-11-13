@@ -115,6 +115,15 @@ void SwerveDrive::ZeroAzimuth() {
  * @param azimuth command left/right yaw
  */
 void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
+  // don't reset wheels to zero in dead zone
+  if (std::fabs(forward) <= 0.08 && std::fabs(strafe) <= 0.08 &&
+      std::fabs(azimuth) < 0.08) {
+    map_->rf_drive->Set(0.0);
+    map_->lf_drive->Set(0.0);
+    map_->lr_drive->Set(0.0);
+    map_->rr_drive->Set(0.0);
+    return;
+  }
   DriveData dd = DriveData();
   dd.fwd = forward;
   dd.str = strafe;
@@ -122,8 +131,8 @@ void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
   swerve_math_.Calc(dd);
 
   // TODO: round? cast? ignore?
-  map_->rf_azimuth->Set(std::round(dd.warf * 2048 / 180));
   map_->lf_azimuth->Set(std::round(dd.walf * 2048 / 180));
+  map_->rf_azimuth->Set(std::round(dd.warf * 2048 / 180));
   map_->lr_azimuth->Set(std::round(dd.walr * 2048 / 180));
   map_->rr_azimuth->Set(std::round(dd.warr * 2048 / 180));
 
@@ -131,6 +140,14 @@ void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
   map_->lf_drive->Set(dd.wslf * max_voltage_);
   map_->lr_drive->Set(dd.wslr * max_voltage_);
   map_->rr_drive->Set(dd.wsrr * max_voltage_);
+  static int i;
+  if (++i == 15) {
+    logger_->debug("warf = {}, walf = {}, walr = {}, warr = {}", dd.warf,
+                   dd.walf, dd.walr, dd.warr);
+    logger_->debug("wsrf = {}, wslf = {}, wslr = {}, wsrr = {}", dd.wsrf,
+                   dd.wslf, dd.wslr, dd.wsrr);
+    i = 0;
+  }
 }
 
 /** Drive in crab drive mode.

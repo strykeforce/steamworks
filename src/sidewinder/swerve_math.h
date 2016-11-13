@@ -2,6 +2,9 @@
 
 #include <iostream>
 
+#include "spdlog/fmt/ostr.h"
+#include "spdlog/spdlog.h"
+
 namespace sidewinder {
 
 struct DriveData {
@@ -12,7 +15,8 @@ struct DriveData {
 
 class SwerveMath {
  private:
-  /* data */
+  DriveData last_dd_;
+
  public:
   SwerveMath();
   void Calc(DriveData& dd);
