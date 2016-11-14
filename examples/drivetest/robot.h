@@ -4,8 +4,8 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "sidewinder/oi.h"
-#include "sidewinder/swerve_drive.h"
+#include "swerve/oi.h"
+#include "swerve/swerve_drive.h"
 
 namespace sidewinder {
 

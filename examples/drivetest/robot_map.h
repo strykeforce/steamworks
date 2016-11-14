@@ -2,7 +2,7 @@
 
 #include "WPILib.h"
 
-#include "sidewinder/talon_map.h"
+#include "swerve/talon_map.h"
 
 namespace sidewinder {
 

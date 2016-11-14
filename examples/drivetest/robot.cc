@@ -5,8 +5,8 @@
 #include "spdlog/spdlog.h"
 
 #include "robot_map.h"
-#include "sidewinder/swerve_drive.h"
-#include "sidewinder/talon_map.h"
+#include "swerve/swerve_drive.h"
+#include "swerve/talon_map.h"
 #include "talon/position_talon.h"
 
 namespace sidewinder {
