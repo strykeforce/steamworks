@@ -3,11 +3,11 @@
 #include "WPILib.h"
 
 #include "HostToObject.h"
-#include "robot_config.h"
 #include "swerve/talon_map.h"
 
 namespace sidewinder {
 
+// helper functions to start grapher data collection thread if enabled.
 namespace {
 inline JerrysGrapher_DeviceBundle jgdb(byte id, ::CANTalon* t) {
   JerrysGrapher_DeviceBundle db{JerrysGrapher_DeviceType::Talon, id, t};
@@ -42,7 +42,7 @@ TalonMap* RobotMap::swerve_talons = new TalonMap();
  * We allocate these as singletons since there should only be one system-wide
  * reference to each.
  */
-void RobotMap::Init() {
+void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
   swerve_talons->lf_drive = new ::CANTalon(Talons::kLeftFrontDrive);
   swerve_talons->lf_azimuth = new ::CANTalon(Talons::kLeftFrontAzimuth);
 
@@ -55,9 +55,11 @@ void RobotMap::Init() {
   swerve_talons->rr_drive = new ::CANTalon(Talons::kRightRearDrive);
   swerve_talons->rr_azimuth = new ::CANTalon(Talons::kRightRearAzimuth);
 
-#ifdef GRAPHER
-  initialize_grapher();
-#endif
+  // start grapher data collection thread if enabled in config file.
+  auto c = config->get_table("DRIVETEST");
+  if (c->get_as<bool>("grapher").value_or(false)) {
+    initialize_grapher();
+  }
 }
 
 } /* sidewinder */

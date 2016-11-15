@@ -1,7 +1,3 @@
-set(GRAPHER ON CACHE BOOL "Include grapher support")
-
-configure_file("robot_config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/robot_config.h")
-
 add_executable(drivetest
   robot_map.cc
   robot.cc

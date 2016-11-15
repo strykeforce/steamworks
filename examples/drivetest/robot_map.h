@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WPILib.h"
+#include "cpptoml/cpptoml.h"
 
 #include "swerve/talon_map.h"
 
@@ -35,7 +36,7 @@ class RobotMap {
   static TalonMap* swerve_talons;
 
   // instantiate talons and read encoder zero count
-  static void Init();
+  static void Init(const std::shared_ptr<cpptoml::table> config);
 };
 
 // Joysticks

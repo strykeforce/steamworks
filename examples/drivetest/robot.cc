@@ -21,7 +21,7 @@ Robot::Robot()
 
 void Robot::RobotInit() {
   LoadConfig();
-  RobotMap::Init();
+  RobotMap::Init(config_);
   LogAbsoluteEncoders();
   oi = new OI(config_);
   swerve_drive = new SwerveDrive(config_->get_table("SIDEWINDER"),
