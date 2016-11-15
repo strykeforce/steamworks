@@ -14,9 +14,11 @@ inline JerrysGrapher_DeviceBundle jgdb(byte id, ::CANTalon* t) {
   return db;
 }
 
+static std::vector<JerrysGrapher_DeviceBundle> gd;
+
 void initialize_grapher() {
   typedef RobotMap rm;
-  std::vector<JerrysGrapher_DeviceBundle> gd;
+
   gd.push_back(jgdb(rm::kLeftFrontDrive, rm::swerve_talons->lf_drive));
   gd.push_back(jgdb(rm::kLeftFrontAzimuth, rm::swerve_talons->lf_azimuth));
 
@@ -57,6 +59,7 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
 
   // start grapher data collection thread if enabled in config file.
   auto c = config->get_table("DRIVETEST");
+  assert(c);
   if (c->get_as<bool>("grapher").value_or(false)) {
     initialize_grapher();
   }
