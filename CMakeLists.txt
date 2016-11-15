@@ -20,7 +20,6 @@ set(CMAKE_STRIP        /usr/bin/arm-frc-linux-gnueabi-strip)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -fstrict-aliasing -std=c++1y")
 
-
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 
 include_directories(SYSTEM
@@ -32,6 +31,6 @@ link_directories(
   "${WPI_LIBS}/lib"
 )
 
-# add_subdirectory(vendor/tools)
 add_subdirectory(src)
 add_subdirectory(examples)
+add_subdirectory(vendor)

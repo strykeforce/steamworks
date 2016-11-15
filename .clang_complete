@@ -1,6 +1,7 @@
 -Wno-pragma-once-outside-header
 -I/opt/wpilib/include
 -Ivendor/include
+-Ivendor/grapher
 -Isrc
--Ibuild/src
+-Ibuild/examples/drivetest
 -Ibuild/vendor/tools/generate_version
