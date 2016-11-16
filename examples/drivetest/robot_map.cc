@@ -31,6 +31,15 @@ void initialize_grapher() {
   gd.push_back(jgdb(rm::kRightRearDrive, rm::swerve_talons->rr_drive));
   gd.push_back(jgdb(rm::kRightRearAzimuth, rm::swerve_talons->rr_azimuth));
 
+  for (const auto& d : gd) {
+    ::CANTalon* talon = static_cast<::CANTalon*>(d.objectPointer);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateGeneral, 20);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateFeedback, 20);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateQuadEncoder, 20);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRatePulseWidthMeas, 20);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateAnalogTempVbat, 20);
+  }
+
   JerrysGrapher_StartStatusThread(&gd);
 }
 
