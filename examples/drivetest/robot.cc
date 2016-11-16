@@ -14,8 +14,7 @@ namespace sidewinder {
 OI* Robot::oi = nullptr;
 Drive* Robot::drive = nullptr;
 
-Robot::Robot()
-    : IterativeRobot(), logger_(spdlog::stdout_color_st("Drivetest")) {
+Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("robot")) {
   logger_->set_level(spdlog::level::trace);
 }
 

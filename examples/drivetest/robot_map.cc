@@ -1,6 +1,7 @@
 #include "robot_map.h"
 
 #include "WPILib.h"
+#include "spdlog/spdlog.h"
 
 #include "HostToObject.h"
 #include "swerve/talon_map.h"
@@ -70,6 +71,7 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
   auto c = config->get_table("DRIVETEST");
   assert(c);
   if (c->get_as<bool>("grapher").value_or(false)) {
+    spdlog::get("robot")->warn("initializing grapher");
     initialize_grapher();
   }
 }
