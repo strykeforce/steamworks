@@ -7,15 +7,15 @@
 
 namespace sidewinder {
 
-/** Sidewinder OI provides swerve drive operator inputs.
+/** Robot OI provides swerve drive operator inputs.
  * It assumes the flight simulator joysticks and buttons are used for swerve
- * drive operation. This class is intended to be subclassed by robots in order
- * to implement other game inputs.
+ * drive operation.
  */
 class OI {
  private:
   // create our joystick objects
   ::Joystick flight_sim_joystick_;
+  ::JoystickButton reset_button_;
   float joystick_dead_zone_, joystick_expo_coeff_, joystick_expo_scale_;
 
   float JoystickExpo(const float in) const;

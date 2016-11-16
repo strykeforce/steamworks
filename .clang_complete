@@ -3,5 +3,5 @@
 -Ivendor/include
 -Ivendor/grapher
 -Isrc
--Ibuild/examples/drivetest
 -Ibuild/vendor/tools/generate_version
+-Iexamples/drivetest

@@ -5,14 +5,14 @@
 #include "spdlog/spdlog.h"
 
 #include "robot_map.h"
-#include "swerve/swerve_drive.h"
+#include "subsystems/drive.h"
 #include "swerve/talon_map.h"
 #include "talon/position_talon.h"
 
 namespace sidewinder {
 
 OI* Robot::oi = nullptr;
-SwerveDrive* Robot::swerve_drive = nullptr;
+Drive* Robot::drive = nullptr;
 
 Robot::Robot()
     : IterativeRobot(), logger_(spdlog::stdout_color_st("Drivetest")) {
@@ -23,9 +23,10 @@ void Robot::RobotInit() {
   LoadConfig();
   RobotMap::Init(config_);
   LogAbsoluteEncoders();
+
+  // load in order of dependency
+  drive = new Drive(config_->get_table("SIDEWINDER"));
   oi = new OI(config_);
-  swerve_drive = new SwerveDrive(config_->get_table("SIDEWINDER"),
-                                 RobotMap::swerve_talons, oi);
 }
 
 void Robot::DisabledInit() { logger_->trace("DisabledInit"); }
@@ -36,10 +37,7 @@ void Robot::AutonomousInit() { logger_->trace("AutonomousInit"); }
 
 void Robot::AutonomousPeriodic() { ::Scheduler::GetInstance()->Run(); }
 
-void Robot::TeleopInit() {
-  logger_->trace("TeleopInit");
-  swerve_drive->ZeroAzimuth();
-}
+void Robot::TeleopInit() { logger_->trace("TeleopInit"); }
 
 void Robot::TeleopPeriodic() { ::Scheduler::GetInstance()->Run(); }
 

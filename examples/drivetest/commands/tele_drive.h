@@ -4,7 +4,7 @@
 #include "spdlog/spdlog.h"
 
 #include "oi.h"
-#include "swerve_drive.h"
+#include "swerve/swerve_drive.h"
 
 namespace sidewinder {
 
@@ -15,15 +15,11 @@ class TeleDrive : public ::Command {
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   const std::unique_ptr<::Timer> print_timer_;
-  const OI* oi_;
-  SwerveDrive* swerve_drive_;
 
  public:
   /** Construct the TeleDrive.
-   * @param oi this must be a sidewinder::OI or subclass
-   * @param sd an initialized shared instance of the swerve drive
    */
-  TeleDrive(const OI* oi, SwerveDrive* sd);
+  TeleDrive();
 
   // implements Command
   void Initialize() override;

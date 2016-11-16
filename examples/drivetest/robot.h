@@ -4,8 +4,8 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "swerve/oi.h"
-#include "swerve/swerve_drive.h"
+#include "oi.h"
+#include "subsystems/drive.h"
 
 namespace sidewinder {
 
@@ -19,7 +19,7 @@ class Robot : public ::IterativeRobot {
 
  public:
   static OI* oi;
-  static SwerveDrive* swerve_drive;
+  static Drive* drive;
 
   Robot();
 

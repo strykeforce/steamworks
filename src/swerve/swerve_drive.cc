@@ -7,15 +7,8 @@
 #include "talon/position_talon.h"
 #include "talon/voltage_talon.h"
 #include "talon_map.h"
-#include "tele_drive.h"
 
 namespace sidewinder {
-
-/** Initialize the Sidewinder tele drive command.
- */
-void SwerveDrive::InitDefaultCommand() {
-  SetDefaultCommand(new TeleDrive(oi_, this));
-}
 
 /** Initialize the Sidewinder SwerveDrive.
  * @param config cpptoml SIDEWINDER table
@@ -23,12 +16,9 @@ void SwerveDrive::InitDefaultCommand() {
  * @oi sidewinder-specific operator input
  */
 SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
-                         const TalonMap* tm, const OI* oi)
-    : Subsystem("SwerveDrive"),
-      logger_(spdlog::stdout_color_st(GetName())),
-      map_(tm),
-      oi_(oi) {
-  logger_->set_level(spdlog::level::trace);
+                         const TalonMap* tm)
+    : logger_(spdlog::stdout_color_st("SwerveDrive")), map_(tm) {
+  logger_->set_level(spdlog::level::debug);
   logger_->trace("starting constructor");
 
   logger_->trace("configuring azimuth talons in position mode");
@@ -142,9 +132,9 @@ void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
   map_->rr_drive->Set(dd.wsrr * max_voltage_);
   static int i;
   if (++i == 15) {
-    logger_->debug("warf = {}, walf = {}, walr = {}, warr = {}", dd.warf,
+    logger_->trace("warf = {}, walf = {}, walr = {}, warr = {}", dd.warf,
                    dd.walf, dd.walr, dd.warr);
-    logger_->debug("wsrf = {}, wslf = {}, wslr = {}, wsrr = {}", dd.wsrf,
+    logger_->trace("wsrf = {}, wslf = {}, wslr = {}, wsrr = {}", dd.wsrf,
                    dd.wslf, dd.wslr, dd.wsrr);
     i = 0;
   }

@@ -5,12 +5,15 @@
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
+#include "commands/zero_drive_wheels.h"
+
 namespace sidewinder {
 
-/** Construct and configure Sidewinder operator input.
+/** Construct and configure Robot operator input.
  */
 OI::OI(const std::shared_ptr<cpptoml::table> config)
-    : flight_sim_joystick_(kFlightSimJoystick) {
+    : flight_sim_joystick_(kFlightSimJoystick),
+      reset_button_(&flight_sim_joystick_, kFlightSimResetButton) {
   auto c = config->get_table("SIDEWINDER");
   assert(c);
   joystick_dead_zone_ =
@@ -21,6 +24,9 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   joystick_expo_scale_ =
       1.0 / (joystick_expo_coeff_ * std::pow(1.0 - joystick_dead_zone_, 3) +
              (1.0 - joystick_expo_coeff_) * (1.0 - joystick_dead_zone_));
+
+  // buttons
+  reset_button_.WhenPressed(new ZeroDriveWheels());
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)
