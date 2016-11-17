@@ -4,7 +4,7 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "talon.h"
+#include "settings.h"
 
 namespace sidewinder {
 namespace talon {
@@ -12,7 +12,7 @@ namespace talon {
 /** Represents a Talon configured for closed-loop control.
  * This class is not intended to be used directly, use a subclass.
  */
-class PIDTalon : public Talon {
+class PIDSettings : public Settings {
  private:
   double p_, i_, d_, f_;
   // TODO: verify uint types
@@ -23,8 +23,8 @@ class PIDTalon : public Talon {
   double nominal_output_voltage_forward_, nominal_output_voltage_reverse_;
 
  public:
-  PIDTalon(const std::shared_ptr<cpptoml::table> config);
-  virtual ~PIDTalon() = default;
+  PIDSettings(const std::shared_ptr<cpptoml::table> config);
+  virtual ~PIDSettings() = default;
   virtual void SetMode(::CANTalon* talon) const override;
   virtual void LogConfig(
       const std::shared_ptr<spdlog::logger> logger) const override;

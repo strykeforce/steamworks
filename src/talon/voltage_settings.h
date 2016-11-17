@@ -4,17 +4,17 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "talon.h"
+#include "settings.h"
 
 namespace sidewinder {
 namespace talon {
 
 /** Represents a Talon configured for open-loop voltage compensation control.
  */
-class VoltageTalon : public Talon {
+class VoltageSettings : public Settings {
  public:
-  VoltageTalon(const std::shared_ptr<cpptoml::table> config);
-  virtual ~VoltageTalon() = default;
+  VoltageSettings(const std::shared_ptr<cpptoml::table> config);
+  virtual ~VoltageSettings() = default;
   virtual void SetMode(::CANTalon* talon) const override;
   virtual void LogConfig(
       const std::shared_ptr<spdlog::logger> logger) const override;

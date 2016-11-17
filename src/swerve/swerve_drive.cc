@@ -4,60 +4,60 @@
 #include "cpptoml/cpptoml.h"
 
 #include "swerve_math.h"
-#include "talon/position_talon.h"
-#include "talon/voltage_talon.h"
+#include "talon/settings.h"
 #include "talon_map.h"
 
-namespace sidewinder {
+using namespace sidewinder;
 
 /** Initialize the Sidewinder SwerveDrive.
  * @param config cpptoml SIDEWINDER table
  * @param tm talon map initialized with pointers to drive talons
  * @oi sidewinder-specific operator input
  */
-SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
-                         const TalonMap* tm)
+SwerveDrive::SwerveDrive(talon::TalonConfig config, const TalonMap* tm)
     : logger_(spdlog::stdout_color_st("SwerveDrive")), map_(tm) {
+  assert(config);
+  assert(tm);
+
   logger_->set_level(spdlog::level::debug);
   logger_->trace("starting constructor");
 
   logger_->trace("configuring azimuth talons in position mode");
-  auto azimuth_cfg_data = config->get_table("AZIMUTH");
-  assert(azimuth_cfg_data);
-  auto azimuth_talon_cfg = talon::PositionTalon(azimuth_cfg_data);
+  auto swerve_settings = config->get_table("SWERVE");
+  assert(swerve_settings);
+  auto azimuth_settings = talon::Settings::Create(swerve_settings, "azimuth");
   logger_->debug("dumping azimuth talon configuration");
-  azimuth_talon_cfg.LogConfig(logger_);
+  azimuth_settings->LogConfig(logger_);
 
-  azimuth_talon_cfg.Configure(map_->lf_azimuth);
-  azimuth_talon_cfg.SetMode(map_->lf_azimuth);
-  azimuth_talon_cfg.Configure(map_->rf_azimuth);
-  azimuth_talon_cfg.SetMode(map_->rf_azimuth);
-  azimuth_talon_cfg.Configure(map_->lr_azimuth);
-  azimuth_talon_cfg.SetMode(map_->lr_azimuth);
-  azimuth_talon_cfg.Configure(map_->rr_azimuth);
-  azimuth_talon_cfg.SetMode(map_->rr_azimuth);
+  azimuth_settings->Configure(map_->lf_azimuth);
+  azimuth_settings->SetMode(map_->lf_azimuth);
+  azimuth_settings->Configure(map_->rf_azimuth);
+  azimuth_settings->SetMode(map_->rf_azimuth);
+  azimuth_settings->Configure(map_->lr_azimuth);
+  azimuth_settings->SetMode(map_->lr_azimuth);
+  azimuth_settings->Configure(map_->rr_azimuth);
+  azimuth_settings->SetMode(map_->rr_azimuth);
 
-  SetEncoderZero(azimuth_cfg_data);
+  SetEncoderZero(swerve_settings);
 
   logger_->trace("configuring drive talons in voltage mode");
-  auto drive_cfg_data = config->get_table("DRIVE");
-  assert(drive_cfg_data);
-  auto drive_talon_cfg = talon::VoltageTalon(drive_cfg_data);
+  auto drive_settings =
+      talon::Settings::Create(swerve_settings, "drive_voltage");
   logger_->debug("dumping drive talon configuration");
-  drive_talon_cfg.LogConfig(logger_);
+  drive_settings->LogConfig(logger_);
 
-  drive_talon_cfg.Configure(map_->lf_drive);
-  drive_talon_cfg.SetMode(map_->lf_drive);
-  drive_talon_cfg.Configure(map_->rf_drive);
-  drive_talon_cfg.SetMode(map_->rf_drive);
-  drive_talon_cfg.Configure(map_->lr_drive);
-  drive_talon_cfg.SetMode(map_->lr_drive);
-  drive_talon_cfg.Configure(map_->rr_drive);
-  drive_talon_cfg.SetMode(map_->rr_drive);
+  drive_settings->Configure(map_->lf_drive);
+  drive_settings->SetMode(map_->lf_drive);
+  drive_settings->Configure(map_->rf_drive);
+  drive_settings->SetMode(map_->rf_drive);
+  drive_settings->Configure(map_->lr_drive);
+  drive_settings->SetMode(map_->lr_drive);
+  drive_settings->Configure(map_->rr_drive);
+  drive_settings->SetMode(map_->rr_drive);
 
   // this is how hard we will allow driving in voltage mode.
   max_voltage_ =
-      static_cast<float>(*drive_cfg_data->get_as<double>("max_voltage"));
+      static_cast<float>(*config->get_as<double>("max_drive_voltage"));
   logger_->trace("done with constructor");
 }
 
@@ -165,5 +165,3 @@ void SwerveDrive::CrabDrive(float forward, float strafe) {
     i = 0;
   }
 }
-
-} /* sidewinder */

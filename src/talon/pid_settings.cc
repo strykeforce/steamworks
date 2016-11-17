@@ -1,15 +1,15 @@
-#include "pid_talon.h"
+#include "pid_settings.h"
 
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "talon.h"
+#include "settings.h"
 
-namespace sidewinder {
-namespace talon {
-PIDTalon::PIDTalon(const std::shared_ptr<cpptoml::table> config)
-    : Talon(config) {
+using namespace sidewinder::talon;
+
+PIDSettings::PIDSettings(const std::shared_ptr<cpptoml::table> config)
+    : Settings(config) {
   p_ = config->get_as<double>("P").value_or(0.0);
   i_ = config->get_as<double>("I").value_or(0.0);
   d_ = config->get_as<double>("D").value_or(0.0);
@@ -33,10 +33,10 @@ PIDTalon::PIDTalon(const std::shared_ptr<cpptoml::table> config)
       config->get_as<double>("nominal_output_voltage_reverse").value_or(0.0);
 }
 
-void PIDTalon::SetMode(::CANTalon* talon) const {
+void PIDSettings::SetMode(::CANTalon* talon) const {
   assert(talon);
   // override to set control mode
-  Talon::SetMode(talon);
+  Settings::SetMode(talon);
   talon->SetPID(p_, i_, d_, f_);
   talon->SetIzone(i_zone_);
   talon->SetAllowableClosedLoopErr(allowable_closed_loop_error_);
@@ -47,7 +47,8 @@ void PIDTalon::SetMode(::CANTalon* talon) const {
   talon->SetCloseLoopRampRate(close_loop_ramp_rate_);
 }
 
-void PIDTalon::LogConfig(const std::shared_ptr<spdlog::logger> logger) const {
+void PIDSettings::LogConfig(
+    const std::shared_ptr<spdlog::logger> logger) const {
   assert(logger);
   logger->debug("P = {}", p_);
   logger->debug("I = {}", i_);
@@ -62,8 +63,5 @@ void PIDTalon::LogConfig(const std::shared_ptr<spdlog::logger> logger) const {
                 nominal_output_voltage_forward_,
                 nominal_output_voltage_reverse_);
   logger->debug("closed loop ramp rate = {} v/sec", close_loop_ramp_rate_);
-  Talon::LogConfig(logger);
+  Settings::LogConfig(logger);
 }
-
-} /* talon */
-} /* sidewinder */

@@ -7,7 +7,6 @@
 #include "robot_map.h"
 #include "subsystems/drive.h"
 #include "swerve/talon_map.h"
-#include "talon/position_talon.h"
 
 namespace sidewinder {
 
