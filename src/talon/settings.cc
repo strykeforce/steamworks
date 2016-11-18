@@ -1,5 +1,6 @@
 #include "settings.h"
 
+#include <iostream>
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
@@ -40,9 +41,9 @@ unique_ptr<Settings> Settings::Create(TalonConfig config, const string name) {
   // create configured Talon settings of specified type
   unique_ptr<Settings> settings{nullptr};
   if (*type == "voltage") {
-    settings.reset(new VoltageSettings(config));
+    settings.reset(new VoltageSettings(talon));
   } else if (*type == "position") {
-    settings.reset(new PositionSettings(config));
+    settings.reset(new PositionSettings(talon));
   } else if (*type == "velocity") {
     throw invalid_argument("velocity talon not implemented");
   } else {
