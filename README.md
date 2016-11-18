@@ -2,43 +2,29 @@
 
 The Stryke Force motor tuning tool.
 
-## Dependencies
+You will need [Vagrant](https://www.vagrantup.com) installed. Vagrant is used to build as it will provision the correct development environment automatically.
 
-This repository needs to be checked out adjacent to two other repositories. Note that `2017_Pre-Season` needs to be on the **Development** branch:
-
-```
-|
-|- bdc_comm (this repository)
-|- 2017_Pre-Season (git@gitlab.com:strykeforce2767/2017_Pre-Season.git) Development Branch
-|- 2017_Static (git@gitlab.com:strykeforce2767/2017_Static.git)
-```
-
-[Vagrant](https://www.vagrantup.com) is recommended as it will provision the correct development environment automatically:
+To set up the build environment:
 
 ```sh
-$ cd sidewinder
+$ # ensure vagrant is installed per above
+$ cd bdc_comm
 $ vagrant up
+$ # virtual machine image downloaded, booted and provisioned
 $ vagrant ssh
 $ # now logged into virtual build environment
 $ cd /vagrant
 ```
 
-Compile the roboRIO shared libraries into the static library `librio.a`. We'll temporarily do this manually:
-
-```sh
-$ cd 2017_Pre-Season/Shared_Libs/Compiled_RIO/
-$ make all
-$ arm-frc-linux-gnueabi-ar rcs librio.a *.o
-```
-
-## Compiling
-
 We use CMake to build this project:
 
 ```sh
-$ cd bdc_comm
+$ # ssh'd into virtual build environment and in /vagrant directory
 $ mkdir build
 $ cd build
+$ # set up build
 $ cmake ..
+$ # run make to compile
 $ make
+$ # from now on, just run make to rebuild
 ```

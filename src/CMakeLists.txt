@@ -1,6 +1,3 @@
-set(STRONGHOLD_SHARED_LIBS ../../2017_Pre-Season/Shared_Libs)
-set(WPI_LIBS ../../2017_Static/Robot_Libs)
-
 set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 
 include_directories(
@@ -17,7 +14,12 @@ add_executable(BDC_Comm
   Main.cpp
 )
 
+target_include_directories(BDC_Comm
+  PUBLIC
+  "${CMAKE_SOURCE_DIR}/lib"
+)
+
 target_link_libraries(BDC_Comm
-  "rio"
-  "wpi"
+  grapher
+  wpi
 )
