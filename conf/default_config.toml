@@ -26,7 +26,7 @@ max_drive_voltage = 12.0 # v, max drive in voltage mode
         # mag relative = 6
         # mag absolute = 7
         # pulse width  = 8
-        feedback_device = 0 # mag relative
+        feedback_device = 0 # quad
 
         # neutral mode
         # jumper = 0
