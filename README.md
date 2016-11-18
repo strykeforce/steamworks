@@ -38,3 +38,4 @@ A normal programming session looks like:
 3. Log into the VM with `vagrant ssh`.
 4. Compile.
 5. Deploy the compiled executable to the robot for testing.
+6. When finished, suspend the Vagrant VM with `vagrant halt`.
