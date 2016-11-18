@@ -2,7 +2,7 @@
 
 #include "WPILib.h"
 
-namespace sidewinder {
+namespace avenger {
 
 /** ZeroDriveWheels is a WPI command-based command to zero wheels.
  */
@@ -19,4 +19,4 @@ class ZeroDriveWheels : public ::Command {
   void Interrupted() override;
 };
 
-} /* sidewinder */
+} /* avenger */

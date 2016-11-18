@@ -5,7 +5,7 @@
 
 #include "swerve/talon_map.h"
 
-namespace sidewinder {
+namespace avenger {
 
 class RobotMap {
  public:
@@ -33,7 +33,7 @@ class RobotMap {
     kLeftRearDrive = 14,
   };
   // pointers to talons and azimuth encoder zero count
-  static TalonMap* swerve_talons;
+  static sidewinder::TalonMap* swerve_talons;
 
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);
@@ -69,4 +69,4 @@ enum TalonProfileSlots {
   kPrimary,
 };
 
-} /* sidewinder */
+} /* avenger */

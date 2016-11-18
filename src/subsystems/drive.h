@@ -3,10 +3,10 @@
 #include "WPILib.h"
 #include "swerve/swerve_drive.h"
 
-namespace sidewinder {
+namespace avenger {
 class Drive : public ::Subsystem {
  private:
-  SwerveDrive swerve_drive_;
+  sidewinder::SwerveDrive swerve_drive_;
 
  public:
   Drive(const std::shared_ptr<cpptoml::table> config);
@@ -14,4 +14,4 @@ class Drive : public ::Subsystem {
   void ZeroWheels();
   void CartesianDrive(float forward, float strafe, float azimuth);
 };
-} /* sidewinder */
+} /* avenger */

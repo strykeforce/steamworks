@@ -7,7 +7,7 @@
 #include "robot_map.h"
 #include "swerve/swerve_drive.h"
 
-namespace sidewinder {
+using namespace avenger;
 
 Drive::Drive(const std::shared_ptr<cpptoml::table> config)
     : ::Subsystem("Drive"), swerve_drive_(config, RobotMap::swerve_talons) {
@@ -21,4 +21,3 @@ void Drive::CartesianDrive(float forward, float strafe, float azimuth) {
 void Drive::ZeroWheels() { swerve_drive_.ZeroAzimuth(); }
 
 void Drive::InitDefaultCommand() { SetDefaultCommand(new TeleDrive()); }
-} /* sidewinder */

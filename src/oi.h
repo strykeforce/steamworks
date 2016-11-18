@@ -5,7 +5,7 @@
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
-namespace sidewinder {
+namespace avenger {
 
 /** Robot OI provides swerve drive operator inputs.
  * It assumes the flight simulator joysticks and buttons are used for swerve
@@ -50,4 +50,4 @@ class OI {
   float GetTeleDriveAzimuthAxis() const;
 };
 
-} /* sidewinder */
+} /* avenger */

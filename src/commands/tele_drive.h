@@ -6,7 +6,7 @@
 #include "oi.h"
 #include "swerve/swerve_drive.h"
 
-namespace sidewinder {
+namespace avenger {
 
 /** TeleDrive is a WPI command-based command to manually drive the Sidewinder
  * swerve drive.
@@ -29,4 +29,4 @@ class TeleDrive : public ::Command {
   void Interrupted() override;
 };
 
-} /* sidewinder */
+} /* avenger */

@@ -8,7 +8,7 @@
 #include "subsystems/drive.h"
 #include "swerve/talon_map.h"
 
-namespace sidewinder {
+using namespace avenger;
 
 OI* Robot::oi = nullptr;
 Drive* Robot::drive = nullptr;
@@ -64,6 +64,4 @@ void Robot::LoadConfig() {
   assert(config_);
 }
 
-} /* sidewinder */
-
-START_ROBOT_CLASS(sidewinder::Robot)
+START_ROBOT_CLASS(avenger::Robot)

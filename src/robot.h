@@ -7,7 +7,7 @@
 #include "oi.h"
 #include "subsystems/drive.h"
 
-namespace sidewinder {
+namespace avenger {
 
 class Robot : public ::IterativeRobot {
  private:
@@ -38,4 +38,4 @@ class Robot : public ::IterativeRobot {
   void TestPeriodic() override;
 };
 
-} /* sidewinder */
+} /* avenger */

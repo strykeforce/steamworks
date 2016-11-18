@@ -5,10 +5,10 @@
 
 #include "swerve/talon_map.h"
 
-namespace sidewinder {
+using namespace avenger;
 
 /** Holds pointers to the 8 swerve drive Talons.  */
-TalonMap* RobotMap::swerve_talons = new TalonMap();
+sidewinder::TalonMap* RobotMap::swerve_talons = new sidewinder::TalonMap();
 
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.
@@ -28,5 +28,3 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
   swerve_talons->rr_drive = new ::CANTalon(Talons::kRightRearDrive);
   swerve_talons->rr_azimuth = new ::CANTalon(Talons::kRightRearAzimuth);
 }
-
-} /* sidewinder */
