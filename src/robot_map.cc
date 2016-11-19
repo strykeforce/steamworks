@@ -10,7 +10,7 @@ using namespace avenger;
 sidewinder::TalonMap* RobotMap::swerve_talons = new sidewinder::TalonMap();
 
 /** Holds pointer to turret arm Talon. */
-std::unique_ptr<::CANTalon> RobotMap::turret_talon{nullptr};
+::CANTalon* RobotMap::turret_talon{nullptr};
 
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.
@@ -18,7 +18,7 @@ std::unique_ptr<::CANTalon> RobotMap::turret_talon{nullptr};
  * reference to each.
  */
 void RobotMap::Init() {
-  turret_talon.reset(new ::CANTalon(Talons::kTurret));
+  turret_talon = new ::CANTalon(Talons::kTurret);
 
   swerve_talons->lf_drive = new ::CANTalon(Talons::kLeftFrontDrive);
   swerve_talons->lf_azimuth = new ::CANTalon(Talons::kLeftFrontAzimuth);

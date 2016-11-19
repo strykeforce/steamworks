@@ -1,6 +1,7 @@
 [AVENGER]
 grapher = false
 fire_duration_ms = 80
+turret_drive_voltage = 4.0
 
     [[AVENGER.TALON]]
     name = "turret"

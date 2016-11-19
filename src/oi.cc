@@ -56,6 +56,13 @@ float OI::GetTeleDriveAzimuthAxis() const {
   return JoystickExpo(axis);
 }
 
+/** Returns gamepad elevation input.
+ */
+float OI::GetTurretElevationAxis() const {
+  float axis = -gamepad_joystick_.GetRawAxis(kGamepadLeftYAxis);
+  return JoystickExpo(axis);
+}
+
 /** Joystick sensitivity transfer function.
  * https://plot.ly/~jhh/11/matplotlib-notebook-import-matplotlibp/
  */

@@ -26,14 +26,15 @@ Cannon::Cannon(const std::shared_ptr<cpptoml::table> config)
 void Cannon::Fire() {
   if (firing_) return;
   if (barrel_ == 7) barrel_ = -1;
-  solenoids_[++barrel_]->Set(true);
+  ++barrel_;
+  // solenoids_[++barrel_]->Set(true);
   firing_ = true;
   notifier_->StartSingle(fire_duration_sec_);
   logger_->info("fired barrel {}", barrel_);
 }
 
 void Cannon::CloseSolenoid() {
-  solenoids_[barrel_]->Set(false);
+  // solenoids_[barrel_]->Set(false);
   firing_ = false;
   logger_->debug("closed solenoid for barrel {}", barrel_);
 }

@@ -47,6 +47,13 @@ class OI {
     kFlightSimLeftCornerUpButton,
   };
 
+  enum GamepadAxis {
+    kGamepadLeftXAxis = 0,
+    kGamepadLeftYAxis = 1,
+    kGamepadRightXAxis = 4,
+    kGamepadRightYAxis = 5,
+  };
+
   enum GamepadButtons {
     kGamepadAButton = 1,
     kGamepadBButton = 2,
@@ -61,6 +68,8 @@ class OI {
   float GetTeleDriveForwardAxis() const;
   float GetTeleDriveStrafeAxis() const;
   float GetTeleDriveAzimuthAxis() const;
+
+  float GetTurretElevationAxis() const;
 };
 
 } /* avenger */
