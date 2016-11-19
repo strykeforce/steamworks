@@ -12,8 +12,6 @@ Cannon::Cannon(const std::shared_ptr<cpptoml::table> config)
   fire_duration_sec_ =
       config->get_as<double>("fire_duration_ms").value_or(0) / 1000.0;
 
-  // fire_duration_sec_ = 0.08;
-
   logger_->info("firing pulse is {} ms", fire_duration_sec_ * 1000);
 
   for (size_t i = 0; i < 8; i++) {
@@ -24,8 +22,11 @@ Cannon::Cannon(const std::shared_ptr<cpptoml::table> config)
 }
 
 void Cannon::Fire() {
+  std::lock_guard<std::mutex> lock(mutex_);
+
   if (firing_) return;
   if (barrel_ == 7) barrel_ = -1;
+
   solenoids_[++barrel_]->Set(true);
   firing_ = true;
   notifier_->StartSingle(fire_duration_sec_);
@@ -33,6 +34,8 @@ void Cannon::Fire() {
 }
 
 void Cannon::CloseSolenoid() {
+  std::lock_guard<std::mutex> lock(mutex_);
+
   solenoids_[barrel_]->Set(false);
   firing_ = false;
   logger_->debug("closed solenoid for barrel {}", barrel_);

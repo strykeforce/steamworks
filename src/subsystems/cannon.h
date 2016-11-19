@@ -1,5 +1,7 @@
 #pragma once
 
+#include <mutex>
+
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
@@ -13,8 +15,8 @@ class Cannon : public ::Subsystem {
   double fire_duration_sec_ = 0.0;
   int barrel_ = -1;
   std::unique_ptr<::Notifier> notifier_;
-  // TODO: should this be atomic?
   bool firing_ = false;
+  std::mutex mutex_;
 
   void CloseSolenoid();
 
