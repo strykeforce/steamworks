@@ -1,5 +1,6 @@
 /build
 /.vagrant
+/.vault_pw
 
 # Created by https://www.gitignore.io/api/cmake,c++,osx
 
