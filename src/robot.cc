@@ -5,25 +5,31 @@
 #include "spdlog/spdlog.h"
 
 #include "robot_map.h"
+#include "subsystems/cannon.h"
 #include "subsystems/drive.h"
+#include "subsystems/turret.h"
 #include "swerve/talon_map.h"
 
 using namespace avenger;
 
 OI* Robot::oi = nullptr;
 Drive* Robot::drive = nullptr;
+Turret* Robot::turret = nullptr;
+Cannon* Robot::cannon = nullptr;
 
-Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("robot")) {
+Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("Robot")) {
   logger_->set_level(spdlog::level::trace);
 }
 
 void Robot::RobotInit() {
   LoadConfig();
-  RobotMap::Init(config_);
+  RobotMap::Init();
   LogAbsoluteEncoders();
 
   // load in order of dependency
   drive = new Drive(config_->get_table("SIDEWINDER"));
+  turret = new Turret(config_->get_table("AVENGER"));
+  cannon = new Cannon(config_->get_table("AVENGER"));
   oi = new OI(config_);
 }
 

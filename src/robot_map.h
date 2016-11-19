@@ -1,7 +1,6 @@
 #pragma once
 
 #include "WPILib.h"
-#include "cpptoml/cpptoml.h"
 
 #include "swerve/talon_map.h"
 
@@ -31,12 +30,16 @@ class RobotMap {
     kRightRearDrive = 13,
     kLeftRearAzimuth = 4,
     kLeftRearDrive = 14,
+    kTurret = 5,
   };
   // pointers to talons and azimuth encoder zero count
   static sidewinder::TalonMap* swerve_talons;
 
+  // pointer to turret talon
+  static std::unique_ptr<::CANTalon> turret_talon;
+
   // instantiate talons and read encoder zero count
-  static void Init(const std::shared_ptr<cpptoml::table> config);
+  static void Init();
 };
 
 // Joysticks

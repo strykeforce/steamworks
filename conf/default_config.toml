@@ -1,5 +1,18 @@
-[DRIVETEST]
-grapher = true
+[AVENGER]
+grapher = false
+fire_duration_ms = 80
+
+    [[AVENGER.TALON]]
+    name = "turret"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # brake
+    limit_mode      = 0 # use switches
+    encoder_reversed = false
+    output_reversed  = false
+
+    voltage_ramp_rate = 4.0 # v/s, 0 disables
+
 
 [SIDEWINDER]
 joystick_dead_zone  = 0.08

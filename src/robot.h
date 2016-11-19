@@ -5,7 +5,9 @@
 #include "spdlog/spdlog.h"
 
 #include "oi.h"
+#include "subsystems/cannon.h"
 #include "subsystems/drive.h"
+#include "subsystems/turret.h"
 
 namespace avenger {
 
@@ -20,6 +22,8 @@ class Robot : public ::IterativeRobot {
  public:
   static OI* oi;
   static Drive* drive;
+  static Turret* turret;
+  static Cannon* cannon;
 
   Robot();
 

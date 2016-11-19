@@ -5,6 +5,7 @@
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
+#include "commands/fire_cannon.h"
 #include "commands/zero_drive_wheels.h"
 
 using namespace avenger;
@@ -26,7 +27,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
              (1.0 - joystick_expo_coeff_) * (1.0 - joystick_dead_zone_));
 
   // buttons
-  reset_button_.WhenPressed(new ZeroDriveWheels());
+  reset_button_.WhenPressed(new FireCannon());
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)

@@ -36,5 +36,6 @@ Vagrant.configure('2') do |config|
     }
     ansible.sudo = true
     ansible.verbose = false
+    ansible.raw_arguments = ['--vault-password-file=/vagrant/.vault_pw']
   end
 end
