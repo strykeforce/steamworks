@@ -36,7 +36,7 @@ class RobotMap {
   static sidewinder::TalonMap* swerve_talons;
 
   // pointer to turret talon
-  static std::unique_ptr<::CANTalon> turret_talon;
+  static ::CANTalon* turret_talon;
 
   // instantiate talons and read encoder zero count
   static void Init();
