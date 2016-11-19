@@ -10,8 +10,13 @@ class Cannon : public ::Subsystem {
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   std::vector<std::unique_ptr<::Solenoid>> solenoids_;
-  int fire_duration_ms_ = 0;
-  int barrel_ = 0;
+  double fire_duration_sec_ = 0.0;
+  int barrel_ = -1;
+  std::unique_ptr<::Notifier> notifier_;
+  // TODO: should this be atomic?
+  bool firing_ = false;
+
+  void CloseSolenoid();
 
  public:
   Cannon(const std::shared_ptr<cpptoml::table> config);
