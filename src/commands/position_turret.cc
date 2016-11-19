@@ -20,8 +20,8 @@ void PositionTurret::Execute() {
   Robot::turret->Move(elevation);
 }
 
-bool PositionTurret::IsFinished() { return true; }
+bool PositionTurret::IsFinished() { return false; }
 
-void PositionTurret::End() {}
+void PositionTurret::End() { Robot::turret->Move(0.0); }
 
-void PositionTurret::Interrupted() {}
+void PositionTurret::Interrupted() { End(); }
