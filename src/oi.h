@@ -15,7 +15,11 @@ class OI {
  private:
   // create our joystick objects
   ::Joystick flight_sim_joystick_;
+  ::Joystick gamepad_joystick_;
+
   ::JoystickButton reset_button_;
+  ::JoystickButton fire_button_;
+
   float joystick_dead_zone_, joystick_expo_coeff_, joystick_expo_scale_;
 
   float JoystickExpo(const float in) const;
@@ -23,7 +27,7 @@ class OI {
  public:
   enum Joysticks {
     kFlightSimJoystick = 0,
-    kGamePadJoystick,
+    kGamepadJoystick,
   };
 
   // TODO: verify these
@@ -41,6 +45,15 @@ class OI {
     kFlightSimResetButton,
     kFlightSimLeftCornerDownButton,
     kFlightSimLeftCornerUpButton,
+  };
+
+  enum GamepadButtons {
+    kGamepadAButton = 1,
+    kGamepadBButton = 2,
+    kGamepadXButton = 3,
+    kGamepadYButton = 4,
+    kGamepadLeftBumper = 5,
+    kGamepadRightBumper = 6,
   };
 
   OI(const std::shared_ptr<cpptoml::table> config);

@@ -14,7 +14,9 @@ using namespace avenger;
  */
 OI::OI(const std::shared_ptr<cpptoml::table> config)
     : flight_sim_joystick_(kFlightSimJoystick),
-      reset_button_(&flight_sim_joystick_, kFlightSimResetButton) {
+      gamepad_joystick_(kGamepadJoystick),
+      reset_button_(&flight_sim_joystick_, kFlightSimResetButton),
+      fire_button_(&gamepad_joystick_, kGamepadXButton) {
   auto c = config->get_table("SIDEWINDER");
   assert(c);
   joystick_dead_zone_ =
@@ -27,7 +29,8 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
              (1.0 - joystick_expo_coeff_) * (1.0 - joystick_dead_zone_));
 
   // buttons
-  reset_button_.WhenPressed(new FireCannon());
+  reset_button_.WhenPressed(new ZeroDriveWheels());
+  fire_button_.WhenPressed(new FireCannon());
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)
