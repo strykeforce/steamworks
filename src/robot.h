@@ -11,6 +11,9 @@
 
 namespace avenger {
 
+/** Robot is a command-based robot.
+ * Hardware references are managed in robot_map and operator inputs in oi.
+ */
 class Robot : public ::IterativeRobot {
  private:
   const std::shared_ptr<spdlog::logger> logger_;

@@ -7,13 +7,12 @@
 
 namespace avenger {
 
-/** Robot OI provides swerve drive operator inputs.
+/** Robot OI provides operator inputs.
  * It assumes the flight simulator joysticks and buttons are used for swerve
- * drive operation.
+ * drive operation while gamepad runs the turret and cannon.
  */
 class OI {
  private:
-  // create our joystick objects
   ::Joystick flight_sim_joystick_;
   ::Joystick gamepad_joystick_;
 
@@ -25,6 +24,16 @@ class OI {
   float JoystickExpo(const float in) const;
 
  public:
+  OI(const std::shared_ptr<cpptoml::table> config);
+  OI(const OI&) = delete;
+  OI& operator=(const OI&) = delete;
+  virtual ~OI() = default;
+
+  float GetTeleDriveForwardAxis() const;
+  float GetTeleDriveStrafeAxis() const;
+  float GetTeleDriveAzimuthAxis() const;
+  float GetTurretElevationAxis() const;
+
   enum Joysticks {
     kFlightSimJoystick = 0,
     kGamepadJoystick,
@@ -62,14 +71,6 @@ class OI {
     kGamepadLeftBumper = 5,
     kGamepadRightBumper = 6,
   };
-
-  OI(const std::shared_ptr<cpptoml::table> config);
-  virtual ~OI() = default;
-  float GetTeleDriveForwardAxis() const;
-  float GetTeleDriveStrafeAxis() const;
-  float GetTeleDriveAzimuthAxis() const;
-
-  float GetTurretElevationAxis() const;
 };
 
 } /* avenger */

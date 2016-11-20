@@ -8,19 +8,6 @@ namespace avenger {
 
 class RobotMap {
  public:
-  // FIXME: need to sort out left/right madness
-  // device ids for swerve drive talons
-  // enum Talons {
-  //   kRightFrontAzimuth = 1,
-  //   kRightFrontDrive = 11,
-  //   kLeftFrontAzimuth = 2,
-  //   kLeftFrontDrive = 12,
-  //   kRightRearAzimuth = 4,
-  //   kRightRearDrive = 14,
-  //   kLeftRearAzimuth = 3,
-  //   kLeftRearDrive = 13,
-  // };
-
   enum Talons {
     kRightFrontAzimuth = 2,
     kRightFrontDrive = 12,
@@ -32,26 +19,26 @@ class RobotMap {
     kLeftRearDrive = 14,
     kTurret = 5,
   };
+
   // pointers to talons and azimuth encoder zero count
   static sidewinder::TalonMap* swerve_talons;
 
   // pointer to turret talon
   static ::CANTalon* turret_talon;
 
-  // instantiate talons and read encoder zero count
+  // instantiate pointers to hardware objects like Talons, etc.
   static void Init();
 };
 
 // Joysticks
 enum Joysticks {
-  kFlightSimJoystick = 0,  // global.joy1 in old code
-  kGamePadJoystick,        // global.joy2
+  kFlightSimJoystick = 0,
+  kGamePadJoystick,
 };
 
-// flight sim axis deadzone 0.08
 enum FlightSimAxis {
-  kFlightSimRightAxis = 0,  // FlightSim_RightX_Axis
-  kFlightSimLeftAxis = 2,   // FlightSim_LeftY_Axis
+  kFlightSimRightAxis = 0,
+  kFlightSimLeftAxis = 2,
 };
 
 enum FlightSimButtons {
@@ -62,14 +49,14 @@ enum FlightSimButtons {
   kFlightSimLeftCornerUpButton,
 };
 
-// Joystick Buttons
 enum JoystickButtons {
   kGameButtonA = 1,
-  kGameButtonB,  // 2
+  kGameButtonB,
 };
 
 enum TalonProfileSlots {
-  kPrimary,
+  kPrimary = 0,
+  kSecondary,
 };
 
 } /* avenger */
