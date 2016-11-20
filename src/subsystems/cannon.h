@@ -27,5 +27,6 @@ class Cannon : public ::Subsystem {
   virtual ~Cannon() = default;
 
   void Fire();
+  void Reset();
 };
 } /* avenger */

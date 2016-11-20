@@ -40,3 +40,10 @@ void Cannon::CloseSolenoid() {
   firing_ = false;
   logger_->debug("closed solenoid for barrel {}", barrel_);
 }
+
+void Cannon::Reset() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  if (firing_) return;
+  barrel_ = -1;
+  logger_->info("reset to barrel 0", barrel_);
+}

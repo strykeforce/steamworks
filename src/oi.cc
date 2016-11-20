@@ -6,6 +6,7 @@
 #include "cpptoml/cpptoml.h"
 
 #include "commands/fire_cannon.h"
+#include "commands/reset_cannon.h"
 #include "commands/zero_drive_wheels.h"
 
 using namespace avenger;
@@ -15,8 +16,9 @@ using namespace avenger;
 OI::OI(const std::shared_ptr<cpptoml::table> config)
     : flight_sim_joystick_(kFlightSimJoystick),
       gamepad_joystick_(kGamepadJoystick),
-      reset_button_(&flight_sim_joystick_, kFlightSimResetButton),
-      fire_button_(&gamepad_joystick_, kGamepadXButton) {
+      reset_drive_button_(&flight_sim_joystick_, kFlightSimResetButton),
+      fire_cannon_button_(&gamepad_joystick_, kGamepadXButton),
+      reset_cannon_button_(&gamepad_joystick_, kGamepadSelectButton) {
   auto c = config->get_table("SIDEWINDER");
   assert(c);
   joystick_dead_zone_ =
@@ -29,8 +31,9 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
              (1.0 - joystick_expo_coeff_) * (1.0 - joystick_dead_zone_));
 
   // buttons
-  reset_button_.WhenPressed(new ZeroDriveWheels());
-  fire_button_.WhenPressed(new FireCannon());
+  reset_drive_button_.WhenPressed(new ZeroDriveWheels());
+  fire_cannon_button_.WhenPressed(new FireCannon());
+  reset_cannon_button_.WhenPressed(new ResetCannon());
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)

@@ -16,8 +16,9 @@ class OI {
   ::Joystick flight_sim_joystick_;
   ::Joystick gamepad_joystick_;
 
-  ::JoystickButton reset_button_;
-  ::JoystickButton fire_button_;
+  ::JoystickButton reset_drive_button_;
+  ::JoystickButton fire_cannon_button_;
+  ::JoystickButton reset_cannon_button_;
 
   float joystick_dead_zone_, joystick_expo_coeff_, joystick_expo_scale_;
 
@@ -68,8 +69,10 @@ class OI {
     kGamepadBButton = 2,
     kGamepadXButton = 3,
     kGamepadYButton = 4,
-    kGamepadLeftBumper = 5,
-    kGamepadRightBumper = 6,
+    kGamepadLeftBumperButton = 5,
+    kGamepadRightBumperButton = 6,
+    kGamepadSelectButton = 7,
+    kGamepadStartButton = 8,
   };
 };
 
