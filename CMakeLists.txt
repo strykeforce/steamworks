@@ -35,4 +35,6 @@ link_directories(
 )
 
 add_subdirectory(src)
-# add_subdirectory(vendor/tools)
+
+set(DEFAULT_CONFIG_H "${PROJECT_BINARY_DIR}/src/default_config.h")
+add_subdirectory(vendor/tools)

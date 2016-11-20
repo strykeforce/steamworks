@@ -4,11 +4,13 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
+#include "default_config.h"
 #include "robot_map.h"
 #include "subsystems/cannon.h"
 #include "subsystems/drive.h"
 #include "subsystems/turret.h"
 #include "swerve/talon_map.h"
+#include "version.h"
 
 using namespace avenger;
 
@@ -22,6 +24,7 @@ Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("Robot")) {
 }
 
 void Robot::RobotInit() {
+  LogVersion();
   LoadConfig();
   RobotMap::Init();
   LogAbsoluteEncoders();
@@ -64,10 +67,39 @@ void Robot::LogAbsoluteEncoders() {
   logger_->info("right rear azimuth position: {}", pos);
 }
 
+/** Reads our configuration file from ~lvuser/stronghold.toml.
+ * If not present or unable to parse, will read the default compiled-in
+ * configuration from conf/default_config.toml.
+ */
 void Robot::LoadConfig() {
-  logger_->info("loading configuration from: /home/lvuser/avenger.toml");
-  config_ = cpptoml::parse_file("/home/lvuser/avenger.toml");
-  assert(config_);
+  auto path = "/home/lvuser/avenger.toml";
+  logger_->info("loading configuration from: {}", path);
+
+  try {
+    config_ = cpptoml::parse_file(path);
+    return;
+  } catch (const std::exception& e) {
+    logger_->warn(e.what());
+  }
+
+  logger_->warn("using default config compiled into binary");
+  std::string conf(default_config_toml, std::end(default_config_toml));
+  std::istringstream is{conf};
+  cpptoml::parser p{is};
+  config_ = p.parse();
 }
+
+void Robot::LogVersion() {
+  logger_->info("Avenger {}.{}.{}{} initializing...", AVENGER_VERSION_MAJOR,
+                AVENGER_VERSION_MINOR, AVENGER_VERSION_PATCH,
+                AVENGER_VERSION_META);
+  logger_->info(" build {} compiled at {} {}", AVENGER_VERSION_BUILD,
+                AVENGER_COMPILE_DATE, AVENGER_COMPILE_TIME);
+}
+
+// used for: strings stronghold | grep AVENGER_VERSION
+static const char* stronghold_version =
+    "AVENGER_VERSION " AVENGER_VERSION " " AVENGER_COMPILE_DATE
+    " " AVENGER_COMPILE_TIME;
 
 START_ROBOT_CLASS(avenger::Robot)

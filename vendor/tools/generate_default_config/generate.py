@@ -17,15 +17,7 @@ dir_name, file_name = os.path.split(args.input)
 os.chdir(dir_name)
 data = subprocess.check_output(args=["/usr/bin/xxd", "-i", file_name])
 
-preamble = """
-#ifndef STRONGHOLD_DEFAULT_CONFIG_H_
-#define STRONGHOLD_DEFAULT_CONFIG_H_
-"""
-
-postamble = """
-#endif /* end of include guard: STRONGHOLD_DEFAULT_CONFIG_H_ */
-"""
+preamble = "#pragma once"
 
 print(preamble)
 print(data.decode("ascii"))
-print(postamble)

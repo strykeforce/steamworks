@@ -18,6 +18,7 @@ class Robot : public ::IterativeRobot {
 
   void LoadConfig();
   void LogAbsoluteEncoders();
+  void LogVersion();
 
  public:
   static OI* oi;
