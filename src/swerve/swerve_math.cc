@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace sidewinder {
+using namespace sidewinder;
 
 /** helper function for swerve drive calculations.
  *  https://www.chiefdelphi.com/media/papers/2426
@@ -90,5 +90,3 @@ void SwerveMath::Calc(DriveData& dd) {
 
   last_dd_ = dd;
 }
-
-} /* sidewinder */

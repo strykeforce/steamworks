@@ -7,7 +7,7 @@
 #include "robot.h"
 #include "subsystems/drive.h"
 
-namespace sidewinder {
+using namespace sidewinder;
 
 TeleDrive::TeleDrive()
     : ::Command("TeleDrive"),
@@ -45,5 +45,3 @@ void TeleDrive::Interrupted() {
   logger_->debug("interrupted driving.");
   End();
 }
-
-} /* sidewinder */

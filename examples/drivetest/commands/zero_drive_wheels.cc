@@ -6,7 +6,7 @@
 #include "robot.h"
 #include "subsystems/drive.h"
 
-namespace sidewinder {
+using namespace sidewinder;
 
 ZeroDriveWheels::ZeroDriveWheels() : ::Command("ZeroDriveWheels") {
   assert(Robot::drive);
@@ -22,5 +22,3 @@ bool ZeroDriveWheels::IsFinished() { return true; }
 void ZeroDriveWheels::End() {}
 
 void ZeroDriveWheels::Interrupted() {}
-
-} /* sidewinder */

@@ -8,7 +8,7 @@
 #include "subsystems/drive.h"
 #include "swerve/talon_map.h"
 
-namespace sidewinder {
+using namespace sidewinder;
 
 OI* Robot::oi = nullptr;
 Drive* Robot::drive = nullptr;
@@ -63,7 +63,5 @@ void Robot::LoadConfig() {
   config_ = cpptoml::parse_file("/home/lvuser/drivetest.toml");
   assert(config_);
 }
-
-} /* sidewinder */
 
 START_ROBOT_CLASS(sidewinder::Robot)

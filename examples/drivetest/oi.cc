@@ -7,7 +7,7 @@
 
 #include "commands/zero_drive_wheels.h"
 
-namespace sidewinder {
+using namespace sidewinder;
 
 /** Construct and configure Robot operator input.
  */
@@ -64,4 +64,3 @@ float OI::JoystickExpo(float in) const {
           (1 - joystick_expo_coeff_) * in) *
          joystick_expo_scale_;
 }
-} /* sidewinder */

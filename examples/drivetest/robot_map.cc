@@ -6,7 +6,7 @@
 #include "HostToObject.h"
 #include "swerve/talon_map.h"
 
-namespace sidewinder {
+using namespace sidewinder;
 
 // helper functions to start grapher data collection thread if enabled.
 namespace {
@@ -75,5 +75,3 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
     initialize_grapher();
   }
 }
-
-} /* sidewinder */
