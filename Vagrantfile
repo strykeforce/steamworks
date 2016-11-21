@@ -20,7 +20,7 @@ Vagrant.configure('2') do |config|
 
   [[ ! -x $GIT ]] && apt-get install -y git
 
-  if [[ -d $ANSIBLE_DIR ]]; then
+  if [[ -d $ANSIBLE_DIR/.git ]]; then
     cd $ANSIBLE_DIR
     $GIT pull -q
   else
