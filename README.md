@@ -6,7 +6,7 @@ The Stryke Force swerve drive library. It provides a WPILib command-based subsys
 
 This will install the Sidewinder static library and necessary header files in `/opt/sidewinder`.
 
-Vagrant is recommended as it will provision the correct development environment automatically:
+Vagrant is recommended as it will provision the correct development environment automatically. Note: installation requires a Gitlab deployment password to be in the `.vault_pw` file at the top of the repo. Contact a team member to obtain it.
 
 ```sh
 $ cd sidewinder
