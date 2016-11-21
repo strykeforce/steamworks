@@ -13,12 +13,14 @@ namespace avenger {
  */
 class OI {
  private:
-  ::Joystick flight_sim_joystick_;
+  ::Joystick drive_joystick_;
   ::Joystick gamepad_joystick_;
 
-  ::JoystickButton reset_drive_button_;
-  ::JoystickButton fire_cannon_button_;
-  ::JoystickButton reset_cannon_button_;
+  std::unique_ptr<::JoystickButton> reset_drive_button_;
+  std::unique_ptr<::JoystickButton> fire_cannon_button_;
+  std::unique_ptr<::JoystickButton> reset_cannon_button_;
+
+  uint32_t drive_forward_axis_, drive_strafe_axis_, drive_azimuth_axis_;
 
   float joystick_dead_zone_, joystick_expo_coeff_, joystick_expo_scale_;
 
@@ -35,9 +37,14 @@ class OI {
   float GetTeleDriveAzimuthAxis() const;
   float GetTurretElevationAxis() const;
 
-  enum Joysticks {
-    kFlightSimJoystick = 0,
-    kGamepadJoystick,
+  // USB Ports for Joysticks
+  enum JoystickUSBPorts {
+    kUSB0 = 0,
+    kUSB1,
+    kUSB2,
+    kUSB3,
+    kUSB4,
+    kUSB5,
   };
 
   // TODO: verify these
