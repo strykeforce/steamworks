@@ -6,6 +6,7 @@
 #include "spdlog/spdlog.h"
 
 #include "position_settings.h"
+#include "velocity_settings.h"
 #include "voltage_settings.h"
 
 using namespace sidewinder::talon;
@@ -45,7 +46,7 @@ unique_ptr<Settings> Settings::Create(TalonConfig config, const string name) {
   } else if (*type == "position") {
     settings.reset(new PositionSettings(talon));
   } else if (*type == "velocity") {
-    throw invalid_argument("velocity talon not implemented");
+    settings.reset(new VelocitySettings(talon));
   } else {
     throw invalid_argument("unrecognized type: " + *type);
   }
