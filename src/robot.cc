@@ -19,14 +19,14 @@ Drive* Robot::drive = nullptr;
 Turret* Robot::turret = nullptr;
 Cannon* Robot::cannon = nullptr;
 
-Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("Robot")) {
+Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("robot")) {
   logger_->set_level(spdlog::level::trace);
 }
 
 void Robot::RobotInit() {
   LogVersion();
   LoadConfig();
-  RobotMap::Init();
+  RobotMap::Init(config_);
   LogAbsoluteEncoders();
 
   // load in order of dependency

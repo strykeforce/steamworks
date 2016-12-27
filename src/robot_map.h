@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WPILib.h"
+#include "cpptoml/cpptoml.h"
 
 #include "swerve/talon_map.h"
 
@@ -27,7 +28,7 @@ class RobotMap {
   static ::CANTalon* turret_talon;
 
   // instantiate pointers to hardware objects like Talons, etc.
-  static void Init();
+  static void Init(const std::shared_ptr<cpptoml::table> config);
 };
 
 // Joysticks

@@ -17,6 +17,7 @@ target_include_directories(avenger
 target_link_libraries(avenger
   PUBLIC
   sidewinder
+  grapher
   wpi
 )
 

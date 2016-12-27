@@ -1,5 +1,5 @@
 [AVENGER]
-grapher = false
+grapher = true
 fire_duration_ms = 100
 turret_drive_voltage = 4.0
 # drive_joystick_type = "flight_sim" # or gamepad

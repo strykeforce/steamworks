@@ -27,6 +27,7 @@ include_directories(
   "${SIDEWINDER_LIBS}/include"
   "${WPI_LIBS}/include"
   "${CMAKE_SOURCE_DIR}/vendor/include"
+  "${CMAKE_SOURCE_DIR}/vendor/grapher"
 )
 
 link_directories(
@@ -35,6 +36,7 @@ link_directories(
 )
 
 add_subdirectory(src)
+add_subdirectory(vendor)
 
 set(DEFAULT_CONFIG_H "${PROJECT_BINARY_DIR}/src/default_config.h")
 add_subdirectory(vendor/tools)
