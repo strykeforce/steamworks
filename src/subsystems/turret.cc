@@ -16,7 +16,7 @@ using namespace sidewinder;
 Turret::Turret(const std::shared_ptr<cpptoml::table> config)
     : ::Subsystem("Turret"), logger_(spdlog::stdout_color_st(GetName())) {
   assert(config);
-  logger_->set_level(spdlog::level::trace);
+  logger_->set_level(spdlog::level::info);
   logger_->trace("starting constructor");
 
   drive_voltage_ = static_cast<float>(
