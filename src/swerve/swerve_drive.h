@@ -17,7 +17,7 @@ class SwerveDrive {
   const std::shared_ptr<spdlog::logger> logger_;
   const TalonMap* map_;
   SwerveMath swerve_math_;
-  float max_voltage_ = 12.0;  // voltage limit in voltage mode
+  float drive_scale_factor_ = 0.0;
 
   void SetEncoderZero(const std::shared_ptr<cpptoml::table> config);
 

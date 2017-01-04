@@ -55,9 +55,9 @@ SwerveDrive::SwerveDrive(talon::TalonConfig config, const TalonMap* tm)
   drive_settings->Configure(map_->rr_drive);
   drive_settings->SetMode(map_->rr_drive);
 
-  // this is how hard we will allow driving in voltage mode.
-  max_voltage_ =
-      static_cast<float>(*config->get_as<double>("max_drive_voltage"));
+  // max output to CANTalon.Set().
+  drive_scale_factor_ =
+      static_cast<float>(*config->get_as<double>("drive_scale_factor"));
   logger_->trace("done with constructor");
 }
 
@@ -106,6 +106,7 @@ void SwerveDrive::ZeroAzimuth() {
  */
 void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
   // don't reset wheels to zero in dead zone
+  // FIXME: dead zone hard-coded
   if (std::fabs(forward) <= 0.08 && std::fabs(strafe) <= 0.08 &&
       std::fabs(azimuth) < 0.08) {
     map_->rf_drive->Set(0.0);
@@ -120,16 +121,15 @@ void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
   dd.rcw = azimuth;
   swerve_math_.Calc(dd);
 
-  // TODO: round? cast? ignore?
   map_->lf_azimuth->Set(std::round(dd.walf * 2048 / 180));
   map_->rf_azimuth->Set(std::round(dd.warf * 2048 / 180));
   map_->lr_azimuth->Set(std::round(dd.walr * 2048 / 180));
   map_->rr_azimuth->Set(std::round(dd.warr * 2048 / 180));
 
-  map_->rf_drive->Set(dd.wsrf * max_voltage_);
-  map_->lf_drive->Set(dd.wslf * max_voltage_);
-  map_->lr_drive->Set(dd.wslr * max_voltage_);
-  map_->rr_drive->Set(dd.wsrr * max_voltage_);
+  map_->rf_drive->Set(dd.wsrf * drive_scale_factor_);
+  map_->lf_drive->Set(dd.wslf * drive_scale_factor_);
+  map_->lr_drive->Set(dd.wslr * drive_scale_factor_);
+  map_->rr_drive->Set(dd.wsrr * drive_scale_factor_);
   static int i;
   if (++i == 15) {
     logger_->trace("warf = {}, walf = {}, walr = {}, warr = {}", dd.warf,
@@ -153,7 +153,7 @@ void SwerveDrive::CrabDrive(float forward, float strafe) {
   map_->lr_azimuth->Set(pos);
   map_->rr_azimuth->Set(pos);
 
-  float volts = forward * max_voltage_;
+  float volts = forward * drive_scale_factor_;
   map_->lf_drive->Set(volts);
   map_->rf_drive->Set(volts);
   map_->lr_drive->Set(volts);
