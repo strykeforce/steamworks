@@ -4,6 +4,7 @@
 
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
+#include "oi/expo.h"
 
 namespace sidewinder {
 
@@ -16,9 +17,7 @@ class OI {
   // create our joystick objects
   ::Joystick flight_sim_joystick_;
   ::JoystickButton reset_button_;
-  float joystick_dead_zone_, joystick_expo_coeff_, joystick_expo_scale_;
-
-  float JoystickExpo(const float in) const;
+  oi::Expo drive_expo_, azimuth_expo_;
 
  public:
   enum Joysticks {
