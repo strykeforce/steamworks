@@ -5,6 +5,7 @@
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 #include "oi/expo.h"
+#include "oi/sma.h"
 
 namespace sidewinder {
 
@@ -18,6 +19,7 @@ class OI {
   ::Joystick flight_sim_joystick_;
   ::JoystickButton reset_button_;
   oi::Expo drive_expo_, azimuth_expo_;
+  oi::SMA drive_sma_, azimuth_sma_;
 
  public:
   enum Joysticks {
@@ -44,9 +46,9 @@ class OI {
 
   OI(const std::shared_ptr<cpptoml::table> config);
   virtual ~OI() = default;
-  float GetTeleDriveForwardAxis() const;
-  float GetTeleDriveStrafeAxis() const;
-  float GetTeleDriveAzimuthAxis() const;
+  float GetTeleDriveForwardAxis();
+  float GetTeleDriveStrafeAxis();
+  float GetTeleDriveAzimuthAxis();
 };
 
 } /* sidewinder */
