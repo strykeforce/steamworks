@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.0.0] - 2017-01-06
+
+Version 16.0.0 updated for 2017 libraries.
+
 ## [16.0.0] - 2017-01-06
 
 This is the last feature release for 2016.
