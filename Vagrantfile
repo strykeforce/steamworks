@@ -8,6 +8,7 @@ Vagrant.configure('2') do |config|
     v.name = 'steamworks'
     v.memory = 1024
     v.cpus = 2
+    v.customize ['modifyvm', :id, '--paravirtprovider', 'kvm']
   end
 
   config.vm.network 'public_network'
