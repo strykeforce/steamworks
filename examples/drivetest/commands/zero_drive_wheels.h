@@ -6,7 +6,7 @@ namespace sidewinder {
 
 /** ZeroDriveWheels is a WPI command-based command to zero wheels.
  */
-class ZeroDriveWheels : public ::Command {
+class ZeroDriveWheels : public frc::Command {
  private:
  public:
   ZeroDriveWheels();

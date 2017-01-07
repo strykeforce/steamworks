@@ -16,8 +16,8 @@ namespace sidewinder {
 class OI {
  private:
   // create our joystick objects
-  ::Joystick flight_sim_joystick_;
-  ::JoystickButton reset_button_;
+  frc::Joystick flight_sim_joystick_;
+  frc::JoystickButton reset_button_;
   oi::Expo drive_expo_, azimuth_expo_;
   oi::SMA drive_sma_, azimuth_sma_;
 

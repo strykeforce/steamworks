@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WPILib.h"
+#include "CANTalon.h"
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
 #include "swerve/talon_map.h"

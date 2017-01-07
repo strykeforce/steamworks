@@ -1,7 +1,7 @@
 #include "settings.h"
 
 #include <iostream>
-#include "WPILib.h"
+#include "CANTalon.h"
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 

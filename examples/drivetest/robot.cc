@@ -29,19 +29,19 @@ void Robot::RobotInit() {
 
 void Robot::DisabledInit() { logger_->trace("DisabledInit"); }
 
-void Robot::DisabledPeriodic() { ::Scheduler::GetInstance()->Run(); }
+void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::AutonomousInit() { logger_->trace("AutonomousInit"); }
 
-void Robot::AutonomousPeriodic() { ::Scheduler::GetInstance()->Run(); }
+void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::TeleopInit() { logger_->trace("TeleopInit"); }
 
-void Robot::TeleopPeriodic() { ::Scheduler::GetInstance()->Run(); }
+void Robot::TeleopPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::TestInit() { logger_->trace("TestInit"); }
 
-void Robot::TestPeriodic() { ::LiveWindow::GetInstance()->Run(); }
+void Robot::TestPeriodic() { frc::LiveWindow::GetInstance()->Run(); }
 
 void Robot::LogAbsoluteEncoders() {
   auto tm = RobotMap::swerve_talons;

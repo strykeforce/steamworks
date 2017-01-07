@@ -4,7 +4,7 @@
 #include "swerve/swerve_drive.h"
 
 namespace sidewinder {
-class Drive : public ::Subsystem {
+class Drive : public frc::Subsystem {
  private:
   SwerveDrive swerve_drive_;
 

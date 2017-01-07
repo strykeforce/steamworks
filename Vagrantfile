@@ -17,7 +17,7 @@ Vagrant.configure('2') do |config|
   config.vm.provision 'shell', inline: <<-SCRIPT
   GIT=/usr/bin/git
   ANSIBLE_REPO=https://github.com/strykeforce/ansible.git
-  ANSIBLE_VERSION=v16.0.1
+  ANSIBLE_VERSION=master
   ANSIBLE_DIR=/opt/ansible
 
   [[ ! -x $GIT ]] && apt-get install -y git

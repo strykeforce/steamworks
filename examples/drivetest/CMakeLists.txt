@@ -17,5 +17,6 @@ target_link_libraries(drivetest
   PUBLIC
   sidewinder
   grapher
+  TalonSRXLib
   wpi
 )

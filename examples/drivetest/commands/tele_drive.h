@@ -11,10 +11,10 @@ namespace sidewinder {
 /** TeleDrive is a WPI command-based command to manually drive the Sidewinder
  * swerve drive.
  */
-class TeleDrive : public ::Command {
+class TeleDrive : public frc::Command {
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  const std::unique_ptr<::Timer> print_timer_;
+  const std::unique_ptr<frc::Timer> print_timer_;
 
  public:
   /** Construct the TeleDrive.

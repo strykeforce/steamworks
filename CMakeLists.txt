@@ -2,12 +2,14 @@ cmake_minimum_required(VERSION 3.2)
 project(Sidewinder)
 
 set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
+set(CTRE_LIBS /opt/ctre CACHE PATH "CTRE directory.")
+
 set(CMAKE_INSTALL_PREFIX /opt/sidewinder CACHE PATH "Sidewinder installation directory." FORCE)
 
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 1)
+set(VERSION_MAJOR 17)
+set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
-set(VERSION_META "-alpha")
+set(VERSION_META "")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
 set(CMAKE_LD           /usr/bin/arm-frc-linux-gnueabi-ld)
@@ -24,11 +26,13 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 
 include_directories(SYSTEM
   "${WPI_LIBS}/include"
+  "${CTRE_LIBS}/include"
   "${CMAKE_SOURCE_DIR}/vendor/include"
 )
 
 link_directories(
   "${WPI_LIBS}/lib"
+  "${CTRE_LIBS}/lib"
 )
 
 add_subdirectory(src)

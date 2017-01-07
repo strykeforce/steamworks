@@ -10,9 +10,9 @@
 using namespace sidewinder;
 
 TeleDrive::TeleDrive()
-    : ::Command("TeleDrive"),
+    : frc::Command("TeleDrive"),
       logger_(spdlog::stdout_color_st("TeleDrive")),
-      print_timer_(std::unique_ptr<::Timer>(new ::Timer())) {
+      print_timer_(std::unique_ptr<frc::Timer>(new frc::Timer())) {
   Requires(Robot::drive);
   logger_->set_level(spdlog::level::debug);
   print_timer_->Start();

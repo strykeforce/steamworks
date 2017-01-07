@@ -8,7 +8,7 @@
 
 using namespace sidewinder;
 
-ZeroDriveWheels::ZeroDriveWheels() : ::Command("ZeroDriveWheels") {
+ZeroDriveWheels::ZeroDriveWheels() : frc::Command("ZeroDriveWheels") {
   assert(Robot::drive);
   Requires(Robot::drive);
 }

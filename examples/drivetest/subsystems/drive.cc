@@ -10,7 +10,7 @@
 using namespace sidewinder;
 
 Drive::Drive(const std::shared_ptr<cpptoml::table> config)
-    : ::Subsystem("Drive"), swerve_drive_(config, RobotMap::swerve_talons) {
+    : frc::Subsystem("Drive"), swerve_drive_(config, RobotMap::swerve_talons) {
   ;
 }
 

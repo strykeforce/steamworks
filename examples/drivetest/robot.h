@@ -9,7 +9,7 @@
 
 namespace sidewinder {
 
-class Robot : public ::IterativeRobot {
+class Robot : public frc::IterativeRobot {
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   std::shared_ptr<cpptoml::table> config_;
