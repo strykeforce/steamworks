@@ -69,7 +69,7 @@ inline std::pair<float, float> min_angle(float speed, float next, float prev) {
  * joystick forward, strafe and azimuth. Outputs are wheel speeds in the range
  * 0 to +1 and wheel angles in the range -180 to 180 degrees.
  */
-void SwerveMath::Calc(DriveData& dd) {
+void SwerveMath::operator()(DriveData& dd) {
   calc_wheels(dd);
 
   auto wheel = min_angle(dd.wsrf, dd.warf, last_dd_.warf);

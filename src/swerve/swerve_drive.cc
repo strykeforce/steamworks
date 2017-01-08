@@ -119,7 +119,7 @@ void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
   dd.fwd = forward;
   dd.str = strafe;
   dd.rcw = azimuth;
-  swerve_math_.Calc(dd);
+  swerve_math_(dd);
 
   map_->lf_azimuth->Set(std::round(dd.walf * 2048 / 180));
   map_->rf_azimuth->Set(std::round(dd.warf * 2048 / 180));

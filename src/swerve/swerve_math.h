@@ -19,6 +19,6 @@ class SwerveMath {
 
  public:
   SwerveMath();
-  void Calc(DriveData& dd);
+  void operator()(DriveData& dd);
 };
 } /* sidewinder */
