@@ -1,0 +1,81 @@
+[STEAMWORKS]
+grapher = false
+
+    [[STEAMWORKS.TALON]]
+    name = "turret"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # brake
+    limit_mode      = 0 # use switches
+    encoder_reversed = false
+    output_reversed  = false
+
+    voltage_ramp_rate = 4.0 # v/s, 0 disables
+
+
+[SIDEWINDER]
+joystick_dead_zone  = 0.08
+joystick_expo_coeff = 0.75
+max_drive_voltage = 6.0 # v, max drive in voltage mode
+
+    [SIDEWINDER.SWERVE]
+    lf_zero = 1008
+    rf_zero = 3252
+    lr_zero = 3415
+    rr_zero = 1297
+
+
+        [[SIDEWINDER.SWERVE.TALON]]
+        name = "azimuth"
+        type = "position"
+
+        # feedback device
+        # quad         = 0
+        # analog pot   = 2
+        # analog enc   = 3
+        # enc rising   = 4
+        # enc falling  = 5
+        # mag relative = 6
+        # mag absolute = 7
+        # pulse width  = 8
+        feedback_device = 0 # quad
+
+        # neutral mode
+        # jumper = 0
+        # brake = 1
+        # coast = 2
+        neutral_mode    = 2 # coast
+
+        # limit mode
+        # only use switches for limits             = 0
+        # use both switches and soft limits        = 1
+        # disable switches and disable soft limits = 2
+        limit_mode      = 2 # soft and hard disabled
+
+        P      =   12.0
+        I      =    0.0
+        D      =  200.0
+        F      =    0.0
+        I_zone =      0
+
+        voltage_ramp_rate              =  0.0 # v/s, 0 disables
+        close_loop_ramp_rate           =  0.0 # v/s, 0 disables
+        peak_output_voltage_forward    =  6.0 # v
+        peak_output_voltage_reverse    = -6.0 # v
+        nominal_output_voltage_forward =  0.0 # v
+        nominal_output_voltage_reverse =  0.0 # v
+        allowable_closed_loop_error    =    0 # encoder ticks
+        encoder_reversed = false
+        output_reversed  = false
+
+        [[SIDEWINDER.SWERVE.TALON]]
+        name = "drive_voltage"
+        type = "voltage"
+
+        feedback_device = 0 # quad
+        neutral_mode    = 2 # coast
+        limit_mode      = 2 # soft and hard disabled
+        encoder_reversed = false
+        output_reversed  = false
+
+        voltage_ramp_rate = 12.0 # v/s, 0 disables
