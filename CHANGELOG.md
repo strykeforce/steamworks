@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Version 16.0.0 updated for 2017 libraries.
 
+### Changed
+
+- WPILib now in `frc` namespace.
+- Talon code broken out into separate CTRE library.
+
 ## [16.0.0] - 2017-01-06
 
 This is the last feature release for 2016.
