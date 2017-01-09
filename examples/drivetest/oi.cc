@@ -61,22 +61,22 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)
  * input.
  */
-float OI::GetTeleDriveForwardAxis() {
-  float axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftYAxis);
+double OI::GetTeleDriveForwardAxis() {
+  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftYAxis);
   return drive_sma_(drive_expo_(axis));
 }
 
 /** Returns flight simulator joystick left stick left and right strafe (X-axis)
  * input.
  */
-float OI::GetTeleDriveStrafeAxis() {
-  float axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftXAxis);
+double OI::GetTeleDriveStrafeAxis() {
+  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftXAxis);
   return drive_sma_(drive_expo_(axis));
 }
 
 /** Returns flight simulator joystick CW and CCW azimuth (X-axis) input.
  */
-float OI::GetTeleDriveAzimuthAxis() {
-  float axis = -flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
+double OI::GetTeleDriveAzimuthAxis() {
+  double axis = -flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
   return azimuth_sma_(azimuth_expo_(axis));
 }

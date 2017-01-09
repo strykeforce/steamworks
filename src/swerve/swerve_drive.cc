@@ -72,7 +72,7 @@ SwerveDrive::SwerveDrive(talon::TalonConfig config, const TalonMap* tm)
     throw std::invalid_argument(
         "SIDEWINDER drive_scale_factor setting is missing");
   }
-  drive_scale_factor_ = static_cast<float>(*drive_scale_factor);
+  drive_scale_factor_ = *drive_scale_factor;
   logger_->trace("done with constructor");
 }
 
@@ -119,7 +119,7 @@ void SwerveDrive::ZeroAzimuth() {
  * @param strafe command left/right (X-axis) motion
  * @param azimuth command left/right yaw
  */
-void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
+void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
   // don't reset wheels to zero in dead zone
   // FIXME: dead zone hard-coded
   if (std::fabs(forward) <= 0.08 && std::fabs(strafe) <= 0.08 &&
@@ -159,16 +159,16 @@ void SwerveDrive::Drive(float forward, float strafe, float azimuth) {
  * @param forward command forward/backwards (Y-axis) motion
  * @param strafe command left/right (X-axis) motion
  */
-void SwerveDrive::CrabDrive(float forward, float strafe) {
+void SwerveDrive::CrabDrive(double forward, double strafe) {
   // int pos = std::round(2048 * (strafe < 0 ? 2 + strafe : strafe));
   int pos = -std::round(2048 * strafe);
-  // float pos = 0.5 * strafe;
+  // double pos = 0.5 * strafe;
   map_->lf_azimuth->Set(pos);
   map_->rf_azimuth->Set(pos);
   map_->lr_azimuth->Set(pos);
   map_->rr_azimuth->Set(pos);
 
-  float volts = forward * drive_scale_factor_;
+  double volts = forward * drive_scale_factor_;
   map_->lf_drive->Set(volts);
   map_->rf_drive->Set(volts);
   map_->lr_drive->Set(volts);

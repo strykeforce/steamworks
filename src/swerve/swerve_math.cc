@@ -15,13 +15,13 @@ SwerveMath::SwerveMath() : last_dd_() {}
 namespace {
 const int L = 1;
 const int W = 1;
-const float R = std::sqrt(L * L + W * W);
+const double R = std::sqrt(L * L + W * W);
 
 void calc_wheels(DriveData& dd) {
-  float a = dd.str - dd.rcw * (L / R);
-  float b = dd.str + dd.rcw * (L / R);
-  float c = dd.fwd - dd.rcw * (W / R);
-  float d = dd.fwd + dd.rcw * (W / R);
+  double a = dd.str - dd.rcw * (L / R);
+  double b = dd.str + dd.rcw * (L / R);
+  double c = dd.fwd - dd.rcw * (W / R);
+  double d = dd.fwd + dd.rcw * (W / R);
   dd.wsrf = std::sqrt(b * b + c * c);
   dd.wslf = std::sqrt(b * b + d * d);
   dd.wslr = std::sqrt(a * a + d * d);
@@ -32,7 +32,7 @@ void calc_wheels(DriveData& dd) {
   dd.warr = std::atan2(a, c) * 180 / M_PI;
 
   // normalize wheel speed if needed
-  float max = std::max({dd.wsrf, dd.wslf, dd.wslr, dd.wsrr});
+  double max = std::max({dd.wsrf, dd.wslf, dd.wslr, dd.wsrr});
   if (max > 1.0) {
     dd.wsrf /= max;
     dd.wslf /= max;
@@ -41,14 +41,14 @@ void calc_wheels(DriveData& dd) {
   }
 }
 
-inline std::pair<float, float> min_angle(float speed, float next, float prev) {
+inline std::pair<double, double> min_angle(double speed, double next, double prev) {
   // std::cout << "NEXT = " << next << " PREV = " << prev << std::endl;
   assert(speed >= 0);
   assert(next >= -180 && next <= 180);
   assert(prev >= -180 && prev <= 180);
 
   // alternate drive angle is 180 degrees from next ordered angle
-  float alt = next + (next < 0 ? 180 : -180);
+  double alt = next + (next < 0 ? 180 : -180);
 
   // delta from each angle to last drive angle
   auto d_next = std::fabs(next - prev);
@@ -57,10 +57,10 @@ inline std::pair<float, float> min_angle(float speed, float next, float prev) {
   // use minumum angle change, reverse drive if alt angle used
   // prefer forward drive if both delta are equal
   if (d_next <= d_alt) {
-    return std::pair<float, float>{speed, next};
+    return std::pair<double, double>{speed, next};
   }
   // std::cout << "NEXT = " << next << " ALT = " << alt << std::endl;
-  return std::pair<float, float>{-speed, alt};
+  return std::pair<double, double>{-speed, alt};
 }
 
 } /* namespace */

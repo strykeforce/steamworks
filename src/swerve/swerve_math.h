@@ -8,9 +8,9 @@
 namespace sidewinder {
 
 struct DriveData {
-  float fwd, str, rcw;
-  float wsrf, wslf, wslr, wsrr;
-  float warf, walf, walr, warr;
+  double fwd, str, rcw;
+  double wsrf, wslf, wslr, wsrr;
+  double warf, walf, walr, warr;
 };
 
 class SwerveMath {
