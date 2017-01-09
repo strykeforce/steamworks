@@ -30,3 +30,14 @@ To install:
 ```sh
 $ sudo make install
 ```
+
+To run tests:
+
+```sh
+$ cd test
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ ./test-runner
+```

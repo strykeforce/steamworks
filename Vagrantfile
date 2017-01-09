@@ -26,6 +26,7 @@ Vagrant.configure('2') do |config|
 
   cd $ANSIBLE_DIR
   $GIT checkout -q $ANSIBLE_VERSION
+  $GIT pull -q
   SCRIPT
 
   config.vm.provision 'ansible_local' do |ansible|

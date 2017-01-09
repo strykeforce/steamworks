@@ -23,7 +23,7 @@ void Robot::RobotInit() {
   LogAbsoluteEncoders();
 
   // load in order of dependency
-  drive = new Drive(config_->get_table("SIDEWINDER"));
+  drive = new Drive(config_);
   oi = new OI(config_);
 }
 
