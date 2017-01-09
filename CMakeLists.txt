@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(Sidewinder)
+project(sidewinder)
 
 set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
 set(CTRE_LIBS /opt/ctre CACHE PATH "CTRE directory.")
