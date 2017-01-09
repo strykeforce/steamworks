@@ -18,7 +18,7 @@ Vagrant.configure('2') do |config|
   config.vm.provision 'shell', inline: <<-SCRIPT
   GIT=/usr/bin/git
   ANSIBLE_REPO=https://github.com/strykeforce/ansible.git
-  ANSIBLE_VERSION=develop
+  ANSIBLE_VERSION=master
   ANSIBLE_DIR=/opt/ansible
 
   [[ ! -x $GIT ]] && apt-get install -y git
@@ -26,8 +26,8 @@ Vagrant.configure('2') do |config|
   [[ ! -d $ANSIBLE_DIR ]] && $GIT clone -q $ANSIBLE_REPO $ANSIBLE_DIR
 
   cd $ANSIBLE_DIR
-  $GIT fetch -q
   $GIT checkout -q $ANSIBLE_VERSION
+  $GIT pull -q
   SCRIPT
 
   config.vm.provision 'ansible_local' do |ansible|

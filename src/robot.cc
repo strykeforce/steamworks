@@ -6,6 +6,7 @@
 
 #include "default_config.h"
 #include "robot_map.h"
+#include "subsystems/drive.h"
 #include "version.h"
 
 using namespace steamworks;
@@ -22,8 +23,8 @@ void Robot::RobotInit() {
   LoadConfig();
   RobotMap::Init(config_);
 
-  drive = new Drive(config_->get_table("STEAMWORKS"));
   oi = new OI(config_);
+  drive = new Drive(config_);
 }
 
 void Robot::DisabledInit() { logger_->trace("DisabledInit"); }
