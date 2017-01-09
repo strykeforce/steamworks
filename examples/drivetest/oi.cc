@@ -49,9 +49,9 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
     : flight_sim_joystick_(kFlightSimJoystick),
       reset_button_(&flight_sim_joystick_, kFlightSimResetButton),
       drive_expo_(get_double(config, "drive_dead_zone"),
-                  get_double(config, "drive_drive_expo_scale")),
+                  get_double(config, "drive_expo_scale")),
       azimuth_expo_(get_double(config, "azimuth_dead_zone"),
-                    get_double(config, "azimuth_drive_expo_scale")),
+                    get_double(config, "azimuth_expo_scale")),
       drive_sma_(get_uint(config, "drive_sma_period")),
       azimuth_sma_(get_uint(config, "azimuth_sma_period")) {
   // buttons
