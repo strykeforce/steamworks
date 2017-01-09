@@ -16,15 +16,26 @@ using namespace sidewinder;
  */
 SwerveDrive::SwerveDrive(talon::TalonConfig config, const TalonMap* tm)
     : logger_(spdlog::stdout_color_st("SwerveDrive")), map_(tm) {
-  assert(config);
   assert(tm);
+
+  if (!config) {
+    throw std::invalid_argument("config must not be null");
+  }
+
+  auto settings = config->get_table("SIDEWINDER");
+  if (!settings) {
+    throw std::invalid_argument("SIDEWINDER config is missing");
+  }
 
   logger_->set_level(spdlog::level::debug);
   logger_->trace("starting constructor");
 
   logger_->trace("configuring azimuth talons in position mode");
-  auto swerve_settings = config->get_table("SWERVE");
-  assert(swerve_settings);
+  auto swerve_settings = settings->get_table("SWERVE");
+  if (!swerve_settings) {
+    throw std::invalid_argument("SIDEWINDER SWERVE config is missing");
+  }
+
   auto azimuth_settings = talon::Settings::Create(swerve_settings, "azimuth");
   logger_->debug("dumping azimuth talon configuration");
   azimuth_settings->LogConfig(logger_);
@@ -56,8 +67,12 @@ SwerveDrive::SwerveDrive(talon::TalonConfig config, const TalonMap* tm)
   drive_settings->SetMode(map_->rr_drive);
 
   // max output to CANTalon.Set().
-  drive_scale_factor_ =
-      static_cast<float>(*config->get_as<double>("drive_scale_factor"));
+  auto drive_scale_factor = settings->get_as<double>("drive_scale_factor");
+  if (!drive_scale_factor) {
+    throw std::invalid_argument(
+        "SIDEWINDER drive_scale_factor setting is missing");
+  }
+  drive_scale_factor_ = static_cast<float>(*drive_scale_factor);
   logger_->trace("done with constructor");
 }
 
