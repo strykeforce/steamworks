@@ -12,6 +12,6 @@ class Drive : public frc::Subsystem {
   Drive(const std::shared_ptr<cpptoml::table> config);
   void InitDefaultCommand() override;
   void ZeroWheels();
-  void CartesianDrive(float forward, float strafe, float azimuth);
+  void CartesianDrive(double forward, double strafe, double azimuth);
 };
 } /* sidewinder */

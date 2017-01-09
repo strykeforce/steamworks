@@ -17,7 +17,7 @@ class SwerveDrive {
   const std::shared_ptr<spdlog::logger> logger_;
   const TalonMap* map_;
   SwerveMath swerve_math_;
-  float drive_scale_factor_ = 0.0;
+  double drive_scale_factor_ = 0.0;
 
   void SetEncoderZero(const std::shared_ptr<cpptoml::table> config);
 
@@ -25,7 +25,7 @@ class SwerveDrive {
   SwerveDrive(const std::shared_ptr<cpptoml::table> config,
               const TalonMap* map);
   void ZeroAzimuth();
-  void Drive(float forward, float strafe, float azimuth);
-  void CrabDrive(float forward, float strafe);
+  void Drive(double forward, double strafe, double azimuth);
+  void CrabDrive(double forward, double strafe);
 };
 } /* sidewinder */

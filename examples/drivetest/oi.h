@@ -46,9 +46,9 @@ class OI {
 
   OI(const std::shared_ptr<cpptoml::table> config);
   virtual ~OI() = default;
-  float GetTeleDriveForwardAxis();
-  float GetTeleDriveStrafeAxis();
-  float GetTeleDriveAzimuthAxis();
+  double GetTeleDriveForwardAxis();
+  double GetTeleDriveStrafeAxis();
+  double GetTeleDriveAzimuthAxis();
 };
 
 } /* sidewinder */

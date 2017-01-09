@@ -14,7 +14,7 @@ Drive::Drive(const std::shared_ptr<cpptoml::table> config)
   ;
 }
 
-void Drive::CartesianDrive(float forward, float strafe, float azimuth) {
+void Drive::CartesianDrive(double forward, double strafe, double azimuth) {
   swerve_drive_.Drive(forward, strafe, azimuth);
 }
 
