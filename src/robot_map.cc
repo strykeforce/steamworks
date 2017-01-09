@@ -8,9 +8,10 @@
 #include "swerve/talon_map.h"
 
 using namespace steamworks;
+using namespace sidewinder;
 
 /** Holds pointers to the 8 swerve drive Talons.  */
-sidewinder::TalonMap* RobotMap::swerve_talons = new sidewinder::TalonMap();
+swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
 
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.

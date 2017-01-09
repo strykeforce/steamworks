@@ -22,7 +22,7 @@ class RobotMap {
   };
 
   // pointers to talons and azimuth encoder zero count
-  static sidewinder::TalonMap* swerve_talons;
+  static sidewinder::swerve::TalonMap* swerve_talons;
 
   // instantiate pointers to hardware objects like Talons, etc.
   static void Init(const std::shared_ptr<cpptoml::table> config);

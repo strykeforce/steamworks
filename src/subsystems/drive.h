@@ -6,7 +6,7 @@
 namespace steamworks {
 class Drive : public frc::Subsystem {
  private:
-  sidewinder::SwerveDrive swerve_drive_;
+  sidewinder::swerve::SwerveDrive swerve_drive_;
 
  public:
   Drive(const std::shared_ptr<cpptoml::table> config);
