@@ -7,7 +7,7 @@
 #include "talon/settings.h"
 #include "talon_map.h"
 
-using namespace sidewinder;
+using namespace sidewinder::swerve;
 
 /** Initialize the Sidewinder SwerveDrive.
  * @param config cpptoml SIDEWINDER table

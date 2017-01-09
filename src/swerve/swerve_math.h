@@ -6,7 +6,7 @@
 #include "spdlog/spdlog.h"
 
 namespace sidewinder {
-
+namespace swerve {
 struct DriveData {
   double fwd, str, rcw;
   double wsrf, wslf, wslr, wsrr;
@@ -21,4 +21,5 @@ class SwerveMath {
   SwerveMath();
   void operator()(DriveData& dd);
 };
+} /* swerve */
 } /* sidewinder */

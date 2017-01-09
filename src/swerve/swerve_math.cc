@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cmath>
 
-using namespace sidewinder;
+using namespace sidewinder::swerve;
 
 /** helper function for swerve drive calculations.
  *  https://www.chiefdelphi.com/media/papers/2426
@@ -41,7 +41,8 @@ void calc_wheels(DriveData& dd) {
   }
 }
 
-inline std::pair<double, double> min_angle(double speed, double next, double prev) {
+inline std::pair<double, double> min_angle(double speed, double next,
+                                           double prev) {
   // std::cout << "NEXT = " << next << " PREV = " << prev << std::endl;
   assert(speed >= 0);
   assert(next >= -180 && next <= 180);
