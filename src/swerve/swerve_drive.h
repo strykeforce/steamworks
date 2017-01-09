@@ -8,6 +8,7 @@
 #include "talon_map.h"
 
 namespace sidewinder {
+namespace swerve {
 
 /** SwerveDrive is a WPI command-based subsystem represents the Sidewinder
  * swerve drive.
@@ -28,4 +29,5 @@ class SwerveDrive {
   void Drive(double forward, double strafe, double azimuth);
   void CrabDrive(double forward, double strafe);
 };
+} /* swerve */
 } /* sidewinder */

@@ -47,7 +47,7 @@ void initialize_grapher() {
 } /* namespace */
 
 /** Holds pointers to the 8 swerve drive Talons.  */
-TalonMap* RobotMap::swerve_talons = new TalonMap();
+swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
 
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.

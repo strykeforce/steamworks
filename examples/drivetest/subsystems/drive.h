@@ -6,7 +6,7 @@
 namespace sidewinder {
 class Drive : public frc::Subsystem {
  private:
-  SwerveDrive swerve_drive_;
+  swerve::SwerveDrive swerve_drive_;
 
  public:
   Drive(const std::shared_ptr<cpptoml::table> config);

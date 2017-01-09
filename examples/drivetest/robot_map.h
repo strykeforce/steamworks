@@ -32,7 +32,7 @@ class RobotMap {
     kLeftRearDrive = 14,
   };
   // pointers to talons and azimuth encoder zero count
-  static TalonMap* swerve_talons;
+  static swerve::TalonMap* swerve_talons;
 
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);
