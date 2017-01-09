@@ -14,7 +14,7 @@ PIDSettings::PIDSettings(const std::shared_ptr<cpptoml::table> config)
   i_ = config->get_as<double>("I").value_or(0.0);
   d_ = config->get_as<double>("D").value_or(0.0);
   f_ = config->get_as<double>("F").value_or(0.0);
-  i_zone_ = config->get_as<uint32_t>("I_zone").value_or(0);
+  i_zone_ = config->get_as<unsigned>("I_zone").value_or(0);
 
   allowable_closed_loop_error_ =
       config->get_as<uint32_t>("allowable_closed_loop_error").value_or(0);

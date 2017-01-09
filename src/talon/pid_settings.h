@@ -15,8 +15,7 @@ namespace talon {
 class PIDSettings : public Settings {
  private:
   double p_, i_, d_, f_;
-  // TODO: verify uint types
-  uint32_t i_zone_;
+  unsigned i_zone_;
   uint32_t allowable_closed_loop_error_;
   double close_loop_ramp_rate_;
   double peak_output_voltage_forward_, peak_output_voltage_reverse_;
