@@ -8,14 +8,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-- Better config file error checking.
+- Better config file error checking. (#10)
 - Unit tests in `test` directory.
 
 ### Changed
 
+- Swerve drive now in `swerve` namespace. (#6)
+
 ### Fixed
 
-- More updates to conform with 2017 WPILib changes.
+- More updates to conform with 2017 WPILib changes. (#11)
 
 ## [17.0.0] - 2017-01-06
 
