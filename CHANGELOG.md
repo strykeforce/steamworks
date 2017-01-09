@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [Unreleased]
+
+### Added
+
+- Better config file error checking.
+- Unit tests in `test` directory.
+
+### Changed
+
+### Fixed
+
+- More updates to conform with 2017 WPILib changes.
+
 ## [17.0.0] - 2017-01-06
 
 Version 16.0.0 updated for 2017 libraries.
