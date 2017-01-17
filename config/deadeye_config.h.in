@@ -1,7 +1,0 @@
-#ifndef DEADEYE_CMAKE_CONFIG_INC_
-#define DEADEYE_CMAKE_CONFIG_INC_
-
-#define DEADEYE_VERSION "@deadeye_VERSION@"
-
-
-#endif /* end of include guard: DEADEYE_CMAKE_CONFIG_INC_ */

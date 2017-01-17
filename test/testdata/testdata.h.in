@@ -1,6 +1,0 @@
-#ifndef DEADEYE_TESTDATA_CONFIG_INC_
-#define DEADEYE_TESTDATA_CONFIG_INC_
-
-static std::string const kTestDataDir{"@CMAKE_CURRENT_SOURCE_DIR@/testdata"};
-
-#endif /* end of include guard: DEADEYE_TESTDATA_CONFIG_INC_ */
