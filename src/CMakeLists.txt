@@ -1,8 +1,19 @@
-file(GLOB deadeye_core_sources "*.cc" )
-add_library(deadeye_core ${deadeye_core_sources})
-target_include_directories(deadeye_core PUBLIC ${PROJECT_SOURCE_DIR}/include)
-target_link_libraries(deadeye_core ${OpenCV_LIBS} cpptoml spdlog)
-set_target_properties(deadeye_core PROPERTIES
+
+include_directories(
+"${CMAKE_SOURCE_DIR}/vendor/include"
+/opt/flycapture/include
+)
+
+link_directories(/opt/flycapture/lib)
+
+add_executable(deadeye
+main.cc
+camera.cc
+deadeye.cc
+)
+
+target_link_libraries(deadeye ${OpenCV_LIBS} flycapture)
+set_target_properties(deadeye PROPERTIES
   CXX_STANDARD 11
   CXX_EXTENSIONS OFF
   CXX_STANDARD_REQUIRED YES)
