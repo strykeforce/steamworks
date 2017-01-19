@@ -9,6 +9,7 @@ link_directories(/opt/flycapture/lib)
 add_executable(deadeye
 main.cc
 camera.cc
+frame.cc
 deadeye.cc
 )
 

@@ -5,6 +5,8 @@
 #include <iostream>
 #include "opencv2/opencv.hpp"
 
+#include "frame.h"
+
 using namespace FlyCapture2;
 using namespace deadeye;
 
@@ -20,6 +22,7 @@ void Deadeye::Display() {
   }
 
   // capture loop
+  Frame frame{std::shared_ptr<cpptoml::table>{nullptr}};
   char key = 0;
   while (key != 'q') {
     // Get the image
@@ -40,34 +43,16 @@ void Deadeye::Display() {
     cv::Mat image = cv::Mat(rgbImage.GetRows(), rgbImage.GetCols(), CV_8UC3,
                             rgbImage.GetData(), rowBytes);
 
-    cv::Mat hsl, blur, mask;
-    cv::cvtColor(image, hsl, CV_BGR2HSV);
-    cv::blur(hsl, blur, cv::Size(2, 2));
-    cv::inRange(blur, cv::Scalar{80, 100, 100}, cv::Scalar{100, 255, 255},
-                mask);
+    frame.Process(image);
+    cv::Rect lower_rect = cv::boundingRect(frame.lower_contour);
+    cv::Rect upper_rect = cv::boundingRect(frame.upper_contour);
 
-    std::vector<std::vector<cv::Point>> contours;
-    cv::findContours(mask.clone(), contours, CV_RETR_LIST,
-                     CV_CHAIN_APPROX_SIMPLE);
-
-    std::vector<cv::Point> lower, upper;
-    double arc = 0.0;
-    for (const auto& c : contours) {
-      auto candidate = cv::arcLength(c, true);
-      if (candidate > arc) {
-        lower = upper;
-        upper = c;
-        arc = candidate;
-      }
-    }
-
-    cv::Rect lower_rect = cv::boundingRect(lower);
-    cv::Rect upper_rect = cv::boundingRect(upper);
-
-    cv::drawContours(image, std::vector<std::vector<cv::Point>>{lower}, 0,
-                     cv::Scalar(0, 0, 255), 1);
-    cv::drawContours(image, std::vector<std::vector<cv::Point>>{upper}, 0,
-                     cv::Scalar(0, 0, 255), 1);
+    cv::drawContours(image,
+                     std::vector<std::vector<cv::Point>>{frame.lower_contour},
+                     0, cv::Scalar(0, 0, 255), 1);
+    cv::drawContours(image,
+                     std::vector<std::vector<cv::Point>>{frame.upper_contour},
+                     0, cv::Scalar(0, 0, 255), 1);
 
     cv::rectangle(image, lower_rect, cv::Scalar(0, 255, 0), 1);
     cv::rectangle(image, upper_rect, cv::Scalar(0, 255, 0), 1);
