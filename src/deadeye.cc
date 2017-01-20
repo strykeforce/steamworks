@@ -3,7 +3,9 @@
 #include "FlyCapture2.h"
 #include <memory>
 #include <iostream>
+#include <sstream>
 #include "opencv2/opencv.hpp"
+#include "cpptoml/cpptoml.h"
 
 #include "frame.h"
 
@@ -60,6 +62,11 @@ void Deadeye::Display() {
     cv::imshow("image", image);
 
     key = cv::waitKey(30);
+    // auto t = std::time(nullptr);
+    // auto tm = *std::localtime(&t);
+    // std::ostringstream filename;
+    // filename << "boiler_" << std::put_time(&tm, "%Y%m%d%H%M%S") << ".png";
+    // cv::imwrite(filename.str(), image);
   }
 
   error = camera_->StopCapture();
