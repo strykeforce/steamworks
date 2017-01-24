@@ -8,7 +8,7 @@ using namespace deadeye;
 
 Frame::Frame(std::shared_ptr<cpptoml::table> config) {}
 
-void Frame::Process(const cv::Mat& frame) {
+bool Frame::FindTargets(const cv::Mat& frame) {
   cv::Mat hsl, blur, mask;
   cv::cvtColor(frame, hsl, CV_BGR2HSV);
   cv::blur(hsl, blur, cv::Size(2, 2));
@@ -27,4 +27,5 @@ void Frame::Process(const cv::Mat& frame) {
       arc_length = candidate;
     }
   }
+  return arc_length > 250.0;
 }

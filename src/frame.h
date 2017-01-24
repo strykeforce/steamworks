@@ -13,7 +13,7 @@ class Frame {
   Frame(std::shared_ptr<cpptoml::table> config);
   virtual ~Frame() = default;
 
-  void Process(const cv::Mat& frame);
+  bool FindTargets(const cv::Mat& frame);
 };
 
 } /* deadeye */
