@@ -11,8 +11,9 @@ Frame::Frame(std::shared_ptr<cpptoml::table> config) {}
 bool Frame::FindTargets(const cv::Mat& frame) {
   cv::Mat hsl, blur, mask;
   cv::cvtColor(frame, hsl, CV_BGR2HSV);
-  cv::blur(hsl, blur, cv::Size(2, 2));
-  cv::inRange(blur, cv::Scalar{80, 100, 100}, cv::Scalar{100, 255, 255}, mask);
+  // full frame blur drops from 30 fps to 13 fps
+  // cv::blur(hsl, blur, cv::Size(2, 2));
+  cv::inRange(hsl, cv::Scalar{80, 100, 100}, cv::Scalar{100, 255, 255}, mask);
 
   std::vector<std::vector<cv::Point>> contours;
   cv::findContours(mask.clone(), contours, CV_RETR_LIST,

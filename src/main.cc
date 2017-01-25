@@ -9,15 +9,20 @@ using namespace deadeye;
 
 int main(int argc, char const* argv[]) {
   auto logger = spdlog::stdout_color_st("deadeye");
+
+  // read config file from path specified in DEADEYE_CONF env variable or
+  // default to /etc/deadeye.toml
   const char* conf_path = std::getenv("DEADEYE_CONF");
   if (!conf_path) {
     conf_path = "/etc/deadeye.toml";
   }
   logger->info("reading configuration from {}", conf_path);
-
   auto config = cpptoml::parse_file(conf_path);
+
+  // configure camera
   auto camera = GetCamera(config);
 
+  // start processing
   Deadeye deadeye(camera);
   deadeye.Display();
   return 0;

@@ -9,7 +9,7 @@ using namespace FlyCapture2;
 std::shared_ptr<Camera> GetCamera(std::shared_ptr<cpptoml::table> toml) {
   auto config = toml->get_table("CAMERA");
   if (!config) {
-    throw std::invalid_argument("CAMERA table array missing");
+    throw std::invalid_argument("CAMERA config section missing");
   }
   Error error;
   BusManager busMgr;

@@ -9,6 +9,7 @@ namespace deadeye {
 class Deadeye {
  private:
   std::shared_ptr<FlyCapture2::Camera> camera_;
+  bool has_gui_;
 
  public:
   Deadeye(std::shared_ptr<FlyCapture2::Camera> camera);
