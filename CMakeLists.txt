@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 project(BDC_Comm CXX)
 
 set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
+set(CTRE_LIBS /opt/ctre CACHE PATH "CTRE Talon directory.")
 
 set(CMAKE_CXX_COMPILER arm-frc-linux-gnueabi-g++)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-write-strings -std=c++1y")
