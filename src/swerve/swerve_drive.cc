@@ -13,7 +13,8 @@ using namespace sidewinder::swerve;
  * @param config cpptoml SIDEWINDER table
  * @param tm talon map initialized with pointers to drive talons
  */
-SwerveDrive::SwerveDrive(talon::TalonConfig config, const TalonMap* tm)
+SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
+                         const TalonMap* tm)
     : logger_(spdlog::stdout_color_st("SwerveDrive")), map_(tm) {
   assert(tm);
 

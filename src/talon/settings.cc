@@ -12,9 +12,11 @@
 using namespace sidewinder::talon;
 using namespace std;
 
-/** Find Talon settins with given name and return appropriate subclass of Talon.
+/** Factory method to find Talon settins with given name and return
+ * appropriate subclass of Talon.
  */
-unique_ptr<Settings> Settings::Create(TalonConfig config, const string name) {
+unique_ptr<Settings> Settings::Create(
+    const std::shared_ptr<cpptoml::table> config, const string name) {
   assert(config);
   assert(name != "");
 
@@ -25,7 +27,7 @@ unique_ptr<Settings> Settings::Create(TalonConfig config, const string name) {
   }
 
   // find Talon config with specified name
-  auto t_itr = find_if(begin(*talons), end(*talons), [=](TalonConfig c) {
+  auto t_itr = find_if(begin(*talons), end(*talons), [=](const std::shared_ptr<cpptoml::table> c) {
     return name == c->get_as<string>("name").value_or("");
   });
   if (t_itr == end(*talons)) {
@@ -54,7 +56,7 @@ unique_ptr<Settings> Settings::Create(TalonConfig config, const string name) {
   return settings;
 }
 
-Settings::Settings(TalonConfig config) {
+Settings::Settings(const std::shared_ptr<cpptoml::table> config) {
   assert(config);
   feedback_device_ = static_cast<::CANTalon::FeedbackDevice>(
       *config->get_as<int>("feedback_device"));

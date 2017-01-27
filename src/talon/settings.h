@@ -7,7 +7,6 @@
 namespace sidewinder {
 namespace talon {
 
-using TalonConfig = const std::shared_ptr<cpptoml::table>;
 using Logger = const std::shared_ptr<spdlog::logger>;
 
 /** Base class representing a Talon configuration.
@@ -23,9 +22,9 @@ class Settings {
   bool output_reversed_;
 
  public:
-  static std::unique_ptr<Settings> Create(TalonConfig config,
-                                          const std::string name);
-  Settings(TalonConfig config);
+  static std::unique_ptr<Settings> Create(
+      const std::shared_ptr<cpptoml::table> config, const std::string name);
+  Settings(const std::shared_ptr<cpptoml::table> config);
   virtual ~Settings() = default;
   virtual void Configure(::CANTalon* talon) const;
   virtual void SetMode(::CANTalon* talon) const;
