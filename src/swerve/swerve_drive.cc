@@ -12,7 +12,6 @@ using namespace sidewinder::swerve;
 /** Initialize the Sidewinder SwerveDrive.
  * @param config cpptoml SIDEWINDER table
  * @param tm talon map initialized with pointers to drive talons
- * @oi sidewinder-specific operator input
  */
 SwerveDrive::SwerveDrive(talon::TalonConfig config, const TalonMap* tm)
     : logger_(spdlog::stdout_color_st("SwerveDrive")), map_(tm) {
