@@ -12,8 +12,13 @@
 using namespace sidewinder::talon;
 using namespace std;
 
-/** Factory method to find Talon settins with given name and return
- * appropriate subclass of Talon.
+/** Factory method to find Talon settinsand return appropriate subclass of
+ * Talon. This gets its settings from the config file based on "name" and
+ * sets mode based on "type", for example, this config file section:
+ *
+ *       [[SIDEWINDER.SWERVE.TALON]]
+ *       name = "azimuth"
+ *       type = "position"
  */
 unique_ptr<Settings> Settings::Create(
     const std::shared_ptr<cpptoml::table> config, const string name) {
@@ -27,9 +32,10 @@ unique_ptr<Settings> Settings::Create(
   }
 
   // find Talon config with specified name
-  auto t_itr = find_if(begin(*talons), end(*talons), [=](const std::shared_ptr<cpptoml::table> c) {
-    return name == c->get_as<string>("name").value_or("");
-  });
+  auto t_itr = find_if(begin(*talons), end(*talons),
+                       [=](const std::shared_ptr<cpptoml::table> c) {
+                         return name == c->get_as<string>("name").value_or("");
+                       });
   if (t_itr == end(*talons)) {
     throw invalid_argument("TALON not found for name: " + name);
   }
@@ -56,8 +62,13 @@ unique_ptr<Settings> Settings::Create(
   return settings;
 }
 
+/** Construct a Talon Settings object.
+ */
 Settings::Settings(const std::shared_ptr<cpptoml::table> config) {
   assert(config);
+
+  // configure settings common to all operating modes.
+
   feedback_device_ = static_cast<::CANTalon::FeedbackDevice>(
       *config->get_as<int>("feedback_device"));
 
@@ -72,6 +83,8 @@ Settings::Settings(const std::shared_ptr<cpptoml::table> config) {
   output_reversed_ = *config->get_as<bool>("output_reversed");
 }
 
+/** Configure is intended to be one-time setup for Talons at initialization.
+ */
 void Settings::Configure(::CANTalon* talon) const {
   assert(talon);
   talon->SelectProfileSlot(0);
@@ -82,9 +95,20 @@ void Settings::Configure(::CANTalon* talon) const {
   talon->SetInverted(output_reversed_);
 }
 
+/** SetMode sets the current operating mode for the Talon, i.e. voltage,
+ * velocity, etc. It is not unusual to switch between modes frequently during
+ * robot operation.
+ */
 void Settings::SetMode(::CANTalon* talon) const {
   assert(talon);
   talon->SetVoltageRampRate(voltage_ramp_rate_);
+}
+
+/** Convenience method that calls Configure and SetMode for talon.
+ */
+void Settings::Initialize(::CANTalon* talon) const {
+  Configure(talon);
+  SetMode(talon);
 }
 
 void Settings::LogConfig(Logger logger) const {

@@ -18,6 +18,7 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
     : logger_(spdlog::stdout_color_st("SwerveDrive")), map_(tm) {
   assert(tm);
 
+  // load sidewinder configuration from common config file
   if (!config) {
     throw std::invalid_argument("config must not be null");
   }
@@ -27,44 +28,42 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
     throw std::invalid_argument("SIDEWINDER config is missing");
   }
 
+  // configure logging for this class
   logger_->set_level(spdlog::level::debug);
   logger_->trace("starting constructor");
 
+  // get swerve drive configuration from sidewinder settings
   logger_->trace("configuring azimuth talons in position mode");
   auto swerve_settings = settings->get_table("SWERVE");
   if (!swerve_settings) {
     throw std::invalid_argument("SIDEWINDER SWERVE config is missing");
   }
 
+  // load azimuth Talon settings from swerve config and initialize azimuth
+  // Talons
   auto azimuth_settings = talon::Settings::Create(swerve_settings, "azimuth");
   logger_->debug("dumping azimuth talon configuration");
   azimuth_settings->LogConfig(logger_);
 
-  azimuth_settings->Configure(map_->lf_azimuth);
-  azimuth_settings->SetMode(map_->lf_azimuth);
-  azimuth_settings->Configure(map_->rf_azimuth);
-  azimuth_settings->SetMode(map_->rf_azimuth);
-  azimuth_settings->Configure(map_->lr_azimuth);
-  azimuth_settings->SetMode(map_->lr_azimuth);
-  azimuth_settings->Configure(map_->rr_azimuth);
-  azimuth_settings->SetMode(map_->rr_azimuth);
+  azimuth_settings->Initialize(map_->lf_azimuth);
+  azimuth_settings->Initialize(map_->rf_azimuth);
+  azimuth_settings->Initialize(map_->lr_azimuth);
+  azimuth_settings->Initialize(map_->rr_azimuth);
 
+  // zero out azimuth encoders based on config values in swerve_settings
   SetEncoderZero(swerve_settings);
 
+  // load drive Talon settings from swerve config and initialize drive Talons
   logger_->trace("configuring drive talons in voltage mode");
   auto drive_settings =
       talon::Settings::Create(swerve_settings, "drive_voltage");
   logger_->debug("dumping drive talon configuration");
   drive_settings->LogConfig(logger_);
 
-  drive_settings->Configure(map_->lf_drive);
-  drive_settings->SetMode(map_->lf_drive);
-  drive_settings->Configure(map_->rf_drive);
-  drive_settings->SetMode(map_->rf_drive);
-  drive_settings->Configure(map_->lr_drive);
-  drive_settings->SetMode(map_->lr_drive);
-  drive_settings->Configure(map_->rr_drive);
-  drive_settings->SetMode(map_->rr_drive);
+  drive_settings->Initialize(map_->lf_drive);
+  drive_settings->Initialize(map_->rf_drive);
+  drive_settings->Initialize(map_->lr_drive);
+  drive_settings->Initialize(map_->rr_drive);
 
   // max output to CANTalon.Set().
   auto drive_scale_factor = settings->get_as<double>("drive_scale_factor");
