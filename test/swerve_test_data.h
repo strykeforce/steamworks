@@ -3,7 +3,7 @@
 #include <vector>
 #include "swerve/swerve_math.h"
 
-std::vector<sidewinder::DriveData> tests = {
+std::vector<sidewinder::swerve::DriveData> tests = {
     {
         1.0, 0.0, 0.0,       // input forward / strafe / rotate CW
         1.0, 1.0, 1.0, 1.0,  // expected ws

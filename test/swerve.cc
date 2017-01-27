@@ -7,7 +7,7 @@
 #include "swerve/swerve_math.h"
 #include "swerve_test_data.h"
 
-using namespace sidewinder;
+using namespace sidewinder::swerve;
 
 SwerveMath math = SwerveMath();
 
