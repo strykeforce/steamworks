@@ -33,12 +33,12 @@ std::vector<sidewinder::swerve::DriveData> tests = {
         0.0, -1.0, 0.0,          // input strafe left
         -1.0, -1.0, -1.0, -1.0,  // ws
         90.0, 90.0, 90.0, 90.0   // wa min angle is reverse drive
-    },
-    {
-        0.0, 0.0, 0.0,       // input reset to zero
-        0.0, 0.0, 0.0, 0.0,  // ws
-        0.0, 0.0, 0.0, 0.0   // wa
-    },
+    },                           /*
+                               {
+                                   0.0, 0.0, 0.0,       // input reset to zero
+                                   0.0, 0.0, 0.0, 0.0,  // ws
+                                   0.0, 0.0, 0.0, 0.0   // wa
+                               },*/
     {
         0.0, 0.0, 1.0,            // input rotate CW
         -1.0, 1.0, 1.0, -1.0,     // ws

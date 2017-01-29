@@ -9,7 +9,7 @@ set(CMAKE_INSTALL_PREFIX /opt/sidewinder CACHE PATH "Sidewinder installation dir
 set(VERSION_MAJOR 17)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
-set(VERSION_META "")
+set(VERSION_META "-zander")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
 set(CMAKE_LD           /usr/bin/arm-frc-linux-gnueabi-ld)

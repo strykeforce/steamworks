@@ -15,11 +15,14 @@ struct DriveData {
 
 class SwerveMath {
  private:
-  DriveData last_dd_;
+  double wheel_angles[4]{0.0, 0.0, 0.0, 0.0};
+  double wheel_mags[4]{0.0, 0.0, 0.0, 0.0};
+  double wheel_anglesPast[4]{0.0, 0.0, 0.0, 0.0};
+  bool wheel_mag_negated[4]{false, false, false, false};
 
  public:
   SwerveMath();
   void operator()(DriveData& dd);
 };
-} /* swerve */
+}
 } /* sidewinder */

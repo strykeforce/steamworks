@@ -144,6 +144,7 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
   map_->lf_drive->Set(dd.wslf * drive_scale_factor_);
   map_->lr_drive->Set(dd.wslr * drive_scale_factor_);
   map_->rr_drive->Set(dd.wsrr * drive_scale_factor_);
+
   static int i;
   if (++i == 15) {
     logger_->trace("warf = {}, walf = {}, walr = {}, warr = {}", dd.warf,

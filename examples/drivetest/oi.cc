@@ -62,8 +62,8 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
  * input.
  */
 double OI::GetTeleDriveForwardAxis() {
-  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftYAxis);
-  return drive_expo_(axis);
+  double axis = -flight_sim_joystick_.GetRawAxis(kFlightSimLeftYAxis);
+  return drive_sma_(drive_expo_(axis));
 }
 
 /** Returns flight simulator joystick left stick left and right strafe (X-axis)
@@ -77,6 +77,6 @@ double OI::GetTeleDriveStrafeAxis() {
 /** Returns flight simulator joystick CW and CCW azimuth (X-axis) input.
  */
 double OI::GetTeleDriveAzimuthAxis() {
-  double axis = -flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
+  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
   return azimuth_expo_(axis);
 }

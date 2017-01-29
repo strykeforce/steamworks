@@ -1,93 +1,95 @@
 #include "swerve_math.h"
 
-#include <iostream>
-
-#include <algorithm>
 #include <cmath>
+#include <cstring>
+
+constexpr double PI = 3.14159265358979323846;
+constexpr double TAU = 2.0 * PI;
+
+inline int basic_compare(double a, double b) {
+  return ((a == b) ? 0 : ((a > b) ? 1 : -1));
+}
+inline int sign(double val) { return basic_compare(val, 0); }
+inline double hypot_(double x, double y) { return std::sqrt(x * x + y * y); }
+inline double to_degrees(double rad) { return (rad * 360.0 / TAU); }
 
 using namespace sidewinder::swerve;
 
-/** helper function for swerve drive calculations.
- *  https://www.chiefdelphi.com/media/papers/2426
- */
-SwerveMath::SwerveMath() : last_dd_() {}
+SwerveMath::SwerveMath() {}
 
 namespace {
-const int L = 1;
-const int W = 1;
-const double R = std::sqrt(L * L + W * W);
-
-void calc_wheels(DriveData& dd) {
-  double a = dd.str - dd.rcw * (L / R);
-  double b = dd.str + dd.rcw * (L / R);
-  double c = dd.fwd - dd.rcw * (W / R);
-  double d = dd.fwd + dd.rcw * (W / R);
-  dd.wsrf = std::sqrt(b * b + c * c);
-  dd.wslf = std::sqrt(b * b + d * d);
-  dd.wslr = std::sqrt(a * a + d * d);
-  dd.wsrr = std::sqrt(a * a + c * c);
-  dd.warf = std::atan2(b, c) * 180 / M_PI;
-  dd.walf = std::atan2(b, d) * 180 / M_PI;
-  dd.walr = std::atan2(a, d) * 180 / M_PI;
-  dd.warr = std::atan2(a, c) * 180 / M_PI;
-
-  // normalize wheel speed if needed
-  double max = std::max({dd.wsrf, dd.wslf, dd.wslr, dd.wsrr});
-  if (max > 1.0) {
-    dd.wsrf /= max;
-    dd.wslf /= max;
-    dd.wslr /= max;
-    dd.wsrr /= max;
-  }
-}
-
-inline std::pair<double, double> min_angle(double speed, double next,
-                                           double prev) {
-  // std::cout << "NEXT = " << next << " PREV = " << prev << std::endl;
-  assert(speed >= 0);
-  assert(next >= -180 && next <= 180);
-  assert(prev >= -180 && prev <= 180);
-
-  // alternate drive angle is 180 degrees from next ordered angle
-  double alt = next + (next < 0 ? 180 : -180);
-
-  // delta from each angle to last drive angle
-  auto d_next = std::fabs(next - prev);
-  auto d_alt = std::fabs(alt - prev);
-
-  // use minumum angle change, reverse drive if alt angle used
-  // prefer forward drive if both delta are equal
-  if (d_next <= d_alt) {
-    return std::pair<double, double>{speed, next};
-  }
-  // std::cout << "NEXT = " << next << " ALT = " << alt << std::endl;
-  return std::pair<double, double>{-speed, alt};
-}
+constexpr double L = 1.0;
+constexpr double W = 1.0;
+const double robot_diagonal = hypot_(L, W);
+const double hd = L / robot_diagonal;
+const double wd = W / robot_diagonal;
+const double rotation_vectors[4][2] = {
+    {-hd, -wd},  // [0]
+    {-hd, wd},   // [1]
+    {hd, wd},    // [2]
+    {hd, -wd},   // [3]
+};
 
 } /* namespace */
 
 /** Calculate drive wheel speeds and azimuth angles for all wheels. Inputs are
  * joystick forward, strafe and azimuth. Outputs are wheel speeds in the range
- * 0 to +1 and wheel angles in the range -180 to 180 degrees.
+ * 0 to +1 and wheel angles are in degrees, with no range limit
  */
+
 void SwerveMath::operator()(DriveData& dd) {
-  calc_wheels(dd);
+  for (int i = 0; i < 4; i++) {
+    // just adding vectors together
+    double x = dd.str + rotation_vectors[i][0] * dd.rcw;
+    double y = dd.fwd + rotation_vectors[i][1] * dd.rcw;
+    double wheel_angle = to_degrees(atan2(y, x));
+    // finding best angle
+    wheel_angle = fmod(wheel_angle + 270, 360);
+    double raw_angle_change = wheel_angle - wheel_anglesPast[i];
+    double option1 = raw_angle_change;
+    double option2 = 360.0 - fabs(raw_angle_change);
+    option2 = -sign(raw_angle_change) * option2;
+    // other best angle
+    // for the record, integer 'add()' would work just the same:
+    double smart_angle_change =
+        (fabs(option1) < fabs(option2)) ? option1 : option2;
+    wheel_anglesPast[i] = wheel_anglesPast[i] + smart_angle_change;
+    wheel_anglesPast[i] = fmod(wheel_anglesPast[i] + 360, 360);
+    wheel_angles[i] = wheel_angles[i] + smart_angle_change;
+    if (smart_angle_change > 90) {
+      wheel_angles[i] = wheel_angles[i] - 180;
+      wheel_mag_negated[i] = !wheel_mag_negated[i];
+    } else if (smart_angle_change < -90) {
+      wheel_angles[i] = wheel_angles[i] + 180;
+      wheel_mag_negated[i] = !wheel_mag_negated[i];
+    }
+    // wheel speed
+    wheel_mags[i] = hypot_(x, y);
+  }
 
-  auto wheel = min_angle(dd.wsrf, dd.warf, last_dd_.warf);
-  dd.wsrf = wheel.first;
-  dd.warf = wheel.second;
+  double max_wheel_mag = 0;
+  for (int i = 0; i < 4; i++) {
+    if (max_wheel_mag < wheel_mags[i]) {
+      max_wheel_mag = wheel_mags[i];
+    }
+    if (wheel_mag_negated[i]) {
+      wheel_mags[i] *= -1;
+    }
+  }
 
-  wheel = min_angle(dd.wslf, dd.walf, last_dd_.walf);
-  dd.wslf = wheel.first;
-  dd.walf = wheel.second;
+  // if desired speed is larger than 100%, cut speed
+  if (max_wheel_mag > 1) {
+    for (int i = 0; i < 4; i++) {
+      wheel_mags[i] /= max_wheel_mag;
+    }
+  }
 
-  wheel = min_angle(dd.wslr, dd.walr, last_dd_.walr);
-  dd.wslr = wheel.first;
-  dd.walr = wheel.second;
-
-  wheel = min_angle(dd.wsrr, dd.warr, last_dd_.warr);
-  dd.wsrr = wheel.first;
-  dd.warr = wheel.second;
-
-  last_dd_ = dd;
+  dd.warf = wheel_angles[0];
+  dd.wsrf = wheel_mags[0];
+  dd.walf = wheel_angles[1];
+  dd.wslf = wheel_mags[1];
+  dd.walr = wheel_angles[2];
+  dd.wslr = wheel_mags[2];
+  dd.warr = wheel_angles[3];
+  dd.wsrr = wheel_mags[3];
 }
