@@ -15,7 +15,9 @@ using namespace sidewinder::swerve;
  */
 SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
                          const TalonMap* tm)
-    : logger_(spdlog::stdout_color_st("SwerveDrive")), map_(tm) {
+    : logger_(spdlog::stdout_color_st("SwerveDrive")),
+      map_(tm),
+      swerve_math_(config) {
   assert(tm);
 
   // load sidewinder configuration from common config file

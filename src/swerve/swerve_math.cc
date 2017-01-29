@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstring>
+#include "spdlog/spdlog.h"
 
 constexpr double PI = 3.14159265358979323846;
 constexpr double TAU = 2.0 * PI;
@@ -15,22 +16,40 @@ inline double to_degrees(double rad) { return (rad * 360.0 / TAU); }
 
 using namespace sidewinder::swerve;
 
-SwerveMath::SwerveMath() {}
+SwerveMath::SwerveMath(const std::shared_ptr<cpptoml::table> config) {
+  auto settings = config->get_table("SIDEWINDER");
+  if (!settings) {
+    throw std::invalid_argument("SIDEWINDER config is missing");
+  }
 
-namespace {
-constexpr double L = 1.0;
-constexpr double W = 1.0;
-const double robot_diagonal = hypot_(L, W);
-const double hd = L / robot_diagonal;
-const double wd = W / robot_diagonal;
-const double rotation_vectors[4][2] = {
-    {-hd, -wd},  // [0]
-    {-hd, wd},   // [1]
-    {hd, wd},    // [2]
-    {hd, -wd},   // [3]
-};
+  auto wb_w = settings->get_as<double>("wheelbase_width");
+  if (!wb_w) {
+    throw std::invalid_argument(
+        "SIDEWINDER wheelbase_width setting is missing");
+  }
+  double wheelbase_width = *wb_w;
 
-} /* namespace */
+  auto wb_l = settings->get_as<double>("wheelbase_length");
+  if (!wb_l) {
+    throw std::invalid_argument(
+        "SIDEWINDER wheelbase_length setting is missing");
+  }
+  double wheelbase_length = *wb_l;
+  auto logger = spdlog::get("SwerveDrive");
+  logger->info("wheelbase W = {}, L = {}", wheelbase_width, wheelbase_length);
+
+  double robot_diagonal = hypot_(wheelbase_length, wheelbase_width);
+  double hd = wheelbase_length / robot_diagonal;
+  double wd = wheelbase_width / robot_diagonal;
+  rotation_vectors[0][0] = -hd;
+  rotation_vectors[0][1] = -wd;
+  rotation_vectors[1][0] = -hd;
+  rotation_vectors[1][1] = wd;
+  rotation_vectors[2][0] = hd;
+  rotation_vectors[2][1] = wd;
+  rotation_vectors[3][0] = hd;
+  rotation_vectors[3][1] = -wd;
+}
 
 /** Calculate drive wheel speeds and azimuth angles for all wheels. Inputs are
  * joystick forward, strafe and azimuth. Outputs are wheel speeds in the range
