@@ -7,9 +7,9 @@ set(CTRE_LIBS /opt/ctre CACHE PATH "CTRE directory.")
 set(CMAKE_INSTALL_PREFIX /opt/sidewinder CACHE PATH "Sidewinder installation directory." FORCE)
 
 set(VERSION_MAJOR 17)
-set(VERSION_MINOR 0)
+set(VERSION_MINOR 1)
 set(VERSION_PATCH 0)
-set(VERSION_META "-zander")
+set(VERSION_META "-dev")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
 set(CMAKE_LD           /usr/bin/arm-frc-linux-gnueabi-ld)
