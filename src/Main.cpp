@@ -28,6 +28,8 @@ std::unordered_map<int, DigitalBoth> AllDigitalBoths;
 
 std::vector<CANTalonBundle> TalonsCurrentlyUsing;
 
+auto pulse_ms = std::chrono::milliseconds(1000);
+
 #define ForEveryUsingTalon(__Command__)                   \
   for (int i = 0; i < TalonsCurrentlyUsing.size(); i++) { \
     TalonsCurrentlyUsing[i].TalonRef->__Command__;        \
@@ -86,8 +88,25 @@ void SetIzone() {
   unsigned iz = query("New I Zone Value");
   ForEveryUsingTalon(SetIzone(iz));
 }
+
 void SetCommandedValue_Q(double val) { ForEveryUsingTalon(Set(val)); }
 void SetCommandedValue() { query2("New Commanded Value", SetCommandedValue_Q); }
+
+void SetPulseLength() {
+  double p = query("New pulse length (sec)");
+  p = std::round(p * 1000);
+  pulse_ms = std::chrono::milliseconds(static_cast<long>(p));
+}
+
+void PulseCommandedValue_Q(double val) {
+  ForEveryUsingTalon(Set(val));
+  std::this_thread::sleep_for(pulse_ms);
+  ForEveryUsingTalon(Set(0.0));
+}
+void PulseCommandedValue() {
+  query2("Pulse Commanded Value", PulseCommandedValue_Q);
+}
+
 void SetPeakCloseLoopOutForward() {
   tempvar1A = query("New Forward Peak Closed Loop Output");
   ForEveryUsingTalon(ConfigPeakOutputVoltage(tempvar1A, tempvar1B));
@@ -424,6 +443,7 @@ void Set() {
       "DIO Pin",
       "Status Frame Rates",
       "Current Limit",
+      "Pulse Length",
   };
   VoidFunction FunctionPointers[] = {
       SetControlMode,
@@ -451,8 +471,9 @@ void Set() {
       SetDIO_Pin,
       SetStatusFrameRates,
       SetCurrentLimit,
+      SetPulseLength,
   };
-  menu(25, FunctionNames, "Set What?", FunctionPointers, true);
+  menu(26, FunctionNames, "Set What?", FunctionPointers, true);
 }
 void Get() {
   char* FunctionNames[] = {
@@ -477,12 +498,16 @@ class Robot : public SampleRobot {
     printf("Welcome to BDC_Comm v6.1\n");
     SingularTalon();
     char* FunctionNames[] = {"Select One Single Talon",
-                             "Select Additional Talon", "Set Commanded Value",
-                             "Set", "Get"};
-    VoidFunction FunctionPointers[] = {SingularTalon, ChangeTalons,
-                                       SetCommandedValue, Set, Get};
+                             "Select Additional Talon",
+                             "Set Commanded Value",
+                             "Pulse Commanded Value",
+                             "Set",
+                             "Get"};
+    VoidFunction FunctionPointers[] = {
+        SingularTalon,       ChangeTalons, SetCommandedValue,
+        PulseCommandedValue, Set,          Get};
     while (true) {
-      menu(5, FunctionNames, "Select Action", FunctionPointers, true);
+      menu(6, FunctionNames, "Select Action", FunctionPointers, true);
       printf("You cannot leave root menu.\n");
     }
   }
