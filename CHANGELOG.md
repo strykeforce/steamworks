@@ -4,12 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
-## [Unreleased]
+## [17.1.0] - 2017-01-30
 
 ### Added
 
 - Better config file error checking. (#10)
 - Unit tests in `test` directory.
+- Convenience method to initialize Talons.
+- Configurable swerve wheelbase dimensions. (#18)
+- Grapher support moved to library. (#15)
 
 ### Changed
 
@@ -17,6 +20,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed
 
+- Azimuth reset when crossing negative Y-axis (#3)
 - More updates to conform with 2017 WPILib changes. (#11)
 
 ## [17.0.0] - 2017-01-06
