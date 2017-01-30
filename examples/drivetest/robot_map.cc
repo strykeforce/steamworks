@@ -3,7 +3,7 @@
 #include "CANTalon.h"
 #include "spdlog/spdlog.h"
 
-#include "HostToObject.h"
+#include "grapher/HostToObject.h"
 #include "swerve/talon_map.h"
 
 using namespace sidewinder;
