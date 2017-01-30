@@ -22,6 +22,11 @@ SwerveMath::SwerveMath(const std::shared_ptr<cpptoml::table> config) {
     throw std::invalid_argument("SIDEWINDER config is missing");
   }
 
+  settings = settings->get_table("SWERVE");
+  if (!settings) {
+    throw std::invalid_argument("SWERVE config is missing");
+  }
+
   auto wb_w = settings->get_as<double>("wheelbase_width");
   if (!wb_w) {
     throw std::invalid_argument(
