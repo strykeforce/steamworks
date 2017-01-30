@@ -1,14 +1,51 @@
 #include "robot_map.h"
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
+#include "CANTalon.h"
 #include "spdlog/spdlog.h"
 
-// #include "HostToObject.h"
+#include "grapher/HostToObject.h"
 #include "swerve/talon_map.h"
 
 using namespace steamworks;
 using namespace sidewinder;
+
+// helper functions to start grapher data collection thread if enabled.
+namespace {
+inline JerrysGrapher_DeviceBundle jgdb(byte id, ::CANTalon* t) {
+  JerrysGrapher_DeviceBundle db{JerrysGrapher_DeviceType::Talon, id, t};
+  return db;
+}
+
+static std::vector<JerrysGrapher_DeviceBundle> gd;
+
+void initialize_grapher() {
+  typedef RobotMap rm;
+
+  gd.push_back(jgdb(rm::kLeftFrontDrive, rm::swerve_talons->lf_drive));
+  gd.push_back(jgdb(rm::kLeftFrontAzimuth, rm::swerve_talons->lf_azimuth));
+
+  gd.push_back(jgdb(rm::kRightFrontDrive, rm::swerve_talons->rf_drive));
+  gd.push_back(jgdb(rm::kRightFrontAzimuth, rm::swerve_talons->rf_azimuth));
+
+  gd.push_back(jgdb(rm::kLeftRearDrive, rm::swerve_talons->lr_drive));
+  gd.push_back(jgdb(rm::kLeftRearAzimuth, rm::swerve_talons->lr_azimuth));
+
+  gd.push_back(jgdb(rm::kRightRearDrive, rm::swerve_talons->rr_drive));
+  gd.push_back(jgdb(rm::kRightRearAzimuth, rm::swerve_talons->rr_azimuth));
+
+  for (const auto& d : gd) {
+    ::CANTalon* talon = static_cast<::CANTalon*>(d.objectPointer);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateGeneral, 20);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateFeedback, 20);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateQuadEncoder, 20);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRatePulseWidthMeas, 20);
+    talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateAnalogTempVbat, 20);
+  }
+
+  JerrysGrapher_StartStatusThread(&gd);
+}
+
+} /* namespace */
 
 /** Holds pointers to the 8 swerve drive Talons.  */
 swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
@@ -36,6 +73,6 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
   assert(c);
   if (c->get_as<bool>("grapher").value_or(false)) {
     spdlog::get("robot")->warn("initializing grapher");
-    // initialize_grapher();
+    initialize_grapher();
   }
 }

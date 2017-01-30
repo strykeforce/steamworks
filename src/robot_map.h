@@ -1,6 +1,5 @@
 #pragma once
 
-#include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
 #include "swerve/talon_map.h"
@@ -9,6 +8,19 @@ namespace steamworks {
 
 class RobotMap {
  public:
+  // FIXME: need to sort out left/right madness
+  // device ids for swerve drive talons
+  // enum Talons {
+  //   kRightFrontAzimuth = 1,
+  //   kRightFrontDrive = 11,
+  //   kLeftFrontAzimuth = 2,
+  //   kLeftFrontDrive = 12,
+  //   kRightRearAzimuth = 4,
+  //   kRightRearDrive = 14,
+  //   kLeftRearAzimuth = 3,
+  //   kLeftRearDrive = 13,
+  // };
+
   enum Talons {
     kRightFrontAzimuth = 2,
     kRightFrontDrive = 12,
@@ -18,25 +30,24 @@ class RobotMap {
     kRightRearDrive = 13,
     kLeftRearAzimuth = 4,
     kLeftRearDrive = 14,
-    kTurret = 5,
   };
-
   // pointers to talons and azimuth encoder zero count
   static sidewinder::swerve::TalonMap* swerve_talons;
 
-  // instantiate pointers to hardware objects like Talons, etc.
+  // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);
 };
 
 // Joysticks
 enum Joysticks {
-  kFlightSimJoystick = 0,
-  kGamePadJoystick,
+  kFlightSimJoystick = 0,  // global.joy1 in old code
+  kGamePadJoystick,        // global.joy2
 };
 
+// flight sim axis deadzone 0.08
 enum FlightSimAxis {
-  kFlightSimRightAxis = 0,
-  kFlightSimLeftAxis = 2,
+  kFlightSimRightAxis = 0,  // FlightSim_RightX_Axis
+  kFlightSimLeftAxis = 2,   // FlightSim_LeftY_Axis
 };
 
 enum FlightSimButtons {
@@ -47,14 +58,14 @@ enum FlightSimButtons {
   kFlightSimLeftCornerUpButton,
 };
 
+// Joystick Buttons
 enum JoystickButtons {
   kGameButtonA = 1,
-  kGameButtonB,
+  kGameButtonB,  // 2
 };
 
 enum TalonProfileSlots {
-  kPrimary = 0,
-  kSecondary,
+  kPrimary,
 };
 
 } /* steamworks */

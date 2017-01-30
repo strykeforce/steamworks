@@ -8,5 +8,5 @@ ssh roborio <<END_SSH
 mv $DST.tmp $DST
 ln -sf $DST /home/lvuser/FRCUserProgram
 . /etc/profile.d/natinst-path.sh
-/usr/local/frc/bin/frcKillRobot.sh -r -t
+/usr/local/frc/bin/frcKillRobot.sh -r -t > /dev/null 2>&1
 END_SSH
