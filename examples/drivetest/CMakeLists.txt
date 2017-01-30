@@ -11,13 +11,11 @@ include(subsystems/CMakeLists.txt)
 target_include_directories(${DRIVETEST}
   PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}"
-  "${CMAKE_SOURCE_DIR}/vendor/grapher"
 )
 
 target_link_libraries(${DRIVETEST}
   PUBLIC
   sidewinder
-  grapher
   TalonSRXLib
   wpi
 )
