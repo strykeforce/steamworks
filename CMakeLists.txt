@@ -3,6 +3,7 @@ project(sidewinder)
 
 set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
 set(CTRE_LIBS /opt/ctre CACHE PATH "CTRE directory.")
+set(NAVX_LIBS /opt/navx CACHE PATH "NavX directory.")
 
 set(CMAKE_INSTALL_PREFIX /opt/sidewinder CACHE PATH "Sidewinder installation directory." FORCE)
 
@@ -27,12 +28,14 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O2 -DNDEBUG")
 include_directories(SYSTEM
   "${WPI_LIBS}/include"
   "${CTRE_LIBS}/include"
+  "${NAVX_LIBS}/include"
   "${CMAKE_SOURCE_DIR}/vendor/include"
 )
 
 link_directories(
   "${WPI_LIBS}/lib"
   "${CTRE_LIBS}/lib"
+  "${NAVX_LIBS}/lib"
 )
 
 add_subdirectory(src)

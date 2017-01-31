@@ -17,6 +17,7 @@ target_link_libraries(${DRIVETEST}
   PUBLIC
   sidewinder
   TalonSRXLib
+  navx_frc_cpp
   wpi
 )
 
