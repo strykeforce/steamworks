@@ -1,19 +1,55 @@
 #include "deadeye.h"
 
-#include "FlyCapture2.h"
-#include <memory>
-#include <iostream>
-#include <sstream>
-#include "opencv2/opencv.hpp"
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "frame.h"
-#include "robot.h"
+#include "boiler_target_data.h"
 
-using namespace FlyCapture2;
 using namespace deadeye;
 
+Deadeye::Deadeye(std::shared_ptr<cpptoml::table> config)
+    : logger_(spdlog::get("deadeye")), link_(config), boiler_camera_(config) {
+  boiler_camera_.Connect();
+}
+
+void Deadeye::Run() {
+  boiler_camera_.StartCapture();
+  while (true) {
+    switch (link_.GetMode()) {
+      case Link::kBoilerMode:
+        ProcessBoilerTarget();
+        break;
+      case Link::kGearMode:
+        ProcessGearTarget();
+        break;
+      case Link::kQuitMode:
+        return;
+    }
+  }
+}
+
+void Deadeye::ProcessBoilerTarget() {
+  int y;  // vertical target separation
+  int azimuth_error;
+  std::tie(azimuth_error, y) = boiler_camera_.ProcessFrame();
+  boiler_camera_.DisplayFrame();
+  y -= boiler_target_offset;
+  if (y < 0 || y > boiler_target_data_size - 1) {
+    logger_->warn("boiler target separation distance out of range: {} px", y);
+    return;
+  }
+  link_.SendBoilerSolution(azimuth_error, boiler_target_data[y][kRange],
+                           boiler_target_data[y][kAngle],
+                           boiler_target_data[y][kSpeed]);
+
+  // TODO: config file should decide
+}
+
+void Deadeye::ProcessGearTarget() {
+  logger_->error("{} not implemented", __FUNCTION__);
+}
+
+/*
 Deadeye::Deadeye(std::shared_ptr<FlyCapture2::Camera> camera)
     : camera_(camera), has_gui_(!!std::getenv("DISPLAY")) {}
 
@@ -61,12 +97,14 @@ void Deadeye::Display() {
     cv::Rect lower_rect = cv::boundingRect(frame.lower_contour);
     cv::Rect upper_rect = cv::boundingRect(frame.upper_contour);
 
-    // compute distance between target bounding box top edges and send to robot
+    // compute distance between target bounding box top edges and send to
+robot
     auto y = lower_rect.y - upper_rect.y;
     // FIXME: get frame dims from camera config
     int x = 640 - upper_rect.x - (upper_rect.width / 2);
     logger->debug(
-        " {} Frame width = {}, Rect X = {}, Rect width = {}, X = {}, Y = {}",
+        " {} Frame width = {}, Rect X = {}, Rect width = {}, X = {}, Y =
+{}",
         typeid(upper_rect).name(), image.cols, upper_rect.x,
         upper_rect.width / 2.0, x, y);
     robot.SendBoilerTarget(x, y);
@@ -88,9 +126,11 @@ void Deadeye::Display() {
 
       std::string range = "target height = " + std::to_string(y);
       std::string coords = "azimuth error = " + std::to_string(x);
-      cv::putText(image, range, cv::Point(100, 50), cv::FONT_HERSHEY_SIMPLEX,
+      cv::putText(image, range, cv::Point(100, 50),
+cv::FONT_HERSHEY_SIMPLEX,
                   1.0, cv::Scalar(255, 255, 255));
-      cv::putText(image, coords, cv::Point(100, 100), cv::FONT_HERSHEY_SIMPLEX,
+      cv::putText(image, coords, cv::Point(100, 100),
+cv::FONT_HERSHEY_SIMPLEX,
                   1.0, cv::Scalar(255, 255, 255));
 
       // display capture frame in GUI window, look for 'q' keypress
@@ -110,3 +150,4 @@ void Deadeye::Display() {
 
   camera_->Disconnect();
 }
+*/

@@ -1,19 +1,29 @@
 #pragma once
 
-#include <memory>
+#include <vector>
+
 #include "cpptoml/cpptoml.h"
 #include "opencv2/opencv.hpp"
+#include "spdlog/spdlog.h"
 
 namespace deadeye {
 
 class Frame {
- private:
  public:
+  cv::Mat hsv, blur, mask;
   std::vector<cv::Point> upper_contour, lower_contour;
+  cv::Rect upper_rect, lower_rect;
+  int azimuth_error, target_separation;
+
   Frame(std::shared_ptr<cpptoml::table> config);
   virtual ~Frame() = default;
 
   bool FindTargets(const cv::Mat& frame);
+
+ private:
+  std::shared_ptr<spdlog::logger> logger_;
+  cv::Scalar hsv_lower_, hsv_upper_;
+  double min_arc_length_;
 };
 
 } /* deadeye */

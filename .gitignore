@@ -2,6 +2,7 @@
 /test/build
 /bin
 /.clang_complete
+/.vault_pw
 
 # Vagrant
 /.vagrant

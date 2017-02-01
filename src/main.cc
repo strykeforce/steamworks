@@ -1,11 +1,10 @@
 #include <cstdlib>
+
 #include "spdlog/spdlog.h"
 #include "cpptoml/cpptoml.h"
 
-#include "camera.h"
+// #include "camera.h"
 #include "deadeye.h"
-
-using namespace deadeye;
 
 int main(int argc, char const* argv[]) {
   auto logger = spdlog::stdout_color_st("deadeye");
@@ -20,10 +19,10 @@ int main(int argc, char const* argv[]) {
   auto config = cpptoml::parse_file(conf_path);
 
   // configure camera
-  auto camera = GetCamera(config);
+  // auto camera = GetCamera(config);
 
   // start processing
-  Deadeye deadeye(camera);
-  deadeye.Display();
+  deadeye::Deadeye deadeye(config);
+  deadeye.Run();
   return 0;
 }

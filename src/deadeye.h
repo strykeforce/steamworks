@@ -1,21 +1,28 @@
 #pragma once
 
-#include <memory>
-#include "FlyCapture2.h"
 #include "cpptoml/cpptoml.h"
+#include "spdlog/spdlog.h"
+
+#include "link.h"
+#include "camera.h"
 
 namespace deadeye {
 
 class Deadeye {
- private:
-  std::shared_ptr<FlyCapture2::Camera> camera_;
-  bool has_gui_;
-
  public:
-  Deadeye(std::shared_ptr<FlyCapture2::Camera> camera);
-  virtual ~Deadeye() = default;
+  Deadeye(std::shared_ptr<cpptoml::table> config);
+  Deadeye(const Deadeye&) = delete;
+  Deadeye& operator=(const Deadeye&) = delete;
 
-  void Display();
+  void Run();  // start the main loop
+
+ private:
+  std::shared_ptr<spdlog::logger> logger_;
+  Link link_;
+  Camera boiler_camera_;
+
+  void ProcessBoilerTarget();
+  void ProcessGearTarget();
 };
 
 } /* deadeye */

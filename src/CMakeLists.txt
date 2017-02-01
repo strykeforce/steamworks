@@ -11,7 +11,7 @@ add_executable(deadeye
 main.cc
 camera.cc
 frame.cc
-robot.cc
+link.cc
 deadeye.cc
 )
 
