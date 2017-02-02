@@ -10,5 +10,6 @@ static const char* VERSION =
     " " SIDEWINDER_COMPILE_TIME;
 } /* sidewinder */
 
-using namespace sidewinder;
-std::string GetVersion() { return std::string(VERSION); }
+std::string sidewinder::GetVersion() {
+  return std::string(sidewinder::VERSION);
+}
