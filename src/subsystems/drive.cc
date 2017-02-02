@@ -5,7 +5,7 @@
 
 #include "commands/tele_drive.h"
 #include "robot_map.h"
-#include "swerve/swerve_drive.h"
+#include "sidewinder/swerve/gyro_swerve_drive.h"
 
 using namespace steamworks;
 

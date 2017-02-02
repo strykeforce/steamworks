@@ -3,8 +3,8 @@
 #include "CANTalon.h"
 #include "spdlog/spdlog.h"
 
-#include "grapher/HostToObject.h"
-#include "swerve/talon_map.h"
+#include "sidewinder/grapher/HostToObject.h"
+#include "sidewinder/swerve/talon_map.h"
 
 using namespace steamworks;
 using namespace sidewinder;

@@ -5,8 +5,8 @@
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
-#include "oi/expo.h"
-#include "oi/sma.h"
+#include "sidewinder/oi/expo.h"
+#include "sidewinder/oi/sma.h"
 
 using namespace steamworks;
 

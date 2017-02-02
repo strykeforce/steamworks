@@ -2,7 +2,7 @@
 
 #include "cpptoml/cpptoml.h"
 
-#include "swerve/talon_map.h"
+#include "sidewinder/swerve/talon_map.h"
 
 namespace steamworks {
 

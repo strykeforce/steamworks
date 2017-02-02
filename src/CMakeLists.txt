@@ -17,6 +17,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
   PUBLIC
   sidewinder
   TalonSRXLib
+  navx_frc_cpp
   wpi
 )
 
