@@ -11,7 +11,7 @@ install(TARGETS sidewinder
 
 add_dependencies(sidewinder generate_version)
 
-set(VERSION_H "${PROJECT_BINARY_DIR}/src/version.h")
+set(VERSION_H "${PROJECT_BINARY_DIR}/src/version_defs.h")
 
 add_custom_target(generate_version DEPENDS ${VERSION_H})
 
@@ -30,8 +30,8 @@ add_custom_command(
   VERBATIM
 )
 
-# install(FILES version.h DESTINATION include)
-install(DIRECTORY oi DESTINATION include FILES_MATCHING PATTERN "*.h")
-install(DIRECTORY swerve DESTINATION include FILES_MATCHING PATTERN "*.h")
-install(DIRECTORY talon DESTINATION include FILES_MATCHING PATTERN "*.h")
-install(DIRECTORY grapher DESTINATION include FILES_MATCHING PATTERN "*.h")
+install(FILES version.h DESTINATION include/sidewinder)
+install(DIRECTORY oi DESTINATION include/sidewinder FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY swerve DESTINATION include/sidewinder FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY talon DESTINATION include/sidewinder FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY grapher DESTINATION include/sidewinder FILES_MATCHING PATTERN "*.h")
