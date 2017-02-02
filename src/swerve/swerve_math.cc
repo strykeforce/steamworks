@@ -16,6 +16,29 @@ inline double to_degrees(double rad) { return (rad * 360.0 / TAU); }
 
 using namespace sidewinder::swerve;
 
+Vector2f* calc_rotation_vectors(double robot_left_to_right_length,
+                                double robot_front_to_back_length,
+                                Vector2f rotation_cord) {
+  Vector2f cord_multiplers[4];
+  cord_multiplers[WheelPoints::RightFront] = {+1, +1};
+  cord_multiplers[WheelPoints::RightRear] = {+1, -1};
+  cord_multiplers[WheelPoints::LeftRear] = {-1, -1};
+  cord_multiplers[WheelPoints::LeftFront] = {-1, +1};
+  Vector2f* to_be_returned = (Vector2f*)malloc(sizeof(Vector2f) * 4);
+  unsigned int i;
+  for (i = 0; i < 4; i++) {
+    printf("%i:\n", i);
+    double X =
+        rotation_cord.x - robot_left_to_right_length * cord_multiplers[i].x / 2;
+    double Y =
+        rotation_cord.y - robot_front_to_back_length * cord_multiplers[i].y / 2;
+    double distance = hypot_(X, Y);
+    to_be_returned[i].x = -Y / distance;
+    to_be_returned[i].y = X / distance;
+  }
+  return to_be_returned;
+}
+
 SwerveMath::SwerveMath(const std::shared_ptr<cpptoml::table> config) {
   auto settings = config->get_table("SIDEWINDER");
   if (!settings) {
@@ -40,20 +63,28 @@ SwerveMath::SwerveMath(const std::shared_ptr<cpptoml::table> config) {
         "SIDEWINDER wheelbase_length setting is missing");
   }
   double wheelbase_length = *wb_l;
+
+  auto srx = settings->get_as<double>("shooter_rotation_point_X");
+  if (!srx) {
+    throw std::invalid_argument(
+        "SIDEWINDER shooter_rotation_point_X setting is missing");
+  }
+  double srx_value = *srx;
+
+  auto sry = settings->get_as<double>("shooter_rotation_point_Y");
+  if (!sry) {
+    throw std::invalid_argument(
+        "SIDEWINDER shooter_rotation_point_Y setting is missing");
+  }
+  double sry_value = *sry;
+
   auto logger = spdlog::get("SwerveDrive");
   logger->info("wheelbase W = {}, L = {}", wheelbase_width, wheelbase_length);
 
-  double robot_diagonal = hypot_(wheelbase_length, wheelbase_width);
-  double hd = wheelbase_length / robot_diagonal;
-  double wd = wheelbase_width / robot_diagonal;
-  rotation_vectors[0][0] = -hd;
-  rotation_vectors[0][1] = -wd;
-  rotation_vectors[1][0] = -hd;
-  rotation_vectors[1][1] = wd;
-  rotation_vectors[2][0] = hd;
-  rotation_vectors[2][1] = wd;
-  rotation_vectors[3][0] = hd;
-  rotation_vectors[3][1] = -wd;
+  rotation_vectors[RotationPoint::Center] =
+      calc_rotation_vectors(wheelbase_width, wheelbase_length, {0.0, 0.0});
+  rotation_vectors[RotationPoint::Shooter] = calc_rotation_vectors(
+      wheelbase_width, wheelbase_length, {srx_value, sry_value});
 }
 
 /** Calculate drive wheel speeds and azimuth angles for all wheels. Inputs are
@@ -61,11 +92,12 @@ SwerveMath::SwerveMath(const std::shared_ptr<cpptoml::table> config) {
  * 0 to +1 and wheel angles are in degrees, with no range limit
  */
 
-void SwerveMath::operator()(DriveData& dd) {
+void SwerveMath::operator()(DriveData& dd, enum RotationPoint rp) {
+  struct Vector2f* current_rotation_vectors = rotation_vectors[rp];
   for (int i = 0; i < 4; i++) {
     // just adding vectors together
-    double x = dd.str + rotation_vectors[i][0] * dd.rcw;
-    double y = dd.fwd + rotation_vectors[i][1] * dd.rcw;
+    double x = dd.str + current_rotation_vectors[i].x * dd.rcw;
+    double y = dd.fwd + current_rotation_vectors[i].y * dd.rcw;
     double wheel_angle = to_degrees(atan2(y, x));
     // finding best angle
     wheel_angle = fmod(wheel_angle + 270, 360);
@@ -80,6 +112,7 @@ void SwerveMath::operator()(DriveData& dd) {
     wheel_anglesPast[i] = wheel_anglesPast[i] + smart_angle_change;
     wheel_anglesPast[i] = fmod(wheel_anglesPast[i] + 360, 360);
     wheel_angles[i] = wheel_angles[i] + smart_angle_change;
+#if 1
     if (smart_angle_change > 90) {
       wheel_angles[i] = wheel_angles[i] - 180;
       wheel_mag_negated[i] = !wheel_mag_negated[i];
@@ -87,6 +120,7 @@ void SwerveMath::operator()(DriveData& dd) {
       wheel_angles[i] = wheel_angles[i] + 180;
       wheel_mag_negated[i] = !wheel_mag_negated[i];
     }
+#endif
     // wheel speed
     wheel_mags[i] = hypot_(x, y);
   }

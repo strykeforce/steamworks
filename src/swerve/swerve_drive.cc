@@ -135,7 +135,7 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
   dd.fwd = forward;
   dd.str = strafe;
   dd.rcw = azimuth;
-  swerve_math_(dd);
+  swerve_math_(dd, RotationPoint::Center);
 
   map_->lf_azimuth->Set(std::round(dd.walf * 2048 / 180));
   map_->rf_azimuth->Set(std::round(dd.warf * 2048 / 180));
@@ -155,6 +155,24 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
                    dd.wslf, dd.wslr, dd.wsrr);
     i = 0;
   }
+}
+
+void SwerveDrive::TargetRotation(double azimuth) {
+  DriveData dd = DriveData();
+  dd.fwd = 0;
+  dd.str = 0;
+  dd.rcw = azimuth;
+  swerve_math_(dd, RotationPoint::Shooter);
+
+  map_->lf_azimuth->Set(std::round(dd.walf * 2048 / 180));
+  map_->rf_azimuth->Set(std::round(dd.warf * 2048 / 180));
+  map_->lr_azimuth->Set(std::round(dd.walr * 2048 / 180));
+  map_->rr_azimuth->Set(std::round(dd.warr * 2048 / 180));
+
+  map_->rf_drive->Set(dd.wsrf * drive_scale_factor_);
+  map_->lf_drive->Set(dd.wslf * drive_scale_factor_);
+  map_->lr_drive->Set(dd.wslr * drive_scale_factor_);
+  map_->rr_drive->Set(dd.wsrr * drive_scale_factor_);
 }
 
 /** Drive in crab drive mode.

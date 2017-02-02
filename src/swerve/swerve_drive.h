@@ -13,6 +13,7 @@ namespace swerve {
 /** SwerveDrive is a WPI command-based subsystem represents the Sidewinder
  * swerve drive.
  */
+
 class SwerveDrive {
  private:
   const std::shared_ptr<spdlog::logger> logger_;
@@ -27,6 +28,7 @@ class SwerveDrive {
               const TalonMap* map);
   void ZeroAzimuth();
   void Drive(double forward, double strafe, double azimuth);
+  void TargetRotation(double azimuth);
   void CrabDrive(double forward, double strafe);
 };
 } /* swerve */
