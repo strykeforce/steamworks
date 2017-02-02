@@ -2,6 +2,7 @@
 
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
+#include "serial/serial.h"
 
 namespace deadeye {
 class Link {
@@ -17,6 +18,7 @@ class Link {
 
  private:
   std::shared_ptr<spdlog::logger> logger_;
+  std::unique_ptr<serial::Serial> serial_;
 };
 
 } /* deadeye */
