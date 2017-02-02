@@ -30,6 +30,7 @@ include_directories(SYSTEM
   "${CTRE_LIBS}/include"
   "${NAVX_LIBS}/include"
   "${CMAKE_SOURCE_DIR}/vendor/include"
+  "${PROJECT_BINARY_DIR}/src"
 )
 
 link_directories(

@@ -1,1 +1,1 @@
-add_subdirectory(tools/deploy)
+add_subdirectory(tools)
