@@ -4,36 +4,27 @@
 
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
+#include "sidewinder/oi/expo.h"
+#include "sidewinder/oi/sma.h"
 
 namespace steamworks {
 
-/** Robot OI provides operator inputs.
+/** Robot OI provides swerve drive operator inputs.
  * It assumes the flight simulator joysticks and buttons are used for swerve
- * drive operation while gamepad runs the turret and cannon.
+ * drive operation.
  */
 class OI {
  private:
-  frc::Joystick drive_joystick_;
-  frc::Joystick gamepad_joystick_;
+  // create our joystick objects
+  frc::Joystick flight_sim_joystick_;
+  frc::JoystickButton reset_button_;
+  sidewinder::oi::Expo drive_expo_, azimuth_expo_;
+  sidewinder::oi::SMA drive_sma_, azimuth_sma_;
 
  public:
-  OI(const std::shared_ptr<cpptoml::table> config);
-  OI(const OI&) = delete;
-  OI& operator=(const OI&) = delete;
-  virtual ~OI() = default;
-
-  float GetTeleDriveForwardAxis() const;
-  float GetTeleDriveStrafeAxis() const;
-  float GetTeleDriveAzimuthAxis() const;
-
-  // USB Ports for Joysticks
-  enum JoystickUSBPorts {
-    kUSB0 = 0,
-    kUSB1,
-    kUSB2,
-    kUSB3,
-    kUSB4,
-    kUSB5,
+  enum Joysticks {
+    kFlightSimJoystick = 0,
+    kGamePadJoystick,
   };
 
   // TODO: verify these
@@ -53,23 +44,11 @@ class OI {
     kFlightSimLeftCornerUpButton,
   };
 
-  enum GamepadAxis {
-    kGamepadLeftXAxis = 0,
-    kGamepadLeftYAxis = 1,
-    kGamepadRightXAxis = 4,
-    kGamepadRightYAxis = 5,
-  };
-
-  enum GamepadButtons {
-    kGamepadAButton = 1,
-    kGamepadBButton = 2,
-    kGamepadXButton = 3,
-    kGamepadYButton = 4,
-    kGamepadLeftBumperButton = 5,
-    kGamepadRightBumperButton = 6,
-    kGamepadSelectButton = 7,
-    kGamepadStartButton = 8,
-  };
+  OI(const std::shared_ptr<cpptoml::table> config);
+  virtual ~OI() = default;
+  double GetTeleDriveForwardAxis();
+  double GetTeleDriveStrafeAxis();
+  double GetTeleDriveAzimuthAxis();
 };
 
 } /* steamworks */

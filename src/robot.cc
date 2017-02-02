@@ -6,6 +6,7 @@
 
 #include "default_config.h"
 #include "robot_map.h"
+#include "sidewinder/version.h"
 #include "subsystems/drive.h"
 #include "version.h"
 
@@ -71,6 +72,7 @@ void Robot::LogVersion() {
                 STEAMWORKS_VERSION_PATCH, STEAMWORKS_VERSION_META);
   logger_->info(" build {} compiled at {} {}", STEAMWORKS_VERSION_BUILD,
                 STEAMWORKS_COMPILE_DATE, STEAMWORKS_COMPILE_TIME);
+  logger_->info(sidewinder::GetVersion());
 }
 
 // used for: strings steamworks | grep STEAMWORKS_VERSION

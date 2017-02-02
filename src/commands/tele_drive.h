@@ -4,7 +4,7 @@
 #include "spdlog/spdlog.h"
 
 #include "oi.h"
-#include "swerve/swerve_drive.h"
+#include "sidewinder/swerve/swerve_drive.h"
 
 namespace steamworks {
 

@@ -1,5 +1,5 @@
 [STEAMWORKS]
-grapher = false
+grapher = true
 
     [[STEAMWORKS.TALON]]
     name = "turret"
@@ -23,14 +23,16 @@ azimuth_sma_period = 5
 
 # drive scale factor scales the 0.0 - 1.0 input to the appropriate value
 # for the drive mode, e.g. 12.0 for voltage and max ticks/10ms for velocity
-drive_scale_factor = 680.0
+drive_scale_factor = 10.0
 
     [SIDEWINDER.SWERVE]
-    lf_zero = 1008
-    rf_zero = 3252
-    lr_zero = 3415
-    rr_zero = 1297
+    lf_zero = 1002
+    rf_zero = 959
+    lr_zero = 981
+    rr_zero = 969
 
+    wheelbase_width  = 26.4375 # inches
+    wheelbase_length = 22.5    # inches
 
         [[SIDEWINDER.SWERVE.TALON]]
         name = "azimuth"
@@ -59,16 +61,16 @@ drive_scale_factor = 680.0
         # disable switches and disable soft limits = 2
         limit_mode      = 2 # soft and hard disabled
 
-        P      =   12.0
+        P      =   10.0
         I      =    0.0
-        D      =  200.0
+        D      =  150.0
         F      =    0.0
         I_zone =      0
 
         voltage_ramp_rate              =  0.0 # v/s, 0 disables
         close_loop_ramp_rate           =  0.0 # v/s, 0 disables
-        peak_output_voltage_forward    =  6.0 # v
-        peak_output_voltage_reverse    = -6.0 # v
+        peak_output_voltage_forward    =  5.0 # v
+        peak_output_voltage_reverse    = -5.0 # v
         nominal_output_voltage_forward =  0.0 # v
         nominal_output_voltage_reverse =  0.0 # v
         allowable_closed_loop_error    =    0 # encoder ticks
@@ -80,9 +82,9 @@ drive_scale_factor = 680.0
         type = "voltage"
 
         feedback_device = 0 # quad
-        neutral_mode    = 2 # coast
+        neutral_mode    = 1 # brake
         limit_mode      = 2 # soft and hard disabled
         encoder_reversed = false
         output_reversed  = false
 
-        voltage_ramp_rate = 12.0 # v/s, 0 disables
+        voltage_ramp_rate = 0.0 # v/s, 0 disables
