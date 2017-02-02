@@ -30,7 +30,7 @@ add_custom_command(
   VERBATIM
 )
 
-install(FILES version.h DESTINATION include)
+# install(FILES version.h DESTINATION include)
 install(DIRECTORY oi DESTINATION include FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY swerve DESTINATION include FILES_MATCHING PATTERN "*.h")
 install(DIRECTORY talon DESTINATION include FILES_MATCHING PATTERN "*.h")
