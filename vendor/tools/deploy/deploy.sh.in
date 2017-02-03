@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SRC=/vagrant/build/src/${CMAKE_PROJECT_NAME}
-DST=/home/lvuser/${CMAKE_PROJECT_NAME}.${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}
+DST=/home/lvuser/${CMAKE_PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}
 
 scp $SRC roborio:$DST.tmp
 ssh roborio <<END_SSH
