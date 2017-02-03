@@ -1,5 +1,6 @@
 #include "catch/catch.hpp"
 #include "cpptoml/cpptoml.h"
+#include "spdlog/spdlog.h"
 
 #include <cstdlib>
 #include <fcntl.h>
@@ -10,6 +11,7 @@
 using namespace deadeye;
 
 TEST_CASE("deadeye Run method", "[deadeye]") {
+  spdlog::get("deadeye")->set_level(spdlog::level::critical);
   auto root = cpptoml::make_table();
   auto camera = cpptoml::make_table();
   root->insert("CAMERA", camera);
@@ -25,6 +27,8 @@ TEST_CASE("deadeye Run method", "[deadeye]") {
   auto link = cpptoml::make_table();
   root->insert("LINK", link);
   link->insert("port", std::string(port));
+  link->insert("speed", 9600);
+  link->insert("timeout", 100);
 
   Deadeye deadeye{root};
   REQUIRE_NOTHROW(deadeye.Run());
