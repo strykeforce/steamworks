@@ -13,10 +13,14 @@ add_definitions(-DDEADEYE_TEST)
 add_executable(test-runner
   test-runner.cc
   deadeye_test.cc
+  sentence_test.cc
+  parser_test.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/deadeye.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/link.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/camera.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/frame.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/link/sentence.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/link/parser.cc
 )
 
 set(INCLUDE_DIRS
