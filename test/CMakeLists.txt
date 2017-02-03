@@ -4,18 +4,24 @@ project(deadeye-test)
 set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 find_package(OpenCV  2.4 REQUIRED)
 
+add_subdirectory(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../vendor
+  ${CMAKE_CURRENT_BINARY_DIR}/vendor
+)
+
 add_executable(test-runner
   test-runner.cc
   deadeye_test.cc
-  ../src/deadeye.cc
-  ../src/link.cc
-  ../src/camera.cc
-  ../src/frame.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/deadeye.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/link.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/camera.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/frame.cc
 )
 
 set(INCLUDE_DIRS
-../vendor/include
-../src
+${CMAKE_CURRENT_SOURCE_DIR}/../vendor/include
+${CMAKE_CURRENT_SOURCE_DIR}/../src
+${CMAKE_CURRENT_SOURCE_DIR}/../vendor/serial/include
 )
 
 find_file(HAVE_FLYCAPTURE_OPT FlyCapture2.h
@@ -27,7 +33,7 @@ endif(HAVE_FLYCAPTURE_OPT)
 
 target_include_directories(test-runner PUBLIC ${INCLUDE_DIRS})
 
-target_link_libraries(test-runner ${OpenCV_LIBS} flycapture)
+target_link_libraries(test-runner ${OpenCV_LIBS} flycapture serial)
 
 set_target_properties(test-runner
   PROPERTIES
