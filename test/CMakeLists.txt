@@ -15,12 +15,16 @@ add_executable(test-runner
   deadeye_test.cc
   sentence_test.cc
   parser_test.cc
+  boiler_test.cc
+  checksum_test.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/deadeye.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/link.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/camera.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/frame.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/link/checksum.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/link/sentence.cc
   ${CMAKE_CURRENT_SOURCE_DIR}/../src/link/parser.cc
+  ${CMAKE_CURRENT_SOURCE_DIR}/../src/link/boiler.cc
 )
 
 set(INCLUDE_DIRS

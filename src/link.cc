@@ -5,6 +5,8 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
+#include "link/boiler.h"
+
 using namespace deadeye;
 using namespace std;
 
@@ -64,9 +66,9 @@ void Link::SendBoilerSolution(int azimuth_error,
                               int range,
                               int angle,
                               int speed) {
-  logger_->info(
+  logger_->debug(
       "boiler solution: az err = {}, range = {}, angle = {}, speed = {}",
       azimuth_error, range, angle, speed);
-  serial_->write("$BTS," + to_string(azimuth_error) + "," + to_string(range) +
-                 "," + to_string(angle) + "," + to_string(speed) + "*4E\r\n");
+  BoilerSentence bts(azimuth_error, range, angle, speed);
+  serial_->write(bts.ToString() + "\r\n");
 }

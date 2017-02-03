@@ -4,17 +4,13 @@
 #include <vector>
 #include <cstdint>
 
-// #include "parser.h"
-
-namespace sfrt {
+namespace deadeye {
 
 class Sentence {
   friend class Parser;
 
- private:
-  bool is_valid_;
-
  public:
+  // FIXME: need to be private, not always calculated
   std::string text;
   std::string name;
   std::vector<std::string> parameters;
@@ -27,6 +23,13 @@ class Sentence {
 
   bool ChecksumOK() const;
   bool Valid() const;
+  std::string ToString() const;
+
+ protected:
+  virtual std::string ParametersToString() const;
+
+ private:
+  bool is_valid_;
 };
 
-} /* sfrt */
+} /* deadeye */

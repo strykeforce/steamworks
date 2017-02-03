@@ -13,6 +13,10 @@ camera.cc
 frame.cc
 link.cc
 deadeye.cc
+link/boiler.cc
+link/checksum.cc
+link/parser.cc
+link/sentence.cc
 )
 
 target_link_libraries(deadeye ${OpenCV_LIBS} flycapture serial)

@@ -3,11 +3,15 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <algorithm>
 
-using namespace sfrt;
+#include "checksum.h"
+
+using namespace deadeye;
+using namespace std;
 
 Sentence::Sentence()
-    : is_valid_(false), parsed_checksum(0), calculated_checksum(0) {}
+    : parsed_checksum(0), calculated_checksum(0), is_valid_(false) {}
 
 Sentence::~Sentence() {}
 
@@ -18,4 +22,21 @@ bool Sentence::ChecksumOK() const {
 
 bool Sentence::Valid() const {
   return is_valid_ && ChecksumOK();
+}
+
+string Sentence::ToString() const {
+  string ts = this->name;
+  ts += ParametersToString();
+  return '$' + ts + '*' + ToHex(CalculateChecksum(ts));
+}
+
+/** Stringify parameters, comma before each.
+ */
+string Sentence::ParametersToString() const {
+  string ts;
+  for_each(parameters.begin(), parameters.end(), [&ts](const string& s) {
+    ts += ',';
+    ts += s;
+  });
+  return ts;
 }

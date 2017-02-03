@@ -6,8 +6,9 @@
 #include <memory>
 
 #include "sentence.h"
+#include "checksum.h"
 
-using namespace sfrt;
+using namespace deadeye;
 
 Parser::Parser() {}
 Parser::~Parser() {}
@@ -76,21 +77,4 @@ void Parser::ParseText(Sentence& sentence, std::string line) {
 
   // made it!
   sentence.is_valid_ = true;
-}
-
-uint8_t Parser::CalculateChecksum(std::string s) {
-  uint8_t checksum = 0;
-  for (const char& c : s) {
-    checksum ^= c;
-  }
-  return checksum;
-}
-
-uint8_t Parser::FromHex(const char a) {
-  if (a >= 'A' && a <= 'F')
-    return a - 'A' + 10;
-  else if (a >= 'a' && a <= 'f')
-    return a - 'a' + 10;
-  else
-    return a - '0';
 }
