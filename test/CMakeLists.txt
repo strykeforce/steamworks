@@ -8,6 +8,7 @@ add_subdirectory(
   ${CMAKE_CURRENT_SOURCE_DIR}/../vendor
   ${CMAKE_CURRENT_BINARY_DIR}/vendor
 )
+add_definitions(-DDEADEYE_TEST)
 
 add_executable(test-runner
   test-runner.cc
