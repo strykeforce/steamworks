@@ -27,7 +27,6 @@ Vector2f* calc_rotation_vectors(double robot_left_to_right_length,
   Vector2f* to_be_returned = (Vector2f*)malloc(sizeof(Vector2f) * 4);
   unsigned int i;
   for (i = 0; i < 4; i++) {
-    printf("%i:\n", i);
     double X =
         rotation_cord.x - robot_left_to_right_length * cord_multiplers[i].x / 2;
     double Y =
