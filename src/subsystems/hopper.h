@@ -7,11 +7,11 @@
 namespace steamworks {
 namespace subsystem {
 
-class GearIntake : public frc::Subsystem {
+class Hopper : public frc::Subsystem {
  public:
-  GearIntake(const std::shared_ptr<cpptoml::table> config);
-  GearIntake& operator=(GearIntake&) = delete;
-  GearIntake(GearIntake&) = delete;
+  Hopper(const std::shared_ptr<cpptoml::table> config);
+  Hopper& operator=(Hopper&) = delete;
+  Hopper(Hopper&) = delete;
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
