@@ -4,6 +4,8 @@
 #include "sidewinder/swerve/gyro_swerve_drive.h"
 
 namespace steamworks {
+namespace subsystem {
+
 class Drive : public frc::Subsystem {
  private:
   sidewinder::swerve::GyroSwerveDrive swerve_drive_;
@@ -14,4 +16,6 @@ class Drive : public frc::Subsystem {
   void ZeroWheels();
   void CartesianDrive(float forward, float strafe, float azimuth);
 };
+
+} /* subsystem */
 } /* steamworks */

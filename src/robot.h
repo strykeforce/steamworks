@@ -23,7 +23,7 @@ class Robot : public frc::IterativeRobot {
 
  public:
   static OI* oi;
-  static Drive* drive;
+  static subsystem::Drive* drive;
 
   Robot();
 

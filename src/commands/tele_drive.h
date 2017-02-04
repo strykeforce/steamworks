@@ -7,6 +7,7 @@
 #include "sidewinder/swerve/swerve_drive.h"
 
 namespace steamworks {
+namespace command {
 
 /** TeleDrive is a WPI command-based command to manually drive the Sidewinder
  * swerve drive.
@@ -29,4 +30,5 @@ class TeleDrive : public frc::Command {
   void Interrupted() override;
 };
 
+} /* command */
 } /* steamworks */

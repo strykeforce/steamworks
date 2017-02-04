@@ -7,12 +7,12 @@
 #include "robot.h"
 #include "subsystems/drive.h"
 
-using namespace steamworks;
+using namespace steamworks::command;
 
 TeleDrive::TeleDrive()
-    : ::Command("TeleDrive"),
-      logger_(spdlog::stdout_color_st("TeleDrive")),
-      print_timer_(std::unique_ptr<::Timer>(new ::Timer())) {
+    : frc::Command("TeleDrive"),
+      logger_(spdlog::get("command")),
+      print_timer_(new frc::Timer()) {
   Requires(Robot::drive);
   logger_->set_level(spdlog::level::debug);
   print_timer_->Start();

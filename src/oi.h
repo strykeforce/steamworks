@@ -16,10 +16,10 @@ namespace steamworks {
 class OI {
  private:
   // create our joystick objects
-  frc::Joystick flight_sim_joystick_;
-  frc::JoystickButton reset_button_;
   sidewinder::oi::Expo drive_expo_, azimuth_expo_;
-  sidewinder::oi::SMA drive_sma_, azimuth_sma_;
+  frc::Joystick flight_sim_joystick_;
+  frc::Joystick gamepad_joystick_;
+  frc::JoystickButton reset_button_;
 
  public:
   enum Joysticks {

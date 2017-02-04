@@ -13,9 +13,11 @@
 using namespace steamworks;
 
 OI* Robot::oi = nullptr;
-Drive* Robot::drive = nullptr;
+subsystem::Drive* Robot::drive = nullptr;
 
 Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("robot")) {
+  spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
   logger_->set_level(spdlog::level::trace);
 }
 
@@ -25,7 +27,7 @@ void Robot::RobotInit() {
   RobotMap::Init(config_);
 
   oi = new OI(config_);
-  drive = new Drive(config_);
+  drive = new subsystem::Drive(config_);
 }
 
 void Robot::DisabledInit() { logger_->trace("DisabledInit"); }
