@@ -6,6 +6,7 @@ add_executable(${CMAKE_PROJECT_NAME}
 
 include(commands/CMakeLists.txt)
 include(subsystems/CMakeLists.txt)
+include(triggers/CMakeLists.txt)
 
 target_include_directories(${CMAKE_PROJECT_NAME}
   PUBLIC

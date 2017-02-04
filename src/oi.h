@@ -7,6 +7,8 @@
 #include "sidewinder/oi/expo.h"
 #include "sidewinder/oi/sma.h"
 
+#include "triggers/trim.h"
+
 namespace steamworks {
 
 /** Robot OI provides swerve drive operator inputs.
@@ -36,10 +38,15 @@ class OI {
   frc::JoystickButton shoot_feed_button_;
   frc::JoystickButton shoot_close_button_;
 
+  trigger::Trim trim_up_;
+  trigger::Trim trim_down_;
+  trigger::Trim trim_left_;
+  trigger::Trim trim_right_;
+
  public:
   enum Joysticks {
-    kFlightSimJoystick = 0,
     kGamePadJoystick,
+    kFlightSimJoystick,
   };
 
   // TODO: verify these

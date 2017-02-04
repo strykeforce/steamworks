@@ -7,6 +7,7 @@
 #include "sidewinder/oi/expo.h"
 
 #include "commands/log.h"
+#include "triggers/trim.h"
 
 using namespace steamworks;
 
@@ -50,7 +51,11 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       intake_off_button_(&gamepad_joystick_, kGamepadFaceBButton),
       intake_reverse_button_(&gamepad_joystick_, kGamepadFaceYButton),
       shoot_feed_button_(&gamepad_joystick_, kGamepadFaceAButton),
-      shoot_close_button_(&gamepad_joystick_, kGamepadFaceXButton) {
+      shoot_close_button_(&gamepad_joystick_, kGamepadFaceXButton),
+      trim_up_(trigger::Trim::kUp),
+      trim_down_(trigger::Trim::kDown),
+      trim_left_(trigger::Trim::kLeft),
+      trim_right_(trigger::Trim::kRight) {
   // buttons
   reset_button_.WhenPressed(new command::Log("flight simulator reset button"));
   gear_auto_on_button_.WhenPressed(
@@ -71,6 +76,11 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   shoot_feed_button_.WhenPressed(new command::Log("gamepad feed shot button"));
   shoot_close_button_.WhenPressed(
       new command::Log("gamepad close shot button"));
+
+  trim_up_.WhenActive(new command::Log("trim up active"));
+  trim_down_.WhenActive(new command::Log("trim down active"));
+  trim_left_.WhenActive(new command::Log("trim left active"));
+  trim_right_.WhenActive(new command::Log("trim right active"));
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)
