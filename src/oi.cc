@@ -37,9 +37,40 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
                     get_double(config, "azimuth_expo_scale")),
       flight_sim_joystick_(kFlightSimJoystick),
       gamepad_joystick_(kGamePadJoystick),
-      reset_button_(&flight_sim_joystick_, kFlightSimResetButton) {
+      reset_button_(&flight_sim_joystick_, kFlightSimResetButton),
+      gear_auto_on_button_(&flight_sim_joystick_,
+                           kFlightSimLeftCornerDownButton),
+      gear_auto_off_button_(&flight_sim_joystick_,
+                            kFlightSimLeftCornerUpButton),
+      shooter_auto_button_(&flight_sim_joystick_, kFlightSimRightCornerButton),
+      gear_stage_button_(&gamepad_joystick_, kGamepadLeftShoulderButton),
+      gear_stage_reverse_button_(&gamepad_joystick_, kGamepadBackButton),
+      climber_button_(&gamepad_joystick_, kGamepadStartButton),
+      intake_on_button_(&gamepad_joystick_, kGamepadRightShoulderButton),
+      intake_off_button_(&gamepad_joystick_, kGamepadFaceBButton),
+      intake_reverse_button_(&gamepad_joystick_, kGamepadFaceYButton),
+      shoot_feed_button_(&gamepad_joystick_, kGamepadFaceAButton),
+      shoot_close_button_(&gamepad_joystick_, kGamepadFaceXButton) {
   // buttons
   reset_button_.WhenPressed(new command::Log("flight simulator reset button"));
+  gear_auto_on_button_.WhenPressed(
+      new command::Log("flight simulator gear auto on button"));
+  gear_auto_off_button_.WhenPressed(
+      new command::Log("flight simulator gear auto off button"));
+  shooter_auto_button_.WhenPressed(
+      new command::Log("flight simulator shooter auto button"));
+
+  gear_stage_button_.WhenPressed(new command::Log("gamepad gear stage button"));
+  gear_stage_reverse_button_.WhenPressed(
+      new command::Log("gamepad gear stage reverse button"));
+  climber_button_.WhenPressed(new command::Log("gamepad climber button"));
+  intake_on_button_.WhenPressed(new command::Log("gamepad intake on button"));
+  intake_off_button_.WhenPressed(new command::Log("gamepad intake off button"));
+  intake_reverse_button_.WhenPressed(
+      new command::Log("gamepad intake reverse button"));
+  shoot_feed_button_.WhenPressed(new command::Log("gamepad feed shot button"));
+  shoot_close_button_.WhenPressed(
+      new command::Log("gamepad close shot button"));
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)
