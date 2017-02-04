@@ -34,6 +34,9 @@ drive_scale_factor = 10.0
     wheelbase_width  = 26.4375 # inches
     wheelbase_length = 22.5    # inches
 
+    shooter_rotation_point_X = 0.0
+    shooter_rotation_point_Y = 0.0
+
         [[SIDEWINDER.SWERVE.TALON]]
         name = "azimuth"
         type = "position"
