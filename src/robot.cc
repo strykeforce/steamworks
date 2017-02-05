@@ -15,11 +15,7 @@ using namespace steamworks;
 OI* Robot::oi = nullptr;
 subsystem::Drive* Robot::drive = nullptr;
 
-Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("robot")) {
-  spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
-  spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
-  logger_->set_level(spdlog::level::trace);
-}
+Robot::Robot() : IterativeRobot(), logger_(nullptr) { ConfigureLogging(); }
 
 void Robot::RobotInit() {
   LogVersion();
@@ -45,6 +41,24 @@ void Robot::TeleopPeriodic() { ::Scheduler::GetInstance()->Run(); }
 void Robot::TestInit() { logger_->trace("TestInit"); }
 
 void Robot::TestPeriodic() { ::LiveWindow::GetInstance()->Run(); }
+
+/** Configure logging based on release type.
+ * If building for Release, don't put ANSI terminal color codes in log since
+ * it will be read in driver station logs.
+ */
+void Robot::ConfigureLogging() {
+#ifdef NDEBUG
+  logger_ = spdlog::stdout_logger_st("robot");
+  logger_->set_level(spdlog::level::info);
+  spdlog::stdout_logger_st("command")->set_level(spdlog::level::info);
+  spdlog::stdout_logger_st("subsystem")->set_level(spdlog::level::info);
+#else
+  logger_ = spdlog::stdout_color_st("robot");
+  logger_->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
+#endif
+}
 
 /** Reads our configuration file from ~lvuser/steamworks.toml.
  * If not present or unable to parse, will read the default compiled-in

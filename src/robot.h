@@ -13,14 +13,6 @@ namespace steamworks {
  * Hardware references are managed in robot_map and operator inputs in oi.
  */
 class Robot : public frc::IterativeRobot {
- private:
-  const std::shared_ptr<spdlog::logger> logger_;
-  std::shared_ptr<cpptoml::table> config_;
-
-  void LoadConfig();
-  void LogAbsoluteEncoders();
-  void LogVersion();
-
  public:
   static OI* oi;
   static subsystem::Drive* drive;
@@ -40,6 +32,15 @@ class Robot : public frc::IterativeRobot {
 
   void TestInit() override;
   void TestPeriodic() override;
+
+ private:
+  std::shared_ptr<spdlog::logger> logger_;
+  std::shared_ptr<cpptoml::table> config_;
+
+  void ConfigureLogging();
+  void LoadConfig();
+  void LogAbsoluteEncoders();
+  void LogVersion();
 };
 
 } /* steamworks */
