@@ -56,31 +56,61 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       trim_down_(trigger::Trim::kDown),
       trim_left_(trigger::Trim::kLeft),
       trim_right_(trigger::Trim::kRight) {
-  // buttons
+  // flight sim reset button is reserved
   reset_button_.WhenPressed(new command::Log("flight simulator reset button"));
-  gear_auto_on_button_.WhenPressed(
-      new command::Log("flight simulator gear auto on button"));
-  gear_auto_off_button_.WhenPressed(
-      new command::Log("flight simulator gear auto off button"));
+
+  // flight sim left shoulder 3-position button controlls gear loader
+  frc::Command* command =
+      new command::Log("flight simulator gear auto on button");
+  if (flight_sim_joystick_.GetRawButton(kFlightSimLeftCornerDownButton)) {
+    // button is already in auto on position so run command
+    command->Start();
+  }
+  gear_auto_on_button_.WhenPressed(command);
+
+  command = new command::Log("flight simulator gear auto off button");
+  if (flight_sim_joystick_.GetRawButton(kFlightSimLeftCornerUpButton)) {
+    // button is already in auto ooff position so run command
+    command->Start();
+  }
+  gear_auto_off_button_.WhenPressed(command);
+
+  // flight sim right shoulder 2-position button controls shooter auto mode
   shooter_auto_button_.WhenPressed(
       new command::Log("flight simulator shooter auto button"));
 
+  // gamepad left shoulder stages gear in loader
   gear_stage_button_.WhenPressed(new command::Log("gamepad gear stage button"));
+
+  // gamepad back button reverses gear loader
   gear_stage_reverse_button_.WhenPressed(
       new command::Log("gamepad gear stage reverse button"));
-  climber_button_.WhenPressed(new command::Log("gamepad climber button"));
+
+  // gamepad right shoulder turns on fuel intake
   intake_on_button_.WhenPressed(new command::Log("gamepad intake on button"));
+
+  // gamepad B button turns off fuel intake
   intake_off_button_.WhenPressed(new command::Log("gamepad intake off button"));
+
+  // gamepad Y button reverses fuel intake
   intake_reverse_button_.WhenPressed(
       new command::Log("gamepad intake reverse button"));
+
+  // gamepad A button performs feed shot
   shoot_feed_button_.WhenPressed(new command::Log("gamepad feed shot button"));
+
+  // gamepad X button performs close shot
   shoot_close_button_.WhenPressed(
       new command::Log("gamepad close shot button"));
 
+  // gamepad D-pad trims shooter aimpoint
   trim_up_.WhenActive(new command::Log("trim up active"));
   trim_down_.WhenActive(new command::Log("trim down active"));
   trim_left_.WhenActive(new command::Log("trim left active"));
   trim_right_.WhenActive(new command::Log("trim right active"));
+
+  // gamepad start button toggles climber
+  climber_button_.WhenPressed(new command::Log("gamepad climber button"));
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)
