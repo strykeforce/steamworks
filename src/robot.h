@@ -32,6 +32,7 @@ class Robot : public frc::IterativeRobot {
   Robot();
 
   void RobotInit() override;
+  void RobotPeriodic() override;
 
   void DisabledInit() override;
   void DisabledPeriodic() override;

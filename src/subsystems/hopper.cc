@@ -26,8 +26,7 @@ Hopper::Hopper(const std::shared_ptr<cpptoml::table> config)
   auto talon_settings = talon::Settings::Create(steamworks_config, "hopper");
   logger_->debug("dumping hopper talon configuration");
   talon_settings->LogConfig(logger_);
-  talon_settings->Configure(RobotMap::hopper_talon);
-  talon_settings->SetMode(RobotMap::hopper_talon);
+  talon_settings->Initialize(RobotMap::hopper_talon);
 }
 
 void Hopper::Start() { RobotMap::hopper_talon->Set(7.0); }

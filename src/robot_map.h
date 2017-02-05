@@ -8,19 +8,6 @@ namespace steamworks {
 
 class RobotMap {
  public:
-  // FIXME: need to sort out left/right madness
-  // device ids for swerve drive talons
-  // enum Talons {
-  //   kRightFrontAzimuth = 1,
-  //   kRightFrontDrive = 11,
-  //   kLeftFrontAzimuth = 2,
-  //   kLeftFrontDrive = 12,
-  //   kRightRearAzimuth = 4,
-  //   kRightRearDrive = 14,
-  //   kLeftRearAzimuth = 3,
-  //   kLeftRearDrive = 13,
-  // };
-
   enum Talons {
     kRightFrontAzimuth = 2,
     kRightFrontDrive = 12,
@@ -30,13 +17,26 @@ class RobotMap {
     kRightRearDrive = 13,
     kLeftRearAzimuth = 4,
     kLeftRearDrive = 14,
+    kShooterWheel = 21,
+    kShooterElevation = 22,
     kHopper = 31,
+    kIntake = 41,
+    kGearIntake = 51,
+    kGearElevation = 52,
+    kClimberMaster = 61,
+    kClimberSlave = 62,
   };
   // pointers to talons and azimuth encoder zero count
   static sidewinder::swerve::TalonMap* swerve_talons;
 
-  // pointer to hopper talon
+  static ::CANTalon* shooter_wheel_talon;
+  static ::CANTalon* shooter_elevation_talon;
   static ::CANTalon* hopper_talon;
+  static ::CANTalon* intake_talon;
+  static ::CANTalon* gear_intake_talon;
+  static ::CANTalon* gear_elevation_talon;
+  static ::CANTalon* climber_master_talon;
+  static ::CANTalon* climber_slave_talon;
 
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);

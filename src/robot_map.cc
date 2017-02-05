@@ -52,8 +52,14 @@ void initialize_grapher() {
 /** Holds pointers to the 8 swerve drive Talons.  */
 swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
 
-/** Holds pointer to hopper arm Talon. */
+::CANTalon* RobotMap::shooter_wheel_talon{nullptr};
+::CANTalon* RobotMap::shooter_elevation_talon{nullptr};
 ::CANTalon* RobotMap::hopper_talon{nullptr};
+::CANTalon* RobotMap::intake_talon{nullptr};
+::CANTalon* RobotMap::gear_intake_talon{nullptr};
+::CANTalon* RobotMap::gear_elevation_talon{nullptr};
+::CANTalon* RobotMap::climber_master_talon{nullptr};
+::CANTalon* RobotMap::climber_slave_talon{nullptr};
 
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.
@@ -61,7 +67,14 @@ swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
  * reference to each.
  */
 void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
+  // shooter_wheel_talon = new ::CANTalon(Talons::kShooterWheel);
+  // shooter_elevation_talon = new ::CANTalon(Talons::kShooterElevation);
   hopper_talon = new ::CANTalon(Talons::kHopper);
+  // intake_talon = new ::CANTalon(Talons::kIntake);
+  // gear_intake_talon = new ::CANTalon(Talons::kGearIntake);
+  // gear_elevation_talon = new ::CANTalon(Talons::kGearElevation);
+  // climber_master_talon = new ::CANTalon(Talons::kClimberMaster);
+  // climber_slave_talon = new ::CANTalon(Talons::kClimberSlave);
 
   swerve_talons->lf_drive = new ::CANTalon(Talons::kLeftFrontDrive);
   swerve_talons->lf_azimuth = new ::CANTalon(Talons::kLeftFrontAzimuth);

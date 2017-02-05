@@ -39,6 +39,8 @@ void Robot::RobotInit() {
   oi = new OI(config_);  // keep this after subsystems
 }
 
+void Robot::RobotPeriodic() {}
+
 void Robot::DisabledInit() { logger_->trace(__FUNCTION__); }
 
 void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
