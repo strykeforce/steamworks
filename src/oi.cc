@@ -122,6 +122,6 @@ double OI::GetTeleDriveStrafeAxis() {
 /** Returns flight simulator joystick CW and CCW azimuth (X-axis) input.
  */
 double OI::GetTeleDriveAzimuthAxis() {
-  double axis = -flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
+  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
   return azimuth_expo_(axis);
 }
