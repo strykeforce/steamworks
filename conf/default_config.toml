@@ -1,6 +1,8 @@
 [STEAMWORKS]
 grapher = true
 
+hopper_voltage = 8.0
+
     [[STEAMWORKS.TALON]]
     name = "hopper"
     type = "voltage"

@@ -10,9 +10,18 @@ using namespace steamworks::subsystem;
 using namespace sidewinder;
 
 Hopper::Hopper(const std::shared_ptr<cpptoml::table> config)
-    : frc::Subsystem("Hopper"), logger_(spdlog::get("subsystem")) {
-  // FIXME: get voltage
+    : frc::Subsystem("Hopper"),
+      logger_(spdlog::get("subsystem")),
+      voltage_(7.0) {
   auto steamworks_config = config->get_table("STEAMWORKS");
+
+  auto voltage = steamworks_config->get_as<double>("hopper_voltage");
+  if (voltage) {
+    voltage_ = *voltage;
+  } else {
+    logger_->warn("STEAMWORKS hopper_voltage setting missing, using default");
+  }
+  logger_->info("hopper motor voltage: {}", voltage_);
 
   auto talon_settings = talon::Settings::Create(steamworks_config, "hopper");
   logger_->debug("dumping hopper talon configuration");

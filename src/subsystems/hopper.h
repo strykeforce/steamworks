@@ -18,6 +18,7 @@ class Hopper : public frc::Subsystem {
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
+  double voltage_;
 };
 
 } /* subsystem */
