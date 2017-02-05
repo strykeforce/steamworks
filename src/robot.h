@@ -5,8 +5,13 @@
 #include "spdlog/spdlog.h"
 
 #include "oi.h"
+#include "subsystems/climber.h"
 #include "subsystems/drive.h"
+#include "subsystems/gear_intake.h"
+#include "subsystems/gear_loader.h"
 #include "subsystems/hopper.h"
+#include "subsystems/intake.h"
+#include "subsystems/shooter.h"
 
 namespace steamworks {
 
@@ -16,8 +21,13 @@ namespace steamworks {
 class Robot : public frc::IterativeRobot {
  public:
   static OI* oi;
+  static subsystem::Climber* climber;
   static subsystem::Drive* drive;
+  static subsystem::GearIntake* gear_intake;
+  static subsystem::GearLoader* gear_loader;
   static subsystem::Hopper* hopper;
+  static subsystem::Intake* intake;
+  static subsystem::Shooter* shooter;
 
   Robot();
 
