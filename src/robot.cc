@@ -15,6 +15,7 @@ using namespace steamworks;
 
 OI* Robot::oi = nullptr;
 subsystem::Drive* Robot::drive = nullptr;
+subsystem::Hopper* Robot::hopper = nullptr;
 
 Robot::Robot() : frc::IterativeRobot(), logger_(nullptr) { ConfigureLogging(); }
 
@@ -23,8 +24,9 @@ void Robot::RobotInit() {
   LoadConfig();
   RobotMap::Init(config_);
 
-  oi = new OI(config_);
   drive = new subsystem::Drive(config_);
+  hopper = new subsystem::Hopper(config_);
+  oi = new OI(config_);  // keep this after subsystems
 }
 
 void Robot::DisabledInit() { logger_->trace(__FUNCTION__); }

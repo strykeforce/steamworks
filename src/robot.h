@@ -6,6 +6,7 @@
 
 #include "oi.h"
 #include "subsystems/drive.h"
+#include "subsystems/hopper.h"
 
 namespace steamworks {
 
@@ -16,6 +17,7 @@ class Robot : public frc::IterativeRobot {
  public:
   static OI* oi;
   static subsystem::Drive* drive;
+  static subsystem::Hopper* hopper;
 
   Robot();
 

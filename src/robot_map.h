@@ -30,9 +30,13 @@ class RobotMap {
     kRightRearDrive = 13,
     kLeftRearAzimuth = 4,
     kLeftRearDrive = 14,
+    kHopper = 31,
   };
   // pointers to talons and azimuth encoder zero count
   static sidewinder::swerve::TalonMap* swerve_talons;
+
+  // pointer to hopper talon
+  static ::CANTalon* hopper_talon;
 
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);

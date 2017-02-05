@@ -6,6 +6,7 @@
 #include "cpptoml/cpptoml.h"
 #include "sidewinder/oi/expo.h"
 
+#include "commands/hopper.h"
 #include "commands/log.h"
 #include "triggers/trim.h"
 
@@ -97,6 +98,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   trim_up_.WhenActive(new command::Log("trim up active"));
   trim_down_.WhenActive(new command::Log("trim down active"));
   trim_left_.WhenActive(new command::Log("trim left active"));
+  trim_left_.WhenActive(new command::Hopper(command::Hopper::kToggle));
   trim_right_.WhenActive(new command::Log("trim right active"));
 
   // gamepad start button toggles climber

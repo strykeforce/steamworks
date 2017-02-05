@@ -13,6 +13,9 @@ class Hopper : public frc::Subsystem {
   Hopper& operator=(Hopper&) = delete;
   Hopper(Hopper&) = delete;
 
+  void Start();
+  void Stop();
+
  private:
   const std::shared_ptr<spdlog::logger> logger_;
 };
