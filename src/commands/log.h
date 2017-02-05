@@ -7,7 +7,7 @@
 
 namespace steamworks {
 namespace command {
-class Log : public InstantCommand {
+class Log : public frc::InstantCommand {
  public:
   Log(std::string message);
 

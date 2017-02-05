@@ -3,7 +3,7 @@
 using namespace steamworks::command;
 
 Log::Log(std::string message)
-    : InstantCommand("Log"),
+    : frc::InstantCommand("Log"),
       logger_(spdlog::get("command")),
       message_(message) {}
 
