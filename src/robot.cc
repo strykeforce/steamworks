@@ -4,6 +4,7 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
+#include "commands/log.h"
 #include "default_config.h"
 #include "robot_map.h"
 #include "sidewinder/version.h"
@@ -15,7 +16,7 @@ using namespace steamworks;
 OI* Robot::oi = nullptr;
 subsystem::Drive* Robot::drive = nullptr;
 
-Robot::Robot() : IterativeRobot(), logger_(nullptr) { ConfigureLogging(); }
+Robot::Robot() : frc::IterativeRobot(), logger_(nullptr) { ConfigureLogging(); }
 
 void Robot::RobotInit() {
   LogVersion();
@@ -26,21 +27,33 @@ void Robot::RobotInit() {
   drive = new subsystem::Drive(config_);
 }
 
-void Robot::DisabledInit() { logger_->trace("DisabledInit"); }
+void Robot::DisabledInit() { logger_->trace(__FUNCTION__); }
 
-void Robot::DisabledPeriodic() { ::Scheduler::GetInstance()->Run(); }
+void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::AutonomousInit() { logger_->trace("AutonomousInit"); }
+void Robot::AutonomousInit() { logger_->trace(__FUNCTION__); }
 
-void Robot::AutonomousPeriodic() { ::Scheduler::GetInstance()->Run(); }
+void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::TeleopInit() { logger_->trace("TeleopInit"); }
+void Robot::TeleopInit() {
+  logger_->trace(__FUNCTION__);
+  frc::Joystick fsj(OI::kFlightSimJoystick);
+  if (fsj.GetRawButton(OI::kFlightSimLeftCornerDownButton)) {
+    // button is already in auto on position so run command
+    logger_->info("auto gear load is on");
+  }
 
-void Robot::TeleopPeriodic() { ::Scheduler::GetInstance()->Run(); }
+  if (fsj.GetRawButton(OI::kFlightSimLeftCornerUpButton)) {
+    // button is already in auto on position so run command
+    logger_->info("auto gear load is off");
+  }
+}
 
-void Robot::TestInit() { logger_->trace("TestInit"); }
+void Robot::TeleopPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::TestPeriodic() { ::LiveWindow::GetInstance()->Run(); }
+void Robot::TestInit() { logger_->trace(__FUNCTION__); }
+
+void Robot::TestPeriodic() { frc::LiveWindow::GetInstance()->Run(); }
 
 /** Configure logging based on release type.
  * If building for Release, don't put ANSI terminal color codes in log since
@@ -52,11 +65,13 @@ void Robot::ConfigureLogging() {
   logger_->set_level(spdlog::level::info);
   spdlog::stdout_logger_st("command")->set_level(spdlog::level::info);
   spdlog::stdout_logger_st("subsystem")->set_level(spdlog::level::info);
+  logger_->info("configured as RELEASE build");
 #else
   logger_ = spdlog::stdout_color_st("robot");
   logger_->set_level(spdlog::level::trace);
   spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
   spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
+  logger_->warn("configured as DEBUG build");
 #endif
 }
 
@@ -89,6 +104,11 @@ void Robot::LogVersion() {
   logger_->info(" build {} compiled at {} {}", STEAMWORKS_VERSION_BUILD,
                 STEAMWORKS_COMPILE_DATE, STEAMWORKS_COMPILE_TIME);
   logger_->info(sidewinder::GetVersion());
+#ifdef NDEBUG
+  logger_->info("configured as RELEASE build");
+#else
+  logger_->warn("configured as DEBUG build");
+#endif
 }
 
 // used for: strings steamworks | grep STEAMWORKS_VERSION

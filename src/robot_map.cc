@@ -19,6 +19,7 @@ inline JerrysGrapher_DeviceBundle jgdb(byte id, ::CANTalon* t) {
 static std::vector<JerrysGrapher_DeviceBundle> gd;
 
 void initialize_grapher() {
+#ifndef NDEBUG
   typedef RobotMap rm;
 
   gd.push_back(jgdb(rm::kLeftFrontDrive, rm::swerve_talons->lf_drive));
@@ -43,6 +44,7 @@ void initialize_grapher() {
   }
 
   JerrysGrapher_StartStatusThread(&gd);
+#endif
 }
 
 } /* namespace */

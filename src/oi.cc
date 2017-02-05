@@ -60,20 +60,10 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   reset_button_.WhenPressed(new command::Log("flight simulator reset button"));
 
   // flight sim left shoulder 3-position button controlls gear loader
-  frc::Command* command =
-      new command::Log("flight simulator gear auto on button");
-  if (flight_sim_joystick_.GetRawButton(kFlightSimLeftCornerDownButton)) {
-    // button is already in auto on position so run command
-    command->Start();
-  }
-  gear_auto_on_button_.WhenPressed(command);
-
-  command = new command::Log("flight simulator gear auto off button");
-  if (flight_sim_joystick_.GetRawButton(kFlightSimLeftCornerUpButton)) {
-    // button is already in auto ooff position so run command
-    command->Start();
-  }
-  gear_auto_off_button_.WhenPressed(command);
+  gear_auto_on_button_.WhenPressed(
+      new command::Log("flight simulator gear auto on button"));
+  gear_auto_off_button_.WhenPressed(
+      new command::Log("flight simulator gear auto off button"));
 
   // flight sim right shoulder 2-position button controls shooter auto mode
   shooter_auto_button_.WhenPressed(
