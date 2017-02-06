@@ -132,8 +132,8 @@ void Camera::Connect() {
 
   fc::Property prop;
   prop.type = fc::AUTO_EXPOSURE;
-  prop.onOff = true;            // ensure property on
-  prop.autoManualMode = false;  // auto-adjust off
+  prop.onOff = false;           // off for full manual control
+  prop.autoManualMode = false;  // ditto
   prop.absControl = true;
   prop.absValue = exposure_;
   error = camera_.SetProperty(&prop);
