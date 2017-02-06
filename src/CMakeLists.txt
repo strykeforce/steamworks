@@ -2,6 +2,7 @@
 include_directories(
 "${CMAKE_SOURCE_DIR}/vendor/include"
 "${CMAKE_SOURCE_DIR}/vendor/serial/include"
+"${PROJECT_BINARY_DIR}/src"
 /opt/flycapture/include
 )
 
@@ -24,3 +25,5 @@ set_target_properties(deadeye PROPERTIES
   CXX_STANDARD 11
   CXX_EXTENSIONS OFF
   CXX_STANDARD_REQUIRED YES)
+
+add_dependencies(deadeye generate_lookup)
