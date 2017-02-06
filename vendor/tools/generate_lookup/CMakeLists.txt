@@ -1,4 +1,3 @@
-set(BOILER_LOOKUP_INPUT "${CMAKE_SOURCE_DIR}/conf/steamworks_boiler_data.xlsx")
 set(GENERATE_CMD "${CMAKE_CURRENT_LIST_DIR}/generate.py")
 set(BOILER_LOOKUP_H "${PROJECT_BINARY_DIR}/src/boiler_target_data.h")
 
