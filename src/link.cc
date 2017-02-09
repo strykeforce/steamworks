@@ -70,5 +70,5 @@ void Link::SendBoilerSolution(int azimuth_error,
       "boiler solution: az err = {}, range = {}, angle = {}, speed = {}",
       azimuth_error, range, angle, speed);
   BoilerSentence bts(azimuth_error, range, angle, speed);
-  serial_->write(bts.ToString() + "\r\n");
+  serial_->write(bts.ToString() + "\n");
 }
