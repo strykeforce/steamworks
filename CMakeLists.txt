@@ -4,7 +4,7 @@ project(deadeye)
 set(VERSION_MAJOR 17)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
-set(VERSION_META "")
+set(VERSION_META "-dev")
 
 set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 find_package(OpenCV  2.4 REQUIRED)

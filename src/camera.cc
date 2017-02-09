@@ -251,6 +251,11 @@ void Camera::DisplayFrame() {
 
     // display capture frame in GUI window
     cv::imshow("frame", frame_);
+    // if (frame_process_.target_separation < 90 ||
+    //     frame_process_.target_separation > 110) {
+    //   cv::waitKey(10000);
+    //   return;
+    // }
     cv::waitKey(1);
   }
 }

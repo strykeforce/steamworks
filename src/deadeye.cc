@@ -33,7 +33,9 @@ void Deadeye::ProcessBoilerTarget() {
   int y;  // vertical target separation
   int azimuth_error;
   std::tie(azimuth_error, y) = boiler_camera_.ProcessFrame();
+#if !NDEBUG
   boiler_camera_.DisplayFrame();
+#endif
   y -= boiler_target_offset;
   if (y < 0 || y > boiler_target_data_size - 1) {
     logger_->warn("boiler target separation distance out of range: {} px", y);
