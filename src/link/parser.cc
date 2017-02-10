@@ -61,6 +61,8 @@ void Parser::ParseText(Sentence& sentence, std::string line) {
   sentence.name = std::string(parm);
   parm = std::strtok(NULL, ",*");
 
+  // clear out previous parameters
+  sentence.parameters.clear();
   while (parm != NULL) {
     sentence.parameters.push_back(std::string(parm));
     parm = std::strtok(NULL, ",*");

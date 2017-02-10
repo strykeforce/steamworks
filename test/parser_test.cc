@@ -91,3 +91,23 @@ TEST_CASE("gets two sentences", "[link][parser]") {
   REQUIRE(sentence.parameters[1] == "12.9");
   REQUIRE(sentence.parameters[2] == "1000");
 }
+
+TEST_CASE("reuses sentence object", "[link][parser][sentence]") {
+  Parser parser;
+  Sentence sentence;
+  parser.ParseText(sentence, "$ABC,2,12.9,1000*4B");
+  REQUIRE(sentence.parameters.size() == 3);
+  REQUIRE(sentence.name == "ABC");
+  REQUIRE(sentence.Valid());
+  REQUIRE(sentence.parameters[0] == "2");
+  REQUIRE(sentence.parameters[1] == "12.9");
+  REQUIRE(sentence.parameters[2] == "1000");
+
+  parser.ParseText(sentence, "$PMTK,000,12,1*2C");
+  REQUIRE(sentence.parameters.size() == 3);
+  REQUIRE(sentence.name == "PMTK");
+  REQUIRE(sentence.Valid());
+  REQUIRE(sentence.parameters[0] == "000");
+  REQUIRE(sentence.parameters[1] == "12");
+  REQUIRE(sentence.parameters[2] == "1");
+}
