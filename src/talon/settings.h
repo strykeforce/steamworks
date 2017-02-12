@@ -20,6 +20,7 @@ class Settings {
   double voltage_ramp_rate_;
   bool encoder_reversed_;
   bool output_reversed_;
+  uint32_t current_limit_;
 
  public:
   // factory method, used to create obj based on config file

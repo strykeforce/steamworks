@@ -19,8 +19,12 @@ drive_scale_factor = 680.0
     lr_zero = 3441
     rr_zero = 1305
 
-    wheelbase_width  = 26.4375 # inches
-    wheelbase_length = 22.5    # inches
+    wheelbase_width  = 1.0 # inches
+    wheelbase_length = 1.0    # inches
+
+    shooter_rotation_point_X = 0.0
+    shooter_rotation_point_Y = 0.0
+
 
         [[SIDEWINDER.SWERVE.TALON]]
         name = "azimuth"
@@ -64,6 +68,7 @@ drive_scale_factor = 680.0
         allowable_closed_loop_error    =    0 # encoder ticks
         encoder_reversed = false
         output_reversed  = false
+        current_limit    = 0 # 0 disables
 
         [[SIDEWINDER.SWERVE.TALON]]
         name = "drive_voltage"
@@ -88,3 +93,4 @@ drive_scale_factor = 680.0
         allowable_closed_loop_error    =    0 # encoder ticks
         encoder_reversed = false
         output_reversed  = false
+        current_limit    = 0 # 0 disables
