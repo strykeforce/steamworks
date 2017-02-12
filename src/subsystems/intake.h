@@ -13,8 +13,13 @@ class Intake : public frc::Subsystem {
   Intake& operator=(Intake&) = delete;
   Intake(Intake&) = delete;
 
+  void Start();
+  void Reverse();
+  void Stop();
+
  private:
   const std::shared_ptr<spdlog::logger> logger_;
+  double voltage_;
 };
 
 } /* subsystem */

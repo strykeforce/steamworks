@@ -7,6 +7,7 @@
 #include "sidewinder/oi/expo.h"
 
 #include "commands/hopper.h"
+#include "commands/intake.h"
 #include "commands/log.h"
 #include "triggers/trim.h"
 
@@ -78,14 +79,14 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       new command::Log("gamepad gear stage reverse button"));
 
   // gamepad right shoulder turns on fuel intake
-  intake_on_button_.WhenPressed(new command::Log("gamepad intake on button"));
+  intake_on_button_.WhenPressed(new command::Intake(command::Intake::kStart));
 
   // gamepad B button turns off fuel intake
-  intake_off_button_.WhenPressed(new command::Log("gamepad intake off button"));
+  intake_off_button_.WhenPressed(new command::Intake(command::Intake::kStop));
 
   // gamepad Y button reverses fuel intake
   intake_reverse_button_.WhenPressed(
-      new command::Log("gamepad intake reverse button"));
+      new command::Intake(command::Intake::kReverse));
 
   // gamepad A button performs feed shot
   shoot_feed_button_.WhenPressed(new command::Log("gamepad feed shot button"));

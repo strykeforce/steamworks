@@ -70,7 +70,7 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
   // shooter_wheel_talon = new ::CANTalon(Talons::kShooterWheel);
   // shooter_elevation_talon = new ::CANTalon(Talons::kShooterElevation);
   hopper_talon = new ::CANTalon(Talons::kHopper);
-  // intake_talon = new ::CANTalon(Talons::kIntake);
+  intake_talon = new ::CANTalon(Talons::kIntake);
   // gear_intake_talon = new ::CANTalon(Talons::kGearIntake);
   // gear_elevation_talon = new ::CANTalon(Talons::kGearElevation);
   // climber_master_talon = new ::CANTalon(Talons::kClimberMaster);

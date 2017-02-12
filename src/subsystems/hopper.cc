@@ -2,9 +2,9 @@
 
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
+#include "sidewinder/talon/settings.h"
 
 #include "robot_map.h"
-#include "sidewinder/talon/settings.h"
 
 using namespace steamworks::subsystem;
 using namespace sidewinder;
