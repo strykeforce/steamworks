@@ -81,6 +81,7 @@ Settings::Settings(const std::shared_ptr<cpptoml::table> config) {
   voltage_ramp_rate_ = *config->get_as<double>("voltage_ramp_rate");
   encoder_reversed_ = *config->get_as<bool>("encoder_reversed");
   output_reversed_ = *config->get_as<bool>("output_reversed");
+  current_limit_ = config->get_as<uint32_t>("current_limit").value_or(0);
 }
 
 /** Configure is intended to be one-time setup for Talons at initialization.
@@ -93,6 +94,8 @@ void Settings::Configure(::CANTalon* talon) const {
   talon->ConfigLimitMode(limit_mode_);
   talon->SetSensorDirection(encoder_reversed_);
   talon->SetInverted(output_reversed_);
+  talon->SetCurrentLimit(current_limit_);
+  talon->EnableCurrentLimit(current_limit_ > 0);
 }
 
 /** SetMode sets the current operating mode for the Talon, i.e. voltage,
@@ -119,4 +122,5 @@ void Settings::LogConfig(Logger logger) const {
   logger->debug("voltage_ramp_rate = {} v/sec", voltage_ramp_rate_);
   logger->debug("encoder_reversed = {}", encoder_reversed_);
   logger->debug("output_reversed = {}", output_reversed_);
+  logger->debug("current_limit = {}", current_limit_);
 }
