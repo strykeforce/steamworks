@@ -81,7 +81,11 @@ Settings::Settings(const std::shared_ptr<cpptoml::table> config) {
   voltage_ramp_rate_ = *config->get_as<double>("voltage_ramp_rate");
   encoder_reversed_ = *config->get_as<bool>("encoder_reversed");
   output_reversed_ = *config->get_as<bool>("output_reversed");
-  current_limit_ = config->get_as<uint32_t>("current_limit").value_or(0);
+  auto current_limit = config->get_as<uint32_t>("current_limit");
+  if (!current_limit) {
+    throw invalid_argument("TALON current_limit setting missing");
+  }
+  current_limit_ = *current_limit;
 }
 
 /** Configure is intended to be one-time setup for Talons at initialization.

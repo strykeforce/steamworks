@@ -72,25 +72,13 @@ drive_scale_factor = 680.0
 
         [[SIDEWINDER.SWERVE.TALON]]
         name = "drive_voltage"
-        type = "velocity"
-
-        P      =   12.0
-        I      =    0.0
-        D      =    0.0
-        F      =    0.0
-        I_zone =      0
+        type = "voltage"
 
         feedback_device = 0 # quad
-        neutral_mode    = 2 # coast
+        neutral_mode    = 1 # brake
         limit_mode      = 2 # soft and hard disabled
-
-        voltage_ramp_rate = 0.0 # v/s, 0 disables
-        close_loop_ramp_rate           =  0.0 # v/s, 0 disables
-        peak_output_voltage_forward    =  12.0 # v
-        peak_output_voltage_reverse    = -12.0 # v
-        nominal_output_voltage_forward =  0.0  # v
-        nominal_output_voltage_reverse =  0.0  # v
-        allowable_closed_loop_error    =    0 # encoder ticks
         encoder_reversed = false
         output_reversed  = false
         current_limit    = 0 # 0 disables
+
+        voltage_ramp_rate = 0.0 # v/s, 0 disables
