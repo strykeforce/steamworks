@@ -79,6 +79,6 @@ drive_scale_factor = 680.0
         limit_mode      = 2 # soft and hard disabled
         encoder_reversed = false
         output_reversed  = false
-        current_limit    = 0 # 0 disables
+        current_limit    = 60 # 0 disables
 
         voltage_ramp_rate = 0.0 # v/s, 0 disables
