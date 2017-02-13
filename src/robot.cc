@@ -41,16 +41,16 @@ void Robot::RobotInit() {
 
 void Robot::RobotPeriodic() {}
 
-void Robot::DisabledInit() { logger_->trace(__FUNCTION__); }
+void Robot::DisabledInit() { logger_->trace(__PRETTY_FUNCTION__); }
 
 void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::AutonomousInit() { logger_->trace(__FUNCTION__); }
+void Robot::AutonomousInit() { logger_->trace(__PRETTY_FUNCTION__); }
 
 void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::TeleopInit() {
-  logger_->trace(__FUNCTION__);
+  logger_->trace(__PRETTY_FUNCTION__);
   frc::Joystick fsj(OI::kFlightSimJoystick);
   if (fsj.GetRawButton(OI::kFlightSimLeftCornerDownButton)) {
     // button is already in auto on position so run command
@@ -65,7 +65,7 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::TestInit() { logger_->trace(__FUNCTION__); }
+void Robot::TestInit() { logger_->trace(__PRETTY_FUNCTION__); }
 
 void Robot::TestPeriodic() { frc::LiveWindow::GetInstance()->Run(); }
 
@@ -83,7 +83,7 @@ void Robot::ConfigureLogging() {
 #else
   logger_ = spdlog::stdout_color_st("robot");
   logger_->set_level(spdlog::level::trace);
-  spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("command")->set_level(spdlog::level::debug);
   spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
   logger_->warn("configured as DEBUG build");
 #endif

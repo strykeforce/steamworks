@@ -13,7 +13,7 @@ using namespace sidewinder;
 Intake::Intake(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("Intake"),
       logger_(spdlog::get("subsystem")),
-      voltage_(4.0) {
+      voltage_(12.0) {
   auto steamworks_config = config->get_table("STEAMWORKS");
 
   auto voltage = steamworks_config->get_as<double>("intake_voltage");
@@ -35,3 +35,5 @@ void Intake::Start() { RobotMap::intake_talon->Set(voltage_); }
 void Intake::Reverse() { RobotMap::intake_talon->Set(-voltage_); }
 
 void Intake::Stop() { RobotMap::intake_talon->Set(0.0); }
+
+int Intake::GetEncoderVelocity() { return RobotMap::intake_talon->GetEncVel(); }

@@ -16,6 +16,7 @@ class Intake : public frc::Subsystem {
   void Start();
   void Reverse();
   void Stop();
+  int GetEncoderVelocity();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;

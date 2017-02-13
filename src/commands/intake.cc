@@ -5,53 +5,81 @@
 
 using namespace steamworks::command;
 
-Intake::Intake(Operation operation)
-    : frc::InstantCommand("Intake"),
-      logger_(spdlog::get("command")),
-      operation_(operation),
-      is_started_(false) {
+namespace {
+constexpr int kRunningSpeed = 6800;
+}
+
+//
+// StartIntake
+//
+StartIntake::StartIntake()
+    : frc::Command("StartIntake"), logger_(spdlog::get("command")) {
   Requires(Robot::intake);
 }
 
-void Intake::Initialize() {
-  switch (operation_) {
-    case kStart:
-      Start();
-      break;
-    case kReverse:
-      Reverse();
-      break;
-    case kStop:
-      Stop();
-      break;
-    case kToggle:
-      Toggle();
-      break;
+void StartIntake::Initialize() {
+  logger_->trace(__PRETTY_FUNCTION__);
+  if (Robot::intake->GetEncoderVelocity() < 0) {
+    Robot::intake->Stop();
   }
 }
 
-void Intake::Start() {
-  logger_->debug("starting intake");
-  Robot::intake->Start();
-  is_started_ = true;
+void StartIntake::Execute() {
+  logger_->trace(__PRETTY_FUNCTION__);
+  if (Robot::intake->GetEncoderVelocity() >= 0) {
+    Robot::intake->Start();
+  }
 }
 
-void Intake::Reverse() {
-  logger_->debug("reversing intake");
-  // Robot::intake->Reverse();
-  // is_started_ = true;
+bool StartIntake::IsFinished() {
+  logger_->trace(__PRETTY_FUNCTION__);
+  logger_->debug("encoder velocity = {}", Robot::intake->GetEncoderVelocity());
+  return Robot::intake->GetEncoderVelocity() > kRunningSpeed;
 }
 
-void Intake::Stop() {
-  logger_->debug("stopping intake");
+//
+// StopIntake
+//
+StopIntake::StopIntake()
+    : frc::Command("StopIntake"), logger_(spdlog::get("command")) {
+  Requires(Robot::intake);
+}
+
+void StopIntake::Initialize() {
+  logger_->trace(__PRETTY_FUNCTION__);
   Robot::intake->Stop();
-  is_started_ = false;
 }
 
-void Intake::Toggle() {
-  if (is_started_) {
-    Stop();
-    return;
+bool StopIntake::IsFinished() {
+  logger_->trace(__PRETTY_FUNCTION__);
+  logger_->debug("encoder velocity = {}", Robot::intake->GetEncoderVelocity());
+  return Robot::intake->GetEncoderVelocity() == 0;
+}
+
+//
+// ClearIntake
+//
+ClearIntake::ClearIntake()
+    : frc::Command("ClearIntake"), logger_(spdlog::get("command")) {
+  Requires(Robot::intake);
+}
+
+void ClearIntake::Initialize() {
+  logger_->trace(__PRETTY_FUNCTION__);
+  if (Robot::intake->GetEncoderVelocity() > 0) {
+    Robot::intake->Stop();
   }
-  Start();
+}
+
+void ClearIntake::Execute() {
+  logger_->trace(__PRETTY_FUNCTION__);
+  if (Robot::intake->GetEncoderVelocity() <= 0) {
+    Robot::intake->Reverse();
+  }
+}
+
+bool ClearIntake::IsFinished() {
+  logger_->trace(__PRETTY_FUNCTION__);
+  logger_->debug("encoder velocity = {}", Robot::intake->GetEncoderVelocity());
+  return Robot::intake->GetEncoderVelocity() < -kRunningSpeed;
 }

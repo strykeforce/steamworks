@@ -79,14 +79,13 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       new command::Log("gamepad gear stage reverse button"));
 
   // gamepad right shoulder turns on fuel intake
-  intake_on_button_.WhenPressed(new command::Intake(command::Intake::kStart));
+  intake_on_button_.WhenPressed(new command::StartIntake());
 
   // gamepad B button turns off fuel intake
-  intake_off_button_.WhenPressed(new command::Intake(command::Intake::kStop));
+  intake_off_button_.WhenPressed(new command::StopIntake());
 
   // gamepad Y button reverses fuel intake
-  intake_reverse_button_.WhenPressed(
-      new command::Intake(command::Intake::kReverse));
+  intake_reverse_button_.WhenPressed(new command::ClearIntake());
 
   // gamepad A button performs feed shot
   shoot_feed_button_.WhenPressed(new command::Log("gamepad feed shot button"));

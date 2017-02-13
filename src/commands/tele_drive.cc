@@ -14,7 +14,6 @@ TeleDrive::TeleDrive()
       logger_(spdlog::get("command")),
       print_timer_(new frc::Timer()) {
   Requires(Robot::drive);
-  logger_->set_level(spdlog::level::debug);
   print_timer_->Start();
 }
 

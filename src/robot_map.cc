@@ -34,6 +34,9 @@ void initialize_grapher() {
   gd.push_back(jgdb(rm::kRightRearDrive, rm::swerve_talons->rr_drive));
   gd.push_back(jgdb(rm::kRightRearAzimuth, rm::swerve_talons->rr_azimuth));
 
+  gd.push_back(jgdb(rm::kHopper, rm::hopper_talon));
+  gd.push_back(jgdb(rm::kIntake, rm::intake_talon));
+
   for (const auto& d : gd) {
     ::CANTalon* talon = static_cast<::CANTalon*>(d.objectPointer);
     talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateGeneral, 20);

@@ -7,28 +7,41 @@
 
 namespace steamworks {
 namespace command {
-class Intake : public frc::InstantCommand {
+class StartIntake : public frc::Command {
  public:
-  enum Operation {
-    kStart,
-    kReverse,
-    kStop,
-    kToggle,
-  };
-
-  Intake(Operation operation);
-
+  StartIntake();
   void Initialize() override;
+  void Execute() override;
+  bool IsFinished() override;
+
+ protected:
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
+};
+
+class StopIntake : public frc::Command {
+ public:
+  StopIntake();
+  void Initialize() override;
+  bool IsFinished() override;
+
+ protected:
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
+};
+
+class ClearIntake : public frc::Command {
+ public:
+  ClearIntake();
+
+ protected:
+  void Initialize() override;
+  void Execute() override;
+  bool IsFinished() override;
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  Operation operation_;
-  bool is_started_;
-
-  void Start();
-  void Reverse();
-  void Stop();
-  void Toggle();
 };
+
 } /* command */
 } /* steamworks */
