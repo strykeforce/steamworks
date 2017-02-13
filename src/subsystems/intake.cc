@@ -34,6 +34,8 @@ void Intake::Start() { RobotMap::intake_talon->Set(voltage_); }
 
 void Intake::Reverse() { RobotMap::intake_talon->Set(-voltage_); }
 
-void Intake::Stop() { RobotMap::intake_talon->Set(0.0); }
+void Intake::Stop() { RobotMap::intake_talon->StopMotor(); }
 
-int Intake::GetEncoderVelocity() { return RobotMap::intake_talon->GetEncVel(); }
+int Intake::GetSpeed() {
+  return static_cast<int>(RobotMap::intake_talon->GetSpeed());
+}
