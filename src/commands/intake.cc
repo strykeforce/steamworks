@@ -6,7 +6,8 @@
 using namespace steamworks::command;
 
 namespace {
-constexpr int kRunningSpeed = 6800;
+constexpr int kStoppedSpeed = 10;
+constexpr int kRunningSpeed = 6600;
 }
 
 //
@@ -18,23 +19,19 @@ StartIntake::StartIntake()
 }
 
 void StartIntake::Initialize() {
-  logger_->trace(__PRETTY_FUNCTION__);
-  if (Robot::intake->GetEncoderVelocity() < 0) {
+  if (Robot::intake->GetSpeed() < 0) {
     Robot::intake->Stop();
   }
 }
 
 void StartIntake::Execute() {
-  logger_->trace(__PRETTY_FUNCTION__);
-  if (Robot::intake->GetEncoderVelocity() >= 0) {
+  if (Robot::intake->GetSpeed() >= 0) {
     Robot::intake->Start();
   }
 }
 
 bool StartIntake::IsFinished() {
-  logger_->trace(__PRETTY_FUNCTION__);
-  logger_->debug("encoder velocity = {}", Robot::intake->GetEncoderVelocity());
-  return Robot::intake->GetEncoderVelocity() > kRunningSpeed;
+  return Robot::intake->GetSpeed() > kRunningSpeed;
 }
 
 //
@@ -45,15 +42,10 @@ StopIntake::StopIntake()
   Requires(Robot::intake);
 }
 
-void StopIntake::Initialize() {
-  logger_->trace(__PRETTY_FUNCTION__);
-  Robot::intake->Stop();
-}
+void StopIntake::Initialize() { Robot::intake->Stop(); }
 
 bool StopIntake::IsFinished() {
-  logger_->trace(__PRETTY_FUNCTION__);
-  logger_->debug("encoder velocity = {}", Robot::intake->GetEncoderVelocity());
-  return Robot::intake->GetEncoderVelocity() == 0;
+  return std::abs(Robot::intake->GetSpeed()) < kStoppedSpeed;
 }
 
 //
@@ -65,21 +57,17 @@ ClearIntake::ClearIntake()
 }
 
 void ClearIntake::Initialize() {
-  logger_->trace(__PRETTY_FUNCTION__);
-  if (Robot::intake->GetEncoderVelocity() > 0) {
+  if (Robot::intake->GetSpeed() > 0) {
     Robot::intake->Stop();
   }
 }
 
 void ClearIntake::Execute() {
-  logger_->trace(__PRETTY_FUNCTION__);
-  if (Robot::intake->GetEncoderVelocity() <= 0) {
+  if (Robot::intake->GetSpeed() <= 0) {
     Robot::intake->Reverse();
   }
 }
 
 bool ClearIntake::IsFinished() {
-  logger_->trace(__PRETTY_FUNCTION__);
-  logger_->debug("encoder velocity = {}", Robot::intake->GetEncoderVelocity());
-  return Robot::intake->GetEncoderVelocity() < -kRunningSpeed;
+  return Robot::intake->GetSpeed() < -kRunningSpeed;
 }

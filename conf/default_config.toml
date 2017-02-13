@@ -1,5 +1,5 @@
 [STEAMWORKS]
-grapher = true
+grapher = false
 
 hopper_voltage = 8.0
 intake_voltage = 12.0
