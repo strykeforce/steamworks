@@ -6,6 +6,7 @@
 #include "cpptoml/cpptoml.h"
 #include "sidewinder/oi/expo.h"
 
+#include "commands/drive.h"
 #include "commands/hopper.h"
 #include "commands/intake.h"
 #include "commands/log.h"
@@ -95,7 +96,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       new command::Log("gamepad close shot button"));
 
   // gamepad D-pad trims shooter aimpoint
-  trim_up_.WhenActive(new command::Log("trim up active"));
+  // trim_up_.WhenActive(new command::DriveSquare());
   trim_down_.WhenActive(new command::Log("trim down active"));
   trim_left_.WhenActive(new command::Log("trim left active"));
   trim_left_.WhenActive(new command::Hopper(command::Hopper::kToggle));

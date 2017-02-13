@@ -1,5 +1,5 @@
 [STEAMWORKS]
-grapher = false
+grapher = true
 
 hopper_voltage = 8.0
 intake_voltage = 12.0
@@ -41,10 +41,10 @@ azimuth_sma_period = 5
 drive_scale_factor = 12.0
 
     [SIDEWINDER.SWERVE]
-    lf_zero = 1002
-    rf_zero = 959
-    lr_zero = 981
-    rr_zero = 969
+    lf_zero = 1014
+    rf_zero = 967
+    lr_zero = 971
+    rr_zero = 988
 
     wheelbase_width  = 26.4375 # inches
     wheelbase_length = 22.5    # inches
