@@ -15,21 +15,36 @@ namespace swerve {
  */
 
 class SwerveDrive {
+ public:
+  /** Swerve drive wheels. */
+  enum Wheel {
+    kRightFront,
+    kLeftFront,
+    kLeftRear,
+    kRightRear,
+  };
+
+  SwerveDrive(const std::shared_ptr<cpptoml::table> config,
+              const TalonMap* map);
+  // normal driving methods
+  void Drive(double forward, double strafe, double azimuth);
+  void TargetRotation(double azimuth);
+  int GetPosition(const Wheel wheel = kRightRear) const;
+
+  // special driving or troubleshooting methods
+  void CrabDrive(double speed, double direction);
+  void ZeroAzimuth();
+
+  // utility methods
+  void SetLogger(const std::shared_ptr<spdlog::logger> logger);
+
  private:
-  const std::shared_ptr<spdlog::logger> logger_;
+  std::shared_ptr<spdlog::logger> logger_;
   const TalonMap* map_;
   SwerveMath swerve_math_;
   double drive_scale_factor_ = 0.0;
 
   void SetEncoderZero(const std::shared_ptr<cpptoml::table> config);
-
- public:
-  SwerveDrive(const std::shared_ptr<cpptoml::table> config,
-              const TalonMap* map);
-  void ZeroAzimuth();
-  void Drive(double forward, double strafe, double azimuth);
-  void TargetRotation(double azimuth);
-  void CrabDrive(double forward, double strafe);
 };
 } /* swerve */
 } /* sidewinder */

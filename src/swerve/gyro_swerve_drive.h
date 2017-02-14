@@ -7,12 +7,6 @@
 namespace sidewinder {
 namespace swerve {
 class GyroSwerveDrive {
- private:
-  SwerveDrive sd_;
-  std::shared_ptr<AHRS> ahrs_;
-  double initial_angle_;
-  bool first_time_;
-
  public:
   GyroSwerveDrive(const std::shared_ptr<cpptoml::table> config,
                   const TalonMap* map);
@@ -20,9 +14,25 @@ class GyroSwerveDrive {
   GyroSwerveDrive(const std::shared_ptr<cpptoml::table> config,
                   const TalonMap* map, std::shared_ptr<AHRS> gyro);
 
-  void ZeroAzimuth();
-
+  // normal driving methods
   void Drive(double forward, double strafe, double azimuth);
+  void TargetRotation(double azimuth);
+  int GetPosition(
+      const SwerveDrive::Wheel wheel = SwerveDrive::kRightRear) const;
+
+  // special driving or troubleshooting methods
+  void ZeroAzimuth();
+  void SetGyroDisabled(bool disabled);
+
+  // utility methods
+  void SetLogger(const std::shared_ptr<spdlog::logger> logger);
+
+ private:
+  std::shared_ptr<spdlog::logger> logger_;
+  SwerveDrive sd_;
+  std::shared_ptr<AHRS> ahrs_;
+  double initial_angle_;
+  bool gyro_disabled_;
 };
 } /* swerve */
 } /* sidewinder */

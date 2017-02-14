@@ -77,7 +77,7 @@ SwerveMath::SwerveMath(const std::shared_ptr<cpptoml::table> config) {
   }
   double sry_value = *sry;
 
-  auto logger = spdlog::get("SwerveDrive");
+  auto logger = spdlog::get("sidewinder");
   logger->info("wheelbase W = {}, L = {}", wheelbase_width, wheelbase_length);
 
   rotation_vectors[RotationPoint::Center] =

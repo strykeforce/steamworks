@@ -15,10 +15,13 @@ using namespace sidewinder::swerve;
  */
 SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
                          const TalonMap* tm)
-    : logger_(spdlog::stdout_color_st("SwerveDrive")),
-      map_(tm),
-      swerve_math_(config) {
+    : logger_(spdlog::get("sidewinder")), map_(tm), swerve_math_(config) {
   assert(tm);
+
+  if (!logger_) {
+    logger_ = spdlog::stdout_logger_st("sidewinder");
+  }
+  logger_->set_level(spdlog::level::info);
 
   // load sidewinder configuration from common config file
   if (!config) {
@@ -31,8 +34,6 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   }
 
   // configure logging for this class
-  logger_->set_level(spdlog::level::debug);
-  logger_->trace("starting constructor");
 
   // get swerve drive configuration from sidewinder settings
   logger_->trace("configuring azimuth talons in position mode");
@@ -116,19 +117,19 @@ void SwerveDrive::ZeroAzimuth() {
 }
 
 /** Drive in swerve drive mode.
- * @param forward command forward/backwards (Y-axis) motion
- * @param strafe command left/right (X-axis) motion
- * @param azimuth command left/right yaw
+ * @param forward command forward/backwards (Y-axis) throttle, -1.0 - 1.0
+ * @param strafe command left/right (X-axis) throttle, -1.0 - 1.0
+ * @param azimuth command CW/CCW azimuth throttle, -1.0 - 1.0
  */
 void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
   // don't reset wheels to zero in dead zone
   // FIXME: dead zone hard-coded
   if (std::fabs(forward) <= 0.08 && std::fabs(strafe) <= 0.08 &&
       std::fabs(azimuth) < 0.08) {
-    map_->rf_drive->Set(0.0);
-    map_->lf_drive->Set(0.0);
-    map_->lr_drive->Set(0.0);
-    map_->rr_drive->Set(0.0);
+    map_->rf_drive->StopMotor();
+    map_->lf_drive->StopMotor();
+    map_->lr_drive->StopMotor();
+    map_->rr_drive->StopMotor();
     return;
   }
   DriveData dd = DriveData();
@@ -148,15 +149,18 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
   map_->rr_drive->Set(dd.wsrr * drive_scale_factor_);
 
   static int i;
-  if (++i == 15) {
+  if (++i == 50) {
+    i = 0;
     logger_->trace("warf = {}, walf = {}, walr = {}, warr = {}", dd.warf,
                    dd.walf, dd.walr, dd.warr);
     logger_->trace("wsrf = {}, wslf = {}, wslr = {}, wsrr = {}", dd.wsrf,
                    dd.wslf, dd.wslr, dd.wsrr);
-    i = 0;
   }
 }
 
+/** Rotate around an off-center point, used for pivoting on robot shooter.
+ * @param azimuth command CW/CCW azimuth throttle, -1.0 - 1.0
+ */
 void SwerveDrive::TargetRotation(double azimuth) {
   DriveData dd = DriveData();
   dd.fwd = 0;
@@ -176,27 +180,44 @@ void SwerveDrive::TargetRotation(double azimuth) {
 }
 
 /** Drive in crab drive mode.
- * @param forward command forward/backwards (Y-axis) motion
- * @param strafe command left/right (X-axis) motion
+ * @param speed command forward/backwards (Y-axis) throttle, -1.0 - 1.0
+ * @param direction command left/right (X-axis), -1.0 - 1.0
  */
-void SwerveDrive::CrabDrive(double forward, double strafe) {
-  // int pos = std::round(2048 * (strafe < 0 ? 2 + strafe : strafe));
-  int pos = -std::round(2048 * strafe);
-  // double pos = 0.5 * strafe;
+void SwerveDrive::CrabDrive(double speed, double direction) {
+  int pos = -std::round(2048 * direction);
   map_->lf_azimuth->Set(pos);
   map_->rf_azimuth->Set(pos);
   map_->lr_azimuth->Set(pos);
   map_->rr_azimuth->Set(pos);
 
-  double volts = forward * drive_scale_factor_;
-  map_->lf_drive->Set(volts);
-  map_->rf_drive->Set(volts);
-  map_->lr_drive->Set(volts);
-  map_->rr_drive->Set(volts);
-  static int i;
-  if (++i == 15) {
-    logger_->debug("crab driving forward = {}, strafe = {}", forward, strafe);
-    logger_->debug("crab driving pos = {}, volts = {}", pos, volts);
-    i = 0;
+  double setpoint = speed * drive_scale_factor_;
+  map_->lf_drive->Set(setpoint);
+  map_->rf_drive->Set(setpoint);
+  map_->lr_drive->Set(setpoint);
+  map_->rr_drive->Set(setpoint);
+}
+
+/** Get encoder value of specified drive wheel.
+ *  @param wheel select wheel to read
+ */
+int SwerveDrive::GetPosition(const Wheel wheel) const {
+  switch (wheel) {
+    case kRightRear:
+      return static_cast<int>(map_->rr_drive->GetPosition());
+    case kLeftRear:
+      return static_cast<int>(map_->lr_drive->GetPosition());
+    case kRightFront:
+      return static_cast<int>(map_->rf_drive->GetPosition());
+    case kLeftFront:
+      return static_cast<int>(map_->lf_drive->GetPosition());
   }
+  return 0;
+}
+
+/** Override the default logger.
+ * This logger is expected to have the name "sidewinder".
+ */
+void SwerveDrive::SetLogger(const std::shared_ptr<spdlog::logger> logger) {
+  logger_ = logger;
+  logger_->debug("overriding logger");
 }
