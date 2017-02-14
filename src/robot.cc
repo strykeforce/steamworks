@@ -28,6 +28,7 @@ void Robot::RobotInit() {
   LogVersion();
   LoadConfig();
   RobotMap::Init(config_);
+  LogAbsoluteEncoders();
 
   climber = new subsystem::Climber(config_);
   drive = new subsystem::Drive(config_);
@@ -123,6 +124,21 @@ void Robot::LogVersion() {
 #else
   logger_->warn("configured as DEBUG build");
 #endif
+}
+
+void Robot::LogAbsoluteEncoders() {
+  auto tm = RobotMap::swerve_talons;
+  auto pos = tm->lf_azimuth->GetPulseWidthPosition() & 0xFFF;
+  logger_->info("left front azimuth position: {}", pos);
+
+  pos = tm->rf_azimuth->GetPulseWidthPosition() & 0xFFF;
+  logger_->info("right front azimuth position: {}", pos);
+
+  pos = tm->lr_azimuth->GetPulseWidthPosition() & 0xFFF;
+  logger_->info("left rear azimuth position: {}", pos);
+
+  pos = tm->rr_azimuth->GetPulseWidthPosition() & 0xFFF;
+  logger_->info("right rear azimuth position: {}", pos);
 }
 
 // used for: strings steamworks | grep STEAMWORKS_VERSION

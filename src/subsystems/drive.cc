@@ -10,7 +10,10 @@
 using namespace steamworks::subsystem;
 
 Drive::Drive(const std::shared_ptr<cpptoml::table> config)
-    : frc::Subsystem("Drive"), swerve_drive_(config, RobotMap::swerve_talons) {}
+    : frc::Subsystem("Drive"),
+      logger_(spdlog::get("subsystem")),
+      gyro_(std::make_shared<AHRS>(SPI::Port::kMXP)),
+      swerve_drive_(config, RobotMap::swerve_talons, gyro_) {}
 
 void Drive::CartesianDrive(float forward, float strafe, float azimuth) {
   swerve_drive_.Drive(forward, strafe, azimuth);
