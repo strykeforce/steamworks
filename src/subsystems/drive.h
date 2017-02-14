@@ -14,6 +14,7 @@ class Drive : public frc::Subsystem {
   void InitDefaultCommand() override;
   void ZeroWheels();
   void CartesianDrive(float forward, float strafe, float azimuth);
+  int GetPosition() const;
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
