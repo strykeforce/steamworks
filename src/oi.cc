@@ -99,7 +99,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   trim_up_.WhenActive(new command::DriveSquare());
   trim_down_.WhenActive(new command::Log("trim down active"));
   trim_left_.WhenActive(new command::Log("trim left active"));
-  trim_left_.WhenActive(new command::Hopper(command::Hopper::kToggle));
+  trim_left_.WhenActive(new command::ToggleHopper());
   trim_right_.WhenActive(new command::Log("trim right active"));
 
   // gamepad start button toggles climber

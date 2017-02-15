@@ -5,44 +5,47 @@
 
 using namespace steamworks::command;
 
-Hopper::Hopper(Operation operation)
-    : frc::InstantCommand("Hopper"),
-      logger_(spdlog::get("command")),
-      operation_(operation),
-      is_started_(false) {
+//
+// StartHopper
+//
+StartHopper::StartHopper()
+    : frc::InstantCommand("StartHopper"), logger_(spdlog::get("command")) {
   Requires(Robot::hopper);
 }
 
-void Hopper::Initialize() {
-  switch (operation_) {
-    case kStart:
-      Start();
-      break;
-    case kStop:
-      Stop();
-      break;
-    case kToggle:
-      Toggle();
-      break;
-  }
-}
-
-void Hopper::Start() {
+void StartHopper::Initialize() {
   logger_->debug("starting hopper");
   Robot::hopper->Start();
-  is_started_ = true;
 }
 
-void Hopper::Stop() {
+//
+// StopHopper
+//
+StopHopper::StopHopper()
+    : frc::InstantCommand("StopHopper"), logger_(spdlog::get("command")) {
+  Requires(Robot::hopper);
+}
+
+void StopHopper::Initialize() {
   logger_->debug("stopping hopper");
   Robot::hopper->Stop();
-  is_started_ = false;
 }
 
-void Hopper::Toggle() {
-  if (is_started_) {
-    Stop();
+//
+// ToggleHopper
+//
+ToggleHopper::ToggleHopper()
+    : frc::InstantCommand("ToggleHopper"),
+      logger_(spdlog::get("command")),
+      start_cmd_(),
+      stop_cmd_() {
+  Requires(Robot::hopper);
+}
+
+void ToggleHopper::Initialize() {
+  if (Robot::hopper->IsRunning()) {
+    stop_cmd_.Start();
     return;
   }
-  Start();
+  start_cmd_.Start();
 }

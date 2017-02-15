@@ -15,10 +15,12 @@ class Hopper : public frc::Subsystem {
 
   void Start();
   void Stop();
+  bool IsRunning();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   double voltage_;
+  bool is_running_;
 };
 
 } /* subsystem */

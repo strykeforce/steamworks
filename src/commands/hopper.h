@@ -7,26 +7,40 @@
 
 namespace steamworks {
 namespace command {
-class Hopper : public frc::InstantCommand {
+class StartHopper : public frc::InstantCommand {
  public:
-  enum Operation {
-    kStart,
-    kStop,
-    kToggle,
-  };
+  StartHopper();
 
-  Hopper(Operation operation);
-
+ protected:
   void Initialize() override;
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  Operation operation_;
-  bool is_started_;
-
-  void Start();
-  void Stop();
-  void Toggle();
 };
+
+class StopHopper : public frc::InstantCommand {
+ public:
+  StopHopper();
+
+ protected:
+  void Initialize() override;
+
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
+};
+
+class ToggleHopper : public frc::InstantCommand {
+ public:
+  ToggleHopper();
+
+ protected:
+  void Initialize() override;
+
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
+  StartHopper start_cmd_;
+  StopHopper stop_cmd_;
+};
+
 } /* command */
 } /* steamworks */

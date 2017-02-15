@@ -12,7 +12,8 @@ using namespace sidewinder;
 Hopper::Hopper(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("Hopper"),
       logger_(spdlog::get("subsystem")),
-      voltage_(7.0) {
+      voltage_(7.0),
+      is_running_(false) {
   auto steamworks_config = config->get_table("STEAMWORKS");
 
   auto voltage = steamworks_config->get_as<double>("hopper_voltage");
@@ -29,6 +30,14 @@ Hopper::Hopper(const std::shared_ptr<cpptoml::table> config)
   talon_settings->Initialize(RobotMap::hopper_talon);
 }
 
-void Hopper::Start() { RobotMap::hopper_talon->Set(7.0); }
+void Hopper::Start() {
+  RobotMap::hopper_talon->Set(voltage_);
+  is_running_ = true;
+}
 
-void Hopper::Stop() { RobotMap::hopper_talon->Set(0.0); }
+void Hopper::Stop() {
+  RobotMap::hopper_talon->StopMotor();
+  is_running_ = false;
+}
+
+bool Hopper::IsRunning() { return is_running_; }
