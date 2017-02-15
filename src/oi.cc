@@ -96,7 +96,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       new command::Log("gamepad close shot button"));
 
   // gamepad D-pad trims shooter aimpoint
-  // trim_up_.WhenActive(new command::DriveSquare());
+  trim_up_.WhenActive(new command::DriveSquare());
   trim_down_.WhenActive(new command::Log("trim down active"));
   trim_left_.WhenActive(new command::Log("trim left active"));
   trim_left_.WhenActive(new command::Hopper(command::Hopper::kToggle));

@@ -25,7 +25,4 @@ void Drive::InitDefaultCommand() {
   SetDefaultCommand(new command::DriveTele());
 }
 
-int Drive::GetPosition() const {
-  // return static_cast<int>(swerve_drive_.GetPosition());
-  return 0;
-}
+int Drive::GetPosition() const { return swerve_drive_.GetPosition(); }

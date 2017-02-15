@@ -88,6 +88,7 @@ void Robot::ConfigureLogging() {
   spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
   logger_->warn("configured as DEBUG build");
 #endif
+  spdlog::set_pattern("[%H:%M:%S.%e][%n][%l] %v");
 }
 
 /** Reads our configuration file from ~lvuser/steamworks.toml.

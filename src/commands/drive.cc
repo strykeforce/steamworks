@@ -67,10 +67,7 @@ DriveClockwise::DriveClockwise(double timeout)
   Requires(Robot::drive);
 }
 
-void DriveClockwise::Execute() {
-  logger_->warn(__PRETTY_FUNCTION__);
-  Robot::drive->CartesianDrive(0.0, 0.0, 0.2);
-}
+void DriveClockwise::Execute() { Robot::drive->CartesianDrive(0.0, 0.0, 0.2); }
 
 void DriveClockwise::End() { Robot::drive->CartesianDrive(0.0, 0.0, 0.0); }
 
