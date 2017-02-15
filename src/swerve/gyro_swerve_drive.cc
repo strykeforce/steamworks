@@ -67,6 +67,13 @@ int GyroSwerveDrive::GetPosition(const SwerveDrive::Wheel wheel) const {
   return sd_.GetPosition(wheel);
 }
 
+/** Get encoder value of specified azimuht wheel.
+ *  @param wheel select wheel to read
+ */
+int GyroSwerveDrive::GetAzimuth(const SwerveDrive::Wheel wheel) const {
+  return sd_.GetAzimuth(wheel);
+}
+
 /** Move all wheels to their home position.
  */
 void GyroSwerveDrive::ZeroAzimuth() { sd_.ZeroAzimuth(); }
@@ -78,6 +85,18 @@ void GyroSwerveDrive::SetGyroDisabled(bool disabled) {
   logger_->info("setting swerve gyro to {}", disabled ? "DISABLED" : "ENABLED");
   gyro_disabled_ = disabled;
 }
+
+/** Write out wheel zero azimuth data to ~lvuser/sidewinder_calibration.toml
+ */
+void GyroSwerveDrive::WriteAzimuthCalibration() {
+  sd_.WriteAzimuthCalibration();
+}
+
+/** Read in wheel zero azimuth data from ~lvuser/sidewinder_calibration.toml
+ * and set the four azimuth quad encoders to match the current absolute offset
+ * from zero.
+ */
+void GyroSwerveDrive::ReadAzimuthCalibration() { sd_.ReadAzimuthCalibration(); }
 
 /** Override the default logger.
  * This logger is expected to have the name "sidewinder".

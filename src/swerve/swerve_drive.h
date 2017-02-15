@@ -29,11 +29,14 @@ class SwerveDrive {
   // normal driving methods
   void Drive(double forward, double strafe, double azimuth);
   void TargetRotation(double azimuth);
+  int GetAzimuth(const Wheel wheel = kRightRear) const;
   int GetPosition(const Wheel wheel = kRightRear) const;
 
   // special driving or troubleshooting methods
   void CrabDrive(double speed, double direction);
   void ZeroAzimuth();
+  void WriteAzimuthCalibration();
+  void ReadAzimuthCalibration();
 
   // utility methods
   void SetLogger(const std::shared_ptr<spdlog::logger> logger);
@@ -43,8 +46,6 @@ class SwerveDrive {
   const TalonMap* map_;
   SwerveMath swerve_math_;
   double drive_scale_factor_ = 0.0;
-
-  void SetEncoderZero(const std::shared_ptr<cpptoml::table> config);
 };
 } /* swerve */
 } /* sidewinder */

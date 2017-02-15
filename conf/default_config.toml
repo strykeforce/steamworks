@@ -14,11 +14,6 @@ azimuth_sma_period = 5
 drive_scale_factor = 680.0
 
     [SIDEWINDER.SWERVE]
-    lf_zero = 921
-    rf_zero = 3267
-    lr_zero = 3441
-    rr_zero = 1305
-
     wheelbase_width  = 1.0 # inches
     wheelbase_length = 1.0    # inches
 

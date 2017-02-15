@@ -1,5 +1,8 @@
 #include "swerve_drive.h"
 
+#include <ctime>
+#include <fstream>
+
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
@@ -53,10 +56,11 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   azimuth_settings->Initialize(map_->lr_azimuth);
   azimuth_settings->Initialize(map_->rr_azimuth);
 
-  // zero out azimuth encoders based on config values in swerve_settings
-  SetEncoderZero(swerve_settings);
+  // zero out azimuth encoders based on stored config values
+  ReadAzimuthCalibration();
 
-  // load drive Talon settings from swerve config and initialize drive Talons
+  // load drive Talon settings from swerve config and initialize drive
+  // Talons
   logger_->trace("configuring drive talons in voltage mode");
   auto drive_settings =
       talon::Settings::Create(swerve_settings, "drive_voltage");
@@ -78,35 +82,6 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   logger_->trace("done with constructor");
 }
 
-/** Set the four azimuth quad encoders to match the current absolute offset
- * from zero.
- */
-void SwerveDrive::SetEncoderZero(const std::shared_ptr<cpptoml::table> config) {
-  logger_->trace("setting azimuth zero");
-
-  // Take lower 12-bits of current absolute encoder position (0-4096) and offset
-  // by our recorded zero position. Repeat for all four wheels.
-  auto pos = (map_->lf_azimuth->GetPulseWidthPosition() & 0xFFF) -
-             *config->get_as<int>("lf_zero");
-  map_->lf_azimuth->SetPosition(pos);
-  logger_->debug("set left front azimuth position = {}", pos);
-
-  pos = (map_->rf_azimuth->GetPulseWidthPosition() & 0xFFF) -
-        *config->get_as<int>("rf_zero");
-  map_->rf_azimuth->SetPosition(pos);
-  logger_->debug("set right front azimuth position = {}", pos);
-
-  pos = (map_->lr_azimuth->GetPulseWidthPosition() & 0xFFF) -
-        *config->get_as<int>("lr_zero");
-  map_->lr_azimuth->SetPosition(pos);
-  logger_->debug("set left rear azimuth position = {}", pos);
-
-  pos = (map_->rr_azimuth->GetPulseWidthPosition() & 0xFFF) -
-        *config->get_as<int>("rr_zero");
-  map_->rr_azimuth->SetPosition(pos);
-  logger_->debug("set right rear azimuth position = {}", pos);
-}
-
 /** Move all wheels to their home position.
  */
 void SwerveDrive::ZeroAzimuth() {
@@ -114,6 +89,77 @@ void SwerveDrive::ZeroAzimuth() {
   map_->rf_azimuth->Set(0.0);
   map_->lr_azimuth->Set(0.0);
   map_->rr_azimuth->Set(0.0);
+}
+
+namespace {
+std::string kCalibrationPath{"/home/lvuser/sidewinder_calibration.toml"};
+}
+/** Write out wheel zero azimuth data to ~lvuser/sidewinder_calibration.toml
+ */
+void SwerveDrive::WriteAzimuthCalibration() {
+  std::shared_ptr<cpptoml::table> cal = cpptoml::make_table();
+  auto time = std::time(nullptr);
+  cal->insert("timestamp",
+              cpptoml::offset_datetime::from_zoned(*std::localtime(&time)));
+  cal->insert("lf", map_->lf_azimuth->GetPulseWidthPosition() & 0xFFF);
+  cal->insert("rf", map_->rf_azimuth->GetPulseWidthPosition() & 0xFFF);
+  cal->insert("lr", map_->lr_azimuth->GetPulseWidthPosition() & 0xFFF);
+  cal->insert("rr", map_->rr_azimuth->GetPulseWidthPosition() & 0xFFF);
+
+  std::ofstream file{kCalibrationPath, std::ofstream::trunc};
+  file << (*cal);
+  file.close();
+
+  logger_->info("azimuth calibration data saved:");
+  logger_->info("  lf = {}", *(cal->get_as<int>("lf")));
+  logger_->info("  rf = {}", *(cal->get_as<int>("rf")));
+  logger_->info("  lr = {}", *(cal->get_as<int>("lr")));
+  logger_->info("  rr = {}", *(cal->get_as<int>("rr")));
+}
+
+/** Read in wheel zero azimuth data from ~lvuser/sidewinder_calibration.toml
+ * and set the four azimuth quad encoders to match the current absolute offset
+ * from zero.
+ */
+void SwerveDrive::ReadAzimuthCalibration() {
+  auto cal = cpptoml::parse_file(kCalibrationPath);
+  auto timestamp = *(cal->get_as<cpptoml::offset_datetime>("timestamp"));
+  logger_->info("loading azimuth calibration from {}", timestamp);
+
+  // get and verify presence of cal data
+  auto value = cal->get_as<int>("lf");
+  if (!value) logger_->critical("lf calibration data missing, using 0");
+  int lf = value.value_or(0);
+
+  value = cal->get_as<int>("rf");
+  if (!value) logger_->critical("rf calibration data missing, using 0");
+  int rf = value.value_or(0);
+
+  value = cal->get_as<int>("lr");
+  if (!value) logger_->critical("lr calibration data missing, using 0");
+  int lr = value.value_or(0);
+
+  value = cal->get_as<int>("rr");
+  if (!value) logger_->critical("rr calibration data missing, using 0");
+  int rr = value.value_or(0);
+
+  // Take lower 12-bits of current absolute encoder position (0-4096) and offset
+  // by our recorded zero position. Repeat for all four wheels.
+  auto pos = (map_->lf_azimuth->GetPulseWidthPosition() & 0xFFF) - lf;
+  map_->lf_azimuth->SetPosition(pos);
+  logger_->debug("set left front azimuth position = {}", pos);
+
+  pos = (map_->rf_azimuth->GetPulseWidthPosition() & 0xFFF) - rf;
+  map_->rf_azimuth->SetPosition(pos);
+  logger_->debug("set right front azimuth position = {}", pos);
+
+  pos = (map_->lr_azimuth->GetPulseWidthPosition() & 0xFFF) - lr;
+  map_->lr_azimuth->SetPosition(pos);
+  logger_->debug("set left rear azimuth position = {}", pos);
+
+  pos = (map_->rr_azimuth->GetPulseWidthPosition() & 0xFFF) - rr;
+  map_->rr_azimuth->SetPosition(pos);
+  logger_->debug("set right rear azimuth position = {}", pos);
 }
 
 /** Drive in swerve drive mode.
@@ -210,6 +256,23 @@ int SwerveDrive::GetPosition(const Wheel wheel) const {
       return static_cast<int>(map_->rf_drive->GetPosition());
     case kLeftFront:
       return static_cast<int>(map_->lf_drive->GetPosition());
+  }
+  return 0;
+}
+
+/** Get encoder value of specified azimuth wheel.
+ *  @param wheel select wheel to read
+ */
+int SwerveDrive::GetAzimuth(const Wheel wheel) const {
+  switch (wheel) {
+    case kRightRear:
+      return static_cast<int>(map_->rr_azimuth->GetPosition());
+    case kLeftRear:
+      return static_cast<int>(map_->lr_azimuth->GetPosition());
+    case kRightFront:
+      return static_cast<int>(map_->rf_azimuth->GetPosition());
+    case kLeftFront:
+      return static_cast<int>(map_->lf_azimuth->GetPosition());
   }
   return 0;
 }

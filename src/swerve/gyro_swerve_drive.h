@@ -19,10 +19,14 @@ class GyroSwerveDrive {
   void TargetRotation(double azimuth);
   int GetPosition(
       const SwerveDrive::Wheel wheel = SwerveDrive::kRightRear) const;
+  int GetAzimuth(
+      const SwerveDrive::Wheel wheel = SwerveDrive::kRightRear) const;
 
   // special driving or troubleshooting methods
   void ZeroAzimuth();
   void SetGyroDisabled(bool disabled);
+  void WriteAzimuthCalibration();
+  void ReadAzimuthCalibration();
 
   // utility methods
   void SetLogger(const std::shared_ptr<spdlog::logger> logger);
