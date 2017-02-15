@@ -14,7 +14,13 @@ class Drive : public frc::Subsystem {
   void InitDefaultCommand() override;
   void ZeroWheels();
   void CartesianDrive(float forward, float strafe, float azimuth);
-  int GetPosition() const;
+  int GetPosition(sidewinder::swerve::SwerveDrive::Wheel wheel =
+                      sidewinder::swerve::SwerveDrive::kRightRear) const;
+  int GetAzimuth(sidewinder::swerve::SwerveDrive::Wheel wheel =
+                     sidewinder::swerve::SwerveDrive::kRightRear) const;
+
+  void WriteAzimuthCalibration();
+  void ReadAzimuthCalibration();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;

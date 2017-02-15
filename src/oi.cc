@@ -6,6 +6,7 @@
 #include "cpptoml/cpptoml.h"
 #include "sidewinder/oi/expo.h"
 
+#include "commands/azimuth.h"
 #include "commands/drive.h"
 #include "commands/hopper.h"
 #include "commands/intake.h"
@@ -104,6 +105,11 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
 
   // gamepad start button toggles climber
   climber_button_.WhenPressed(new command::Log("gamepad climber button"));
+
+  // Driver Station buttons
+  SmartDashboard::PutData("Zero Wheels", new command::ZeroWheelAzimuth());
+  SmartDashboard::PutData("Write Azimuth Cal",
+                          new command::WriteAzimuthCalibration());
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)

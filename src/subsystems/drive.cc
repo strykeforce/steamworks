@@ -8,6 +8,7 @@
 #include "sidewinder/swerve/gyro_swerve_drive.h"
 
 using namespace steamworks::subsystem;
+using namespace sidewinder::swerve;
 
 Drive::Drive(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("Drive"),
@@ -25,4 +26,15 @@ void Drive::InitDefaultCommand() {
   SetDefaultCommand(new command::DriveTele());
 }
 
-int Drive::GetPosition() const { return swerve_drive_.GetPosition(); }
+int Drive::GetPosition(SwerveDrive::Wheel wheel) const {
+  return swerve_drive_.GetPosition(wheel);
+}
+
+int Drive::GetAzimuth(SwerveDrive::Wheel wheel) const {
+  return swerve_drive_.GetAzimuth(wheel);
+}
+
+void Drive::WriteAzimuthCalibration() {
+  swerve_drive_.WriteAzimuthCalibration();
+}
+void Drive::ReadAzimuthCalibration() { swerve_drive_.ReadAzimuthCalibration(); }

@@ -25,8 +25,8 @@ Intake::Intake(const std::shared_ptr<cpptoml::table> config)
   logger_->info("intake motor voltage: {}", voltage_);
 
   auto talon_settings = talon::Settings::Create(steamworks_config, "intake");
-  logger_->debug("dumping intake talon configuration");
-  talon_settings->LogConfig(logger_);
+  // logger_->debug("dumping intake talon configuration");
+  // talon_settings->LogConfig(logger_);
   talon_settings->Initialize(RobotMap::intake_talon);
 }
 
