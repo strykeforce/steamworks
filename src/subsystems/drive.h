@@ -21,6 +21,7 @@ class Drive : public frc::Subsystem {
 
   void WriteAzimuthCalibration();
   void ReadAzimuthCalibration();
+  void ZeroGyroYaw();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;

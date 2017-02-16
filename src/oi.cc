@@ -110,6 +110,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   SmartDashboard::PutData("Zero Wheels", new command::ZeroWheelAzimuth());
   SmartDashboard::PutData("Write Azimuth Cal",
                           new command::WriteAzimuthCalibration());
+  SmartDashboard::PutData("Zero Gyro", new command::ZeroGyroYaw());
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)

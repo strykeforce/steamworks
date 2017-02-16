@@ -53,3 +53,12 @@ void ZeroWheelAzimuth::End() {
   RobotMap::swerve_talons->lr_azimuth->StopMotor();
   RobotMap::swerve_talons->rr_azimuth->StopMotor();
 }
+
+//
+// WriteAzimuthCalibration
+//
+ZeroGyroYaw::ZeroGyroYaw() : frc::InstantCommand("ZeroGyroYaw") {
+  Requires(Robot::drive);
+}
+
+void ZeroGyroYaw::Initialize() { Robot::drive->ZeroGyroYaw(); }
