@@ -5,13 +5,15 @@
 
 #include "commands/tele_drive.h"
 #include "robot_map.h"
-#include "swerve/gyro_swerve_drive.h"
+#include "swerve/swerve_drive.h"
 
 using namespace sidewinder;
 
 Drive::Drive(const std::shared_ptr<cpptoml::table> config)
-    : frc::Subsystem("Drive"), swerve_drive_(config, RobotMap::swerve_talons) {
-  ;
+    : frc::Subsystem("Drive"),
+      gyro_(std::make_shared<AHRS>(SPI::Port::kMXP)),
+      swerve_drive_(config, RobotMap::swerve_talons, gyro_) {
+  gyro_->ZeroYaw();
 }
 
 void Drive::CartesianDrive(double forward, double strafe, double azimuth) {

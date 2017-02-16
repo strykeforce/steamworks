@@ -17,8 +17,14 @@ using namespace sidewinder::swerve;
  * @param tm talon map initialized with pointers to drive talons
  */
 SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
-                         const TalonMap* tm)
-    : logger_(spdlog::get("sidewinder")), map_(tm), swerve_math_(config) {
+                         const TalonMap* tm, std::shared_ptr<AHRS> gyro)
+    : logger_(spdlog::get("sidewinder")),
+      map_(tm),
+      ahrs_(gyro),
+      swerve_math_(config),
+      drive_scale_factor_(0.0),
+      gyro_disabled_(false) {
+  // FIXME: logger_ crashes if no sidewinder log
   assert(tm);
 
   if (!logger_) {
@@ -89,6 +95,14 @@ void SwerveDrive::ZeroAzimuth() {
   map_->rf_azimuth->Set(0.0);
   map_->lr_azimuth->Set(0.0);
   map_->rr_azimuth->Set(0.0);
+}
+
+/** Disable driving in field-oriented mode if disired or required by hardware
+ *  failure.
+ */
+void SwerveDrive::SetGyroDisabled(bool disabled) {
+  logger_->info("setting swerve gyro to {}", disabled ? "DISABLED" : "ENABLED");
+  gyro_disabled_ = disabled;
 }
 
 namespace {
@@ -162,12 +176,31 @@ void SwerveDrive::ReadAzimuthCalibration() {
   logger_->debug("set right rear azimuth position = {}", pos);
 }
 
-/** Drive in swerve drive mode.
+/** Drive in field-oriented swerve drive mode.
  * @param forward command forward/backwards (Y-axis) throttle, -1.0 - 1.0
  * @param strafe command left/right (X-axis) throttle, -1.0 - 1.0
  * @param azimuth command CW/CCW azimuth throttle, -1.0 - 1.0
  */
 void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
+  if (gyro_disabled_) {
+    Drive_(forward, strafe, azimuth);
+    return;
+  }
+
+  double rad = ahrs_->GetYaw() * (2.0 * M_PI) / 360.0;
+  double cos_rad = cos(rad);
+  double sin_rad = sin(rad);
+  double rotated_forward = forward * cos_rad + strafe * sin_rad;
+  double rotated_strafe = strafe * cos_rad - forward * sin_rad;
+  Drive_(rotated_forward, rotated_strafe, azimuth);
+}
+
+/** Drive in swerve drive mode without gyro.
+ * @param forward command forward/backwards (Y-axis) throttle, -1.0 - 1.0
+ * @param strafe command left/right (X-axis) throttle, -1.0 - 1.0
+ * @param azimuth command CW/CCW azimuth throttle, -1.0 - 1.0
+ */
+void SwerveDrive::Drive_(double forward, double strafe, double azimuth) {
   // don't reset wheels to zero in dead zone
   // FIXME: dead zone hard-coded
   if (std::fabs(forward) <= 0.08 && std::fabs(strafe) <= 0.08 &&

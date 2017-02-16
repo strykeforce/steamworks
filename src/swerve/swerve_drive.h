@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AHRS.h"
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
@@ -13,7 +14,6 @@ namespace swerve {
 /** SwerveDrive is a WPI command-based subsystem represents the Sidewinder
  * swerve drive.
  */
-
 class SwerveDrive {
  public:
   /** Swerve drive wheels. */
@@ -24,8 +24,11 @@ class SwerveDrive {
     kRightRear,
   };
 
-  SwerveDrive(const std::shared_ptr<cpptoml::table> config,
-              const TalonMap* map);
+  /** Default constructor.
+   */
+  SwerveDrive(const std::shared_ptr<cpptoml::table> config, const TalonMap* map,
+              std::shared_ptr<AHRS> gyro);
+
   // normal driving methods
   void Drive(double forward, double strafe, double azimuth);
   void TargetRotation(double azimuth);
@@ -33,10 +36,11 @@ class SwerveDrive {
   int GetPosition(const Wheel wheel = kRightRear) const;
 
   // special driving or troubleshooting methods
-  void CrabDrive(double speed, double direction);
   void ZeroAzimuth();
+  void SetGyroDisabled(bool disabled);
   void WriteAzimuthCalibration();
   void ReadAzimuthCalibration();
+  void CrabDrive(double speed, double direction);
 
   // utility methods
   void SetLogger(const std::shared_ptr<spdlog::logger> logger);
@@ -44,8 +48,12 @@ class SwerveDrive {
  private:
   std::shared_ptr<spdlog::logger> logger_;
   const TalonMap* map_;
+  std::shared_ptr<AHRS> ahrs_;
   SwerveMath swerve_math_;
-  double drive_scale_factor_ = 0.0;
+  double drive_scale_factor_;
+  bool gyro_disabled_;
+
+  void Drive_(double forward, double strafe, double azimuth);
 };
 } /* swerve */
 } /* sidewinder */
