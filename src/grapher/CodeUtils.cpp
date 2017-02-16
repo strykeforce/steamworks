@@ -75,9 +75,8 @@ double BasicPositionControl(double Error, double Start_Slope,
     if (AAE < Close_Enough) {
       Speed = 0;
     } else {
-      Speed = MinSpeed +
-              ((AAE - Close_Enough) / (Start_Slope - Close_Enough)) *
-                  (MaxSpeed - MinSpeed);
+      Speed = MinSpeed + ((AAE - Close_Enough) / (Start_Slope - Close_Enough)) *
+                             (MaxSpeed - MinSpeed);
     }
   } else {
     Speed = MaxSpeed;
@@ -101,8 +100,8 @@ byte* ReadWholeFile(char* pathname) {
   return file_buffer;
 }
 void RemoveComments(char* root) {
-  int offset = 0;
-  for (int i = 0; i < strlen(root) && offset < strlen(root); i++) {
+  size_t offset = 0;
+  for (size_t i = 0; i < strlen(root) && offset < strlen(root); i++) {
     switch (root[i]) {
       case '/': {
         if (root[i + 1] == '/') {

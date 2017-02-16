@@ -12,8 +12,6 @@
 #include <unistd.h>
 #include <cstdint>
 
-#include "TerminalEscapes.h"
-
 typedef unsigned char byte;
 
 #define ssleep(__SECONDS__) msleep(__SECONDS__ * 1000);
