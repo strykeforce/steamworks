@@ -17,8 +17,9 @@ GyroSwerveDrive::GyroSwerveDrive(const std::shared_ptr<cpptoml::table> config,
     : logger_(spdlog::stdout_logger_st("sidewinder")),
       sd_(config, tm),
       ahrs_(std::make_shared<AHRS>(SPI::Port::kMXP)),
-      initial_angle_(ahrs_->GetYaw()),
-      gyro_disabled_(false) {}
+      gyro_disabled_(false) {
+  ahrs_->ZeroYaw();
+}
 
 /** Initialize the Sidewinder SwerveDrive, reusing gyro.
  * @param config cpptoml SIDEWINDER table
@@ -30,8 +31,9 @@ GyroSwerveDrive::GyroSwerveDrive(const std::shared_ptr<cpptoml::table> config,
     : logger_(spdlog::stdout_logger_st("sidewinder")),
       sd_(config, tm),
       ahrs_(gyro),
-      initial_angle_(ahrs_->GetYaw()),
-      gyro_disabled_(false) {}
+      gyro_disabled_(false) {
+  ahrs_->ZeroYaw();
+}
 
 /** Drive in field-oriented swerve drive mode.
  * @param forward command forward/backwards (Y-axis) throttle, -1.0 - 1.0
@@ -44,8 +46,8 @@ void GyroSwerveDrive::Drive(double forward, double strafe, double azimuth) {
     return;
   }
 
-  double deg = ahrs_->GetYaw() - initial_angle_;
-  double rad = deg * TAU / 360.0;
+  // double deg = ahrs_->GetYaw() - initial_angle_;
+  double rad = ahrs_->GetYaw() * TAU / 360.0;
   double cos_rad = cos(rad);
   double sin_rad = sin(rad);
   double rotated_forward = forward * cos_rad + strafe * sin_rad;

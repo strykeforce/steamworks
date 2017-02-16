@@ -35,7 +35,6 @@ class GyroSwerveDrive {
   std::shared_ptr<spdlog::logger> logger_;
   SwerveDrive sd_;
   std::shared_ptr<AHRS> ahrs_;
-  double initial_angle_;
   bool gyro_disabled_;
 };
 } /* swerve */
