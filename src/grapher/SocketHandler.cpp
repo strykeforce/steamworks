@@ -16,6 +16,7 @@ Socket SocketHandler::CreateUDPSocket(unsigned short portno) {
              sizeof(int));
   return sockfd;
 }
+
 Socket SocketHandler::CreateUDPSocketNOPORT() {
   int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
   int optval = 1;
@@ -23,6 +24,7 @@ Socket SocketHandler::CreateUDPSocketNOPORT() {
              sizeof(int));
   return sockfd;
 }
+
 Socket SocketHandler::CreateTCPSocketCLIENT() {
   int sockfd = socket(AF_INET, SOCK_STREAM, 0);
   int optval = 1;
@@ -30,6 +32,7 @@ Socket SocketHandler::CreateTCPSocketCLIENT() {
              sizeof(int));
   return sockfd;
 }
+
 Socket SocketHandler::CreateTCPSocketSERVER(unsigned short portno) {
   int sockfd = socket(AF_INET, SOCK_STREAM, 0);
   struct sockaddr_in server;
@@ -44,10 +47,11 @@ Socket SocketHandler::CreateTCPSocketSERVER(unsigned short portno) {
   }
   listen(sockfd, 5);
   int optval = 1;
-  int returned = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR,
-                            (const void*)&optval, sizeof(int));
+  setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (const void*)&optval,
+             sizeof(int));
   return sockfd;
 }
+
 int SocketHandler::FilloutSocketAddress(SocketAddress* serveraddr,
                                         char* hostname, short portno) {
   struct hostent* server = gethostbyname(hostname);
@@ -88,6 +92,7 @@ int SocketHandler::FilloutSocketAddress(SocketAddress* serveraddr,
   serveraddr->sin_port = htons(portno);
   return 0;
 }
+
 int SocketHandler::TCPConnectToServer(Socket sockfd, SocketAddress* where) {
   int returned = connect(sockfd, (const sockaddr*)where, sizeof(SocketAddress));
   if (returned == -1) {
@@ -95,38 +100,46 @@ int SocketHandler::TCPConnectToServer(Socket sockfd, SocketAddress* where) {
   }
   return returned;
 }
+
 Socket SocketHandler::TCPWaitForClient(Socket sockfd, SocketAddress* where) {
   int sizeofstruct = sizeof(SocketAddress);
   int returned = accept(sockfd, (sockaddr*)where, (socklen_t*)&sizeofstruct);
   return returned;
 }
+
 int SocketHandler::TCPSend(Socket sockfd, void* data, int length) {
-  int returned = send(sockfd, data, length, 0);
+  return send(sockfd, data, length, 0);
 }
+
 int SocketHandler::UDPSend(Socket sockfd, void* data, int length,
                            SocketAddress* where) {
   int returned = sendto(sockfd, data, length, 0, (const sockaddr*)(where),
                         sizeof(sockaddr));
   return returned;
 }
+
 int SocketHandler::Recv(Socket sockfd, void* where, int length) {
   int size = recv(sockfd, where, length, 0);
   return size;
 }
+
 int SocketHandler::SetTimeout(Socket sockfd, int microseconds, int seconds) {
   struct timeval time;
   time.tv_sec = seconds;
   time.tv_usec = microseconds;
   return setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &time, sizeof(time));
 }
+
 int SocketHandler::RecvFromWho(Socket sockfd, void* where, int length,
                                SocketAddress* who) {
   unsigned int wholength = sizeof(sockaddr_in);
   return recvfrom(sockfd, where, length, 0, (sockaddr*)who, &wholength);
 }
+
 int SocketHandler::PeekRecv(Socket sockfd, void* where, int length) {
   return recv(sockfd, where, length, MSG_PEEK);
 }
+
 #define PingSpeed 100 * 1000 /* Microseconds */
 void SocketHandler::SendPingsToWhere(Socket sockfd, SocketAddress* where) {
   char c = 42;
@@ -138,6 +151,7 @@ void SocketHandler::SendPingsToWhere(Socket sockfd, SocketAddress* where) {
     // usleep(UDPPingSpeed);
   }
 }
+
 void SocketHandler::WaitForPingsFromWho(Socket sockfd, SocketAddress* sa) {
   SetTimeout(sockfd, 0);
   char c;
@@ -147,6 +161,7 @@ void SocketHandler::WaitForPingsFromWho(Socket sockfd, SocketAddress* sa) {
   }
   UDPSend(sockfd, &c, sizeof(c), sa);
 }
+
 void SocketHandler::CloseSocket(Socket s) {
   shutdown(s, SHUT_RDWR);
   close(s);

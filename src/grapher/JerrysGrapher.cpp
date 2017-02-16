@@ -9,7 +9,7 @@
 int JerrysGrapher_IndexOfBundleWithID(
     std::vector<JerrysGrapher_DeviceBundle>* JerrysGrapher_GraphableDevices,
     JerrysGrapher_DeviceType target_device, int id) {
-  for (int i = 0; i < JerrysGrapher_GraphableDevices->size(); i++) {
+  for (size_t i = 0; i < JerrysGrapher_GraphableDevices->size(); i++) {
     if (JerrysGrapher_GraphableDevices->operator[](i).type == target_device)
       if (JerrysGrapher_GraphableDevices->operator[](i).ID == id) return i;
   }
@@ -27,12 +27,12 @@ int Past_Sum;
 int Current_Sum;
 Socket JerrysGrapher_RIO_out;
 SocketAddress GrapherAddress;
+
 void SendDeviceList(
     std::vector<JerrysGrapher_DeviceBundle>* JerrysGrapher_GraphableDevices) {
   JerrysGrapher_DeviceList_Response packet;
   packet.NumberOfDevices = Current_Sum;
-  int i = 0;
-  for (; i < JerrysGrapher_GraphableDevices->size(); i++) {
+  for (size_t i = 0; i < JerrysGrapher_GraphableDevices->size(); i++) {
     packet.DeviceTypes[i] = JerrysGrapher_GraphableDevices->operator[](i).type;
     packet.DeviceIDs[i] = JerrysGrapher_GraphableDevices->operator[](i).ID;
   }
@@ -40,6 +40,7 @@ void SendDeviceList(
                          &GrapherAddress);
   Past_Sum = Current_Sum;
 }
+
 void* JerrysGrapherRIO_Thread(void* JerrysGrapher_GraphableDevicesRAW) {
   std::vector<JerrysGrapher_DeviceBundle>* JerrysGrapher_GraphableDevices =
       (std::vector<JerrysGrapher_DeviceBundle>*)
@@ -50,7 +51,6 @@ void* JerrysGrapherRIO_Thread(void* JerrysGrapher_GraphableDevicesRAW) {
   struct timeval now, start;
   gettimeofday(&start, NULL);
   byte* PacketSpace = (byte*)malloc(JERRYSGRAPHER_MAX_PACKET_SIZE);
-  int GraphableTalons_OldLength = -1;
   Subscription Subscriptions[JERRYSGRAPHER_MAX_NUMBER_OF_DATAPOINTS];
   for (int i = 0; i < JERRYSGRAPHER_MAX_NUMBER_OF_DATAPOINTS; i++) {
     Subscriptions[i].DeviceID = 255;
@@ -74,13 +74,15 @@ void* JerrysGrapherRIO_Thread(void* JerrysGrapher_GraphableDevicesRAW) {
     int Recv_Status = SocketHandler::RecvFromWho(
         JerrysGrapher_RIO_out, PacketSpace, JERRYSGRAPHER_MAX_PACKET_SIZE,
         &GrapherAddress);
+
     if (Recv_Status > 0) {
       JerrysGrapher_MessageID* Header = (JerrysGrapher_MessageID*)PacketSpace;
+
+      int bundleindex;
       switch (*Header) {
-        case JerrysGrapher_MessageID::DeviceList_Request: {
+        case JerrysGrapher_MessageID::DeviceList_Request:
           SendDeviceList(JerrysGrapher_GraphableDevices);
           break;
-        }
         case JerrysGrapher_MessageID::UpdateSubscription: {
           JerrysGrapher_UpdateSubscription* packet =
               (JerrysGrapher_UpdateSubscription*)PacketSpace;
@@ -89,7 +91,7 @@ void* JerrysGrapherRIO_Thread(void* JerrysGrapher_GraphableDevicesRAW) {
           Subscriptions[packet->SubscriptionIndex].DeviceID = packet->DeviceID;
           Subscriptions[packet->SubscriptionIndex].PropertyID =
               packet->PropertyID;
-          int bundleindex = JerrysGrapher_IndexOfBundleWithID(
+          bundleindex = JerrysGrapher_IndexOfBundleWithID(
               JerrysGrapher_GraphableDevices, packet->DeviceType,
               packet->DeviceID);
           // printf("bundleindex == %i\n", bundleindex);
@@ -107,12 +109,17 @@ void* JerrysGrapherRIO_Thread(void* JerrysGrapher_GraphableDevicesRAW) {
                  sizeof(float));
           break;
         }
+        case JerrysGrapher_MessageID::DeviceList_Response:
+        case JerrysGrapher_MessageID::SubscriptionData:
+          // unhandled
+          break;
       }
-    }
+    }  // if (Recv_Status > 0)
+
     JerrysGrapher_SubscriptionData packet;
     for (int i = 0; i < JERRYSGRAPHER_MAX_NUMBER_OF_DATAPOINTS; i++) {
       void* raw_device_ref = Subscriptions[i].Bundle;
-      double val;
+      double val = 0.0;
       if (Subscriptions[i].PropertyID == 255 ||
           (raw_device_ref == NULL &&
            Subscriptions[i].DeviceType != JerrysGrapher_DeviceType::RoboRIO)) {
@@ -134,7 +141,7 @@ void* JerrysGrapherRIO_Thread(void* JerrysGrapher_GraphableDevicesRAW) {
                     TotalSys_Proc2, TotalIdle2;
                 FILE* f = fopen("/proc/stat", "r");
                 unsigned long long TotalUser_Normal, TotalUser_Niced,
-                    TotalSys_Proc, TotalIdle;
+                    TotalSys_Proc = 0, TotalIdle;
                 fscanf(f, "cpu %llu %llu %llu %llu", &TotalUser_Normal,
                        &TotalUser_Niced, &TotalUser_Niced, &TotalIdle);
                 fclose(f);
