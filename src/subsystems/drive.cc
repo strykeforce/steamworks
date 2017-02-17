@@ -5,7 +5,7 @@
 
 #include "commands/drive.h"
 #include "robot_map.h"
-#include "sidewinder/swerve/gyro_swerve_drive.h"
+#include "sidewinder/swerve/swerve_drive.h"
 
 using namespace steamworks::subsystem;
 using namespace sidewinder::swerve;
@@ -40,5 +40,7 @@ void Drive::WriteAzimuthCalibration() {
   swerve_drive_.WriteAzimuthCalibration();
 }
 void Drive::ReadAzimuthCalibration() { swerve_drive_.ReadAzimuthCalibration(); }
+
+float Drive::GetGyroYaw() { return gyro_->GetYaw(); }
 
 void Drive::ZeroGyroYaw() { gyro_->ZeroYaw(); }

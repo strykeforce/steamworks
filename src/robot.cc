@@ -4,7 +4,7 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "commands/log.h"
+#include "commands/commands.h"
 #include "default_config.h"
 #include "robot_map.h"
 #include "sidewinder/version.h"
@@ -29,6 +29,7 @@ void Robot::RobotInit() {
   LoadConfig();
   RobotMap::Init(config_);
 
+  logger_->trace("initializing subsystems");
   climber = new subsystem::Climber(config_);
   drive = new subsystem::Drive(config_);
   gear_intake = new subsystem::GearIntake(config_);
@@ -36,6 +37,7 @@ void Robot::RobotInit() {
   hopper = new subsystem::Hopper(config_);
   intake = new subsystem::Intake(config_);
   shooter = new subsystem::Shooter(config_);
+  logger_->trace("done initializing subsystems");
   oi = new OI(config_);  // keep this after subsystems
 }
 
@@ -79,12 +81,14 @@ void Robot::ConfigureLogging() {
   logger_->set_level(spdlog::level::info);
   spdlog::stdout_logger_st("command")->set_level(spdlog::level::info);
   spdlog::stdout_logger_st("subsystem")->set_level(spdlog::level::info);
+  spdlog::stdout_logger_st("sidewinder")->set_level(spdlog::level::info);
   logger_->info("configured as RELEASE build");
 #else
   logger_ = spdlog::stdout_color_st("robot");
   logger_->set_level(spdlog::level::trace);
-  spdlog::stdout_color_st("command")->set_level(spdlog::level::debug);
+  spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
   spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("sidewinder")->set_level(spdlog::level::trace);
   logger_->warn("configured as DEBUG build");
 #endif
   spdlog::set_pattern("[%H:%M:%S.%e][%n][%l] %v");

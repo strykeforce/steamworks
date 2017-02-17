@@ -2,7 +2,7 @@
 
 #include "AHRS.h"
 #include "WPILib.h"
-#include "sidewinder/swerve/gyro_swerve_drive.h"
+#include "sidewinder/swerve/swerve_drive.h"
 #include "spdlog/spdlog.h"
 
 namespace steamworks {
@@ -21,12 +21,14 @@ class Drive : public frc::Subsystem {
 
   void WriteAzimuthCalibration();
   void ReadAzimuthCalibration();
+
+  float GetGyroYaw();
   void ZeroGyroYaw();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   std::shared_ptr<AHRS> gyro_;
-  sidewinder::swerve::GyroSwerveDrive swerve_drive_;
+  sidewinder::swerve::SwerveDrive swerve_drive_;
 };
 
 } /* subsystem */
