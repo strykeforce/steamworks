@@ -3,7 +3,7 @@
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
-#include "commands/drive.h"
+#include "commands/drive/tele_op.h"
 #include "robot_map.h"
 #include "sidewinder/swerve/swerve_drive.h"
 
@@ -25,7 +25,7 @@ void Drive::CartesianDrive(float forward, float strafe, float azimuth) {
 void Drive::ZeroWheels() { swerve_drive_.ZeroAzimuth(); }
 
 void Drive::InitDefaultCommand() {
-  SetDefaultCommand(new command::DriveTele());
+  SetDefaultCommand(new command::DriveTeleOp());
 }
 
 int Drive::GetPosition(SwerveDrive::Wheel wheel) const {
@@ -40,6 +40,8 @@ void Drive::WriteAzimuthCalibration() {
   swerve_drive_.WriteAzimuthCalibration();
 }
 void Drive::ReadAzimuthCalibration() { swerve_drive_.ReadAzimuthCalibration(); }
+
+std::shared_ptr<AHRS> Drive::GetGyro() { return gyro_; }
 
 float Drive::GetGyroYaw() { return gyro_->GetYaw(); }
 

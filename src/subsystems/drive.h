@@ -22,6 +22,7 @@ class Drive : public frc::Subsystem {
   void WriteAzimuthCalibration();
   void ReadAzimuthCalibration();
 
+  std::shared_ptr<AHRS> GetGyro();
   float GetGyroYaw();
   void ZeroGyroYaw();
 

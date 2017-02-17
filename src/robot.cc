@@ -1,6 +1,7 @@
 #include "robot.h"
 
 #include "WPILib.h"
+#include "WPILibVersion.h"
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
@@ -123,6 +124,7 @@ void Robot::LogVersion() {
   logger_->info(" build {} compiled at {} {}", STEAMWORKS_VERSION_BUILD,
                 STEAMWORKS_COMPILE_DATE, STEAMWORKS_COMPILE_TIME);
   logger_->info(sidewinder::GetVersion());
+  logger_->info("WPILib version: {}", WPILibVersion);
 #ifdef NDEBUG
   logger_->info("configured as RELEASE build");
 #else

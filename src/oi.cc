@@ -6,11 +6,7 @@
 #include "cpptoml/cpptoml.h"
 #include "sidewinder/oi/expo.h"
 
-#include "commands/azimuth.h"
-#include "commands/drive.h"
-#include "commands/hopper.h"
-#include "commands/intake.h"
-#include "commands/log.h"
+#include "commands/commands.h"
 #include "triggers/trim.h"
 
 using namespace steamworks;
@@ -97,7 +93,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       new command::Log("gamepad close shot button"));
 
   // gamepad D-pad trims shooter aimpoint
-  trim_up_.WhenActive(new command::DriveSquare());
+  trim_up_.WhenActive(new command::Log("trim up active"));
   trim_down_.WhenActive(new command::Log("trim down active"));
   trim_left_.WhenActive(new command::Log("trim left active"));
   trim_left_.WhenActive(new command::ToggleHopper());
@@ -110,7 +106,10 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   SmartDashboard::PutData("Zero Wheels", new command::ZeroWheelAzimuth());
   SmartDashboard::PutData("Write Azimuth Cal",
                           new command::WriteAzimuthCalibration());
+  SmartDashboard::PutData("Drive Zero", new command::DriveZero());
   SmartDashboard::PutData("Zero Gyro", new command::ZeroGyroYaw());
+
+  SmartDashboard::PutData("Auton Azimuth", new command::DriveAzimuth(90));
 }
 
 /** Returns flight simulator joystick left stick fowards and backwards (Y-axis)
