@@ -19,17 +19,21 @@ struct Vector2f {
   double y;
 };
 enum RotationPoint : unsigned char { Center, Shooter, END_OF_LIST };
-/*
-        SOFTWARE | HARDWARE
-        LeftFront | FrontRight
-        RightFront |
-*/
-enum WheelPoints : unsigned char {
-  RightFront = 1,  // 0,
-  LeftFront = 0,   // FrontRight
-  LeftRear = 3,    // 2,
-  RightRear = 2,   // 3,
-};
+#if 1
+	enum WheelPoints : unsigned char {
+	  RightFront = 1,  
+	  LeftFront = 0,   
+	  LeftRear = 3,    
+	  RightRear = 2,
+	};
+#else
+	enum WheelPoints : unsigned char {
+	  RightFront = 1,  
+	  LeftFront = 0,   
+	  LeftRear = 3,    
+	  RightRear = 2,
+	};
+#endif
 class SwerveMath {
  private:
   double wheel_angles[4]{0.0, 0.0, 0.0, 0.0};

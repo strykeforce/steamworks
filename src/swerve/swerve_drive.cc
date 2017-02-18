@@ -35,7 +35,6 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   if (!config) {
     throw std::invalid_argument("config must not be null");
   }
-
   auto settings = config->get_table("SIDEWINDER");
   if (!settings) {
     throw std::invalid_argument("SIDEWINDER config is missing");
@@ -84,6 +83,12 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
         "SIDEWINDER drive_scale_factor setting is missing");
   }
   drive_scale_factor_ = *drive_scale_factor;
+  auto dead_zone_ = settings->get_as<double>("drive_dead_zone");
+  if (!dead_zone_) {
+    throw std::invalid_argument(
+        "SIDEWINDER drive_dead_zone setting is missing");
+  }
+  dead_zone = *dead_zone_;
   logger_->trace("done with constructor");
 }
 
@@ -202,8 +207,8 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
 void SwerveDrive::Drive_(double forward, double strafe, double azimuth) {
   // don't reset wheels to zero in dead zone
   // FIXME: dead zone hard-coded
-  if (std::fabs(forward) <= 0.08 && std::fabs(strafe) <= 0.08 &&
-      std::fabs(azimuth) < 0.08) {
+  if (std::fabs(forward) <= dead_zone && std::fabs(strafe) <= dead_zone &&
+      std::fabs(azimuth) < dead_zone) {
     map_->rf_drive->StopMotor();
     map_->lf_drive->StopMotor();
     map_->lr_drive->StopMotor();

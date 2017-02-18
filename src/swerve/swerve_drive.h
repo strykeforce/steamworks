@@ -52,6 +52,7 @@ class SwerveDrive {
   SwerveMath swerve_math_;
   double drive_scale_factor_;
   bool gyro_disabled_;
+  double dead_zone;
 
   void Drive_(double forward, double strafe, double azimuth);
 };
