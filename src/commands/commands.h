@@ -9,3 +9,6 @@
 #include "commands/drive/azimuth.h"
 #include "commands/drive/tele_op.h"
 #include "commands/drive/zero.h"
+
+#include "commands/shooter/elevation.h"
+#include "commands/shooter/wheel.h"

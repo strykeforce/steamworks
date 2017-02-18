@@ -56,6 +56,42 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       trim_down_(trigger::Trim::kDown),
       trim_left_(trigger::Trim::kLeft),
       trim_right_(trigger::Trim::kRight) {
+  AssignFlightSimButtons();
+  AssignGamepadButtons();
+  AssignSmartDashboardButtons();
+}
+
+/**
+ * Returns flight simulator joystick left stick fowards and backwards (Y-axis)
+ * input.
+ */
+double OI::GetTeleDriveForwardAxis() {
+  double axis = -flight_sim_joystick_.GetRawAxis(kFlightSimLeftYAxis);
+  return drive_expo_(axis);
+}
+
+/**
+ * Returns flight simulator joystick left stick left and right strafe (X-axis)
+ * input.
+ */
+double OI::GetTeleDriveStrafeAxis() {
+  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftXAxis);
+  return drive_expo_(axis);
+}
+
+/**
+ * Returns flight simulator joystick CW and CCW azimuth (X-axis) input.
+ */
+double OI::GetTeleDriveAzimuthAxis() {
+  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
+  return azimuth_expo_(axis);
+}
+
+/**
+ * AssignFlightSimButtons hooks up flight simulator controller buttons to
+ * commands.
+ */
+void OI::AssignFlightSimButtons() {
   // flight sim reset button is reserved
   reset_button_.WhenPressed(new command::Log("flight simulator reset button"));
 
@@ -68,13 +104,19 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   // flight sim right shoulder 2-position button controls shooter auto mode
   shooter_auto_button_.WhenPressed(
       new command::Log("flight simulator shooter auto button"));
+}
 
+/**
+ * AssignGamepadButtons hooks up gamepad controller buttons to commands.
+ */
+void OI::AssignGamepadButtons() {
   // gamepad left shoulder stages gear in loader
   gear_stage_button_.WhenPressed(new command::Log("gamepad gear stage button"));
 
   // gamepad back button reverses gear loader
   gear_stage_reverse_button_.WhenPressed(
       new command::Log("gamepad gear stage reverse button"));
+  gear_stage_reverse_button_.WhenPressed(new command::ToggleHopper());
 
   // gamepad right shoulder turns on fuel intake
   intake_on_button_.WhenPressed(new command::StartIntake());
@@ -96,13 +138,16 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   trim_up_.WhenActive(new command::Log("trim up active"));
   trim_down_.WhenActive(new command::Log("trim down active"));
   trim_left_.WhenActive(new command::Log("trim left active"));
-  trim_left_.WhenActive(new command::ToggleHopper());
   trim_right_.WhenActive(new command::Log("trim right active"));
 
   // gamepad start button toggles climber
   climber_button_.WhenPressed(new command::Log("gamepad climber button"));
+}
 
-  // Driver Station buttons
+/**
+ * AssignSmartDashboardButtons hooks up smart dashboard buttons to commands.
+ */
+void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Zero Wheels", new command::ZeroWheelAzimuth());
   SmartDashboard::PutData("Write Azimuth Cal",
                           new command::WriteAzimuthCalibration());
@@ -110,27 +155,21 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   SmartDashboard::PutData("Zero Gyro", new command::ZeroGyroYaw());
 
   SmartDashboard::PutData("Auton Azimuth", new command::DriveAzimuth(90));
-}
 
-/** Returns flight simulator joystick left stick fowards and backwards (Y-axis)
- * input.
- */
-double OI::GetTeleDriveForwardAxis() {
-  double axis = -flight_sim_joystick_.GetRawAxis(kFlightSimLeftYAxis);
-  return drive_expo_(axis);
-}
+  SmartDashboard::PutData("Shooter Elevation Default",
+                          new command::SetShooterElevation(900));
+  SmartDashboard::PutData("Increment Shooter Elevation",
+                          new command::IncrementShooterElevation());
+  SmartDashboard::PutData("Decrement Shooter Elevation",
+                          new command::DecrementShooterElevation());
 
-/** Returns flight simulator joystick left stick left and right strafe (X-axis)
- * input.
- */
-double OI::GetTeleDriveStrafeAxis() {
-  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftXAxis);
-  return drive_expo_(axis);
-}
+  SmartDashboard::PutData("Shooter Wheel Default",
+                          new command::StartShooterWheel());
+  SmartDashboard::PutData("Stop Shooter Wheel",
+                          new command::StopShooterWheel());
 
-/** Returns flight simulator joystick CW and CCW azimuth (X-axis) input.
- */
-double OI::GetTeleDriveAzimuthAxis() {
-  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
-  return azimuth_expo_(axis);
+  SmartDashboard::PutData("Increment Wheel Speed",
+                          new command::IncrementShooterSpeed());
+  SmartDashboard::PutData("Decrement Wheel Speed",
+                          new command::DecrementShooterSpeed());
 }
