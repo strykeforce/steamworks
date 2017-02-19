@@ -3,6 +3,9 @@ grapher = true
 
 hopper_voltage = 8.0
 intake_voltage = 12.0
+climber_capture_voltage = 4.0
+climber_climb_voltage =  12.0
+climber_capture_current = 4.0
 
     [[STEAMWORKS.TALON]]
     name = "intake"
@@ -25,6 +28,31 @@ intake_voltage = 12.0
     encoder_reversed = false
     output_reversed  = false
     current_limit    = 0 # amps, 0 disables
+
+    voltage_ramp_rate = 0.0 # v/s, 0 disables
+
+    [[STEAMWORKS.TALON]]
+    name = "climber_master"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # coast
+    limit_mode      = 2 # disabled
+    encoder_reversed = false
+    output_reversed  = true
+    current_limit    = 40 # amps, 0 disables
+
+    voltage_ramp_rate = 0.0 # v/s, 0 disables
+
+
+    [[STEAMWORKS.TALON]]
+    name = "climber_slave"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # coast
+    limit_mode      = 2 # disabled
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 40 # amps, 0 disables
 
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 

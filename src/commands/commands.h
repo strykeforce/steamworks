@@ -1,6 +1,7 @@
 #pragma once
 
 #include "commands/azimuth.h"
+#include "commands/climber.h"
 #include "commands/hopper.h"
 #include "commands/intake.h"
 #include "commands/log.h"

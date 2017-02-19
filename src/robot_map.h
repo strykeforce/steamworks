@@ -23,7 +23,7 @@ class RobotMap {
     kIntake = 41,
     kGearIntake = 51,
     kGearElevation = 52,
-    kClimberMaster = 61,
+    kClimberMaster = 61,  // reversed
     kClimberSlave = 62,
   };
   // pointers to talons and azimuth encoder zero count

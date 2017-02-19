@@ -13,8 +13,19 @@ class Climber : public frc::Subsystem {
   Climber& operator=(Climber&) = delete;
   Climber(Climber&) = delete;
 
+  void SetCaptureModeEnabled(bool enabled);
+  void StartCapture();
+  void StartClimb();
+  void Stop();
+  bool IsRunning();
+  bool IsCaptured();
+
  private:
   const std::shared_ptr<spdlog::logger> logger_;
+  double capture_voltage_ = 4.0;
+  double climb_voltage_ = 12.0;
+  double capture_current_ = 4.0;
+  bool is_running_ = false;
 };
 
 } /* subsystem */

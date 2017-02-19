@@ -141,7 +141,8 @@ void OI::AssignGamepadButtons() {
   trim_right_.WhenActive(new command::Log("trim right active"));
 
   // gamepad start button toggles climber
-  climber_button_.WhenPressed(new command::Log("gamepad climber button"));
+  climber_button_.WhenPressed(new command::CaptureRope());
+  climber_button_.WhenReleased(new command::StopClimb());
 }
 
 /**

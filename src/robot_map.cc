@@ -40,6 +40,9 @@ void initialize_grapher() {
   gd.push_back(jgdb(rm::kShooterWheel, rm::shooter_wheel_talon));
   gd.push_back(jgdb(rm::kShooterElevation, rm::shooter_elevation_talon));
 
+  gd.push_back(jgdb(rm::kClimberMaster, rm::climber_master_talon));
+  gd.push_back(jgdb(rm::kClimberSlave, rm::climber_slave_talon));
+
   for (const auto& d : gd) {
     ::CANTalon* talon = static_cast<::CANTalon*>(d.objectPointer);
     talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateGeneral, 20);
@@ -79,8 +82,8 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
   intake_talon = new ::CANTalon(Talons::kIntake);
   // gear_intake_talon = new ::CANTalon(Talons::kGearIntake);
   // gear_elevation_talon = new ::CANTalon(Talons::kGearElevation);
-  // climber_master_talon = new ::CANTalon(Talons::kClimberMaster);
-  // climber_slave_talon = new ::CANTalon(Talons::kClimberSlave);
+  climber_master_talon = new ::CANTalon(Talons::kClimberMaster);
+  climber_slave_talon = new ::CANTalon(Talons::kClimberSlave);
 
   swerve_talons->lf_drive = new ::CANTalon(Talons::kLeftFrontDrive);
   swerve_talons->lf_azimuth = new ::CANTalon(Talons::kLeftFrontAzimuth);
