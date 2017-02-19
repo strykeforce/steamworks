@@ -68,24 +68,47 @@ Settings::Settings(const std::shared_ptr<cpptoml::table> config) {
   assert(config);
 
   // configure settings common to all operating modes.
+  auto i_opt = config->get_as<int>("feedback_device");
+  if (!i_opt) {
+    throw invalid_argument("TALON feedback_device setting missing");
+  }
+  feedback_device_ = static_cast<::CANTalon::FeedbackDevice>(*i_opt);
 
-  feedback_device_ = static_cast<::CANTalon::FeedbackDevice>(
-      *config->get_as<int>("feedback_device"));
+  i_opt = config->get_as<int>("neutral_mode");
+  if (!i_opt) {
+    throw invalid_argument("TALON neutral_mode setting missing");
+  }
+  neutral_mode_ = static_cast<::CANTalon::NeutralMode>(*i_opt);
 
-  neutral_mode_ = static_cast<::CANTalon::NeutralMode>(
-      *config->get_as<int>("neutral_mode"));
+  i_opt = config->get_as<int>("limit_mode");
+  if (!i_opt) {
+    throw invalid_argument("TALON limit_mode setting missing");
+  }
+  limit_mode_ = static_cast<::CANTalon::LimitMode>(*i_opt);
 
-  limit_mode_ =
-      static_cast<::CANTalon::LimitMode>(*config->get_as<int>("limit_mode"));
+  auto d_opt = config->get_as<double>("voltage_ramp_rate");
+  if (!d_opt) {
+    throw invalid_argument("TALON voltage_ramp_rate setting missing");
+  }
+  voltage_ramp_rate_ = *d_opt;
 
-  voltage_ramp_rate_ = *config->get_as<double>("voltage_ramp_rate");
-  encoder_reversed_ = *config->get_as<bool>("encoder_reversed");
-  output_reversed_ = *config->get_as<bool>("output_reversed");
-  auto current_limit = config->get_as<uint32_t>("current_limit");
-  if (!current_limit) {
+  auto b_opt = config->get_as<bool>("encoder_reversed");
+  if (!b_opt) {
+    throw invalid_argument("TALON encoder_reversed setting missing");
+  }
+  encoder_reversed_ = *b_opt;
+
+  b_opt = config->get_as<bool>("output_reversed");
+  if (!b_opt) {
+    throw invalid_argument("TALON output_reversed setting missing");
+  }
+  output_reversed_ = *b_opt;
+
+  auto ui_opt = config->get_as<uint32_t>("current_limit");
+  if (!ui_opt) {
     throw invalid_argument("TALON current_limit setting missing");
   }
-  current_limit_ = *current_limit;
+  current_limit_ = *ui_opt;
 }
 
 /** Configure is intended to be one-time setup for Talons at initialization.

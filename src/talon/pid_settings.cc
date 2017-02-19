@@ -7,30 +7,77 @@
 #include "settings.h"
 
 using namespace sidewinder::talon;
+using namespace std;
 
 PIDSettings::PIDSettings(const std::shared_ptr<cpptoml::table> config)
     : Settings(config) {
-  p_ = config->get_as<double>("P").value_or(0.0);
-  i_ = config->get_as<double>("I").value_or(0.0);
-  d_ = config->get_as<double>("D").value_or(0.0);
-  f_ = config->get_as<double>("F").value_or(0.0);
-  i_zone_ = config->get_as<unsigned>("I_zone").value_or(0);
+  auto d_opt = config->get_as<double>("P");
+  if (!d_opt) {
+    throw invalid_argument("TALON P setting missing");
+  }
+  p_ = *d_opt;
 
-  allowable_closed_loop_error_ =
-      config->get_as<uint32_t>("allowable_closed_loop_error").value_or(0);
+  d_opt = config->get_as<double>("I");
+  if (!d_opt) {
+    throw invalid_argument("TALON I setting missing");
+  }
+  i_ = *d_opt;
 
-  close_loop_ramp_rate_ =
-      config->get_as<double>("close_loop_ramp_rate").value_or(0.0);
+  d_opt = config->get_as<double>("D");
+  if (!d_opt) {
+    throw invalid_argument("TALON D setting missing");
+  }
+  d_ = *d_opt;
 
-  peak_output_voltage_forward_ =
-      config->get_as<double>("peak_output_voltage_forward").value_or(4.0);
-  peak_output_voltage_reverse_ =
-      config->get_as<double>("peak_output_voltage_reverse").value_or(4.0);
+  d_opt = config->get_as<double>("F");
+  if (!d_opt) {
+    throw invalid_argument("TALON F setting missing");
+  }
+  f_ = *d_opt;
 
-  nominal_output_voltage_forward_ =
-      config->get_as<double>("nominal_output_voltage_forward").value_or(0.0);
-  nominal_output_voltage_reverse_ =
-      config->get_as<double>("nominal_output_voltage_reverse").value_or(0.0);
+  auto ui_opt = config->get_as<unsigned>("I_zone");
+  if (!ui_opt) {
+    throw invalid_argument("TALON I_zone setting missing");
+  }
+  i_zone_ = *ui_opt;
+
+  ui_opt = config->get_as<uint32_t>("allowable_closed_loop_error");
+  if (!ui_opt) {
+    throw invalid_argument("TALON allowable_closed_loop_error setting missing");
+  }
+  allowable_closed_loop_error_ = *ui_opt;
+
+  d_opt = config->get_as<double>("close_loop_ramp_rate");
+  if (!d_opt) {
+    throw invalid_argument("TALON close_loop_ramp_rate setting missing");
+  }
+  close_loop_ramp_rate_ = *d_opt;
+
+  d_opt = config->get_as<double>("peak_output_voltage_forward");
+  if (!d_opt) {
+    throw invalid_argument("TALON peak_output_voltage_forward setting missing");
+  }
+  peak_output_voltage_forward_ = *d_opt;
+
+  d_opt = config->get_as<double>("peak_output_voltage_reverse");
+  if (!d_opt) {
+    throw invalid_argument("TALON peak_output_voltage_reverse setting missing");
+  }
+  peak_output_voltage_reverse_ = *d_opt;
+
+  d_opt = config->get_as<double>("nominal_output_voltage_forward");
+  if (!d_opt) {
+    throw invalid_argument(
+        "TALON nominal_output_voltage_forward setting missing");
+  }
+  nominal_output_voltage_forward_ = *d_opt;
+
+  d_opt = config->get_as<double>("nominal_output_voltage_reverse");
+  if (!d_opt) {
+    throw invalid_argument(
+        "TALON nominal_output_voltage_reverse setting missing");
+  }
+  nominal_output_voltage_reverse_ = *d_opt;
 }
 
 void PIDSettings::SetMode(::CANTalon* talon) const {

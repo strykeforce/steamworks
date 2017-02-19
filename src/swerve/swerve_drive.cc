@@ -66,8 +66,7 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   // load drive Talon settings from swerve config and initialize drive
   // Talons
   logger_->trace("configuring drive talons in voltage mode");
-  auto drive_settings =
-      talon::Settings::Create(swerve_settings, "drive_voltage");
+  auto drive_settings = talon::Settings::Create(swerve_settings, "drive");
   logger_->debug("dumping drive talon configuration");
   drive_settings->LogConfig(logger_);
 
