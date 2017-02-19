@@ -30,7 +30,6 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   if (!logger_) {
     logger_ = spdlog::stdout_logger_st("sidewinder");
   }
-  logger_->set_level(spdlog::level::info);
 
   // load sidewinder configuration from common config file
   if (!config) {
