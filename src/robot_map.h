@@ -1,5 +1,6 @@
 #pragma once
 
+#include "AHRS.h"
 #include "cpptoml/cpptoml.h"
 
 #include "sidewinder/swerve/talon_map.h"
@@ -37,6 +38,9 @@ class RobotMap {
   static ::CANTalon* gear_elevation_talon;
   static ::CANTalon* climber_master_talon;
   static ::CANTalon* climber_slave_talon;
+
+  // pointer to navX gyro singleton
+  static std::shared_ptr<AHRS> gyro;
 
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);

@@ -1,6 +1,7 @@
 #include "azimuth.h"
 
 #include "robot.h"
+#include "robot_map.h"
 
 using namespace steamworks::command;
 
@@ -25,7 +26,7 @@ DriveAzimuth::DriveAzimuth(double angle)
   // TODO: we might want to create controller during Initialize() and destroy
   // during End() in order to stop the controller notifier
   Requires(Robot::drive);
-  auto gyro = Robot::drive->GetGyro().get();  // PIDSource
+  auto gyro = RobotMap::gyro.get();  // PIDSource
   controller_.reset(new PIDController(kP, kI, kD, gyro, this));
   controller_->SetInputRange(-180.0, 180.0);
   controller_->SetOutputRange(-1.0, 1.0);
@@ -41,7 +42,7 @@ void DriveAzimuth::Initialize() {
   controller_->SetSetpoint(angle_);
   controller_->Enable();
   logger_->debug("setpoint = {}", controller_->GetSetpoint());
-  logger_->debug("gyro = {}", Robot::drive->GetGyro()->GetAngle());
+  logger_->debug("gyro = {}", RobotMap::gyro->GetAngle());
   logger_->debug("error = {}", controller_->GetError());
 }
 
@@ -57,7 +58,7 @@ void DriveAzimuth::Execute() {
   //   azimuth_rate_ = 0.1;
   // }
   logger_->debug("execute azimuth rate = {:+f}", azimuth_rate_);
-  Robot::drive->CartesianDrive(0.0, 0.0, azimuth_rate_);
+  Robot::drive->Drive(0.0, 0.0, azimuth_rate_);
 }
 
 /**
@@ -76,7 +77,7 @@ bool DriveAzimuth::IsFinished() {
  */
 void DriveAzimuth::End() {
   logger_->debug("end");
-  Robot::drive->CartesianDrive(0.0, 0.0, 0.0);
+  Robot::drive->Drive(0.0, 0.0, 0.0);
   controller_->Reset();
   // controller_.reset(nullptr);
 }

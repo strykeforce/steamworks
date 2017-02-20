@@ -26,7 +26,7 @@ void DriveAutonomous::Initialize() {
 }
 
 void DriveAutonomous::Execute() {
-  Robot::drive->CartesianDrive(forward_, strafe_, azimuth_);
+  Robot::drive->Drive(forward_, strafe_, azimuth_);
 }
 
 bool DriveAutonomous::IsFinished() {
@@ -34,4 +34,4 @@ bool DriveAutonomous::IsFinished() {
   return std::abs(current_pos - initial_pos_) > distance_;
 }
 
-void DriveAutonomous::End() { Robot::drive->CartesianDrive(0.0, 0.0, 0.0); }
+void DriveAutonomous::End() { Robot::drive->Drive(0.0, 0.0, 0.0); }

@@ -70,12 +70,16 @@ swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
 ::CANTalon* RobotMap::climber_master_talon{nullptr};
 ::CANTalon* RobotMap::climber_slave_talon{nullptr};
 
+std::shared_ptr<AHRS> RobotMap::gyro;
+
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.
  * We allocate these as singletons since there should only be one system-wide
  * reference to each.
  */
 void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
+  gyro = std::make_shared<AHRS>(SPI::Port::kMXP);
+
   shooter_wheel_talon = new ::CANTalon(Talons::kShooterWheel);
   shooter_elevation_talon = new ::CANTalon(Talons::kShooterElevation);
   hopper_talon = new ::CANTalon(Talons::kHopper);

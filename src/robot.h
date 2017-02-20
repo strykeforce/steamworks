@@ -16,7 +16,7 @@ class Robot : public frc::IterativeRobot {
  public:
   static OI* oi;
   static subsystem::Climber* climber;
-  static subsystem::Drive* drive;
+  static subsystem::SwerveDrive* drive;
   static subsystem::GearIntake* gear_intake;
   static subsystem::GearLoader* gear_loader;
   static subsystem::Hopper* hopper;

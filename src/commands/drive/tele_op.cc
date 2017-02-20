@@ -18,9 +18,9 @@ void DriveTeleOp::Execute() {
   double forward = Robot::oi->GetTeleDriveForwardAxis();
   double strafe = Robot::oi->GetTeleDriveStrafeAxis();
   double azimuth = Robot::oi->GetTeleDriveAzimuthAxis();
-  Robot::drive->CartesianDrive(forward, strafe, azimuth);
+  Robot::drive->Drive(forward, strafe, azimuth);
 }
 
 bool DriveTeleOp::IsFinished() { return false; }
 
-void DriveTeleOp::End() { Robot::drive->CartesianDrive(0.0, 0.0, 0.0); }
+void DriveTeleOp::End() { Robot::drive->Drive(0.0, 0.0, 0.0); }

@@ -1,48 +1,24 @@
 #include "drive.h"
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-
 #include "commands/drive/tele_op.h"
 #include "robot_map.h"
-#include "sidewinder/swerve/swerve_drive.h"
 
 using namespace steamworks::subsystem;
-using namespace sidewinder::swerve;
+namespace sws = sidewinder::swerve;
 
-Drive::Drive(const std::shared_ptr<cpptoml::table> config)
-    : frc::Subsystem("Drive"),
-      logger_(spdlog::get("subsystem")),
-      gyro_(std::make_shared<AHRS>(SPI::Port::kMXP)),
-      swerve_drive_(config, RobotMap::swerve_talons, gyro_) {
+/**
+ * SwerveDrive is the drive subsystem and sets DriveTeleOp as its default
+ * command.
+ */
+SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config)
+    : sws::SwerveDrive(config, RobotMap::swerve_talons, RobotMap::gyro),
+      logger_(spdlog::get("subsystem")) {
   // swerve_drive_.SetGyroDisabled(true);
 }
 
-void Drive::CartesianDrive(float forward, float strafe, float azimuth) {
-  swerve_drive_.Drive(forward, strafe, azimuth);
-}
-
-void Drive::ZeroWheels() { swerve_drive_.ZeroAzimuth(); }
-
-void Drive::InitDefaultCommand() {
+/**
+ * Initializes DriveTeleOp as the default command for this subsystem.
+ */
+void SwerveDrive::InitDefaultCommand() {
   SetDefaultCommand(new command::DriveTeleOp());
 }
-
-int Drive::GetPosition(SwerveDrive::Wheel wheel) const {
-  return swerve_drive_.GetPosition(wheel);
-}
-
-int Drive::GetAzimuth(SwerveDrive::Wheel wheel) const {
-  return swerve_drive_.GetAzimuth(wheel);
-}
-
-void Drive::WriteAzimuthCalibration() {
-  swerve_drive_.WriteAzimuthCalibration();
-}
-void Drive::ReadAzimuthCalibration() { swerve_drive_.ReadAzimuthCalibration(); }
-
-std::shared_ptr<AHRS> Drive::GetGyro() { return gyro_; }
-
-float Drive::GetGyroYaw() { return gyro_->GetYaw(); }
-
-void Drive::ZeroGyroYaw() { gyro_->ZeroYaw(); }

@@ -40,7 +40,7 @@ ZeroWheelAzimuth::ZeroWheelAzimuth() : frc::Command("ZeroWheelAzimuth") {
   Requires(Robot::drive);
 }
 
-void ZeroWheelAzimuth::Initialize() { Robot::drive->ZeroWheels(); }
+void ZeroWheelAzimuth::Initialize() { Robot::drive->ZeroAzimuth(); }
 
 bool ZeroWheelAzimuth::IsFinished() {
   return std::abs(Robot::drive->GetAzimuth()) < 10;
@@ -61,4 +61,4 @@ ZeroGyroYaw::ZeroGyroYaw() : frc::InstantCommand("ZeroGyroYaw") {
   Requires(Robot::drive);
 }
 
-void ZeroGyroYaw::Initialize() { Robot::drive->ZeroGyroYaw(); }
+void ZeroGyroYaw::Initialize() { RobotMap::gyro->ZeroYaw(); }
