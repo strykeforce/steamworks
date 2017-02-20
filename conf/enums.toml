@@ -1,0 +1,22 @@
+# feedback device
+# quad         = 0
+# analog pot   = 2
+# analog enc   = 3
+# enc rising   = 4
+# enc falling  = 5
+# mag relative = 6
+# mag absolute = 7
+# pulse width  = 8
+feedback_device = 0 # quad
+
+# neutral mode
+# jumper = 0
+# brake = 1
+# coast = 2
+neutral_mode    = 2 # coast
+
+# limit mode
+# only use switches for limits             = 0
+# use both switches and soft limits        = 1
+# disable switches and disable soft limits = 2
+limit_mode      = 2 # soft and hard disabled

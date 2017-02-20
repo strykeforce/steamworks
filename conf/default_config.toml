@@ -149,27 +149,8 @@ drive_scale_factor = 12.0
         name = "azimuth"
         type = "position"
 
-        # feedback device
-        # quad         = 0
-        # analog pot   = 2
-        # analog enc   = 3
-        # enc rising   = 4
-        # enc falling  = 5
-        # mag relative = 6
-        # mag absolute = 7
-        # pulse width  = 8
         feedback_device = 0 # quad
-
-        # neutral mode
-        # jumper = 0
-        # brake = 1
-        # coast = 2
         neutral_mode    = 2 # coast
-
-        # limit mode
-        # only use switches for limits             = 0
-        # use both switches and soft limits        = 1
-        # disable switches and disable soft limits = 2
         limit_mode      = 2 # soft and hard disabled
 
         P      =   10.0
@@ -190,7 +171,7 @@ drive_scale_factor = 12.0
         current_limit    = 0 # amps, 0 disables
 
         [[SIDEWINDER.SWERVE.TALON]]
-        name = "drive_voltage"
+        name = "drive"
         type = "voltage"
 
         feedback_device = 0 # quad
@@ -202,46 +183,32 @@ drive_scale_factor = 12.0
 
         voltage_ramp_rate = 0.0 # v/s, 0 disables
 
-        # [[SIDEWINDER.SWERVE.TALON]]
-        # name = "drive_voltage"
-        # type = "velocity"
-        #
-        # # feedback device
-        # # quad         = 0
-        # # analog pot   = 2
-        # # analog enc   = 3
-        # # enc rising   = 4
-        # # enc falling  = 5
-        # # mag relative = 6
-        # # mag absolute = 7
-        # # pulse width  = 8
-        # feedback_device = 0 # quad
-        #
-        # # neutral mode
-        # # jumper = 0
-        # # brake = 1
-        # # coast = 2
-        # neutral_mode    = 2 # coast
-        #
-        # # limit mode
-        # # only use switches for limits             = 0
-        # # use both switches and soft limits        = 1
-        # # disable switches and disable soft limits = 2
-        # limit_mode      = 2 # soft and hard disabled
-        #
-        # P      =    1.5
-        # I      =    0.006
-        # D      =    0.0
-        # F      =    1.1
-        # I_zone =     50
-        #
-        # voltage_ramp_rate              =   0.0 # v/s, 0 disables
-        # close_loop_ramp_rate           =   0.0 # v/s, 0 disables
-        # peak_output_voltage_forward    =  12.0 # v
-        # peak_output_voltage_reverse    = -12.0 # v
-        # nominal_output_voltage_forward =   0.0 # v
-        # nominal_output_voltage_reverse =   0.0 # v
-        # allowable_closed_loop_error    =     0 # encoder ticks
-        # encoder_reversed = false
-        # output_reversed  = false
-        # current_limit    = 50 # amps, 0 disables
+        [[SIDEWINDER.SWERVE.TALON]]
+        # ticks 25 - 400 can step change within this range
+        # 600 practical max, 1000 = 12v
+        # 25 = .42 f/sec
+        # 400 = 6.8 f/sec, linear between 25-400
+        # 48.89 ticks per inch
+        name = "drive_auton"
+        type = "velocity"
+
+        feedback_device = 0 # quad
+        neutral_mode    = 2 # coast
+        limit_mode      = 2 # soft and hard disabled
+
+        P      =    2.0
+        I      =    0.008
+        D      =    0.0
+        F      =    1.4
+        I_zone =     25
+
+        voltage_ramp_rate              =   0.0 # v/s, 0 disables
+        close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+        peak_output_voltage_forward    =  12.0 # v
+        peak_output_voltage_reverse    = -12.0 # v
+        nominal_output_voltage_forward =   0.0 # v
+        nominal_output_voltage_reverse =   0.0 # v
+        allowable_closed_loop_error    =     0 # encoder ticks
+        encoder_reversed = false
+        output_reversed  = false
+        current_limit    = 40 # amps, 0 disables
