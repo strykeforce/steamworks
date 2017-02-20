@@ -24,14 +24,10 @@ bool CaptureRope::IsFinished() { return Robot::climber->IsCaptured(); }
 
 void CaptureRope::Interrupted() {
   logger_->debug("capture is interrupted");
-  End();
+  Robot::climber->SetCaptureModeEnabled(false);
 }
 
 void CaptureRope::End() {
-  if (IsCanceled()) {
-    logger_->info("rope capture is interrupted");
-    return;
-  }
   logger_->info("rope is captured");
   Robot::climber->SetCaptureModeEnabled(false);
   climb_.Start();
