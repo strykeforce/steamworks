@@ -14,7 +14,7 @@ namespace swerve {
 /** SwerveDrive is a WPI command-based subsystem represents the Sidewinder
  * swerve drive.
  */
-class SwerveDrive {
+class SwerveDrive : public frc::Subsystem {
  public:
   /** Swerve drive wheels. */
   enum Wheel {
@@ -24,10 +24,14 @@ class SwerveDrive {
     kRightRear,
   };
 
-  /** Default constructor.
-   */
+  SwerveDrive(const std::string& name,
+              const std::shared_ptr<cpptoml::table> config, const TalonMap* map,
+              std::shared_ptr<AHRS> gyro);
+
   SwerveDrive(const std::shared_ptr<cpptoml::table> config, const TalonMap* map,
               std::shared_ptr<AHRS> gyro);
+
+  virtual ~SwerveDrive() = default;
 
   // normal driving methods
   void Drive(double forward, double strafe, double azimuth);
@@ -50,8 +54,8 @@ class SwerveDrive {
   const TalonMap* map_;
   std::shared_ptr<AHRS> ahrs_;
   SwerveMath swerve_math_;
-  double drive_scale_factor_;
-  bool gyro_disabled_;
+  double drive_scale_factor_ = 0.0;
+  bool gyro_disabled_ = false;
   double dead_zone;
 
   void Drive_(double forward, double strafe, double azimuth);

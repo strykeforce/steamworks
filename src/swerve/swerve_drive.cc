@@ -12,20 +12,27 @@
 
 using namespace sidewinder::swerve;
 
-/** Initialize the Sidewinder SwerveDrive.
- * @param config cpptoml SIDEWINDER table
- * @param tm talon map initialized with pointers to drive talons
+/**
+ * The designated constructor for SwerveDrive.
+ *
+ * It implements frc::Subsystem so it can be used by subclassing in a
+ * command-based robot.
+ *
+ * @param name the name of the Subsystem
+ * @param config gets settings from the SIDEWINDER table within
+ * @param map pointer to stucture containing Talon objects
+ * @param gyro the navX gyro shared by the robot
  */
-SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
-                         const TalonMap* tm, std::shared_ptr<AHRS> gyro)
-    : logger_(spdlog::get("sidewinder")),
-      map_(tm),
+SwerveDrive::SwerveDrive(const std::string& name,
+                         const std::shared_ptr<cpptoml::table> config,
+                         const TalonMap* map, std::shared_ptr<AHRS> gyro)
+    : frc::Subsystem(name),
+      logger_(spdlog::get("sidewinder")),
+      map_(map),
       ahrs_(gyro),
-      swerve_math_(config),
-      drive_scale_factor_(0.0),
-      gyro_disabled_(false) {
+      swerve_math_(config) {
   // FIXME: logger_ crashes if no sidewinder log
-  assert(tm);
+  assert(map_);
 
   if (!logger_) {
     logger_ = spdlog::stdout_logger_st("sidewinder");
@@ -91,7 +98,15 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
   logger_->trace("done with constructor");
 }
 
-/** Move all wheels to their home position.
+/**
+ * Instantiate a SwerveDrive with default name.
+ */
+SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
+                         const TalonMap* map, std::shared_ptr<AHRS> gyro)
+    : SwerveDrive("SwerveDrive", config, map, gyro) {}
+
+/**
+ * Move all wheel azimuths to their home position.
  */
 void SwerveDrive::ZeroAzimuth() {
   map_->lf_azimuth->Set(0.0);
@@ -230,6 +245,7 @@ void SwerveDrive::Drive_(double forward, double strafe, double azimuth) {
   map_->lr_drive->Set(dd.wslr * drive_scale_factor_);
   map_->rr_drive->Set(dd.wsrr * drive_scale_factor_);
 
+#if !NDEBUG
   static int i;
   if (++i == 50) {
     i = 0;
@@ -238,6 +254,7 @@ void SwerveDrive::Drive_(double forward, double strafe, double azimuth) {
     logger_->trace("wsrf = {}, wslf = {}, wslr = {}, wsrr = {}", dd.wsrf,
                    dd.wslf, dd.wslr, dd.wsrr);
   }
+#endif
 }
 
 /** Rotate around an off-center point, used for pivoting on robot shooter.
