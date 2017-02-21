@@ -17,7 +17,6 @@ using namespace steamworks;
 OI* Robot::oi = nullptr;
 subsystem::Climber* Robot::climber = nullptr;
 subsystem::SwerveDrive* Robot::drive = nullptr;
-subsystem::GearIntake* Robot::gear_intake = nullptr;
 subsystem::GearLoader* Robot::gear_loader = nullptr;
 subsystem::Hopper* Robot::hopper = nullptr;
 subsystem::Intake* Robot::intake = nullptr;
@@ -33,7 +32,6 @@ void Robot::RobotInit() {
   logger_->trace("initializing subsystems");
   climber = new subsystem::Climber(config_);
   drive = new subsystem::SwerveDrive(config_);
-  gear_intake = new subsystem::GearIntake(config_);
   gear_loader = new subsystem::GearLoader(config_);
   hopper = new subsystem::Hopper(config_);
   intake = new subsystem::Intake(config_);
