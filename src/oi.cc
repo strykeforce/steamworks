@@ -7,7 +7,6 @@
 #include "sidewinder/oi/expo.h"
 
 #include "commands/commands.h"
-#include "triggers/trim.h"
 
 using namespace steamworks;
 
@@ -55,7 +54,8 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       trim_up_(trigger::Trim::kUp),
       trim_down_(trigger::Trim::kDown),
       trim_left_(trigger::Trim::kLeft),
-      trim_right_(trigger::Trim::kRight) {
+      trim_right_(trigger::Trim::kRight),
+      gear_() {
   AssignFlightSimButtons();
   AssignGamepadButtons();
   AssignSmartDashboardButtons();

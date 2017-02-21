@@ -7,7 +7,7 @@
 #include "sidewinder/oi/expo.h"
 #include "sidewinder/oi/sma.h"
 
-#include "triggers/trim.h"
+#include "triggers/triggers.h"
 
 namespace steamworks {
 
@@ -83,6 +83,8 @@ class OI {
   trigger::Trim trim_down_;
   trigger::Trim trim_left_;
   trigger::Trim trim_right_;
+
+  trigger::Gear gear_;
 
   void AssignFlightSimButtons();
   void AssignGamepadButtons();
