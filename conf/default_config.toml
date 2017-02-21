@@ -2,10 +2,15 @@
 grapher = true
 
 hopper_voltage = 8.0
+
 intake_voltage = 12.0
-climber_capture_voltage = 4.0
-climber_climb_voltage =  12.0
-climber_capture_current = 4.0
+
+climber_capture_voltage =  4.0
+climber_climb_voltage   = 12.0
+climber_capture_current =  4.0
+
+gear_load_voltage =  12.0
+gear_deploy_voltage = 8.0
 
     [[STEAMWORKS.TALON]]
     name = "intake"
@@ -35,7 +40,7 @@ climber_capture_current = 4.0
     name = "climber_master"
     type = "voltage"
     feedback_device = 0 # quad
-    neutral_mode    = 1 # coast
+    neutral_mode    = 1 # brake
     limit_mode      = 2 # disabled
     encoder_reversed = false
     output_reversed  = true
@@ -48,7 +53,7 @@ climber_capture_current = 4.0
     name = "climber_slave"
     type = "voltage"
     feedback_device = 0 # quad
-    neutral_mode    = 1 # coast
+    neutral_mode    = 1 # brake
     limit_mode      = 2 # disabled
     encoder_reversed = false
     output_reversed  = false
@@ -118,6 +123,56 @@ climber_capture_current = 4.0
 
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 
+    [[STEAMWORKS.TALON]]
+    name = "gear_loader"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # brake
+    limit_mode      = 0 # use photo limit switch
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 0 # amps, 0 disables
+
+    voltage_ramp_rate = 0.0 # v/s, 0 disables
+
+    [[STEAMWORKS.TALON]]
+    name = "gear_pivot"
+    type = "position"
+
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # brake
+    limit_mode      = 0 # use switches
+
+    P      =   10.0
+    I      =    0.0
+    D      =  150.0
+    F      =    0.0
+    I_zone =      0
+
+    voltage_ramp_rate              =   0.0 # v/s, 0 disables
+    close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+    peak_output_voltage_forward    =   3.0 # v
+    peak_output_voltage_reverse    =  -3.0 # v
+    nominal_output_voltage_forward =   0.0 # v
+    nominal_output_voltage_reverse =   0.0 # v
+    allowable_closed_loop_error    =     0 # encoder ticks
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 0 # amps, 0 disables
+
+    [[STEAMWORKS.TALON]]
+    name = "gear_pivot_zero"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 2 # coast
+    limit_mode      = 2 # both disabled
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 0 # amps, 0 disables
+
+    voltage_ramp_rate = 0.0 # v/s, 0 disables
+
+
 
 [SIDEWINDER]
 drive_dead_zone  = 0.08
@@ -134,11 +189,6 @@ drive_scale_factor = 12.0
 
 
     [SIDEWINDER.SWERVE]
-    lf_zero = 998
-    rf_zero = 952
-    lr_zero = 3681
-    rr_zero = 961
-
     wheelbase_width  = 26.4375 # inches
     wheelbase_length = 22.5    # inches
 
@@ -212,3 +262,31 @@ drive_scale_factor = 12.0
         encoder_reversed = false
         output_reversed  = false
         current_limit    = 40 # amps, 0 disables
+
+        [[SIDEWINDER.SWERVE.TALON]]
+        # ticks 10 - 75, can experiment going down to 5 but only in down dir
+        # at 10 will stop in 100ms
+        # deadband will prevent hunting
+        name = "drive_auton_slow_azimuth"
+        type = "velocity"
+
+        feedback_device = 0 # quad
+        neutral_mode    = 2 # coast
+        limit_mode      = 2 # soft and hard disabled
+
+        P      =     2.0
+        I      =     0.017 # if jerking, take down to 0.016, 0.015
+        D      =    75.0 # then take down 5 at a time down to 50
+        F      =     2.1
+        I_zone =    20
+
+        voltage_ramp_rate              =   0.0 # v/s, 0 disables
+        close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+        peak_output_voltage_forward    =  12.0 # v
+        peak_output_voltage_reverse    = -12.0 # v
+        nominal_output_voltage_forward =   0.0 # v
+        nominal_output_voltage_reverse =   0.0 # v
+        allowable_closed_loop_error    =     0 # encoder ticks
+        encoder_reversed = false
+        output_reversed  = false
+        current_limit    = 15 # amps, 0 disables

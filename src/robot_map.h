@@ -23,7 +23,7 @@ class RobotMap {
     kHopper = 31,
     kIntake = 41,
     kGearIntake = 51,
-    kGearElevation = 52,
+    kGearPivot = 52,
     kClimberMaster = 61,  // reversed
     kClimberSlave = 62,
   };
@@ -35,7 +35,7 @@ class RobotMap {
   static ::CANTalon* hopper_talon;
   static ::CANTalon* intake_talon;
   static ::CANTalon* gear_intake_talon;
-  static ::CANTalon* gear_elevation_talon;
+  static ::CANTalon* gear_pivot_talon;
   static ::CANTalon* climber_master_talon;
   static ::CANTalon* climber_slave_talon;
 

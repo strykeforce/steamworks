@@ -43,6 +43,9 @@ void initialize_grapher() {
   gd.push_back(jgdb(rm::kClimberMaster, rm::climber_master_talon));
   gd.push_back(jgdb(rm::kClimberSlave, rm::climber_slave_talon));
 
+  gd.push_back(jgdb(rm::kGearIntake, rm::gear_intake_talon));
+  gd.push_back(jgdb(rm::kGearPivot, rm::gear_pivot_talon));
+
   for (const auto& d : gd) {
     ::CANTalon* talon = static_cast<::CANTalon*>(d.objectPointer);
     talon->SetStatusFrameRateMs(::CANTalon::StatusFrameRateGeneral, 20);
@@ -66,7 +69,7 @@ swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
 ::CANTalon* RobotMap::hopper_talon{nullptr};
 ::CANTalon* RobotMap::intake_talon{nullptr};
 ::CANTalon* RobotMap::gear_intake_talon{nullptr};
-::CANTalon* RobotMap::gear_elevation_talon{nullptr};
+::CANTalon* RobotMap::gear_pivot_talon{nullptr};
 ::CANTalon* RobotMap::climber_master_talon{nullptr};
 ::CANTalon* RobotMap::climber_slave_talon{nullptr};
 
@@ -82,10 +85,14 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
 
   shooter_wheel_talon = new ::CANTalon(Talons::kShooterWheel);
   shooter_elevation_talon = new ::CANTalon(Talons::kShooterElevation);
+
   hopper_talon = new ::CANTalon(Talons::kHopper);
+
   intake_talon = new ::CANTalon(Talons::kIntake);
-  // gear_intake_talon = new ::CANTalon(Talons::kGearIntake);
-  // gear_elevation_talon = new ::CANTalon(Talons::kGearElevation);
+
+  gear_intake_talon = new ::CANTalon(Talons::kGearIntake);
+  gear_pivot_talon = new ::CANTalon(Talons::kGearPivot);
+
   climber_master_talon = new ::CANTalon(Talons::kClimberMaster);
   climber_slave_talon = new ::CANTalon(Talons::kClimberSlave);
 

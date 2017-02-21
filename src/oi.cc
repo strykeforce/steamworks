@@ -111,7 +111,7 @@ void OI::AssignFlightSimButtons() {
  */
 void OI::AssignGamepadButtons() {
   // gamepad left shoulder stages gear in loader
-  gear_stage_button_.WhenPressed(new command::Log("gamepad gear stage button"));
+  gear_stage_button_.WhenPressed(new command::LoadGear());
 
   // gamepad back button reverses gear loader
   gear_stage_reverse_button_.WhenPressed(
@@ -155,8 +155,6 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Drive Zero", new command::DriveZero());
   SmartDashboard::PutData("Zero Gyro", new command::ZeroGyroYaw());
 
-  SmartDashboard::PutData("Auton Azimuth", new command::DriveAzimuth(90));
-
   SmartDashboard::PutData("Shooter Elevation Default",
                           new command::SetShooterElevation(900));
   SmartDashboard::PutData("Increment Shooter Elevation",
@@ -173,4 +171,9 @@ void OI::AssignSmartDashboardButtons() {
                           new command::IncrementShooterSpeed());
   SmartDashboard::PutData("Decrement Wheel Speed",
                           new command::DecrementShooterSpeed());
+
+  SmartDashboard::PutData("Auton Azimuth", new command::DriveAzimuth(90));
+
+  SmartDashboard::PutData("Zero Pivot", new command::gear::ZeroPivot());
+  SmartDashboard::PutData("Release Gear", new command::gear::ReleaseGear());
 }

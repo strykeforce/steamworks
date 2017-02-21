@@ -13,3 +13,11 @@
 
 #include "commands/shooter/elevation.h"
 #include "commands/shooter/wheel.h"
+
+#include "commands/gear/clamp.h"
+#include "commands/gear/deploy.h"
+#include "commands/gear/load.h"
+#include "commands/gear/pivot.h"
+#include "commands/gear/release.h"
+#include "commands/gear/sequence.h"
+#include "commands/gear/zero.h"
