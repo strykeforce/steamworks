@@ -2,24 +2,28 @@
 
 #include "commands/commands.h"
 
-using namespace steamworks::command;
+using namespace steamworks::command::gear;
 
-LoadGear::LoadGear() : frc::CommandGroup("LoadGear") {
-  // AddSequential(new Log("ready loading gear"));
-  // AddSequential(new gear::ReadyLoadGear());
+StageGear::StageGear() : frc::CommandGroup("StageGear") {
+  // TODO: check for gear before starting
+  AddSequential(new DeployGear());
+  AddSequential(new CloseClamp());
+  AddSequential(new PivotGear());
+}
 
+TestGearLoad::TestGearLoad() : frc::CommandGroup("TestGearLoad") {
   AddSequential(new Log("loading gear"));
-  AddSequential(new gear::LoadGear());
+  AddSequential(new LoadGear());
 
   AddSequential(new Log("waiting to deploy gear"));
   AddSequential(new WaitCommand(2));
 
   AddSequential(new Log("deploying gear"));
-  AddSequential(new gear::DeployGear());
+  AddSequential(new DeployGear());
 
   AddSequential(new Log("clamping gear"));
-  AddSequential(new gear::CloseClamp());
+  AddSequential(new CloseClamp());
 
   AddSequential(new Log("pivoting gear"));
-  AddSequential(new gear::PivotGear());
+  AddSequential(new PivotGear());
 }

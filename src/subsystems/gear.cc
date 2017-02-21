@@ -8,40 +8,7 @@ using namespace sidewinder;
 
 GearLoader::GearLoader(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("GearLoader"), logger_(spdlog::get("subsystem")) {
-  auto steamworks_config = config->get_table("STEAMWORKS");
-
-  auto voltage = steamworks_config->get_as<double>("gear_load_voltage");
-  if (voltage) {
-    load_voltage_ = *voltage;
-  } else {
-    logger_->warn(
-        "STEAMWORKS gear_load_voltage setting missing, using default");
-  }
-  logger_->info("gear load voltage: {}", load_voltage_);
-
-  voltage = steamworks_config->get_as<double>("gear_deploy_voltage");
-  if (voltage) {
-    deploy_voltage_ = *voltage;
-  } else {
-    logger_->warn(
-        "STEAMWORKS gear_deploy_voltage setting missing, using default");
-  }
-  logger_->info("gear load voltage: {}", deploy_voltage_);
-
-  auto loader_talon_settings =
-      talon::Settings::Create(steamworks_config, "gear_loader");
-  logger_->debug("dumping gear loader talon configuration");
-  loader_talon_settings->LogConfig(logger_);
-  loader_talon_settings->Initialize(RobotMap::gear_intake_talon);
-
-  pivot_settings_ = talon::Settings::Create(steamworks_config, "gear_pivot");
-  logger_->debug("dumping gear pivot talon configuration");
-  pivot_settings_->LogConfig(logger_);
-
-  pivot_zero_settings_ =
-      talon::Settings::Create(steamworks_config, "gear_pivot_zero");
-  logger_->debug("dumping gear pivot zero talon configuration");
-  pivot_zero_settings_->LogConfig(logger_);
+  LoadConfigSettings(config);
 }
 
 /**
@@ -69,13 +36,6 @@ void GearLoader::Deploy() {
 }
 
 /**
- * IsIntakeEnabled
- */
-bool GearLoader::IsIntakeEnabled() {
-  return RobotMap::gear_intake_talon->IsEnabled();
-}
-
-/**
  * StopLoader
  */
 void GearLoader::StopLoader() {
@@ -99,20 +59,27 @@ bool GearLoader::IsLimitSwitchClosed() {
 }
 
 /**
- * SetServo
+ * Set gear clamp to open position for loading.
  */
-void GearLoader::SetServo(double value) {
-  logger_->info("set servo to {}", value);
-  servo_.Set(value);
+void GearLoader::ClampOpen() {
+  logger_->debug("open gear clamp, servo = {}", clamp_open_);
+  servo_.Set(clamp_open_);
 }
 
 /**
- * GetServo
+ * Set gear clamp to clamped shut position for pivoting.
  */
-double GearLoader::GetServo() {
-  double pos = servo_.Get();
-  logger_->debug("servo position is {}", pos);
-  return pos;
+void GearLoader::ClampShut() {
+  logger_->debug("shut gear clamp, servo = {}", clamp_shut_);
+  servo_.Set(clamp_shut_);
+}
+
+/**
+ * Set gear clamp to fully open position for releasing gear on lifter.
+ */
+void GearLoader::ClampRelease() {
+  logger_->debug("gear clamp release, servo = {}", clamp_release_);
+  servo_.Set(clamp_release_);
 }
 
 namespace {
@@ -127,13 +94,13 @@ const int kGearPivotDownPosition = 0;
  */
 void GearLoader::SetPivotZeroModeEnabled(bool enabled) {
   if (enabled) {
-    logger_->info("starting pivot zero mode");
+    logger_->info("enabling pivot zero mode");
     RobotMap::gear_pivot_talon->StopMotor();
     pivot_zero_settings_->Initialize(RobotMap::gear_pivot_talon);
     RobotMap::gear_pivot_talon->Set(kGearZeroVoltage);
     return;
   }
-  logger_->info("finished pivot zero mode");
+  logger_->debug("disabling pivot zero mode");
   RobotMap::gear_pivot_talon->StopMotor();
   pivot_settings_->Initialize(RobotMap::gear_pivot_talon);
 }
@@ -148,7 +115,7 @@ int GearLoader::GetPivotPosition() {
 }
 
 /**
- * SetPivotEncoderZero
+ * Calibrate the pivot encoder after kissing off in full down position.
  */
 void GearLoader::SetPivotEncoderZero() {
   logger_->debug("setting pivot encoder position to {}", kGearZeroPosition);
@@ -156,17 +123,125 @@ void GearLoader::SetPivotEncoderZero() {
 }
 
 /**
- * PivotUp
+ * Position the deployed gear in the upright position for loading onto lift.
  */
 void GearLoader::PivotUp() {
+  // sanity check for control mode, being in voltage mode would be BAD
+  auto mode = RobotMap::gear_pivot_talon->GetTalonControlMode();
+  if (mode != ::CANTalon::kPositionMode) {
+    logger_->critical("gear pivot talon not in position control mode");
+    return;
+  }
   logger_->info("pivoting gear to {}", kGearPivotUpPosition);
   RobotMap::gear_pivot_talon->Set(kGearPivotUpPosition);
 }
 
 /**
- * PivotDown
+ * Put pivot in fully down position.
  */
 void GearLoader::PivotDown() {
   logger_->info("pivoting gear to {}", kGearPivotDownPosition);
   RobotMap::gear_pivot_talon->Set(kGearPivotDownPosition);
+}
+
+/**
+ * Return true when pivot is in fully upright position as specified in config.
+ */
+bool GearLoader::IsPivotUp() { return GetPivotPosition() > pivot_up_position_; }
+
+/**
+ * Return true when pivot is in fully down position as specified in config.
+ */
+bool GearLoader::IsPivotDown() {
+  return GetPivotPosition() < pivot_down_position_;
+}
+
+/**
+ * Load configuration settings.
+ */
+void GearLoader::LoadConfigSettings(
+    const std::shared_ptr<cpptoml::table> config) {
+  auto steamworks_config = config->get_table("STEAMWORKS");
+
+  // gear_load_voltage
+  auto d_opt = steamworks_config->get_as<double>("gear_load_voltage");
+  if (d_opt) {
+    load_voltage_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS gear_load_voltage setting missing, using default");
+  }
+  logger_->info("gear intake motor load voltage: {}", load_voltage_);
+
+  // gear_deploy_voltage
+  d_opt = steamworks_config->get_as<double>("gear_deploy_voltage");
+  if (d_opt) {
+    deploy_voltage_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS gear_deploy_voltage setting missing, using default");
+  }
+  logger_->info("gear intake motor deploy voltage: {}", deploy_voltage_);
+
+  // gear_clamp_open
+  d_opt = steamworks_config->get_as<double>("gear_clamp_open");
+  if (d_opt) {
+    clamp_open_ = *d_opt;
+  } else {
+    logger_->warn("STEAMWORKS gear_clamp_open setting missing, using default");
+  }
+  logger_->info("gear clamp open position: {}", clamp_open_);
+
+  // gear_clamp_shut
+  d_opt = steamworks_config->get_as<double>("gear_clamp_shut");
+  if (d_opt) {
+    clamp_shut_ = *d_opt;
+  } else {
+    logger_->warn("STEAMWORKS gear_clamp_shut setting missing, using default");
+  }
+  logger_->info("gear clamp shut position: {}", clamp_shut_);
+
+  // gear_clamp_release
+  d_opt = steamworks_config->get_as<double>("gear_clamp_release");
+  if (d_opt) {
+    clamp_release_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS gear_clamp_release setting missing, using default");
+  }
+  logger_->info("gear clamp release position: {}", clamp_release_);
+
+  // gear_pivot_up
+  auto i_opt = steamworks_config->get_as<int>("gear_pivot_up");
+  if (i_opt) {
+    pivot_up_position_ = *i_opt;
+  } else {
+    logger_->warn("STEAMWORKS gear_pivot_up setting missing, using default");
+  }
+  logger_->info("gear pivot up position: {}", pivot_up_position_);
+
+  // gear_pivot_up
+  i_opt = steamworks_config->get_as<int>("gear_pivot_down");
+  if (i_opt) {
+    pivot_down_position_ = *i_opt;
+  } else {
+    logger_->warn("STEAMWORKS gear_pivot_down setting missing, using default");
+  }
+  logger_->info("gear pivot down position: {}", pivot_down_position_);
+
+  // Talons
+  auto loader_talon_settings =
+      talon::Settings::Create(steamworks_config, "gear_loader");
+  logger_->debug("dumping gear loader talon configuration");
+  loader_talon_settings->LogConfig(logger_);
+  loader_talon_settings->Initialize(RobotMap::gear_intake_talon);
+
+  pivot_settings_ = talon::Settings::Create(steamworks_config, "gear_pivot");
+  logger_->debug("dumping gear pivot talon configuration");
+  pivot_settings_->LogConfig(logger_);
+
+  pivot_zero_settings_ =
+      talon::Settings::Create(steamworks_config, "gear_pivot_zero");
+  logger_->debug("dumping gear pivot zero talon configuration");
+  pivot_zero_settings_->LogConfig(logger_);
 }

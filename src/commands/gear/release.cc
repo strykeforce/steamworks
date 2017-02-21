@@ -9,17 +9,14 @@ ReleaseGear::ReleaseGear() : frc::Command("ReleaseGear") {
 }
 
 /**
-* Initialize
+* Release gear on lift peg.
 */
 void ReleaseGear::Initialize() {
-  // FIXME: hardcoded
-  Robot::gear_loader->SetServo(1.0);
+  Robot::gear_loader->ClampRelease();
   Robot::gear_loader->PivotDown();
 }
 
 /**
- * IsFinished
+ * Finished when pivot has returned to lowered position.
  */
-bool ReleaseGear::IsFinished() {
-  return Robot::gear_loader->GetPivotPosition() < 10;
-}
+bool ReleaseGear::IsFinished() { return Robot::gear_loader->IsPivotDown(); }

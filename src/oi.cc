@@ -43,6 +43,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       gear_auto_off_button_(&flight_sim_joystick_,
                             kFlightSimLeftCornerUpButton),
       shooter_auto_button_(&flight_sim_joystick_, kFlightSimRightCornerButton),
+      gear_load_button_(),
       gear_stage_button_(&gamepad_joystick_, kGamepadLeftShoulderButton),
       gear_stage_reverse_button_(&gamepad_joystick_, kGamepadBackButton),
       climber_button_(&gamepad_joystick_, kGamepadStartButton),
@@ -54,8 +55,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       trim_up_(trigger::Trim::kUp),
       trim_down_(trigger::Trim::kDown),
       trim_left_(trigger::Trim::kLeft),
-      trim_right_(trigger::Trim::kRight),
-      gear_() {
+      trim_right_(trigger::Trim::kRight) {
   AssignFlightSimButtons();
   AssignGamepadButtons();
   AssignSmartDashboardButtons();
@@ -96,10 +96,9 @@ void OI::AssignFlightSimButtons() {
   reset_button_.WhenPressed(new command::Log("flight simulator reset button"));
 
   // flight sim left shoulder 3-position button controlls gear loader
-  gear_auto_on_button_.WhenPressed(
-      new command::Log("flight simulator gear auto on button"));
   gear_auto_off_button_.WhenPressed(
       new command::Log("flight simulator gear auto off button"));
+  gear_auto_on_button_.WhenPressed(new command::gear::ReleaseGear());
 
   // flight sim right shoulder 2-position button controls shooter auto mode
   shooter_auto_button_.WhenPressed(
@@ -110,8 +109,11 @@ void OI::AssignFlightSimButtons() {
  * AssignGamepadButtons hooks up gamepad controller buttons to commands.
  */
 void OI::AssignGamepadButtons() {
+  // gamepad left trigger starts gear loader
+  gear_load_button_.WhenActive(new command::gear::LoadGear());
+
   // gamepad left shoulder stages gear in loader
-  gear_stage_button_.WhenPressed(new command::LoadGear());
+  gear_stage_button_.WhenPressed(new command::gear::StageGear());
 
   // gamepad back button reverses gear loader
   gear_stage_reverse_button_.WhenPressed(

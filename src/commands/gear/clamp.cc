@@ -5,12 +5,11 @@
 using namespace steamworks::command::gear;
 
 namespace {
-const double kServoPosition = 0.3;
-const double kServoCloseTime = 1.0;
+const double kServoCloseTime = 0.75;
 }
 
 CloseClamp::CloseClamp() : frc::TimedCommand("CloseClamp", kServoCloseTime) {
   Requires(Robot::gear_loader);
 }
 
-void CloseClamp::Initialize() { Robot::gear_loader->SetServo(0.5); }
+void CloseClamp::Initialize() { Robot::gear_loader->ClampShut(); }

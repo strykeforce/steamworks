@@ -13,7 +13,4 @@ void PivotGear::Initialize() {
   Robot::gear_loader->PivotUp();
 }
 
-bool PivotGear::IsFinished() {
-  // FIXME: hardcoded
-  return Robot::gear_loader->GetPivotPosition() > 1080;
-}
+bool PivotGear::IsFinished() { return Robot::gear_loader->IsPivotUp(); }

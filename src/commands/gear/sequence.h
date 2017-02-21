@@ -4,10 +4,18 @@
 
 namespace steamworks {
 namespace command {
-
-class LoadGear : public frc::CommandGroup {
+namespace gear {
+class StageGear : public frc::CommandGroup {
  public:
-  LoadGear();
+  StageGear();
 };
+
+class TestGearLoad : public frc::CommandGroup {
+ public:
+  TestGearLoad();
+};
+
+} /* gear */
+
 } /* command */
 } /* steamworks */

@@ -4,25 +4,6 @@
 
 using namespace steamworks::command::gear;
 
-//
-// ReadyDeployGear
-//
-ReadyDeployGear::ReadyDeployGear() : frc::Command("ReadyDeployGear") {
-  Requires(Robot::gear_loader);
-}
-
-void ReadyDeployGear::Initialize() {
-  Robot::gear_loader->StopLoader();
-  Robot::gear_loader->SetLimitSwitchNormallyOpen(false);
-}
-
-bool ReadyDeployGear::IsFinished() {
-  return Robot::gear_loader->IsIntakeEnabled();
-}
-
-//
-// DeployGear
-//
 DeployGear::DeployGear() : frc::Command("DeployGear") {
   Requires(Robot::gear_loader);
 }

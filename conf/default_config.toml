@@ -1,16 +1,29 @@
 [STEAMWORKS]
 grapher = true
 
+# settings for the fuel hopper motor voltage mode
 hopper_voltage = 8.0
 
+# settings for the fuel intake motor voltage mode
 intake_voltage = 12.0
 
+# settings for the climber motor voltage mode
 climber_capture_voltage =  4.0
 climber_climb_voltage   = 12.0
 climber_capture_current =  4.0
 
+# settings for the gear intake motor voltage mode
 gear_load_voltage =  12.0
 gear_deploy_voltage = 8.0
+
+# settings for the gear clamp servo position
+gear_clamp_open    = 0.7
+gear_clamp_shut    = 0.5
+gear_clamp_release = 1.0
+
+# settings for the gear pivot motor position mode
+gear_pivot_up   = 1080 # ticks
+gear_pivot_down =   10 # ticks
 
     [[STEAMWORKS.TALON]]
     name = "intake"
