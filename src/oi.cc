@@ -137,7 +137,7 @@ void OI::AssignGamepadButtons() {
       new command::Log("gamepad close shot button"));
 
   // gamepad D-pad trims shooter aimpoint
-  trim_up_.WhenActive(new command::Log("trim up active"));
+  trim_up_.WhenActive(new command::ToggleHopper());
   trim_down_.WhenActive(new command::Log("trim down active"));
   trim_left_.WhenActive(new command::Log("trim left active"));
   trim_right_.WhenActive(new command::Log("trim right active"));
