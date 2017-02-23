@@ -11,6 +11,7 @@ class DriveTeleOp : public frc::Command {
   DriveTeleOp();
 
  protected:
+  void Initialize() override;
   void Execute() override;
   bool IsFinished() override;
   void End() override;

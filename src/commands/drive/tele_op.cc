@@ -14,6 +14,11 @@ DriveTeleOp::DriveTeleOp() : frc::Command("DriveTeleOp") {
   Requires(Robot::drive);
 }
 
+/**
+ * Ensure the drive Talons are in the correct mode for TeleOp.
+ */
+void DriveTeleOp::Initialize() { Robot::drive->SetTeleOpMode(); }
+
 void DriveTeleOp::Execute() {
   double forward = Robot::oi->GetTeleDriveForwardAxis();
   double strafe = Robot::oi->GetTeleDriveStrafeAxis();

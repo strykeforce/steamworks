@@ -157,6 +157,8 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Drive Zero", new command::DriveZero());
   SmartDashboard::PutData("Zero Gyro", new command::ZeroGyroYaw());
 
+  SmartDashboard::PutData("Zero Pivot", new command::gear::ZeroPivot());
+
   SmartDashboard::PutData("Shooter Elevation Default",
                           new command::SetShooterElevation(900));
   SmartDashboard::PutData("Increment Shooter Elevation",
@@ -174,8 +176,7 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Decrement Wheel Speed",
                           new command::DecrementShooterSpeed());
 
+  // drive forward 4 ft.
+  SmartDashboard::PutData("Auton Drive", new command::AutonTestSeq());
   SmartDashboard::PutData("Auton Azimuth", new command::DriveAzimuth(90));
-
-  SmartDashboard::PutData("Zero Pivot", new command::gear::ZeroPivot());
-  SmartDashboard::PutData("Release Gear", new command::gear::ReleaseGear());
 }
