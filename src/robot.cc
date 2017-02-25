@@ -51,7 +51,7 @@ void Robot::AutonomousInit() { logger_->trace(__PRETTY_FUNCTION__); }
 void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::TeleopInit() {
-  logger_->trace(__PRETTY_FUNCTION__);
+  logger_->trace("checking auto gear load switch position");
   frc::Joystick fsj(OI::kFlightSimJoystick);
   if (fsj.GetRawButton(OI::kFlightSimLeftCornerDownButton)) {
     // button is already in auto on position so run command

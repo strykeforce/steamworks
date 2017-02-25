@@ -6,4 +6,5 @@ target_sources(${CMAKE_PROJECT_NAME}
   "${CMAKE_CURRENT_LIST_DIR}/hopper.cc"
   "${CMAKE_CURRENT_LIST_DIR}/intake.cc"
   "${CMAKE_CURRENT_LIST_DIR}/shooter.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/motion.cc"
 )
