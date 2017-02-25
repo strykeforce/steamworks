@@ -121,8 +121,6 @@ void Settings::Configure(::CANTalon* talon) const {
   talon->ConfigLimitMode(limit_mode_);
   talon->SetSensorDirection(encoder_reversed_);
   talon->SetInverted(output_reversed_);
-  talon->SetCurrentLimit(current_limit_);
-  talon->EnableCurrentLimit(current_limit_ > 0);
 }
 
 /** SetMode sets the current operating mode for the Talon, i.e. voltage,
@@ -131,6 +129,8 @@ void Settings::Configure(::CANTalon* talon) const {
  */
 void Settings::SetMode(::CANTalon* talon) const {
   assert(talon);
+  talon->SetCurrentLimit(current_limit_);
+  talon->EnableCurrentLimit(current_limit_ > 0);
   talon->SetVoltageRampRate(voltage_ramp_rate_);
 }
 

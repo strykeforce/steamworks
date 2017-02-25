@@ -3,12 +3,7 @@
 #include <ctime>
 #include <fstream>
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-
-#include "swerve_math.h"
 #include "talon/settings.h"
-#include "talon_map.h"
 
 using namespace sidewinder::swerve;
 
@@ -115,12 +110,25 @@ void SwerveDrive::ZeroAzimuth() {
   map_->rr_azimuth->Set(0.0);
 }
 
-/** Disable driving in field-oriented mode if disired or required by hardware
+/**
+ * Disable driving in field-oriented mode if disired or required by hardware
  *  failure.
  */
 void SwerveDrive::SetGyroDisabled(bool disabled) {
   logger_->info("setting swerve gyro to {}", disabled ? "DISABLED" : "ENABLED");
   gyro_disabled_ = disabled;
+}
+
+/**
+ * Reconfigure the drive Talons for another operating mode.
+ */
+void SwerveDrive::SetDriveMode(const std::shared_ptr<talon::Settings> settings,
+                               double setpoint_scale) {
+  drive_scale_factor_ = setpoint_scale;
+  settings->SetMode(map_->lf_drive);
+  settings->SetMode(map_->rf_drive);
+  settings->SetMode(map_->lr_drive);
+  settings->SetMode(map_->rr_drive);
 }
 
 namespace {
@@ -221,14 +229,18 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
 void SwerveDrive::Drive_(double forward, double strafe, double azimuth) {
   // don't reset wheels to zero in dead zone
   // FIXME: dead zone hard-coded
-  if (std::fabs(forward) <= dead_zone && std::fabs(strafe) <= dead_zone &&
-      std::fabs(azimuth) < dead_zone) {
-    map_->rf_drive->StopMotor();
-    map_->lf_drive->StopMotor();
-    map_->lr_drive->StopMotor();
-    map_->rr_drive->StopMotor();
+  bool is_stopping = std::fabs(forward) <= dead_zone &&
+                     std::fabs(strafe) <= dead_zone &&
+                     std::fabs(azimuth) < dead_zone;
+
+  if (is_stopping) {
+    map_->rf_drive->Set(0);
+    map_->lf_drive->Set(0);
+    map_->lr_drive->Set(0);
+    map_->rr_drive->Set(0);
     return;
   }
+
   DriveData dd = DriveData();
   dd.fwd = forward;
   dd.str = strafe;
@@ -279,21 +291,20 @@ void SwerveDrive::TargetRotation(double azimuth) {
 }
 
 /** Drive in crab drive mode.
- * @param speed command forward/backwards (Y-axis) throttle, -1.0 - 1.0
- * @param direction command left/right (X-axis), -1.0 - 1.0
- */
-void SwerveDrive::CrabDrive(double speed, double direction) {
-  int pos = -std::round(2048 * direction);
-  map_->lf_azimuth->Set(pos);
-  map_->rf_azimuth->Set(pos);
-  map_->lr_azimuth->Set(pos);
-  map_->rr_azimuth->Set(pos);
+ * @param velocity command forward/backwards (Y-axis) speed in encoder ticks per
+ * 100ms
+ * @param azimuth command wheel azimuth to absolute position
+*/
+void SwerveDrive::CrabDriveAutonomous(double velocity, int azimuth) {
+  map_->lf_azimuth->Set(static_cast<double>(azimuth));
+  map_->rf_azimuth->Set(static_cast<double>(azimuth));
+  map_->lr_azimuth->Set(static_cast<double>(azimuth));
+  map_->rr_azimuth->Set(static_cast<double>(azimuth));
 
-  double setpoint = speed * drive_scale_factor_;
-  map_->lf_drive->Set(setpoint);
-  map_->rf_drive->Set(setpoint);
-  map_->lr_drive->Set(setpoint);
-  map_->rr_drive->Set(setpoint);
+  map_->lf_drive->Set(velocity);
+  map_->rf_drive->Set(velocity);
+  map_->lr_drive->Set(velocity);
+  map_->rr_drive->Set(velocity);
 }
 
 /** Get encoder value of specified drive wheel.

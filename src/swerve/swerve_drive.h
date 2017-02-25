@@ -9,6 +9,9 @@
 #include "talon_map.h"
 
 namespace sidewinder {
+namespace talon {
+class Settings;
+}
 namespace swerve {
 
 /** SwerveDrive is a WPI command-based subsystem represents the Sidewinder
@@ -35,30 +38,39 @@ class SwerveDrive : public frc::Subsystem {
 
   // normal driving methods
   void Drive(double forward, double strafe, double azimuth);
+
   void TargetRotation(double azimuth);
+
   int GetAzimuth(const Wheel wheel = kRightRear) const;
   int GetPosition(const Wheel wheel = kRightRear) const;
 
   // special driving or troubleshooting methods
   void ZeroAzimuth();
+
   void SetGyroDisabled(bool disabled);
+  void SetDriveMode(const std::shared_ptr<talon::Settings> settings,
+                    double setpoint_scale);
+
   void WriteAzimuthCalibration();
   void ReadAzimuthCalibration();
-  void CrabDrive(double speed, double direction);
+
+  void CrabDriveAutonomous(double velocity, int azimuth);
 
   // utility methods
   void SetLogger(const std::shared_ptr<spdlog::logger> logger);
 
- private:
+ protected:
   std::shared_ptr<spdlog::logger> logger_;
-  const TalonMap* map_;
-  std::shared_ptr<AHRS> ahrs_;
-  SwerveMath swerve_math_;
   double drive_scale_factor_ = 0.0;
-  bool gyro_disabled_ = false;
-  double dead_zone;
+  const TalonMap* map_;
 
   void Drive_(double forward, double strafe, double azimuth);
+
+ private:
+  std::shared_ptr<AHRS> ahrs_;
+  SwerveMath swerve_math_;
+  bool gyro_disabled_ = false;
+  double dead_zone;
 };
 } /* swerve */
 } /* sidewinder */
