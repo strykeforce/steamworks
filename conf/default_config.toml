@@ -17,9 +17,18 @@ gear_load_voltage =  12.0
 gear_deploy_voltage = 8.0
 
 # settings for the gear clamp servo position
-gear_clamp_open    = 0.7
-gear_clamp_shut    = 0.5
-gear_clamp_release = 1.0
+# left servo
+left_gear_clamp_stage    = 0.75
+right_gear_clamp_stage   = 0.32
+
+left_gear_clamp_shut     = 0.5
+right_gear_clamp_shut    = 0.5
+
+left_gear_clamp_release  = 0.84
+right_gear_clamp_release = 0.2
+
+left_gear_clamp_stow     = 0.45 # not used
+right_gear_clamp_stow    = 0.6  # not used
 
 # settings for the gear pivot motor position mode
 gear_pivot_up   = 1080 # ticks

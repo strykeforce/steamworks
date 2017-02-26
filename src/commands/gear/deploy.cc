@@ -11,6 +11,7 @@ DeployGear::DeployGear() : frc::Command("DeployGear") {
 void DeployGear::Initialize() {
   Robot::gear_loader->StopLoader();
   Robot::gear_loader->SetLimitSwitchNormallyOpen(false);
+  Robot::gear_loader->ClampStage();
   Robot::gear_loader->Deploy();
 }
 

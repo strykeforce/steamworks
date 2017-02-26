@@ -20,3 +20,8 @@ void ReleaseGear::Initialize() {
  * Finished when pivot has returned to lowered position.
  */
 bool ReleaseGear::IsFinished() { return Robot::gear_loader->IsPivotDown(); }
+
+/**
+ * Stow clamp after releasing.
+ */
+void ReleaseGear::End() { Robot::gear_loader->ClampShut(); }

@@ -10,7 +10,7 @@ LoadGear::LoadGear() : frc::Command("LoadGear") {
 
 void LoadGear::Initialize() {
   Robot::gear_loader->StopLoader();
-  Robot::gear_loader->ClampOpen();
+  Robot::gear_loader->ClampShut();
   Robot::gear_loader->SetLimitSwitchNormallyOpen(true);
   Robot::gear_loader->Load();
 }

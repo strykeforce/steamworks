@@ -12,6 +12,7 @@ class ReleaseGear : public frc::Command {
  protected:
   void Initialize() override;
   bool IsFinished() override;
+  void End() override;
 };
 } /* gear */
 } /* command */

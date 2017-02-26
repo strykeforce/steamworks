@@ -61,25 +61,41 @@ bool GearLoader::IsLimitSwitchClosed() {
 /**
  * Set gear clamp to open position for loading.
  */
-void GearLoader::ClampOpen() {
-  logger_->debug("open gear clamp, servo = {}", clamp_open_);
-  servo_.Set(clamp_open_);
+void GearLoader::ClampStage() {
+  logger_->debug("gear clamp stage, left = {}, right ={}", left_clamp_stage_,
+                 right_clamp_stage_);
+  left_servo_.Set(left_clamp_stage_);
+  right_servo_.Set(right_clamp_stage_);
 }
 
 /**
  * Set gear clamp to clamped shut position for pivoting.
  */
 void GearLoader::ClampShut() {
-  logger_->debug("shut gear clamp, servo = {}", clamp_shut_);
-  servo_.Set(clamp_shut_);
+  logger_->debug("gear clamp shut, left = {}, right = {}", left_clamp_shut_,
+                 right_clamp_shut_);
+  left_servo_.Set(left_clamp_shut_);
+  right_servo_.Set(right_clamp_shut_);
 }
 
 /**
  * Set gear clamp to fully open position for releasing gear on lifter.
  */
 void GearLoader::ClampRelease() {
-  logger_->debug("gear clamp release, servo = {}", clamp_release_);
-  servo_.Set(clamp_release_);
+  logger_->debug("gear clamp release, left = {}, right = {}",
+                 left_clamp_release_, right_clamp_release_);
+  left_servo_.Set(left_clamp_release_);
+  right_servo_.Set(right_clamp_release_);
+}
+
+/**
+ * Set gear clamp to safe stowed position.
+ */
+void GearLoader::ClampStow() {
+  logger_->debug("gear clamp stow, left = {}, right = {}", left_clamp_stow_,
+                 right_clamp_stow_);
+  left_servo_.Set(left_clamp_stow_);
+  right_servo_.Set(right_clamp_stow_);
 }
 
 namespace {
@@ -183,33 +199,81 @@ void GearLoader::LoadConfigSettings(
   }
   logger_->info("gear intake motor deploy voltage: {}", deploy_voltage_);
 
-  // gear_clamp_open
-  d_opt = steamworks_config->get_as<double>("gear_clamp_open");
+  // gear_clamp_stage
+  d_opt = steamworks_config->get_as<double>("left_gear_clamp_stage");
   if (d_opt) {
-    clamp_open_ = *d_opt;
-  } else {
-    logger_->warn("STEAMWORKS gear_clamp_open setting missing, using default");
-  }
-  logger_->info("gear clamp open position: {}", clamp_open_);
-
-  // gear_clamp_shut
-  d_opt = steamworks_config->get_as<double>("gear_clamp_shut");
-  if (d_opt) {
-    clamp_shut_ = *d_opt;
-  } else {
-    logger_->warn("STEAMWORKS gear_clamp_shut setting missing, using default");
-  }
-  logger_->info("gear clamp shut position: {}", clamp_shut_);
-
-  // gear_clamp_release
-  d_opt = steamworks_config->get_as<double>("gear_clamp_release");
-  if (d_opt) {
-    clamp_release_ = *d_opt;
+    left_clamp_stage_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS gear_clamp_release setting missing, using default");
+        "STEAMWORKS left_gear_clamp_stage setting missing, using default");
   }
-  logger_->info("gear clamp release position: {}", clamp_release_);
+  logger_->info("left gear clamp stage position: {}", left_clamp_stage_);
+
+  d_opt = steamworks_config->get_as<double>("right_gear_clamp_stage");
+  if (d_opt) {
+    right_clamp_stage_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS right_gear_clamp_stage setting missing, using default");
+  }
+  logger_->info("right gear clamp stage position: {}", right_clamp_stage_);
+
+  // gear_clamp_shut
+  d_opt = steamworks_config->get_as<double>("left_gear_clamp_shut");
+  if (d_opt) {
+    left_clamp_shut_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS left_gear_clamp_shut setting missing, using default");
+  }
+  logger_->info("left gear clamp shut position: {}", left_clamp_shut_);
+
+  d_opt = steamworks_config->get_as<double>("right_gear_clamp_shut");
+  if (d_opt) {
+    right_clamp_shut_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS right_gear_clamp_shut setting missing, using default");
+  }
+  logger_->info("right gear clamp shut position: {}", right_clamp_shut_);
+
+  // gear_clamp_release
+  d_opt = steamworks_config->get_as<double>("left_gear_clamp_release");
+  if (d_opt) {
+    left_clamp_release_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS left_gear_clamp_release setting missing, using default");
+  }
+  logger_->info("left gear clamp release position: {}", left_clamp_release_);
+
+  d_opt = steamworks_config->get_as<double>("right_gear_clamp_release");
+  if (d_opt) {
+    right_clamp_release_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS right_gear_clamp_release setting missing, using default");
+  }
+  logger_->info("right gear clamp release position: {}", right_clamp_release_);
+
+  // gear_clamp_stow
+  d_opt = steamworks_config->get_as<double>("left_gear_clamp_stow");
+  if (d_opt) {
+    left_clamp_stow_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS left_gear_clamp_stow setting missing, using default");
+  }
+  logger_->info("left gear clamp stow position: {}", left_clamp_stow_);
+
+  d_opt = steamworks_config->get_as<double>("right_gear_clamp_stow");
+  if (d_opt) {
+    right_clamp_stow_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS right_gear_clamp_stow setting missing, using default");
+  }
+  logger_->info("right gear clamp stow position: {}", right_clamp_stow_);
 
   // gear_pivot_up
   auto i_opt = steamworks_config->get_as<int>("gear_pivot_up");

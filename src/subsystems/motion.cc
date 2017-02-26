@@ -86,5 +86,6 @@ void Motion::Calculate() {
  * True when robot has finished travelling distance.
  */
 bool Motion::OnTarget() {
+  // FIXME: precalculate condition
   return iteration_ >= total_inputs_ + f1_len_ + f2_len_;
 }
