@@ -78,12 +78,8 @@ SwerveDrive::SwerveDrive(const std::string& name,
   drive_settings->Initialize(map_->rr_drive);
 
   // max output to CANTalon.Set().
-  auto drive_scale_factor = settings->get_as<double>("drive_scale_factor");
-  if (!drive_scale_factor) {
-    throw std::invalid_argument(
-        "SIDEWINDER drive_scale_factor setting is missing");
-  }
-  drive_scale_factor_ = *drive_scale_factor;
+  drive_scale_factor_ = drive_settings->GetSetpointMax();
+
   auto dead_zone_ = settings->get_as<double>("drive_dead_zone");
   if (!dead_zone_) {
     throw std::invalid_argument(

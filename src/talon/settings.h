@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CANTalon.h"
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
+#include <CANTalon.h>
+#include <cpptoml/cpptoml.h>
+#include <spdlog/spdlog.h>
 
 namespace sidewinder {
 namespace talon {
@@ -13,15 +13,6 @@ using Logger = const std::shared_ptr<spdlog::logger>;
  * This class is not intended to be used directly, use a subclass.
  */
 class Settings {
- private:
-  ::CANTalon::FeedbackDevice feedback_device_;
-  ::CANTalon::NeutralMode neutral_mode_;
-  ::CANTalon::LimitMode limit_mode_;
-  double voltage_ramp_rate_;
-  bool encoder_reversed_;
-  bool output_reversed_;
-  uint32_t current_limit_;
-
  public:
   // factory method, used to create obj based on config file
   static std::unique_ptr<Settings> Create(
@@ -36,8 +27,20 @@ class Settings {
   virtual void SetMode(::CANTalon* talon) const;
   // convience method, calls Configure and SetMode
   void Initialize(::CANTalon* talon) const;
+  // get the max setpoint
+  double GetSetpointMax();
   // dump config to log
   virtual void LogConfig(Logger logger) const;
+
+ private:
+  ::CANTalon::FeedbackDevice feedback_device_;
+  ::CANTalon::NeutralMode neutral_mode_;
+  ::CANTalon::LimitMode limit_mode_;
+  double voltage_ramp_rate_;
+  bool encoder_reversed_;
+  bool output_reversed_;
+  uint32_t current_limit_;
+  double setpoint_max_ = -1.0;
 };
 
 } /* talon */

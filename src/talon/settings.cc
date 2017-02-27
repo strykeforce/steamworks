@@ -109,9 +109,16 @@ Settings::Settings(const std::shared_ptr<cpptoml::table> config) {
     throw invalid_argument("TALON current_limit setting missing");
   }
   current_limit_ = *ui_opt;
+
+  // optionally set setpoint scaling
+  d_opt = config->get_as<double>("setpoint_max");
+  if (d_opt) {
+    setpoint_max_ = *d_opt;
+  }
 }
 
-/** Configure is intended to be one-time setup for Talons at initialization.
+/**
+ * Configure is intended to be one-time setup for Talons at initialization.
  */
 void Settings::Configure(::CANTalon* talon) const {
   assert(talon);
@@ -123,7 +130,8 @@ void Settings::Configure(::CANTalon* talon) const {
   talon->SetInverted(output_reversed_);
 }
 
-/** SetMode sets the current operating mode for the Talon, i.e. voltage,
+/**
+ * SetMode sets the current operating mode for the Talon, i.e. voltage,
  * velocity, etc. It is not unusual to switch between modes frequently during
  * robot operation.
  */
@@ -134,15 +142,31 @@ void Settings::SetMode(::CANTalon* talon) const {
   talon->SetVoltageRampRate(voltage_ramp_rate_);
 }
 
-/** Convenience method that calls Configure and SetMode for talon.
+/**
+ * Convenience method that calls Configure and SetMode for talon.
  */
 void Settings::Initialize(::CANTalon* talon) const {
   Configure(talon);
   SetMode(talon);
 }
 
+/**
+ * Returns the optional max setpoint for this Talon configuration. If this is
+ * accessed, but not set by the config file, it will throw an exception.
+ */
+double Settings::GetSetpointMax() {
+  if (setpoint_max_ == -1) {
+    throw logic_error("setpoint_max not used in these Talon settings");
+  }
+  return setpoint_max_;
+}
+
+/**
+ * Log the settings to the supplied logger.
+ */
 void Settings::LogConfig(Logger logger) const {
   assert(logger);
+  logger->debug("setpoint_max = {} (-1 = not used)", setpoint_max_);
   logger->debug("feedback_device = {}", feedback_device_);
   logger->debug("neutral_mode = {}", neutral_mode_);
   logger->debug("limit_mode = {}", limit_mode_);
