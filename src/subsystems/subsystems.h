@@ -1,5 +1,6 @@
 #pragma once
 
+#include "subsystems/camera.h"
 #include "subsystems/climber.h"
 #include "subsystems/drive.h"
 #include "subsystems/gear.h"

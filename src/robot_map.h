@@ -9,6 +9,8 @@ namespace steamworks {
 
 class RobotMap {
  public:
+  static const std::string kCameraSerialPort;
+
   enum Talons {
     kRightFrontAzimuth = 2,
     kRightFrontDrive = 12,
@@ -27,6 +29,22 @@ class RobotMap {
     kClimberMaster = 61,  // reversed
     kClimberSlave = 62,
   };
+
+  enum Servos {
+    kGearClampLeft = 0,
+    kGearClampRight = 1,
+  };
+
+  enum DigitalInputs {
+    kAutonSwitchLSB = 0,
+    kAutonSwitchMSB = 6,
+  };
+
+  enum DigitalOutputs {
+    kGearCameraLight = 8,
+    kBoilerCameraLight = 9,
+  };
+
   // pointers to talons and azimuth encoder zero count
   static sidewinder::swerve::TalonMap* swerve_talons;
 

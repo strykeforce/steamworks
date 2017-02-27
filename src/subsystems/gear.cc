@@ -1,7 +1,6 @@
 #include "gear.h"
 
-#include "robot_map.h"
-#include "sidewinder/talon/settings.h"
+#include <sidewinder/talon/settings.h>
 
 using namespace steamworks::subsystem;
 using namespace sidewinder;
@@ -98,6 +97,7 @@ void GearLoader::ClampStow() {
   right_servo_.Set(right_clamp_stow_);
 }
 
+// FIXME: hard-coded
 namespace {
 const double kGearZeroPosition = -50.0;
 const double kGearZeroVoltage = -1.0;

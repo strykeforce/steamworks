@@ -1,9 +1,11 @@
 #pragma once
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-#include "sidewinder/talon/settings.h"
-#include "spdlog/spdlog.h"
+#include <WPILib.h>
+#include <cpptoml/cpptoml.h>
+#include <sidewinder/talon/settings.h>
+#include <spdlog/spdlog.h>
+
+#include "robot_map.h"
 
 namespace steamworks {
 namespace subsystem {
@@ -38,8 +40,8 @@ class GearLoader : public frc::Subsystem {
   const std::shared_ptr<spdlog::logger> logger_;
   std::unique_ptr<sidewinder::talon::Settings> pivot_zero_settings_;
   std::unique_ptr<sidewinder::talon::Settings> pivot_settings_;
-  Servo left_servo_{0};
-  Servo right_servo_{1};
+  Servo left_servo_{RobotMap::kGearClampLeft};
+  Servo right_servo_{RobotMap::kGearClampRight};
   double load_voltage_ = 12.0;
   double deploy_voltage_ = 8.0;
 

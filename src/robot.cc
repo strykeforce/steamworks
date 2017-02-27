@@ -15,6 +15,7 @@
 using namespace steamworks;
 
 OI* Robot::oi = nullptr;
+subsystem::Camera* Robot::camera = nullptr;
 subsystem::Climber* Robot::climber = nullptr;
 subsystem::SwerveDrive* Robot::drive = nullptr;
 subsystem::GearLoader* Robot::gear_loader = nullptr;
@@ -30,6 +31,7 @@ void Robot::RobotInit() {
   RobotMap::Init(config_);
 
   logger_->trace("initializing subsystems");
+  camera = new subsystem::Camera(config_);
   climber = new subsystem::Climber(config_);
   drive = new subsystem::SwerveDrive(config_);
   gear_loader = new subsystem::GearLoader(config_);
