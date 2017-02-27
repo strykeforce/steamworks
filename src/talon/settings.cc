@@ -1,10 +1,6 @@
 #include "settings.h"
 
-#include <iostream>
-#include "CANTalon.h"
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
-
+#include "motion_magic_settings.h"
 #include "position_settings.h"
 #include "velocity_settings.h"
 #include "voltage_settings.h"
@@ -55,6 +51,8 @@ unique_ptr<Settings> Settings::Create(
     settings.reset(new PositionSettings(talon));
   } else if (*type == "velocity") {
     settings.reset(new VelocitySettings(talon));
+  } else if (*type == "motion_magic") {
+    settings.reset(new MotionMagicSettings(talon));
   } else {
     throw invalid_argument("unrecognized type: " + *type);
   }

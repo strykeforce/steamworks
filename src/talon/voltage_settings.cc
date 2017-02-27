@@ -12,7 +12,7 @@ VoltageSettings::VoltageSettings(const std::shared_ptr<cpptoml::table> config)
     : Settings(config) {}
 
 void VoltageSettings::SetMode(::CANTalon* talon) const {
-  talon->SetControlMode(::CANTalon::ControlMode::kVoltage);
+  talon->SetTalonControlMode(::CANTalon::kVoltageMode);
   Settings::SetMode(talon);
 }
 

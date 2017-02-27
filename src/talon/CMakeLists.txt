@@ -5,6 +5,7 @@ target_sources(sidewinder
   "${CMAKE_CURRENT_LIST_DIR}/pid_settings.cc"
   "${CMAKE_CURRENT_LIST_DIR}/position_settings.cc"
   "${CMAKE_CURRENT_LIST_DIR}/velocity_settings.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/motion_magic_settings.cc"
   PUBLIC
   "${CMAKE_CURRENT_LIST_DIR}/settings.h"
 )

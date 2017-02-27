@@ -13,7 +13,7 @@ VelocitySettings::VelocitySettings(const std::shared_ptr<cpptoml::table> config)
 
 void VelocitySettings::SetMode(::CANTalon* talon) const {
   assert(talon);
-  talon->SetControlMode(::CANTalon::ControlMode::kSpeed);
+  talon->SetTalonControlMode(::CANTalon::kSpeedMode);
   PIDSettings::SetMode(talon);
 }
 

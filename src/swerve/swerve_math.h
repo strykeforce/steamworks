@@ -1,10 +1,7 @@
 #pragma once
 
-#include <iostream>
-
-#include "cpptoml/cpptoml.h"
-#include "spdlog/fmt/ostr.h"
-#include "spdlog/spdlog.h"
+#include <cpptoml/cpptoml.h>
+#include <spdlog/fmt/ostr.h>
 
 namespace sidewinder {
 namespace swerve {
@@ -18,22 +15,16 @@ struct Vector2f {
   double x;
   double y;
 };
+
 enum RotationPoint : unsigned char { Center, Shooter, END_OF_LIST };
-#if 1
-	enum WheelPoints : unsigned char {
-	  RightFront = 1,  
-	  LeftFront = 0,   
-	  LeftRear = 3,    
-	  RightRear = 2,
-	};
-#else
-	enum WheelPoints : unsigned char {
-	  RightFront = 1,  
-	  LeftFront = 0,   
-	  LeftRear = 3,    
-	  RightRear = 2,
-	};
-#endif
+
+enum WheelPoints : unsigned char {
+  RightFront = 1,
+  LeftFront = 0,
+  LeftRear = 3,
+  RightRear = 2,
+};
+
 class SwerveMath {
  private:
   double wheel_angles[4]{0.0, 0.0, 0.0, 0.0};

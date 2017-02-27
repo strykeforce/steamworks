@@ -13,7 +13,7 @@ PositionSettings::PositionSettings(const std::shared_ptr<cpptoml::table> config)
 
 void PositionSettings::SetMode(::CANTalon* talon) const {
   assert(talon);
-  talon->SetControlMode(::CANTalon::ControlMode::kPosition);
+  talon->SetTalonControlMode(::CANTalon::kPositionMode);
   PIDSettings::SetMode(talon);
 }
 

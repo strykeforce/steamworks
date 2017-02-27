@@ -1,8 +1,8 @@
 #include "swerve_math.h"
 
+#include <spdlog/spdlog.h>
 #include <cmath>
 #include <cstring>
-#include "spdlog/spdlog.h"
 
 constexpr double PI = 3.14159265358979323846;
 constexpr double TAU = 2.0 * PI;
