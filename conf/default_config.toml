@@ -214,28 +214,32 @@ azimuth_sma_period = 5
 
         [[SIDEWINDER.SWERVE.TALON]]
         name = "azimuth"
-        type = "position"
+        type = "motion_magic"
 
         feedback_device = 0 # quad
         neutral_mode    = 2 # coast
         limit_mode      = 2 # soft and hard disabled
 
-        P      =   10.0
+        P      =    1.0
         I      =    0.0
-        D      =  150.0
-        F      =    0.0
+        D      =   75.0
+        F      =    0.8
         I_zone =      0
 
-        voltage_ramp_rate              =  0.0 # v/s, 0 disables
-        close_loop_ramp_rate           =  0.0 # v/s, 0 disables
-        peak_output_voltage_forward    =  5.0 # v
-        peak_output_voltage_reverse    = -5.0 # v
-        nominal_output_voltage_forward =  0.0 # v
-        nominal_output_voltage_reverse =  0.0 # v
-        allowable_closed_loop_error    =    0 # encoder ticks
+        # motion magic
+        cruise_velocity =  800.0
+        acceleration    = 6400.0
+
+        voltage_ramp_rate              =   0.0 # v/s, 0 disables
+        close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+        peak_output_voltage_forward    =  12.0 # v
+        peak_output_voltage_reverse    = -12.0 # v
+        nominal_output_voltage_forward =   0.0 # v
+        nominal_output_voltage_reverse =   0.0 # v
+        allowable_closed_loop_error    =     0 # encoder ticks
         encoder_reversed = false
         output_reversed  = false
-        current_limit    = 0 # amps, 0 disables
+        current_limit    = 20 # amps, 0 disables
 
         [[SIDEWINDER.SWERVE.TALON]]
         name = "drive"
