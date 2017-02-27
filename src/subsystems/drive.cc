@@ -22,9 +22,8 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config)
  * Configure the drive talons with the "drive" settings in SIDEWINDER.SWERVE.
  */
 void SwerveDrive::SetTeleOpMode() {
-  // FIXME: hard-coded for voltage mode
   assert(drive_settings_);
-  SetDriveMode(drive_settings_, 12.0);
+  SetDriveMode(drive_settings_, drive_settings_->GetSetpointMax());
 }
 
 /**
@@ -32,8 +31,9 @@ void SwerveDrive::SetTeleOpMode() {
  * SIDEWINDER.SWERVE.
  */
 void SwerveDrive::SetAutonMode() {
-  // FIXME: hard-coded
-  SetDriveMode(drive_auton_settings_, 600.0);
+  assert(drive_settings_);
+  SetDriveMode(drive_auton_settings_,
+               drive_auton_settings_->GetSetpointMax());
 }
 
 /**
@@ -44,6 +44,7 @@ void SwerveDrive::DriveAutonomous(double forward, double strafe,
   swerve::SwerveDrive::Drive_(forward, strafe, azimuth);
 }
 
+// TODO: put in config file
 namespace {
 const unsigned kMaxV = 400;
 const unsigned kTimeV = 400;
