@@ -10,8 +10,6 @@ Vagrant.configure('2') do |config|
     v.cpus = 2
   end
 
-  config.vm.network 'public_network'
-
   # We provision using ansible_local, bootstrap our ansible roles by
   # downloading them from our repo.
   config.vm.provision 'shell', inline: <<-SCRIPT

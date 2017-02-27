@@ -17,6 +17,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include "CANTalon.h"
 #include "WPILib.h"
 
 #include "RIOUtils.h"
@@ -205,23 +206,28 @@ void SetBrakeCoastModeC() {
       ConfigNeutralMode(CANTalon::NeutralMode::kNeutralMode_Coast));
 }
 void SetControlModePV() {
-  ForEveryUsingTalon(SetControlMode(CANTalon::ControlMode::kPercentVbus));
+  ForEveryUsingTalon(SetTalonControlMode(CANTalon::kThrottleMode));
 }
 void SetControlModeV() {
-  ForEveryUsingTalon(SetControlMode(CANTalon::ControlMode::kVoltage));
+  ForEveryUsingTalon(SetTalonControlMode(CANTalon::kVoltageMode));
 }
 void SetControlModeP() {
-  ForEveryUsingTalon(SetControlMode(CANTalon::ControlMode::kPosition));
+  ForEveryUsingTalon(SetTalonControlMode(CANTalon::kPositionMode));
 }
 void SetControlModeSp() {
-  ForEveryUsingTalon(SetControlMode(CANTalon::ControlMode::kSpeed));
+  ForEveryUsingTalon(SetTalonControlMode(CANTalon::kSpeedMode));
 }
 void SetControlModeCu() {
-  ForEveryUsingTalon(SetControlMode(CANTalon::ControlMode::kCurrent));
+  ForEveryUsingTalon(SetTalonControlMode(CANTalon::kCurrentMode));
 }
+
+void SetControlModeMagic() {
+  ForEveryUsingTalon(SetTalonControlMode(CANTalon::kMotionMagicMode));
+}
+
 void SetControlModeSl() {
   int ID = static_cast<int>(query("Master Talon ID"));
-  ForEveryUsingTalon(SetControlMode(CANTalon::ControlMode::kFollower));
+  ForEveryUsingTalon(SetTalonControlMode(CANTalon::kFollowerMode));
   ForEveryUsingTalon(Set(ID));
 }
 void SetStatusFrameRates_G() {
@@ -380,17 +386,18 @@ void SetDIO_Pin() {
   t->Set(value);
   printf("Value == %i\n", value);
 }
-void SetControlMode() {
+void SetTalonControlMode() {
   char* FunctionNames[] = {"Percent Voltage (-1 to 1)",
                            "Position (Encoder Counts)",
                            "Speed (Encoder Counts per Tenth of Second)",
                            "Voltage (Volts)",
                            "Slave",
-                           "Current"};
-  VoidFunction FunctionPointers[] = {SetControlModePV, SetControlModeP,
-                                     SetControlModeSp, SetControlModeV,
-                                     SetControlModeSl, SetControlModeCu};
-  menu(6, FunctionNames, "Select New Control Mode", FunctionPointers, false);
+                           "Current",
+                           "Motion Magic"};
+  VoidFunction FunctionPointers[] = {
+      SetControlModePV, SetControlModeP,  SetControlModeSp,   SetControlModeV,
+      SetControlModeSl, SetControlModeCu, SetControlModeMagic};
+  menu(7, FunctionNames, "Select New Control Mode", FunctionPointers, false);
 }
 void SetStatusFrameRates() {
   char* FunctionNames[] = {
@@ -414,6 +421,16 @@ void SetCurrentLimit() {
   }
   ForEveryUsingTalon(SetCurrentLimit(current_limit));
   ForEveryUsingTalon(EnableCurrentLimit(true));
+}
+
+void SetMotionMagicCruiseVelocity() {
+  double cruise_velocity = query("New Motion Magic Cruise Velocity (RPM)");
+  ForEveryUsingTalon(SetMotionMagicCruiseVelocity(cruise_velocity));
+}
+
+void SetMotionMagicAcceleration() {
+  double accel = query("New Motion Magic Acceleration (RPM/sec)");
+  ForEveryUsingTalon(SetMotionMagicAcceleration(accel));
 }
 
 void Set() {
@@ -444,9 +461,11 @@ void Set() {
       "Status Frame Rates",
       "Current Limit",
       "Pulse Length",
+      "Motion Magic Cruise Velocity",
+      "Motion Magic Acceleration",
   };
   VoidFunction FunctionPointers[] = {
-      SetControlMode,
+      SetTalonControlMode,
       SetP,
       SetI,
       SetD,
@@ -472,8 +491,10 @@ void Set() {
       SetStatusFrameRates,
       SetCurrentLimit,
       SetPulseLength,
+      SetMotionMagicCruiseVelocity,
+      SetMotionMagicAcceleration,
   };
-  menu(26, FunctionNames, "Set What?", FunctionPointers, true);
+  menu(28, FunctionNames, "Set What?", FunctionPointers, true);
 }
 void Get() {
   char* FunctionNames[] = {
@@ -495,7 +516,7 @@ class Robot : public SampleRobot {
     SetForgroundColor(TColor::Default);
     ClearScreen();
     printf("\n");
-    printf("Welcome to BDC_Comm v6.4\n");
+    printf("Welcome to BDC_Comm v6.5\n");
     SingularTalon();
     char* FunctionNames[] = {"Select One Single Talon",
                              "Select Additional Talon",
