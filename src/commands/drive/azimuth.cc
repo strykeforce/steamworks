@@ -7,11 +7,12 @@ using namespace steamworks::command;
 
 // tuning parameters
 namespace {
-const double kP = 0.01;
-const double kI = 0.0;
+const double kP = 0.003;
+const double kI = 0.0001;
 const double kD = 0.0;
 
-const double kToleranceDegrees = 2.0;  // how close to "on target" we want to be
+const double kToleranceDegrees = 1.0;  // how close to "on target" we want to be
+const double kDeadzone = 0.01;
 }
 
 /**
@@ -39,10 +40,12 @@ DriveAzimuth::DriveAzimuth(double angle)
  * Initialize starts the PID controller loop.
  */
 void DriveAzimuth::Initialize() {
+  // Robot::drive->SetAzimuthMode();
+  Robot::drive->SetAutonMode();
   controller_->SetSetpoint(angle_);
   controller_->Enable();
   logger_->debug("setpoint = {}", controller_->GetSetpoint());
-  logger_->debug("gyro = {}", RobotMap::gyro->GetAngle());
+  logger_->debug("gyro = {}", RobotMap::gyro->GetYaw());
   logger_->debug("error = {}", controller_->GetError());
 }
 
@@ -51,14 +54,14 @@ void DriveAzimuth::Initialize() {
  * rate commands to the swerve drive based on current PID calculations.
  */
 void DriveAzimuth::Execute() {
-  // if (std::fabs(azimuth_rate_) < 0.1) {
-  //   if (azimuth_rate_ < 0.0) {
-  //     azimuth_rate_ = -0.1;
-  //   }
-  //   azimuth_rate_ = 0.1;
-  // }
+  if (std::fabs(azimuth_rate_) < kDeadzone) {
+    if (azimuth_rate_ < 0.0) {
+      azimuth_rate_ = -kDeadzone;
+    }
+    azimuth_rate_ = kDeadzone;
+  }
   logger_->debug("execute azimuth rate = {:+f}", azimuth_rate_);
-  Robot::drive->Drive(0.0, 0.0, azimuth_rate_);
+  Robot::drive->DriveAutonomous(0.0, 0.0, azimuth_rate_);
 }
 
 /**
@@ -66,8 +69,8 @@ void DriveAzimuth::Execute() {
  * if desired angle is reached.
  */
 bool DriveAzimuth::IsFinished() {
-  logger_->debug("avg. error = {}", controller_->GetAvgError());
-  logger_->debug("is finished = {}", controller_->OnTarget());
+  // logger_->debug("avg. error = {}", controller_->GetAvgError());
+  // logger_->debug("is finished = {}", controller_->OnTarget());
   return controller_->OnTarget();
 }
 
@@ -79,7 +82,7 @@ void DriveAzimuth::End() {
   logger_->debug("end");
   Robot::drive->Drive(0.0, 0.0, 0.0);
   controller_->Reset();
-  // controller_.reset(nullptr);
+  logger_->debug("Gyro angle = {}", RobotMap::gyro->GetYaw());
 }
 
 /**

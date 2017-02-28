@@ -18,16 +18,23 @@ class SwerveDrive : public sidewinder::swerve::SwerveDrive {
 
   void SetTeleOpMode();
   void SetAutonMode();
+  void SetAzimuthMode();
+  void SetMotionMagicMode();
 
   void DriveAutonomous(double forward, double strafe, double azimuth);
-  void DriveDistance(int distance);
+
+  void ZeroDistance();
+  void DriveDistance(int distance, int azimuth);
   bool IsMotionDone();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   std::shared_ptr<sidewinder::talon::Settings> drive_settings_;
   std::shared_ptr<sidewinder::talon::Settings> drive_auton_settings_;
-  std::unique_ptr<Motion> motion_;
+  std::shared_ptr<sidewinder::talon::Settings> drive_azimuth_settings_;
+  std::shared_ptr<sidewinder::talon::Settings> drive_motion_magic_settings_;
+  double distance_;
+  // std::unique_ptr<Motion> motion_;
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
 };

@@ -80,6 +80,9 @@ bool DriveAutonomous::IsFinished() {
 
 void DriveAutonomous::End() { Robot::drive->CrabDriveAutonomous(0, azimuth_); }
 
+//
+// DriveProfile
+//
 DriveProfile::DriveProfile(int distance)
     : frc::Command("DriveProfile"),
       logger_(spdlog::get("command")),
@@ -88,16 +91,19 @@ DriveProfile::DriveProfile(int distance)
 }
 
 void DriveProfile::Initialize() {
+  logger_->debug("zeroing out drive encoders");
+  Robot::drive->ZeroDistance();
+
   logger_->debug("initializing drive profile command");
-  Robot::drive->SetAutonMode();
-  logger_->debug("drive profile command auton mode set");
-  Robot::drive->DriveDistance(distance_);
+  Robot::drive->SetMotionMagicMode();
+  logger_->debug("drive motion magic mode set");
+  Robot::drive->DriveDistance(distance_, 0);
   logger_->debug("drive profile command motion profile started");
 }
 
 bool DriveProfile::IsFinished() {
   auto done = Robot::drive->IsMotionDone();
-  logger_->debug("drive profile command done = {}", done);
+  // logger_->debug("drive profile command done = {}", done);
   return done;
 }
 
@@ -118,7 +124,9 @@ const int kVelocity = 200;
  */
 AutonTestSeq::AutonTestSeq()
     : frc::CommandGroup("AutonTestSeq"), logger_(spdlog::get("command")) {
-  AddSequential(new DriveProfile(4000));
+  AddSequential(new DriveProfile(5072));  // 100 in.
+  AddSequential(new WaitCommand(10));
+  AddSequential(new DriveProfile(-5072));
   // AddSequential(new PositionWheels(kForwardAzimuth));
   //
   // AddSequential(
