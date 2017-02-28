@@ -55,6 +55,7 @@ class OI {
   double GetTeleDriveForwardAxis();
   double GetTeleDriveStrafeAxis();
   double GetTeleDriveAzimuthAxis();
+  unsigned GetAutonMode();
 
  private:
   // create our joystick objects
@@ -87,7 +88,6 @@ class OI {
   void AssignFlightSimButtons();
   void AssignGamepadButtons();
   void AssignSmartDashboardButtons();
-  unsigned GetAutonMode();
 };
 
 } /* steamworks */
