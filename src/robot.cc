@@ -48,7 +48,10 @@ void Robot::DisabledInit() { logger_->trace(__PRETTY_FUNCTION__); }
 
 void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::AutonomousInit() { logger_->trace(__PRETTY_FUNCTION__); }
+void Robot::AutonomousInit() {
+  logger_->trace(__PRETTY_FUNCTION__);
+  logger_->info("initialize auton mode {:X}", oi->GetAutonMode());
+}
 
 void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 

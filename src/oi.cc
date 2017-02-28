@@ -2,11 +2,8 @@
 
 #include <cmath>
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-#include "sidewinder/oi/expo.h"
-
 #include "commands/commands.h"
+#include "robot_map.h"
 
 using namespace steamworks;
 
@@ -85,6 +82,21 @@ double OI::GetTeleDriveStrafeAxis() {
 double OI::GetTeleDriveAzimuthAxis() {
   double axis = flight_sim_joystick_.GetRawAxis(kFlightSimRightXAxis);
   return azimuth_expo_(axis);
+}
+
+/**
+ * Returns the Auton Mode switch setting.
+ */
+unsigned OI::GetAutonMode() {
+  uint8_t val = 0;
+
+  // iterate unsigned or int backwards to zero, i starts at kAutonSwitchMSB - 1
+  for (int i = RobotMap::kAutonSwitchMSB; i-- > 0;) {
+    frc::DigitalInput di{i};
+    val <<= 1;
+    val = (val & 0xFE) | (di.Get() ? 0 : 1);
+  }
+  return static_cast<unsigned>(val);
 }
 
 /**
@@ -178,5 +190,8 @@ void OI::AssignSmartDashboardButtons() {
 
   // drive forward 4 ft.
   SmartDashboard::PutData("Auton Drive", new command::AutonTestSeq());
-  SmartDashboard::PutData("Auton Azimuth", new command::DriveAzimuth(90));
+  SmartDashboard::PutData("Auton Azimuth 0", new command::DriveAzimuth(0));
+  SmartDashboard::PutData("Auton Azimuth 90", new command::DriveAzimuth(90));
+  SmartDashboard::PutData("Auton Azimuth 179", new command::DriveAzimuth(179));
+  SmartDashboard::PutData("Auton Azimuth -90", new command::DriveAzimuth(-90));
 }

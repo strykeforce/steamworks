@@ -1,9 +1,9 @@
 #pragma once
 
-#include "AHRS.h"
-#include "cpptoml/cpptoml.h"
+#include <AHRS.h>
+#include <cpptoml/cpptoml.h>
 
-#include "sidewinder/swerve/talon_map.h"
+#include <sidewinder/swerve/talon_map.h>
 
 namespace steamworks {
 
@@ -62,36 +62,6 @@ class RobotMap {
 
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);
-};
-
-// Joysticks
-enum Joysticks {
-  kFlightSimJoystick = 0,  // global.joy1 in old code
-  kGamePadJoystick,        // global.joy2
-};
-
-// flight sim axis deadzone 0.08
-enum FlightSimAxis {
-  kFlightSimRightAxis = 0,  // FlightSim_RightX_Axis
-  kFlightSimLeftAxis = 2,   // FlightSim_LeftY_Axis
-};
-
-enum FlightSimButtons {
-  kFlightSimLeftButton = 1,
-  kFlightSimRightCornerButton,
-  kFlightSimResetButton,
-  kFlightSimLeftCornerDownButton,
-  kFlightSimLeftCornerUpButton,
-};
-
-// Joystick Buttons
-enum JoystickButtons {
-  kGameButtonA = 1,
-  kGameButtonB,  // 2
-};
-
-enum TalonProfileSlots {
-  kPrimary,
 };
 
 } /* steamworks */

@@ -1,11 +1,10 @@
 #pragma once
 
+#include <WPILib.h>
+#include <cpptoml/cpptoml.h>
+#include <sidewinder/oi/expo.h>
+#include <sidewinder/oi/sma.h>
 #include <memory>
-
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-#include "sidewinder/oi/expo.h"
-#include "sidewinder/oi/sma.h"
 
 #include "triggers/triggers.h"
 
@@ -88,6 +87,7 @@ class OI {
   void AssignFlightSimButtons();
   void AssignGamepadButtons();
   void AssignSmartDashboardButtons();
+  unsigned GetAutonMode();
 };
 
 } /* steamworks */
