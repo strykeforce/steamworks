@@ -15,7 +15,7 @@ namespace steamworks {
 class Robot : public frc::IterativeRobot {
  public:
   static OI* oi;
-  static subsystem::Camera* camera;
+  static subsystem::Deadeye* deadeye;
   static subsystem::Climber* climber;
   static subsystem::SwerveDrive* drive;
   static subsystem::GearLoader* gear_loader;

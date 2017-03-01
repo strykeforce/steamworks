@@ -1,4 +1,5 @@
 [STEAMWORKS]
+
 grapher = true
 
 # settings for the fuel hopper motor voltage mode
@@ -33,6 +34,8 @@ right_gear_clamp_stow    = 0.6  # not used
 # settings for the gear pivot motor position mode
 gear_pivot_up   = 1080 # ticks
 gear_pivot_down =   10 # ticks
+
+[STEAMWORKS.CAMERA]
 
     [[STEAMWORKS.TALON]]
     name = "intake"
@@ -328,9 +331,9 @@ azimuth_sma_period = 5
         neutral_mode    = 2 # coast
         limit_mode      = 2 # soft and hard disabled
 
-        P      =     2.0
+        P      =     1.5
         I      =     0.008
-        D      =    75.0
+        D      =   150.0
         F      =     1.4
         I_zone =    25
 

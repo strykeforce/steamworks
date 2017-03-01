@@ -43,7 +43,8 @@ ZeroWheelAzimuth::ZeroWheelAzimuth() : frc::Command("ZeroWheelAzimuth") {
 void ZeroWheelAzimuth::Initialize() { Robot::drive->ZeroAzimuth(); }
 
 bool ZeroWheelAzimuth::IsFinished() {
-  return std::abs(Robot::drive->GetAzimuth()) < 10;
+  return false;
+  // return std::abs(Robot::drive->GetAzimuth()) < 10;
 }
 
 void ZeroWheelAzimuth::End() {

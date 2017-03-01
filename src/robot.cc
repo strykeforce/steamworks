@@ -15,7 +15,7 @@
 using namespace steamworks;
 
 OI* Robot::oi = nullptr;
-subsystem::Camera* Robot::camera = nullptr;
+subsystem::Deadeye* Robot::deadeye = nullptr;
 subsystem::Climber* Robot::climber = nullptr;
 subsystem::SwerveDrive* Robot::drive = nullptr;
 subsystem::GearLoader* Robot::gear_loader = nullptr;
@@ -31,7 +31,8 @@ void Robot::RobotInit() {
   RobotMap::Init(config_);
 
   logger_->trace("initializing subsystems");
-  camera = new subsystem::Camera(config_);
+  // deadeye = new subsystem::Deadeye(config_);
+  // deadeye->Start();  // start IO thread
   climber = new subsystem::Climber(config_);
   drive = new subsystem::SwerveDrive(config_);
   gear_loader = new subsystem::GearLoader(config_);
@@ -86,6 +87,7 @@ void Robot::ConfigureLogging() {
   spdlog::stdout_logger_st("command")->set_level(spdlog::level::info);
   spdlog::stdout_logger_st("subsystem")->set_level(spdlog::level::info);
   spdlog::stdout_logger_st("sidewinder")->set_level(spdlog::level::info);
+  spdlog::stdout_logger_mt("deadeye")->set_level(spdlog::level::info);
   logger_->info("configured as RELEASE build");
 #else
   logger_ = spdlog::stdout_color_st("robot");
@@ -93,6 +95,7 @@ void Robot::ConfigureLogging() {
   spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
   spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
   spdlog::stdout_color_st("sidewinder")->set_level(spdlog::level::trace);
+  spdlog::stdout_color_mt("deadeye")->set_level(spdlog::level::trace);
   logger_->warn("configured as DEBUG build");
 #endif
   spdlog::set_pattern("[%H:%M:%S.%e][%n][%l] %v");

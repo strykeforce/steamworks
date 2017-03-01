@@ -9,3 +9,5 @@ target_sources(${CMAKE_PROJECT_NAME}
   "${CMAKE_CURRENT_LIST_DIR}/motion.cc"
   "${CMAKE_CURRENT_LIST_DIR}/shooter.cc"
 )
+
+include("${PROJECT_SOURCE_DIR}/vendor/link/CMakeLists.txt")

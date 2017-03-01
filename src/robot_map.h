@@ -9,8 +9,6 @@ namespace steamworks {
 
 class RobotMap {
  public:
-  static const std::string kCameraSerialPort;
-
   enum Talons {
     kRightFrontAzimuth = 2,
     kRightFrontDrive = 12,

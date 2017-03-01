@@ -8,8 +8,6 @@
 using namespace steamworks;
 using namespace sidewinder;
 
-const std::string RobotMap::kCameraSerialPort = "/dev/ttyUSB0";
-
 // helper functions to start grapher data collection thread if enabled.
 namespace {
 inline JerrysGrapher_DeviceBundle jgdb(byte id, ::CANTalon* t) {

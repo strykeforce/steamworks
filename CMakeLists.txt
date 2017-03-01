@@ -29,6 +29,8 @@ include_directories(
   "${NAVX_LIBS}/include"
   "${CTRE_LIBS}/include"
   "${CMAKE_SOURCE_DIR}/vendor/include"
+  "${CMAKE_SOURCE_DIR}/vendor/serial/include"
+  "${CMAKE_SOURCE_DIR}/vendor/link"
 )
 
 link_directories(
