@@ -45,6 +45,8 @@ class SwerveDrive : public frc::Subsystem {
   int GetPosition(const Wheel wheel = kRightRear) const;
 
   // special driving or troubleshooting methods
+  void SetAzimuth(double setpoint);  // set all to same setpoint
+  void SetDrive(double setpoint);    // set all to same setpoint
   void ZeroAzimuth();
 
   void SetGyroDisabled(bool disabled);
@@ -54,7 +56,7 @@ class SwerveDrive : public frc::Subsystem {
   void WriteAzimuthCalibration();
   void ReadAzimuthCalibration();
 
-  void CrabDriveAutonomous(double velocity, int azimuth);
+  void CrabDriveAutonomous(double setpoint, int azimuth);
 
   // utility methods
   void SetLogger(const std::shared_ptr<spdlog::logger> logger);
@@ -64,13 +66,13 @@ class SwerveDrive : public frc::Subsystem {
   double drive_scale_factor_ = 0.0;
   const TalonMap* map_;
 
-  void Drive_(double forward, double strafe, double azimuth);
+  void Drive_(double forward, double strafe, double azimuth, double dead_zone);
 
  private:
   std::shared_ptr<AHRS> ahrs_;
   SwerveMath swerve_math_;
   bool gyro_disabled_ = false;
-  double dead_zone;
+  double dead_zone_;
 };
 } /* swerve */
 } /* sidewinder */
