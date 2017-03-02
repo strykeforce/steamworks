@@ -194,4 +194,6 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Auton Azimuth 90", new command::DriveAzimuth(90));
   SmartDashboard::PutData("Auton Azimuth 179", new command::DriveAzimuth(179));
   SmartDashboard::PutData("Auton Azimuth -90", new command::DriveAzimuth(-90));
+
+  SmartDashboard::PutData("Position Azimuth", new command::PositionAzimuth());
 }

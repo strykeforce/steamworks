@@ -4,88 +4,105 @@
 #include "robot_map.h"
 
 using namespace steamworks::command;
+using namespace std;
 
 // tuning parameters
 namespace {
-const double kP = 0.003;
-const double kI = 0.0001;
-const double kD = 0.0;
-
-const double kToleranceDegrees = 1.0;  // how close to "on target" we want to be
-const double kDeadzone = 0.01;
+const float kMaxSpeed = 75;
+const float kMinSpeed = 10;
+const int kCloseEnough = 2;
+const int kSlopeStart = 20;
+const int kStableCountReq = 3;
 }
 
 /**
- * DriveAzimuth is a command to spin the robot to a given field-relative angle.
- * See Kauai Labs example at
- * http://www.pdocs.kauailabs.com/navx-mxp/examples/rotate-to-angle-2/.
+ * DriveAzimuth is a command to spin the robot to a given field-relative
+ * azimuth.
  */
-DriveAzimuth::DriveAzimuth(double angle)
+DriveAzimuth::DriveAzimuth(float target)
     : frc::Command("DriveAzimuth"),
       logger_(spdlog::get("command")),
-      angle_(angle) {
-  // TODO: we might want to create controller during Initialize() and destroy
-  // during End() in order to stop the controller notifier
+      target_(target) {
   Requires(Robot::drive);
-  auto gyro = RobotMap::gyro.get();  // PIDSource
-  controller_.reset(new PIDController(kP, kI, kD, gyro, this));
-  controller_->SetInputRange(-180.0, 180.0);
-  controller_->SetOutputRange(-1.0, 1.0);
-  controller_->SetAbsoluteTolerance(kToleranceDegrees);
-  controller_->SetToleranceBuffer(1);
-  controller_->SetContinuous(true);
 }
 
 /**
  * Initialize starts the PID controller loop.
  */
 void DriveAzimuth::Initialize() {
-  // Robot::drive->SetAzimuthMode();
-  Robot::drive->SetAutonMode();
-  controller_->SetSetpoint(angle_);
-  controller_->Enable();
-  logger_->debug("setpoint = {}", controller_->GetSetpoint());
-  logger_->debug("gyro = {}", RobotMap::gyro->GetYaw());
-  logger_->debug("error = {}", controller_->GetError());
+  Robot::drive->SetAzimuthMode();
+  float initial = RobotMap::gyro->GetYaw();
+  error_ = target_ - initial;
+  logger_->debug("target = {}, initial = {}, error = {}", target_, initial,
+                 error_);
 }
 
 /**
  * Execute is called periodically during command execution and sends azimuth
- * rate commands to the swerve drive based on current PID calculations.
+ * rate commands to the swerve drive based on current error calculations.
  */
 void DriveAzimuth::Execute() {
-  if (std::fabs(azimuth_rate_) < kDeadzone) {
-    if (azimuth_rate_ < 0.0) {
-      azimuth_rate_ = -kDeadzone;
+  error_ = target_ - RobotMap::gyro->GetYaw();
+  abs_error_ = fabs(error_);
+  double speed;
+
+  if (abs_error_ < kSlopeStart) {
+    if (abs_error_ < kCloseEnough) {
+      speed = 0;
+    } else {
+      speed = kMinSpeed +
+              ((abs_error_ - kCloseEnough) / (kSlopeStart - kCloseEnough)) *
+                  (kMaxSpeed - kMinSpeed);
     }
-    azimuth_rate_ = kDeadzone;
+  } else {
+    speed = kMaxSpeed;
   }
-  logger_->debug("execute azimuth rate = {:+f}", azimuth_rate_);
-  Robot::drive->DriveAutonomous(0.0, 0.0, azimuth_rate_);
+  speed = speed * (signbit(error_) ? 1 : -1);  // match sign to error
+  logger_->debug("abs_error_ = {}, error_ = {}, speed =  {}", abs_error_,
+                 error_, speed);
+  Robot::drive->DriveAzimuthAutonomous(speed);
 }
 
 /**
  * IsFinished is called periodically during command execution and returns true
- * if desired angle is reached.
+ * if desired azimuth is reached.
  */
 bool DriveAzimuth::IsFinished() {
-  // logger_->debug("avg. error = {}", controller_->GetAvgError());
-  // logger_->debug("is finished = {}", controller_->OnTarget());
-  return controller_->OnTarget();
+  if (abs_error_ < kCloseEnough) {
+    stable_count_++;
+    logger_->trace("incrementing stable_count_ to {}", stable_count_);
+  } else {
+    stable_count_ = 0;
+    logger_->trace("resetting stable_count_ to 0");
+  }
+  if (stable_count_ == kStableCountReq) {
+    logger_->debug("done with DriveAzimuth auton azimuth");
+    return true;
+  }
+  return false;
 }
 
 /**
  * End is called after IsFinished(), it stops azimuth motion and disables the
  * PID controller loop.
  */
-void DriveAzimuth::End() {
-  logger_->debug("end");
-  Robot::drive->Drive(0.0, 0.0, 0.0);
-  controller_->Reset();
-  logger_->debug("Gyro angle = {}", RobotMap::gyro->GetYaw());
+void DriveAzimuth::End() { Robot::drive->SetDrive(0.0); }
+
+//
+// PositionAzimuth
+//
+PositionAzimuth::PositionAzimuth() : frc::Command("PositionAzimuth") {
+  Requires(Robot::drive);
 }
 
 /**
- * PIDWrite is called periodically by the PID controller.
+ * Initial send the position to the azimuth motors.
  */
-void DriveAzimuth::PIDWrite(double output) { azimuth_rate_ = output; }
+void PositionAzimuth::Initialize() { Robot::drive->PositionAzimuthForAuton(); }
+
+/**
+ * Azimuth wheels are close enough
+ */
+bool PositionAzimuth::IsFinished() {
+  return Robot::drive->IsPositionAzimuthForAutonDone();
+}

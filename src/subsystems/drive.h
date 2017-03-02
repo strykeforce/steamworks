@@ -21,6 +21,11 @@ class SwerveDrive : public sidewinder::swerve::SwerveDrive {
   void SetAzimuthMode();
   void SetMotionMagicMode();
 
+  // these three methods work together for autonomous azimuth
+  void PositionAzimuthForAuton();
+  bool IsPositionAzimuthForAutonDone();
+  void DriveAzimuthAutonomous(double setpoint);
+
   void DriveAutonomous(double forward, double strafe, double azimuth);
 
   void ZeroDistance();

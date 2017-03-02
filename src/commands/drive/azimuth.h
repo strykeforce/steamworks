@@ -6,11 +6,9 @@
 namespace steamworks {
 namespace command {
 
-class DriveAzimuth : public frc::Command, public PIDOutput {
+class DriveAzimuth : public frc::Command {
  public:
-  DriveAzimuth(double angle);
-
-  void PIDWrite(double output) override;  // PIDOutput
+  DriveAzimuth(float target);
 
  protected:
   void Initialize() override;
@@ -20,8 +18,19 @@ class DriveAzimuth : public frc::Command, public PIDOutput {
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  std::unique_ptr<PIDController> controller_;
-  double angle_, azimuth_rate_ = 0.0;
+  float target_;
+  float error_;
+  float abs_error_;
+  int stable_count_ = 0;
+};
+
+class PositionAzimuth : public frc::Command {
+ public:
+  PositionAzimuth();
+
+ protected:
+  void Initialize() override;
+  bool IsFinished() override;
 };
 
 } /* command */

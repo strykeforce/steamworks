@@ -31,7 +31,7 @@ void SwerveDrive::SetTeleOpMode() {
  * SIDEWINDER.SWERVE.
  */
 void SwerveDrive::SetAutonMode() {
-  assert(drive_settings_);
+  assert(drive_auton_settings_);
   SetDriveMode(drive_auton_settings_, drive_auton_settings_->GetSetpointMax());
 }
 
@@ -40,8 +40,9 @@ void SwerveDrive::SetAutonMode() {
  * SIDEWINDER.SWERVE.
  */
 void SwerveDrive::SetAzimuthMode() {
-  assert(drive_settings_);
-  SetDriveMode(drive_auton_settings_, drive_auton_settings_->GetSetpointMax());
+  assert(drive_azimuth_settings_);
+  SetDriveMode(drive_azimuth_settings_,
+               drive_azimuth_settings_->GetSetpointMax());
 }
 
 /**
@@ -51,6 +52,61 @@ void SwerveDrive::SetAzimuthMode() {
 void SwerveDrive::SetMotionMagicMode() {
   assert(drive_motion_magic_settings_);
   SetDriveMode(drive_motion_magic_settings_, 0);
+}
+
+namespace {
+const double kWheel1AzimuthAutonPos = (-40.4 / 180) * 2048;
+const double kWheel2AzimuthAutonPos = (40.4 / 180) * 2048;
+const double kWheel3AzimuthAutonPos = (-40.4 / 180) * 2048;
+const double kWheel4AzimuthAutonPos = (40.4 / 180) * 2048;
+}
+
+/**
+ * This is used to position the wheel azimuths for autonomous rotation of the
+ * robot. It moves each wheel a minimum angle by assuming the wheel azimuths
+ * started at zero.
+ *
+ * @see IsPositionAzimuthForAutonDone(), DriveAzimuthAutonomous(double setpoint)
+ */
+void SwerveDrive::PositionAzimuthForAuton() {
+  map_->rf_azimuth->Set(kWheel1AzimuthAutonPos);
+  map_->lf_azimuth->Set(kWheel2AzimuthAutonPos);
+  map_->lr_azimuth->Set(kWheel3AzimuthAutonPos);
+  map_->rr_azimuth->Set(kWheel4AzimuthAutonPos);
+}
+
+/**
+ * Commands use this to determine when wheels are finished moving to position
+ * for autonomous rotation.
+ *
+ * @return true when wheels are in position set by
+ * PositionAzimuthForAuton()
+ *
+ * @see PositionAzimuthForAuton(), DriveAzimuthAutonomous(double setpoint)
+ */
+bool SwerveDrive::IsPositionAzimuthForAutonDone() {
+  int error =
+      std::abs(GetPosition(swerve::SwerveDrive::kLeftFront) - kLeftFront);
+  logger_->debug("IsPositionAzimuthForAutonDone error = {}", error);
+  return error < 25;
+}
+
+/**
+ * Drives the azimuth motors that are set in PositionAzimuthForAuton above.
+ *
+ * Wheels 1 and 4 are driven reverse, while wheels 2 and 3 are driven forward to
+ * match the wheel azimuth positions set by
+ * PositionAzimuthForAuton()
+ *
+ * @param setpoint passed directly to Talon, positive is clockwise
+ *
+ * @see PositionAzimuthForAuton(), IsPositionAzimuthForAutonDone()
+ */
+void SwerveDrive::DriveAzimuthAutonomous(double setpoint) {
+  map_->rf_drive->Set(-setpoint);
+  map_->lf_drive->Set(setpoint);
+  map_->lr_drive->Set(setpoint);
+  map_->rr_drive->Set(-setpoint);
 }
 
 /**
@@ -65,6 +121,7 @@ void SwerveDrive::DriveAutonomous(double forward, double strafe,
  * Zero out the drive encoders.
  */
 void SwerveDrive::ZeroDistance() {
+  // TODO: a better name is ZeroDrivePostion
   map_->lf_drive->SetPosition(0);
   map_->rf_drive->SetPosition(0);
   map_->lr_drive->SetPosition(0);
@@ -75,6 +132,8 @@ void SwerveDrive::ZeroDistance() {
  * Drive the specified number of encoder ticks using motion profile.
  */
 void SwerveDrive::DriveDistance(int distance, int azimuth) {
+  // TODO: this now duplicates crab auton drive, need to unify and clean up
+  // naming. Change distance to setpoint.
   distance_ = distance;
   map_->lf_azimuth->Set(azimuth);
   map_->rf_azimuth->Set(azimuth);
