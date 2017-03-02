@@ -20,8 +20,12 @@ class Drive : public frc::Command {
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  int distance_;
-  int azimuth_;
+  double distance_;
+  int azimuth_ = 0;
+  double error_;
+  double abs_error_;
+  double start_decel_pos_;
+  double stable_count_ = 0;
 };
 } /* drive */
 } /* command */

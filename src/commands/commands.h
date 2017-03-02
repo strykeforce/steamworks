@@ -9,6 +9,7 @@
 #include "commands/auton/test.h"
 
 #include "commands/drive/auton/azimuth.h"
+#include "commands/drive/auton/drive.h"
 #include "commands/drive/auton/position_azimuth.h"
 #include "commands/drive/auton/position_drive.h"
 #include "commands/drive/tele_op.h"

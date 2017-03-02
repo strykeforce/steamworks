@@ -118,7 +118,8 @@ void SwerveDrive::DriveAutonomous(double forward, double strafe,
 }
 
 /**
- * Zero out the drive encoders.
+ * Reset all drive motor encoder counts to zero. Typically, this is done to
+ * prepare for an autonomous drive.
  */
 void SwerveDrive::ZeroDistance() {
   // TODO: a better name is ZeroDrivePostion

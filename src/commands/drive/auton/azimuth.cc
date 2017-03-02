@@ -35,6 +35,7 @@ void Azimuth::Initialize() {
   error_ = target_ - initial;
   logger_->debug("target = {}, initial = {}, error = {}", target_, initial,
                  error_);
+  stable_count_ = 0;
 }
 
 /**
@@ -76,7 +77,7 @@ bool Azimuth::IsFinished() {
     logger_->trace("resetting stable_count_ to 0");
   }
   if (stable_count_ == kStableCountReq) {
-    logger_->debug("done with Azimuth auton azimuth");
+    logger_->debug("done with auton azimuth, abs_error_ = {}", abs_error_);
     return true;
   }
   return false;

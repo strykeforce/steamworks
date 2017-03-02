@@ -795,7 +795,11 @@ INPUT                  = @PROJECT_SOURCE_DIR@/src/           \
                          @PROJECT_SOURCE_DIR@/src/subsystems \
                          @PROJECT_SOURCE_DIR@/src/triggers   \
                          @PROJECT_SOURCE_DIR@/vendor/include/spdlog/logger.h   \
-                         @PROJECT_SOURCE_DIR@/vendor/include/cpptoml
+                         @PROJECT_SOURCE_DIR@/vendor/include/cpptoml \
+                         @PROJECT_SOURCE_DIR@/sidewinder/src \
+                         @PROJECT_SOURCE_DIR@/sidewinder/src/oi \
+                         @PROJECT_SOURCE_DIR@/sidewinder/src/swerve \
+                         @PROJECT_SOURCE_DIR@/sidewinder/src/talon
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

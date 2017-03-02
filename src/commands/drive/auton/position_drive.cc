@@ -37,3 +37,8 @@ bool PositionDrive::IsFinished() {
                  std::abs(azimuth_ - Robot::drive->GetAzimuth()));
   return std::abs(azimuth_ - Robot::drive->GetAzimuth()) < kAzimuthTolerance;
 }
+
+/**
+ * Reset the drive encoders to zero.
+ */
+void PositionDrive::End() { Robot::drive->ZeroDistance(); }
