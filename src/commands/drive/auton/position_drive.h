@@ -1,20 +1,23 @@
 #pragma once
 
 #include <WPILib.h>
+#include <spdlog/spdlog.h>
 
 namespace steamworks {
 namespace command {
 namespace drive {
 
-class DriveTeleOp : public frc::Command {
+class PositionDrive : public frc::Command {
  public:
-  DriveTeleOp();
+  PositionDrive(int azimuth);
 
  protected:
   void Initialize() override;
-  void Execute() override;
   bool IsFinished() override;
-  void End() override;
+
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
+  int azimuth_;
 };
 
 } /* drive */

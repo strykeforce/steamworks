@@ -5,10 +5,10 @@
 
 namespace steamworks {
 namespace command {
-
-class DriveZero : public frc::Command {
+namespace drive {
+class Zero : public frc::Command {
  public:
-  DriveZero();
+  Zero();
 
  protected:
   void Initialize() override;
@@ -16,5 +16,6 @@ class DriveZero : public frc::Command {
   void End() override;
 };
 
+} /* drive */
 } /* command */
 } /* steamworks */

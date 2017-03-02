@@ -7,6 +7,7 @@ target_sources(${CMAKE_PROJECT_NAME}
   "${CMAKE_CURRENT_LIST_DIR}/intake.cc"
 )
 
+include("${CMAKE_CURRENT_LIST_DIR}/auton/CMakeLists.txt")
 include("${CMAKE_CURRENT_LIST_DIR}/drive/CMakeLists.txt")
 include("${CMAKE_CURRENT_LIST_DIR}/gear/CMakeLists.txt")
 include("${CMAKE_CURRENT_LIST_DIR}/shooter/CMakeLists.txt")

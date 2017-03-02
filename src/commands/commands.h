@@ -6,8 +6,11 @@
 #include "commands/intake.h"
 #include "commands/log.h"
 
-#include "commands/drive/auton.h"
-#include "commands/drive/azimuth.h"
+#include "commands/auton/test.h"
+
+#include "commands/drive/auton/azimuth.h"
+#include "commands/drive/auton/position_azimuth.h"
+#include "commands/drive/auton/position_drive.h"
 #include "commands/drive/tele_op.h"
 #include "commands/drive/zero.h"
 

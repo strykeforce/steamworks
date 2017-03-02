@@ -6,6 +6,7 @@
 #include "robot_map.h"
 
 using namespace steamworks;
+using namespace steamworks::command;
 
 // constructor helpers
 namespace {
@@ -105,16 +106,16 @@ unsigned OI::GetAutonMode() {
  */
 void OI::AssignFlightSimButtons() {
   // flight sim reset button is reserved
-  reset_button_.WhenPressed(new command::Log("flight simulator reset button"));
+  reset_button_.WhenPressed(new Log("flight simulator reset button"));
 
   // flight sim left shoulder 3-position button controlls gear loader
   gear_auto_off_button_.WhenPressed(
-      new command::Log("flight simulator gear auto off button"));
-  gear_auto_on_button_.WhenPressed(new command::gear::ReleaseGear());
+      new Log("flight simulator gear auto off button"));
+  gear_auto_on_button_.WhenPressed(new gear::ReleaseGear());
 
   // flight sim right shoulder 2-position button controls shooter auto mode
   shooter_auto_button_.WhenPressed(
-      new command::Log("flight simulator shooter auto button"));
+      new Log("flight simulator shooter auto button"));
 }
 
 /**
@@ -122,78 +123,72 @@ void OI::AssignFlightSimButtons() {
  */
 void OI::AssignGamepadButtons() {
   // gamepad left trigger starts gear loader
-  gear_load_button_.WhenActive(new command::gear::LoadGear());
+  gear_load_button_.WhenActive(new gear::LoadGear());
 
   // gamepad left shoulder stages gear in loader
-  gear_stage_button_.WhenPressed(new command::gear::StageGear());
+  gear_stage_button_.WhenPressed(new gear::StageGear());
 
   // gamepad back button reverses gear loader
   gear_stage_reverse_button_.WhenPressed(
-      new command::Log("gamepad gear stage reverse button"));
-  gear_stage_reverse_button_.WhenPressed(new command::ToggleHopper());
+      new Log("gamepad gear stage reverse button"));
+  gear_stage_reverse_button_.WhenPressed(new ToggleHopper());
 
   // gamepad right shoulder turns on fuel intake
-  intake_on_button_.WhenPressed(new command::StartIntake());
+  intake_on_button_.WhenPressed(new StartIntake());
 
   // gamepad B button turns off fuel intake
-  intake_off_button_.WhenPressed(new command::StopIntake());
+  intake_off_button_.WhenPressed(new StopIntake());
 
   // gamepad Y button reverses fuel intake
-  intake_reverse_button_.WhenPressed(new command::ClearIntake());
+  intake_reverse_button_.WhenPressed(new ClearIntake());
 
   // gamepad A button performs feed shot
-  shoot_feed_button_.WhenPressed(new command::Log("gamepad feed shot button"));
+  shoot_feed_button_.WhenPressed(new Log("gamepad feed shot button"));
 
   // gamepad X button performs close shot
-  shoot_close_button_.WhenPressed(
-      new command::Log("gamepad close shot button"));
+  shoot_close_button_.WhenPressed(new Log("gamepad close shot button"));
 
   // gamepad D-pad trims shooter aimpoint
-  trim_up_.WhenActive(new command::ToggleHopper());
-  trim_down_.WhenActive(new command::Log("trim down active"));
-  trim_left_.WhenActive(new command::Log("trim left active"));
-  trim_right_.WhenActive(new command::Log("trim right active"));
+  trim_up_.WhenActive(new ToggleHopper());
+  trim_down_.WhenActive(new Log("trim down active"));
+  trim_left_.WhenActive(new Log("trim left active"));
+  trim_right_.WhenActive(new Log("trim right active"));
 
   // gamepad start button toggles climber
-  climber_button_.WhenPressed(new command::CaptureRope());
-  climber_button_.WhenReleased(new command::StopClimb());
+  climber_button_.WhenPressed(new CaptureRope());
+  climber_button_.WhenReleased(new StopClimb());
 }
 
 /**
  * AssignSmartDashboardButtons hooks up smart dashboard buttons to commands.
  */
 void OI::AssignSmartDashboardButtons() {
-  SmartDashboard::PutData("Zero Wheels", new command::ZeroWheelAzimuth());
-  SmartDashboard::PutData("Write Azimuth Cal",
-                          new command::WriteAzimuthCalibration());
-  SmartDashboard::PutData("Drive Zero", new command::DriveZero());
-  SmartDashboard::PutData("Zero Gyro", new command::ZeroGyroYaw());
+  SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
+  SmartDashboard::PutData("Write Azimuth Cal", new WriteAzimuthCalibration());
+  SmartDashboard::PutData("Drive Zero", new drive::Zero());
+  SmartDashboard::PutData("Zero Gyro", new ZeroGyroYaw());
 
-  SmartDashboard::PutData("Zero Pivot", new command::gear::ZeroPivot());
+  SmartDashboard::PutData("Zero Pivot", new gear::ZeroPivot());
 
   SmartDashboard::PutData("Shooter Elevation Default",
-                          new command::SetShooterElevation(900));
+                          new SetShooterElevation(900));
   SmartDashboard::PutData("Increment Shooter Elevation",
-                          new command::IncrementShooterElevation());
+                          new IncrementShooterElevation());
   SmartDashboard::PutData("Decrement Shooter Elevation",
-                          new command::DecrementShooterElevation());
+                          new DecrementShooterElevation());
 
-  SmartDashboard::PutData("Shooter Wheel Default",
-                          new command::StartShooterWheel());
-  SmartDashboard::PutData("Stop Shooter Wheel",
-                          new command::StopShooterWheel());
+  SmartDashboard::PutData("Shooter Wheel Default", new StartShooterWheel());
+  SmartDashboard::PutData("Stop Shooter Wheel", new StopShooterWheel());
 
-  SmartDashboard::PutData("Increment Wheel Speed",
-                          new command::IncrementShooterSpeed());
-  SmartDashboard::PutData("Decrement Wheel Speed",
-                          new command::DecrementShooterSpeed());
+  SmartDashboard::PutData("Increment Wheel Speed", new IncrementShooterSpeed());
+  SmartDashboard::PutData("Decrement Wheel Speed", new DecrementShooterSpeed());
 
   // drive forward 4 ft.
-  SmartDashboard::PutData("Auton Drive", new command::AutonTestSeq());
-  SmartDashboard::PutData("Auton Azimuth 0", new command::DriveAzimuth(0));
-  SmartDashboard::PutData("Auton Azimuth 90", new command::DriveAzimuth(90));
-  SmartDashboard::PutData("Auton Azimuth 179", new command::DriveAzimuth(179));
-  SmartDashboard::PutData("Auton Azimuth -90", new command::DriveAzimuth(-90));
+  SmartDashboard::PutData("Auton Drive", new auton::AutonTestSeq());
+  SmartDashboard::PutData("Auton Azimuth 0", new drive::Azimuth(0));
+  SmartDashboard::PutData("Auton Azimuth 90", new drive::Azimuth(90));
+  SmartDashboard::PutData("Auton Azimuth 179", new drive::Azimuth(179));
+  SmartDashboard::PutData("Auton Azimuth -90", new drive::Azimuth(-90));
 
-  SmartDashboard::PutData("Position Azimuth", new command::PositionAzimuth());
+  SmartDashboard::PutData("Position Azimuth", new drive::PositionAzimuth());
 }

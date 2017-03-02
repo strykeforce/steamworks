@@ -1,14 +1,15 @@
 #pragma once
 
-#include "WPILib.h"
-#include "spdlog/spdlog.h"
+#include <WPILib.h>
+#include <spdlog/spdlog.h>
 
 namespace steamworks {
 namespace command {
+namespace drive {
 
-class DriveAzimuth : public frc::Command {
+class Azimuth : public frc::Command {
  public:
-  DriveAzimuth(float target);
+  Azimuth(float target);
 
  protected:
   void Initialize() override;
@@ -24,14 +25,6 @@ class DriveAzimuth : public frc::Command {
   int stable_count_ = 0;
 };
 
-class PositionAzimuth : public frc::Command {
- public:
-  PositionAzimuth();
-
- protected:
-  void Initialize() override;
-  bool IsFinished() override;
-};
-
+} /* drive */
 } /* command */
 } /* steamworks */

@@ -3,15 +3,19 @@
 #include "robot.h"
 #include "robot_map.h"
 
-using namespace steamworks::command;
+using namespace steamworks::command::drive;
 
-DriveZero::DriveZero() : frc::Command("DriveZero") { Requires(Robot::drive); }
-
-void DriveZero::Initialize() {
-  Robot::drive->SetAutonMode();
-  Robot::drive->CrabDriveAutonomous(250.0, 0);
+namespace {
+const double kDriveSetpoint = 250.0;
 }
 
-bool DriveZero::IsFinished() { return false; }
+Zero::Zero() : frc::Command("Zero") { Requires(Robot::drive); }
 
-void DriveZero::End() { Robot::drive->CrabDriveAutonomous(0.0, 0); }
+void Zero::Initialize() {
+  Robot::drive->SetAutonMode();
+  Robot::drive->CrabDriveAutonomous(kDriveSetpoint, 0);
+}
+
+bool Zero::IsFinished() { return false; }
+
+void Zero::End() { Robot::drive->CrabDriveAutonomous(0.0, 0); }

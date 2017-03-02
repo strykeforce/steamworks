@@ -4,7 +4,7 @@
 #include "robot.h"
 #include "subsystems/drive.h"
 
-using namespace steamworks::command;
+using namespace steamworks::command::drive;
 
 /**
  * DriveTele is a WPI command-based command to manually drive the Sidewinder

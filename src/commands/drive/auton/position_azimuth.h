@@ -1,20 +1,22 @@
 #pragma once
 
 #include <WPILib.h>
+#include <spdlog/spdlog.h>
 
 namespace steamworks {
 namespace command {
 namespace drive {
 
-class DriveTeleOp : public frc::Command {
+/**
+ * Aligns wheel position for auton rotation.
+ */
+class PositionAzimuth : public frc::Command {
  public:
-  DriveTeleOp();
+  PositionAzimuth();
 
  protected:
   void Initialize() override;
-  void Execute() override;
   bool IsFinished() override;
-  void End() override;
 };
 
 } /* drive */

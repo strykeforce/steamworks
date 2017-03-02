@@ -162,7 +162,7 @@ bool SwerveDrive::IsMotionDone() {
  * Initializes DriveTeleOp as the default command for this subsystem.
  */
 void SwerveDrive::InitDefaultCommand() {
-  SetDefaultCommand(new command::DriveTeleOp());
+  SetDefaultCommand(new command::drive::DriveTeleOp());
 }
 
 /**

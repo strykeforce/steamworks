@@ -3,7 +3,7 @@
 #include "robot.h"
 #include "robot_map.h"
 
-using namespace steamworks::command;
+using namespace steamworks::command::drive;
 using namespace std;
 
 // tuning parameters
@@ -16,11 +16,11 @@ const int kStableCountReq = 3;
 }
 
 /**
- * DriveAzimuth is a command to spin the robot to a given field-relative
+ * Azimuth is a command to spin the robot to a given field-relative
  * azimuth.
  */
-DriveAzimuth::DriveAzimuth(float target)
-    : frc::Command("DriveAzimuth"),
+Azimuth::Azimuth(float target)
+    : frc::Command("Azimuth"),
       logger_(spdlog::get("command")),
       target_(target) {
   Requires(Robot::drive);
@@ -29,7 +29,7 @@ DriveAzimuth::DriveAzimuth(float target)
 /**
  * Initialize starts the PID controller loop.
  */
-void DriveAzimuth::Initialize() {
+void Azimuth::Initialize() {
   Robot::drive->SetAzimuthMode();
   float initial = RobotMap::gyro->GetYaw();
   error_ = target_ - initial;
@@ -41,7 +41,7 @@ void DriveAzimuth::Initialize() {
  * Execute is called periodically during command execution and sends azimuth
  * rate commands to the swerve drive based on current error calculations.
  */
-void DriveAzimuth::Execute() {
+void Azimuth::Execute() {
   error_ = target_ - RobotMap::gyro->GetYaw();
   abs_error_ = fabs(error_);
   double speed;
@@ -67,7 +67,7 @@ void DriveAzimuth::Execute() {
  * IsFinished is called periodically during command execution and returns true
  * if desired azimuth is reached.
  */
-bool DriveAzimuth::IsFinished() {
+bool Azimuth::IsFinished() {
   if (abs_error_ < kCloseEnough) {
     stable_count_++;
     logger_->trace("incrementing stable_count_ to {}", stable_count_);
@@ -76,7 +76,7 @@ bool DriveAzimuth::IsFinished() {
     logger_->trace("resetting stable_count_ to 0");
   }
   if (stable_count_ == kStableCountReq) {
-    logger_->debug("done with DriveAzimuth auton azimuth");
+    logger_->debug("done with Azimuth auton azimuth");
     return true;
   }
   return false;
@@ -86,23 +86,4 @@ bool DriveAzimuth::IsFinished() {
  * End is called after IsFinished(), it stops azimuth motion and disables the
  * PID controller loop.
  */
-void DriveAzimuth::End() { Robot::drive->SetDrive(0.0); }
-
-//
-// PositionAzimuth
-//
-PositionAzimuth::PositionAzimuth() : frc::Command("PositionAzimuth") {
-  Requires(Robot::drive);
-}
-
-/**
- * Initial send the position to the azimuth motors.
- */
-void PositionAzimuth::Initialize() { Robot::drive->PositionAzimuthForAuton(); }
-
-/**
- * Azimuth wheels are close enough
- */
-bool PositionAzimuth::IsFinished() {
-  return Robot::drive->IsPositionAzimuthForAutonDone();
-}
+void Azimuth::End() { Robot::drive->SetDrive(0.0); }
