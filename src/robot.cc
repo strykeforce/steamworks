@@ -13,6 +13,7 @@
 #include "version.h"
 
 using namespace steamworks;
+using namespace steamworks::command;
 
 OI* Robot::oi = nullptr;
 subsystem::Deadeye* Robot::deadeye = nullptr;
@@ -51,7 +52,23 @@ void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::AutonomousInit() {
   logger_->trace(__PRETTY_FUNCTION__);
-  logger_->info("initialize auton mode {:X}", oi->GetAutonMode());
+  RobotMap::gyro->ZeroYaw();
+  auto auton_mode = oi->GetAutonMode();
+  logger_->info("initialize auton mode {:X}", auton_mode);
+  switch (auton_mode) {
+    case 1:
+      autonomous_command_ = new auton::AutonTestSeq();
+      break;
+    case 2:
+      autonomous_command_ = new auton::Sequence02();
+      break;
+    case 3:
+      autonomous_command_ = new auton::Sequence03();
+      break;
+    default:
+      autonomous_command_ = new Log("unrecognized command");
+  }
+  autonomous_command_->Start();
 }
 
 void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }

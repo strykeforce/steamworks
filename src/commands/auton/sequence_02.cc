@@ -1,4 +1,4 @@
-#include "test.h"
+#include "sequence_02.h"
 
 #include "commands/commands.h"
 
@@ -15,14 +15,14 @@ const int kStrafeDistance = static_cast<int>(49 * 50.72);
 /**
  * Command group for auton teting
  */
-AutonTestSeq::AutonTestSeq() : frc::CommandGroup("AutonTestSeq") {
+Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   AddSequential(new Log("PositionDrive out"));
   AddSequential(new drive::PositionDrive(kForwardAzimuth));
   AddSequential(new drive::Drive(kForwardDistance, kForwardAzimuth, 10));
 
-  AddSequential(new Log("Azimuth -90"));
+  AddSequential(new Log("Azimuth 90"));
   AddSequential(new drive::PositionAzimuth());
-  AddSequential(new drive::Azimuth(-90));
+  AddSequential(new drive::Azimuth(90));
 
   AddSequential(new Log("PositionDrive into Hopper"));
   AddSequential(new drive::PositionDrive(kForwardAzimuth));
@@ -35,7 +35,7 @@ AutonTestSeq::AutonTestSeq() : frc::CommandGroup("AutonTestSeq") {
   AddSequential(new drive::PositionDrive(0));
   AddSequential(new drive::Drive(15 * 50.72, 0, 10));
 
-  AddSequential(new Log("Azimuth 20"));
+  AddSequential(new Log("Azimuth back to 20"));
   AddSequential(new drive::PositionAzimuth());
-  AddSequential(new drive::Azimuth(20));
+  AddSequential(new drive::Azimuth(0));
 }

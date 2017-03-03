@@ -43,6 +43,7 @@ class Robot : public frc::IterativeRobot {
  private:
   std::shared_ptr<spdlog::logger> logger_;
   std::shared_ptr<cpptoml::table> config_;
+  frc::Command* autonomous_command_;
 
   void ConfigureLogging();
   void LoadConfig();

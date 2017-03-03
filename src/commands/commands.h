@@ -6,6 +6,8 @@
 #include "commands/intake.h"
 #include "commands/log.h"
 
+#include "commands/auton/sequence_02.h"
+#include "commands/auton/sequence_03.h"
 #include "commands/auton/test.h"
 
 #include "commands/drive/auton/azimuth.h"
