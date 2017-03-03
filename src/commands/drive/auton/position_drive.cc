@@ -3,6 +3,7 @@
 #include "robot.h"
 
 using namespace steamworks::command::drive;
+using namespace std;
 
 namespace {
 // TODO: azimuth tolerance can be tightened up
@@ -26,16 +27,16 @@ PositionDrive::PositionDrive(int azimuth)
  */
 void PositionDrive::Initialize() {
   logger_->info("positioning wheels to {}", azimuth_);
-  Robot::drive->CrabDriveAutonomous(0, azimuth_);
+  Robot::drive->SetAzimuth(azimuth_);
 }
 
 /**
  * Waits for wheel azimuths to be in position.
  */
 bool PositionDrive::IsFinished() {
-  logger_->debug("position wheels error {}",
-                 std::abs(azimuth_ - Robot::drive->GetAzimuth()));
-  return std::abs(azimuth_ - Robot::drive->GetAzimuth()) < kAzimuthTolerance;
+  int error = (0xFFF + abs(azimuth_ - Robot::drive->GetAzimuth())) & 0xFFF;
+  logger_->debug("position wheels error {}", error);
+  return error < kAzimuthTolerance;
 }
 
 /**

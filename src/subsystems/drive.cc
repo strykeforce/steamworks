@@ -55,24 +55,31 @@ void SwerveDrive::SetMotionMagicMode() {
 }
 
 namespace {
-const double kWheel1AzimuthAutonPos = (-40.4 / 180) * 2048;
-const double kWheel2AzimuthAutonPos = (40.4 / 180) * 2048;
-const double kWheel3AzimuthAutonPos = (-40.4 / 180) * 2048;
-const double kWheel4AzimuthAutonPos = (40.4 / 180) * 2048;
+// azimuth positions used when starting at 2048 azimuth
+const double kWheel1AzimuthAutonPos = (40.4 / 180) * 2048 + 2048;
+const double kWheel2AzimuthAutonPos = (139.6 / 180) * 2048;
+const double kWheel3AzimuthAutonPos = (40.4 / 180) * 2048 + 2048;
+const double kWheel4AzimuthAutonPos = (139.6 / 180) * 2048;
+
+// azimuth positions used when starting at 0 azimuth
+// const double kWheel1AzimuthAutonPos = (-40.4 / 180) * 2048;
+// const double kWheel2AzimuthAutonPos = (40.4 / 180) * 2048;
+// const double kWheel3AzimuthAutonPos = (-40.4 / 180) * 2048;
+// const double kWheel4AzimuthAutonPos = (40.4 / 180) * 2048;
 }
 
 /**
  * This is used to position the wheel azimuths for autonomous rotation of the
  * robot. It moves each wheel a minimum angle by assuming the wheel azimuths
- * started at zero.
+ * started at 2048.
  *
  * @see IsPositionAzimuthForAutonDone(), DriveAzimuthAutonomous(double setpoint)
  */
 void SwerveDrive::PositionAzimuthForAuton() {
-  map_->rf_azimuth->Set(kWheel1AzimuthAutonPos);
-  map_->lf_azimuth->Set(kWheel2AzimuthAutonPos);
-  map_->lr_azimuth->Set(kWheel3AzimuthAutonPos);
-  map_->rr_azimuth->Set(kWheel4AzimuthAutonPos);
+  map_->rf_azimuth->Set(kWheel2AzimuthAutonPos);  // 2-rf
+  map_->lf_azimuth->Set(kWheel1AzimuthAutonPos);  // 1-lf
+  map_->lr_azimuth->Set(kWheel4AzimuthAutonPos);  // 4-rr
+  map_->rr_azimuth->Set(kWheel3AzimuthAutonPos);  // 3-lr
 }
 
 /**
@@ -85,10 +92,13 @@ void SwerveDrive::PositionAzimuthForAuton() {
  * @see PositionAzimuthForAuton(), DriveAzimuthAutonomous(double setpoint)
  */
 bool SwerveDrive::IsPositionAzimuthForAutonDone() {
-  int error =
-      std::abs(GetPosition(swerve::SwerveDrive::kLeftFront) - kLeftFront);
-  logger_->debug("IsPositionAzimuthForAutonDone error = {}", error);
-  return error < 25;
+  int error = std::abs(GetAzimuth(swerve::SwerveDrive::kLeftFront) -
+                       kWheel1AzimuthAutonPos);
+  logger_->debug(
+      "GetPosition(kLeftFront) = {}, kWheel2AzimuthAutonPos = {}, error = {}",
+      GetAzimuth(swerve::SwerveDrive::kLeftFront), kWheel1AzimuthAutonPos,
+      error);
+  return error < 200;
 }
 
 /**
@@ -103,10 +113,10 @@ bool SwerveDrive::IsPositionAzimuthForAutonDone() {
  * @see PositionAzimuthForAuton(), IsPositionAzimuthForAutonDone()
  */
 void SwerveDrive::DriveAzimuthAutonomous(double setpoint) {
-  map_->rf_drive->Set(-setpoint);
-  map_->lf_drive->Set(setpoint);
-  map_->lr_drive->Set(setpoint);
-  map_->rr_drive->Set(-setpoint);
+  map_->rf_drive->Set(setpoint);
+  map_->lf_drive->Set(-setpoint);
+  map_->lr_drive->Set(-setpoint);
+  map_->rr_drive->Set(setpoint);
 }
 
 /**

@@ -25,18 +25,19 @@ const int kSlopeDistance = kMaxSpeed * (kMaxSpeedTime / 100) * 0.5;
 /**
  * Designated constructor.
  */
-Drive::Drive(int distance, int azimuth)
+Drive::Drive(int distance, int azimuth, double timeout)
     : frc::Command("Drive"),
       logger_(spdlog::get("command")),
       distance_(distance),
-      azimuth_(azimuth) {
+      azimuth_(azimuth),
+      timeout_(timeout) {
   Requires(Robot::drive);
 }
 
 /**
  * Initialize with default azimuth of zero.
  */
-Drive::Drive(int distance) : Drive(distance, 0) {}
+Drive::Drive(int distance) : Drive(distance, 0, -1) {}
 
 /**
  * Initialize
@@ -52,6 +53,9 @@ void Drive::Initialize() {
       "distance = {}, position = {}, kSlopeDistance = {}, start_decel_pos_ = "
       "{}",
       distance_, Robot::drive->GetPosition(), kSlopeDistance, start_decel_pos_);
+  if (timeout_ != -1) {
+    SetTimeout(timeout_);
+  }
 }
 
 /**
@@ -60,6 +64,9 @@ void Drive::Initialize() {
  */
 void Drive::Execute() {
   double position = Robot::drive->GetPosition();
+  if (position < 0) {
+    position = 0;
+  }
   error_ = distance_ - position;
   abs_error_ = abs(error_);
   double speed;
@@ -90,6 +97,9 @@ void Drive::Execute() {
  * if desired distance is reached.
  */
 bool Drive::IsFinished() {
+  if (IsTimedOut()) {
+    return true;
+  }
   if (abs_error_ < kCloseEnough) {
     stable_count_++;
   } else {

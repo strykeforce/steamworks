@@ -8,7 +8,7 @@ namespace command {
 namespace drive {
 class Drive : public frc::Command {
  public:
-  Drive(int distance, int azimuth);
+  Drive(int distance, int azimuth, double timeout);
   Drive(int distance);
   virtual ~Drive() = default;
 
@@ -26,6 +26,7 @@ class Drive : public frc::Command {
   double abs_error_;
   double start_decel_pos_;
   double stable_count_ = 0;
+  double timeout_ = -1;
 };
 } /* drive */
 } /* command */

@@ -22,7 +22,7 @@ class SwerveDrive : public sidewinder::swerve::SwerveDrive {
   void SetMotionMagicMode();
 
   // these three methods work together for autonomous azimuth
-  void PositionAzimuthForAuton();
+  void PositionAzimuthForAuton();  // note: valid for 2048 starting pos
   bool IsPositionAzimuthForAutonDone();
   void DriveAzimuthAutonomous(double setpoint);
 
