@@ -1,12 +1,16 @@
 #include "deadeye.h"
 
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
+#include <chrono>
+#include <thread>
 
 #include "boiler_target_data.h"
 #include "link/mode.h"
 
 using namespace deadeye;
+
+namespace {
+constexpr auto NTGT_SLEEP_MS = std::chrono::milliseconds(50);
+}
 
 Deadeye::Deadeye(std::shared_ptr<cpptoml::table> config)
     : logger_(spdlog::get("deadeye")), link_(config), boiler_camera_(config) {
@@ -72,6 +76,7 @@ void Deadeye::ProcessBoilerTarget() {
   if (y < 0 || y > boiler_target_data_size - 1) {
     logger_->warn("boiler target separation distance out of range: {} px", y);
     link_.SendNoTarget();
+    std::this_thread::sleep_for(NTGT_SLEEP_MS);
     return;
   }
   link_.SendBoilerSolution(azimuth_error, boiler_target_data[y][kRange],
