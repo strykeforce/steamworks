@@ -1,7 +1,7 @@
 #pragma once
 
-#include "subsystems/camera.h"
 #include "subsystems/climber.h"
+#include "subsystems/deadeye.h"
 #include "subsystems/drive.h"
 #include "subsystems/gear.h"
 #include "subsystems/hopper.h"

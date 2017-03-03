@@ -74,6 +74,9 @@ swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
 
 std::shared_ptr<AHRS> RobotMap::gyro;
 
+std::shared_ptr<frc::DigitalOutput> RobotMap::gear_camera_led;
+std::shared_ptr<frc::DigitalOutput> RobotMap::shooter_camera_led;
+
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.
  * We allocate these as singletons since there should only be one system-wide
@@ -81,6 +84,10 @@ std::shared_ptr<AHRS> RobotMap::gyro;
  */
 void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
   gyro = std::make_shared<AHRS>(SPI::Port::kMXP);
+
+  gear_camera_led = std::make_shared<frc::DigitalOutput>(kGearCameraLight);
+  shooter_camera_led =
+      std::make_shared<frc::DigitalOutput>(kShooterCameraLight);
 
   shooter_wheel_talon = new ::CANTalon(Talons::kShooterWheel);
   shooter_elevation_talon = new ::CANTalon(Talons::kShooterElevation);

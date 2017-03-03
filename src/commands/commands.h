@@ -10,6 +10,8 @@
 #include "commands/auton/sequence_03.h"
 #include "commands/auton/test.h"
 
+#include "commands/deadeye/gear_led.h"
+
 #include "commands/drive/auton/azimuth.h"
 #include "commands/drive/auton/drive.h"
 #include "commands/drive/auton/position_azimuth.h"

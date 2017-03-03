@@ -8,6 +8,7 @@ target_sources(${CMAKE_PROJECT_NAME}
 )
 
 include("${CMAKE_CURRENT_LIST_DIR}/auton/CMakeLists.txt")
+include("${CMAKE_CURRENT_LIST_DIR}/deadeye/CMakeLists.txt")
 include("${CMAKE_CURRENT_LIST_DIR}/drive/CMakeLists.txt")
 include("${CMAKE_CURRENT_LIST_DIR}/gear/CMakeLists.txt")
 include("${CMAKE_CURRENT_LIST_DIR}/shooter/CMakeLists.txt")

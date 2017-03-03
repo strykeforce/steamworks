@@ -1,10 +1,12 @@
-#include "camera.h"
+#include "deadeye.h"
 
 #include <cpptoml/cpptoml.h>
 #include <serial/serial.h>
 
 #include "parser.h"
 #include "sentence.h"
+
+#include "robot_map.h"
 
 using namespace steamworks::subsystem;
 using namespace std;
@@ -63,6 +65,13 @@ void Deadeye::Run() {
     // }
   }
   serial.close();
+}
+
+/**
+ * SetGearLightEnabled
+ */
+void Deadeye::SetGearLightEnabled(bool enable) {
+  RobotMap::gear_camera_led->Set(!enable);
 }
 
 /**

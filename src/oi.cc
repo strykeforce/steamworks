@@ -164,6 +164,8 @@ void OI::AssignGamepadButtons() {
  */
 void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
+  SmartDashboard::PutData("Position Azimuth", new drive::PositionAzimuth());
+
   SmartDashboard::PutData("Write Azimuth Cal", new WriteAzimuthCalibration());
   SmartDashboard::PutData("Drive Zero", new drive::Zero());
   SmartDashboard::PutData("Zero Gyro", new ZeroGyroYaw());
@@ -183,12 +185,6 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Increment Wheel Speed", new IncrementShooterSpeed());
   SmartDashboard::PutData("Decrement Wheel Speed", new DecrementShooterSpeed());
 
-  // drive forward 4 ft.
-  SmartDashboard::PutData("Auton Drive", new auton::AutonTestSeq());
-  SmartDashboard::PutData("Auton Azimuth 0", new drive::Azimuth(0));
-  SmartDashboard::PutData("Auton Azimuth 90", new drive::Azimuth(90));
-  SmartDashboard::PutData("Auton Azimuth 179", new drive::Azimuth(179));
-  SmartDashboard::PutData("Auton Azimuth -90", new drive::Azimuth(-90));
-
-  SmartDashboard::PutData("Position Azimuth", new drive::PositionAzimuth());
+  SmartDashboard::PutData("Gear LED On", new deadeye::GearLED(true));
+  SmartDashboard::PutData("Gear LED Off", new deadeye::GearLED(false));
 }

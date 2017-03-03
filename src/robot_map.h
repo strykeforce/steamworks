@@ -40,7 +40,7 @@ class RobotMap {
 
   enum DigitalOutputs {
     kGearCameraLight = 8,
-    kBoilerCameraLight = 9,
+    kShooterCameraLight = 9,
   };
 
   // pointers to talons and azimuth encoder zero count
@@ -57,6 +57,10 @@ class RobotMap {
 
   // pointer to navX gyro singleton
   static std::shared_ptr<AHRS> gyro;
+
+  // pointers to camera LED digital control channels
+  static std::shared_ptr<frc::DigitalOutput> gear_camera_led;
+  static std::shared_ptr<frc::DigitalOutput> shooter_camera_led;
 
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);

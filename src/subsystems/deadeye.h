@@ -16,6 +16,8 @@ class Deadeye : public frc::Subsystem {
 
   void Start();
 
+  void SetGearLightEnabled(bool enable);
+
   // Mode GetMode();
   // int GetAzimuthError();
   // int GetRange();
@@ -25,8 +27,8 @@ class Deadeye : public frc::Subsystem {
   std::string port_{"/dev/ttyUSB0"};
   uint32_t speed_ = 115200;
   // Mode mode_;
-  int azimuth_error_;
-  int range_;
+  // int azimuth_error_;
+  // int range_;
   std::thread thread_;
   std::atomic_bool stop_thread_;
   std::mutex mutex_;
