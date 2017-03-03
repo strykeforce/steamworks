@@ -4,6 +4,7 @@
 #include "spdlog/spdlog.h"
 
 #include "boiler_target_data.h"
+#include "link/mode.h"
 
 using namespace deadeye;
 
@@ -12,23 +13,54 @@ Deadeye::Deadeye(std::shared_ptr<cpptoml::table> config)
   boiler_camera_.Connect();
 }
 
+/**
+ * Main loop for camera frame aquistion and processing.
+ */
 void Deadeye::Run() {
-  boiler_camera_.StartCapture();
   while (true) {
-    // TODO: start/stop capture when mode changes
-    switch (link_.GetMode()) {
-      case Link::kBoilerMode:
+    Mode mode = link_.GetMode();
+
+    if (mode != current_mode_) {
+      SwitchMode(mode);
+      current_mode_ = mode;
+    }
+
+    switch (mode) {
+      case Mode::boiler:
         ProcessBoilerTarget();
         break;
-      case Link::kGearMode:
+      case Mode::gear:
         ProcessGearTarget();
         break;
-      case Link::kQuitMode:
+      case Mode::quit:
         return;
     }
   }
 }
 
+/**
+ * Switch active mode.
+ */
+void Deadeye::SwitchMode(Mode mode) {
+  switch (mode) {
+    case Mode::boiler:
+      logger_->info("starting boiler camera capture");
+      boiler_camera_.StartCapture();
+      break;
+    case Mode::gear:
+      logger_->info("starting gear camera capture");
+      break;
+    case Mode::quit:
+      logger_->info("deadeye mode set to quit");
+      break;
+    default:
+      logger_->info("EnableCamera called with unknown mode");
+  }
+}
+
+/**
+ * Called in boiler mode after frame acquired.
+ */
 void Deadeye::ProcessBoilerTarget() {
   int y;  // vertical target separation
   int azimuth_error;

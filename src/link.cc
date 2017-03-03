@@ -2,11 +2,9 @@
 
 #include <string>
 
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
-
 #include "link/boiler.h"
 #include "link/no_target.h"
+#include "link/mode.h"
 
 using namespace deadeye;
 using namespace std;
@@ -54,11 +52,11 @@ Link::Link(std::shared_ptr<cpptoml::table> config)
 /**
  * Read serial line for current mode.
  */
-Link::Mode Link::GetMode() {
+Mode Link::GetMode() {
 #ifdef DEADEYE_TEST
-  return kQuitMode;
+  return Mode::quit;
 #else
-  return kBoilerMode;
+  return Mode::boiler;
 #endif
 }
 
