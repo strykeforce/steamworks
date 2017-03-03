@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [Unreleased]
+
+### Added
+
+- Implement off-center pivot of robot to enable vision-based shooter aiming, from @ztannhauser. (#19)
+- Implement field-oriented gyro drive mode from @ztannhauser. (#17)
+- Provide version information for Sidewinder library users. (#14)
+- Added new Talon current limit and motion magic settings to settings.
+- Swerve drive wheel zero settings are now saved in settings file in `~lvuser/sidewinder_calibration.toml`. This allows saving settings using SmartDashboard button.
+- Convenience methods for autonomous driving.
+
+### Changed
+
+- SwerveDrive class now implements frc::Subsystem to allow direct use by robots that implement command-based programming. (#29)
+- Improve checks for missing Talon configuration settings in config file. (#10)
+- Setpoint scaling for different motor control modes is now settable per Talon configuration instead of once at top level.
+
+### Fixed
+
+- SwerveDrive drive command dead-zone is now configurable instead of being hard-coded into the library. (#4)
+- Compiling library no longer generates compiler warnings from grapher code. (#21)
+
 ## [17.1.0] - 2017-01-30
 
 ### Added
@@ -49,3 +71,9 @@ This releases supports the swerve drive code for the Avenger t-shirt cannon.
 ### Added
 
 - Initial release of functional swerve drive.
+
+[16.0.0]: https://gitlab.com/strykeforce2767/sidewinder/compare/v16.0.0-alpha...v16.0.0
+[16.0.0-alpha]: https://gitlab.com/strykeforce2767/sidewinder/compare/v16.0.0-dev...v16.0.0-alpha
+[17.0.0]: https://gitlab.com/strykeforce2767/sidewinder/compare/v16.0.0...v17.0.0
+[17.1.0]: https://gitlab.com/strykeforce2767/sidewinder/compare/v17.0.0...v17.1.0
+[unreleased]: https://gitlab.com/strykeforce2767/sidewinder/compare/v17.1.0...develop
