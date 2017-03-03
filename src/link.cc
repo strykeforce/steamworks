@@ -6,6 +6,7 @@
 #include "spdlog/spdlog.h"
 
 #include "link/boiler.h"
+#include "link/no_target.h"
 
 using namespace deadeye;
 using namespace std;
@@ -50,7 +51,8 @@ Link::Link(std::shared_ptr<cpptoml::table> config)
       new serial::Serial(port, speed, serial::Timeout::simpleTimeout(timeout)));
 }
 
-/** Read serial line for current mode.
+/**
+ * Read serial line for current mode.
  */
 Link::Mode Link::GetMode() {
 #ifdef DEADEYE_TEST
@@ -60,7 +62,8 @@ Link::Mode Link::GetMode() {
 #endif
 }
 
-/** Send the boiler shooting solution across the serial line.
+/**
+ *Send the boiler shooting solution across the serial line.
  */
 void Link::SendBoilerSolution(int azimuth_error,
                               int range,
@@ -71,4 +74,13 @@ void Link::SendBoilerSolution(int azimuth_error,
       azimuth_error, range, angle, speed);
   BoilerSentence bts(azimuth_error, range, angle, speed);
   serial_->write(bts.ToString() + "\n");
+}
+
+/**
+ * Send a no target message on the serial line.
+ */
+void Link::SendNoTarget() {
+  logger_->debug("no target");
+  NoTargetSentence nts;
+  serial_->write(nts.ToString() + "\n");
 }

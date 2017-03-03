@@ -39,6 +39,7 @@ void Deadeye::ProcessBoilerTarget() {
   y -= boiler_target_offset;
   if (y < 0 || y > boiler_target_data_size - 1) {
     logger_->warn("boiler target separation distance out of range: {} px", y);
+    link_.SendNoTarget();
     return;
   }
   link_.SendBoilerSolution(azimuth_error, boiler_target_data[y][kRange],

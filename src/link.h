@@ -15,6 +15,7 @@ class Link {
 
   Mode GetMode();
   void SendBoilerSolution(int azimuth_error, int range, int angle, int speed);
+  void SendNoTarget();
 
  private:
   std::shared_ptr<spdlog::logger> logger_;

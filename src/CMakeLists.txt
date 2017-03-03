@@ -8,20 +8,24 @@ include_directories(
 
 link_directories(/opt/flycapture/lib)
 
-add_executable(deadeye
-main.cc
-camera.cc
-frame.cc
-link.cc
-deadeye.cc
-link/boiler.cc
-link/checksum.cc
-link/parser.cc
-link/sentence.cc
+add_executable(${CMAKE_PROJECT_NAME}
+  main.cc
+  camera.cc
+  frame.cc
+  link.cc
+  deadeye.cc
 )
 
-target_link_libraries(deadeye ${OpenCV_LIBS} flycapture serial)
-set_target_properties(deadeye PROPERTIES
+include(link/CMakeLists.txt)
+
+target_link_libraries(${CMAKE_PROJECT_NAME}
+  pthread
+  ${OpenCV_LIBS}
+  flycapture
+  serial
+)
+
+set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
   CXX_STANDARD 11
   CXX_EXTENSIONS OFF
   CXX_STANDARD_REQUIRED YES)
