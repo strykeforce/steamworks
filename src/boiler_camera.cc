@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "boiler_camera.h"
 
 #include <cstdlib>
 
@@ -9,9 +9,9 @@
 using namespace deadeye;
 namespace fc = FlyCapture2;
 
-/** Camera is the hardware and frame processing routines.
+/** BoilerCamera is the hardware and frame processing routines.
  */
-Camera::Camera(std::shared_ptr<cpptoml::table> config)
+BoilerCamera::BoilerCamera(std::shared_ptr<cpptoml::table> config)
     : logger_(spdlog::get("deadeye")),
       connected_(false),
       capture_started_(false),
@@ -54,7 +54,7 @@ Camera::Camera(std::shared_ptr<cpptoml::table> config)
   logger_->info("camera frame exposure: {}", exposure_);
 }
 
-Camera::~Camera() {
+BoilerCamera::~BoilerCamera() {
   StopCapture();
   Disconnect();
   if (has_gui_) {
@@ -64,7 +64,7 @@ Camera::~Camera() {
 
 /** Connect to the hardware.
  */
-void Camera::Connect() {
+void BoilerCamera::Connect() {
   if (connected_) {
     return;
   }
@@ -143,7 +143,10 @@ void Camera::Connect() {
   connected_ = true;
 }
 
-void Camera::Disconnect() {
+/**
+ * Disconnect a connected camera.
+ */
+void BoilerCamera::Disconnect() {
   if (!connected_) {
     return;
   }
@@ -151,9 +154,17 @@ void Camera::Disconnect() {
   connected_ = false;
 }
 
-/** Start camera capturing
+/**
+ * Returns true if the camera has been connected.
  */
-void Camera::StartCapture() {
+bool BoilerCamera::IsConnected() {
+  return connected_;
+}
+
+/**
+ * Start camera capturing
+ */
+void BoilerCamera::StartCapture() {
   if (!connected_) {
     logger_->error("must call Connect before calling StartCapture");
     return;
@@ -174,7 +185,7 @@ void Camera::StartCapture() {
 
 /** Stop camera capturing
  */
-void Camera::StopCapture() {
+void BoilerCamera::StopCapture() {
   if (!connected_ && !capture_started_) {
     return;
   }
@@ -185,12 +196,13 @@ void Camera::StopCapture() {
   capture_started_ = false;
 }
 
-const std::tuple<int, int> Camera::PROCESS_ERROR = std::make_tuple(-1, -1);
+const std::tuple<int, int> BoilerCamera::PROCESS_ERROR =
+    std::make_tuple(-1, -1);
 
 /** Process a single frame.
  * Returns azumith error and target top-edge distance in pixels.
  */
-std::tuple<int, int> Camera::ProcessFrame() {
+std::tuple<int, int> BoilerCamera::ProcessFrame() {
   if (!connected_ && !capture_started_) {
     logger_->error("not connected or capture not started");
     return PROCESS_ERROR;
@@ -222,7 +234,7 @@ std::tuple<int, int> Camera::ProcessFrame() {
   return PROCESS_ERROR;
 }
 
-void Camera::DisplayFrame() {
+void BoilerCamera::DisplayFrame() {
   if (has_gui_) {
     // draw contours and bounding boxes around targets into captured frame
     cv::drawContours(

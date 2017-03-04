@@ -2,25 +2,27 @@
 
 #include <utility>
 
-#include "flycapture/FlyCapture2.h"
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
+#include <flycapture/FlyCapture2.h>
+#include <cpptoml/cpptoml.h>
+#include <spdlog/spdlog.h>
+#include <opencv2/opencv.hpp>
 
-#include "frame.h"
+#include "boiler_frame.h"
 
 namespace fc = FlyCapture2;
 
 namespace deadeye {
 
-class Camera {
+class BoilerCamera {
  public:
-  Camera(std::shared_ptr<cpptoml::table> config);
-  virtual ~Camera();
-  Camera(const Camera&) = delete;
-  Camera& operator=(const Camera&) = delete;
+  BoilerCamera(std::shared_ptr<cpptoml::table> config);
+  virtual ~BoilerCamera();
+  BoilerCamera(const BoilerCamera&) = delete;
+  BoilerCamera& operator=(const BoilerCamera&) = delete;
 
   void Connect();
   void Disconnect();
+  bool IsConnected();
   void StartCapture();
   void StopCapture();
   std::tuple<int, int> ProcessFrame();
@@ -40,7 +42,7 @@ class Camera {
 
   static const std::tuple<int, int> PROCESS_ERROR;
   // frame processing
-  Frame frame_process_;
+  BoilerFrame frame_process_;
 };
 
 } /* deadeye */

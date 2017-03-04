@@ -1,12 +1,8 @@
-#include "frame.h"
-
-#include "cpptoml/cpptoml.h"
-#include "opencv2/opencv.hpp"
-#include "spdlog/spdlog.h"
+#include "gear_frame.h"
 
 using namespace deadeye;
 
-Frame::Frame(std::shared_ptr<cpptoml::table> config)
+GearFrame::GearFrame(std::shared_ptr<cpptoml::table> config)
     : logger_(spdlog::get("deadeye")),
       hsv_lower_(80, 100, 100),
       hsv_upper_(100, 255, 255),
@@ -48,7 +44,7 @@ Frame::Frame(std::shared_ptr<cpptoml::table> config)
 
 /** Process the frame and find targets.
  */
-bool Frame::FindTargets(const cv::Mat& frame) {
+bool GearFrame::FindTargets(const cv::Mat& frame) {
   cv::cvtColor(frame, hsv, CV_BGR2HSV);
   // full frame blur drops from 30 fps to 13 fps
   // cv::blur(hsv, blur, cv::Size(2, 2));
@@ -63,8 +59,8 @@ bool Frame::FindTargets(const cv::Mat& frame) {
   for (const auto& c : contours) {
     auto candidate = cv::arcLength(c, true);
     if (candidate > arc_length) {
-      lower_contour = upper_contour;
-      upper_contour = c;
+      left_contour = right_contour;
+      right_contour = c;
       arc_length = candidate;
     }
   }
@@ -75,12 +71,12 @@ bool Frame::FindTargets(const cv::Mat& frame) {
   }
 
   // using upright bounding box to find top edges of targets
-  lower_rect = cv::boundingRect(lower_contour);
-  upper_rect = cv::boundingRect(upper_contour);
+  left_rect = cv::boundingRect(left_contour);
+  right_rect = cv::boundingRect(right_contour);
 
   // compute distance between target bounding box top edges and send to robot
-  target_separation = lower_rect.y - upper_rect.y;
-  azimuth_error = (frame.cols / 2) - upper_rect.x - (upper_rect.width / 2);
+  target_separation = left_rect.y - right_rect.y;
+  azimuth_error = (frame.cols / 2) - right_rect.x - (right_rect.width / 2);
 
   return true;
 }

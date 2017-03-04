@@ -56,7 +56,7 @@ Mode Link::GetMode() {
 #ifdef DEADEYE_TEST
   return Mode::quit;
 #else
-  return Mode::boiler;
+  return Mode::gear;
 #endif
 }
 

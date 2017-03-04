@@ -4,7 +4,8 @@
 #include <spdlog/spdlog.h>
 
 #include "link.h"
-#include "camera.h"
+#include "boiler_camera.h"
+#include "gear_camera.h"
 #include "link/mode.h"
 
 namespace deadeye {
@@ -20,7 +21,8 @@ class Deadeye {
  private:
   std::shared_ptr<spdlog::logger> logger_;
   Link link_;
-  Camera boiler_camera_;
+  BoilerCamera boiler_camera_;
+  GearCamera gear_camera_;
   Mode current_mode_ = Mode::quit;
 
   void SwitchMode(Mode mode);

@@ -2,21 +2,21 @@
 
 #include <vector>
 
-#include "cpptoml/cpptoml.h"
-#include "opencv2/opencv.hpp"
-#include "spdlog/spdlog.h"
+#include <cpptoml/cpptoml.h>
+#include <opencv2/opencv.hpp>
+#include <spdlog/spdlog.h>
 
 namespace deadeye {
 
-class Frame {
+class GearFrame {
  public:
   cv::Mat hsv, blur, mask;
-  std::vector<cv::Point> upper_contour, lower_contour;
-  cv::Rect upper_rect, lower_rect;
+  std::vector<cv::Point> left_contour, right_contour;
+  cv::Rect left_rect, right_rect;
   int azimuth_error, target_separation;
 
-  Frame(std::shared_ptr<cpptoml::table> config);
-  virtual ~Frame() = default;
+  GearFrame(std::shared_ptr<cpptoml::table> config);
+  virtual ~GearFrame() = default;
 
   bool FindTargets(const cv::Mat& frame);
 

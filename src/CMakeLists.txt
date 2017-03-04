@@ -10,8 +10,10 @@ link_directories(/opt/flycapture/lib)
 
 add_executable(${CMAKE_PROJECT_NAME}
   main.cc
-  camera.cc
-  frame.cc
+  boiler_camera.cc
+  boiler_frame.cc
+  gear_camera.cc
+  gear_frame.cc
   link.cc
   deadeye.cc
 )
