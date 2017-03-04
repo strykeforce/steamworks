@@ -122,3 +122,14 @@ void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
     initialize_grapher();
   }
 }
+
+/**
+ * Determine if code is running on the practice robot.
+ */
+bool RobotMap::IsPracticeRobot() {
+  frc::DigitalInput dio(kPracticeRobot);
+  if (!dio.Get()) {  // jumper pulls input low
+    return true;
+  }
+  return false;
+}

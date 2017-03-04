@@ -1,10 +1,7 @@
 #include "climber.h"
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-#include "sidewinder/talon/settings.h"
-
 #include "robot_map.h"
+#include "sidewinder/talon/settings.h"
 
 using namespace steamworks::subsystem;
 using namespace sidewinder;
@@ -53,6 +50,12 @@ Climber::Climber(const std::shared_ptr<cpptoml::table> config)
   logger_->debug("dumping climber slave talon configuration");
   slave_settings->LogConfig(logger_);
   slave_settings->Initialize(RobotMap::climber_slave_talon);
+
+  // override motor direction for practice robot
+  if (RobotMap::IsPracticeRobot()) {
+    RobotMap::climber_master_talon->SetInverted(false);
+    RobotMap::climber_slave_talon->SetInverted(false);
+  }
 }
 
 namespace {
@@ -93,5 +96,6 @@ bool Climber::IsRunning() { return is_running_; }
 bool Climber::IsCaptured() {
   double master = RobotMap::climber_master_talon->GetOutputCurrent();
   double slave = RobotMap::climber_slave_talon->GetOutputCurrent();
+  logger_->debug("master current = {}, slave current = {}", master, slave);
   return (master + slave) / 2.0 > capture_current_;
 }

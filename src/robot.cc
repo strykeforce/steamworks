@@ -32,8 +32,10 @@ void Robot::RobotInit() {
   RobotMap::Init(config_);
 
   logger_->trace("initializing subsystems");
+  logger_->info("running on {} robot",
+                RobotMap::IsPracticeRobot() ? "PRACTICE" : "COMPETITION");
   deadeye = new subsystem::Deadeye(config_);
-  // deadeye->Start();  // start IO thread
+  deadeye->Start();  // start IO thread
   climber = new subsystem::Climber(config_);
   drive = new subsystem::SwerveDrive(config_);
   gear_loader = new subsystem::GearLoader(config_);

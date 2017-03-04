@@ -36,6 +36,7 @@ class RobotMap {
   enum DigitalInputs {
     kAutonSwitchLSB = 0,
     kAutonSwitchMSB = 6,
+    kPracticeRobot = 7,
   };
 
   enum DigitalOutputs {
@@ -64,6 +65,9 @@ class RobotMap {
 
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);
+
+  // tells which robot we're running on
+  static bool IsPracticeRobot();
 };
 
 } /* steamworks */
