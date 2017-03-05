@@ -15,6 +15,13 @@ Sentence::Sentence()
 
 Sentence::~Sentence() {}
 
+/**
+ * Returns the code number associated with this sentence type.
+ */
+int Sentence::Code() const {
+  return stoi(parameters[0]);
+}
+
 bool Sentence::ChecksumOK() const {
   return (parsed_checksum != 0 && calculated_checksum != 0) &&
          (parsed_checksum == calculated_checksum);

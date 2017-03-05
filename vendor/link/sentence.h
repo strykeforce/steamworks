@@ -21,6 +21,7 @@ class Sentence {
   Sentence();
   virtual ~Sentence();
 
+  int Code() const;
   bool ChecksumOK() const;
   bool Valid() const;
   std::string ToString() const;

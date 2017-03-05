@@ -14,6 +14,7 @@ BoilerSentence::BoilerSentence(int azimuth_error,
       angle(angle),
       speed(speed) {
   name = "BTS";
+  parameters.push_back("1");
   parameters.push_back(std::to_string(azimuth_error));
   parameters.push_back(std::to_string(range));
   parameters.push_back(std::to_string(angle));
