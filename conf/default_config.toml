@@ -10,7 +10,7 @@ intake_voltage = 12.0
 
 # settings for the climber motor voltage mode
 climber_capture_voltage =  4.0
-climber_climb_voltage   = 12.0
+climber_climb_voltage   =  8.0
 climber_capture_current =  4.0
 
 # settings for the gear intake motor voltage mode
