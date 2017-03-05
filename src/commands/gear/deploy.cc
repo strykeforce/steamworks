@@ -1,5 +1,6 @@
 #include "deploy.h"
 
+#include "load.h"
 #include "robot.h"
 
 using namespace steamworks::command::gear;
@@ -22,4 +23,6 @@ bool DeployGear::IsFinished() {
 void DeployGear::End() {
   Robot::gear_loader->StopLoader();
   Robot::gear_loader->SetLimitSwitchNormallyOpen(true);
+
+  SmartDashboard::PutBoolean(kGearLoadedLabel, false);
 }

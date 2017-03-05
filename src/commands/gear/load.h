@@ -8,6 +8,8 @@ namespace steamworks {
 namespace command {
 namespace gear {
 
+const std::string kGearLoadedLabel = "Gear Loaded";
+
 class ReadyLoadGear : public frc::Command {
  public:
   ReadyLoadGear();

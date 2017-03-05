@@ -4,10 +4,6 @@
 
 using namespace steamworks::command;
 
-namespace {
-const std::string kWheelSpeedKey("Wheel Speed");
-}
-
 /**
  * StartShooterWheel sets shooter wheel speed to mid-speed.
  */
@@ -21,7 +17,7 @@ StartShooterWheel::StartShooterWheel()
  */
 void StartShooterWheel::Initialize() {
   Robot::shooter->SetSpeed(460);
-  SmartDashboard::PutNumber(kWheelSpeedKey, 460);
+  // SmartDashboard::PutNumber(kWheelSpeedKey, 460);
 }
 
 /**
@@ -53,7 +49,7 @@ void StopShooterWheel::Execute() {
     speed_setpoint_ -= kSpeedDecrement;
   }
   Robot::shooter->SetSpeed(speed_setpoint_);
-  SmartDashboard::PutNumber(kWheelSpeedKey, speed_setpoint_);
+  // SmartDashboard::PutNumber(kWheelSpeedKey, speed_setpoint_);
 }
 
 bool StopShooterWheel::IsFinished() { return speed_setpoint_ == 0; }
@@ -72,7 +68,8 @@ IncrementShooterSpeed::IncrementShooterSpeed()
  */
 void IncrementShooterSpeed::Initialize() {
   Robot::shooter->IncrementSpeed();
-  SmartDashboard::PutNumber(kWheelSpeedKey, Robot::shooter->GetSpeedSetpoint());
+  // SmartDashboard::PutNumber(kWheelSpeedKey,
+  // Robot::shooter->GetSpeedSetpoint());
 }
 
 /**
@@ -89,5 +86,6 @@ DecrementShooterSpeed::DecrementShooterSpeed()
  */
 void DecrementShooterSpeed::Initialize() {
   Robot::shooter->DecrementSpeed();
-  SmartDashboard::PutNumber(kWheelSpeedKey, Robot::shooter->GetSpeedSetpoint());
+  // SmartDashboard::PutNumber(kWheelSpeedKey,
+  // Robot::shooter->GetSpeedSetpoint());
 }

@@ -44,6 +44,8 @@ class Shooter : public frc::Subsystem {
 
   bool elevation_zero_mode_ = false;
 
+  void UpdateSmartDashboard();
+
   unsigned LimitSpeed(unsigned speed);
   unsigned LimitElevation(unsigned elevation);
 };

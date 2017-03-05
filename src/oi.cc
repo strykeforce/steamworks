@@ -172,18 +172,17 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Zero Pivot", new gear::ZeroPivot());
 
-  SmartDashboard::PutData("Shooter Elevation Default",
-                          new SetShooterElevation(900));
-  SmartDashboard::PutData("Increment Shooter Elevation",
+  SmartDashboard::PutData("Default Elevation", new SetShooterElevation(900));
+  SmartDashboard::PutData("Increment Elevation",
                           new IncrementShooterElevation());
-  SmartDashboard::PutData("Decrement Shooter Elevation",
+  SmartDashboard::PutData("Decrement Elevation",
                           new DecrementShooterElevation());
 
-  SmartDashboard::PutData("Shooter Wheel Default", new StartShooterWheel());
-  SmartDashboard::PutData("Stop Shooter Wheel", new StopShooterWheel());
+  SmartDashboard::PutData("Start Wheel", new StartShooterWheel());
+  SmartDashboard::PutData("Stop Wheel", new StopShooterWheel());
 
-  SmartDashboard::PutData("Increment Wheel Speed", new IncrementShooterSpeed());
-  SmartDashboard::PutData("Decrement Wheel Speed", new DecrementShooterSpeed());
+  SmartDashboard::PutData("Increment Speed", new IncrementShooterSpeed());
+  SmartDashboard::PutData("Decrement Speed", new DecrementShooterSpeed());
 
   SmartDashboard::PutData("Gear LED On", new deadeye::GearLED(true));
   SmartDashboard::PutData("Gear LED Off", new deadeye::GearLED(false));

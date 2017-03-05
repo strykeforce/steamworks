@@ -49,6 +49,7 @@ void Shooter::SetElevation(unsigned elevation) {
   elevation_setpoint_ = LimitElevation(elevation);
   logger_->debug("setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(elevation);
+  UpdateSmartDashboard();
 }
 
 /**
@@ -59,6 +60,7 @@ void Shooter::IncrementElevation() {
   logger_->debug("setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(
       static_cast<double>(elevation_setpoint_));
+  UpdateSmartDashboard();
 }
 
 /**
@@ -69,6 +71,7 @@ void Shooter::DecrementElevation() {
   logger_->debug("setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(
       static_cast<double>(elevation_setpoint_));
+  UpdateSmartDashboard();
 }
 
 /**
@@ -135,6 +138,7 @@ void Shooter::SetSpeed(unsigned speed) {
   speed_setpoint_ = speed;
   logger_->debug("setting shooter wheel to {} ticks/100ms", speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
+  UpdateSmartDashboard();
 }
 
 /**
@@ -148,6 +152,7 @@ void Shooter::IncrementSpeed() {
   // }
   logger_->debug("setting shooter wheel to {} ticks/100ms", speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
+  UpdateSmartDashboard();
 }
 
 /**
@@ -161,6 +166,7 @@ void Shooter::DecrementSpeed() {
   // }
   logger_->debug("setting shooter wheel to {} ticks/100ms", speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
+  UpdateSmartDashboard();
 }
 
 /**
@@ -176,6 +182,19 @@ unsigned Shooter::GetSpeedSetpoint() const { return speed_setpoint_; }
 unsigned Shooter::GetSpeed() const {
   auto speed = RobotMap::shooter_wheel_talon->GetSpeed();
   return static_cast<unsigned>(speed);
+}
+
+namespace {
+const std::string kWheelSpeedKey("Wheel Speed");
+const std::string kWheelElevationKey("Shooter Elevation");
+}
+
+/**
+ * Send elevation and speed to SmartDashboard.
+ */
+void Shooter::UpdateSmartDashboard() {
+  SmartDashboard::PutNumber(kWheelSpeedKey, speed_setpoint_);
+  SmartDashboard::PutNumber(kWheelElevationKey, elevation_setpoint_);
 }
 
 unsigned Shooter::LimitSpeed(unsigned speed) {
