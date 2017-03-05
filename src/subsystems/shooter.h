@@ -23,9 +23,6 @@ class Shooter : public frc::Subsystem {
   unsigned GetElevationSetpoint();
   unsigned GetElevation();
 
-  void SetElevationZeroModeEnabled(bool enabled);
-  bool IsElevationZeroLimitSwitchActive();
-  void SetElevationZeroDriveVoltage(double volts);
   void SetElevationEncoderZero();
 
   void SetSpeed(unsigned speed);
@@ -37,12 +34,11 @@ class Shooter : public frc::Subsystem {
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   std::unique_ptr<sidewinder::talon::Settings> elevation_settings_;
-  std::unique_ptr<sidewinder::talon::Settings> elevation_zero_settings_;
 
   unsigned elevation_setpoint_ = 0;
   unsigned speed_setpoint_ = 0;
 
-  bool elevation_zero_mode_ = false;
+  int elevation_zero_ = 0;
 
   void UpdateSmartDashboard();
 

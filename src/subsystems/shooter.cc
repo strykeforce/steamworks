@@ -10,14 +10,19 @@ using namespace sidewinder;
  */
 Shooter::Shooter(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("Shooter"), logger_(spdlog::get("subsystem")) {
-  // get talon parameters
-  logger_->trace("starting constructor");
   auto steamworks_config = config->get_table("STEAMWORKS");
+
+  auto i_opt = steamworks_config->get_as<int>("elevation_zero");
+  if (i_opt) {
+    elevation_zero_ = *i_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS elevation_zero setting not available, using default");
+  }
+  logger_->info("elevation zero position: {}", elevation_zero_);
+
   elevation_settings_ =
       talon::Settings::Create(steamworks_config, "shooter_elevation");
-  elevation_zero_settings_ =
-      talon::Settings::Create(steamworks_config, "shooter_elevation_zero");
-
   auto speed_settings =
       talon::Settings::Create(steamworks_config, "shooter_wheel");
 
@@ -25,10 +30,7 @@ Shooter::Shooter(const std::shared_ptr<cpptoml::table> config)
   elevation_settings_->Initialize(RobotMap::shooter_elevation_talon);
   speed_settings->Initialize(RobotMap::shooter_wheel_talon);
 
-  // logger_->debug("dumping shooter elevation talon configuration");
-  // elevation_settings->LogConfig(logger_);
-  // logger_->debug("dumping shooter wheel talon configuration");
-  // speed_settings->LogConfig(logger_);
+  SetElevationEncoderZero();
 }
 
 namespace {
@@ -90,45 +92,16 @@ unsigned Shooter::GetElevation() {
 }
 
 /**
- * SetElevationZero drives the elevation against a known zero position.
- */
-void Shooter::SetElevationZeroModeEnabled(bool enabled) {
-  elevation_zero_mode_ = enabled;
-  if (elevation_zero_mode_) {
-    logger_->info("starting elevation zero mode");
-    RobotMap::shooter_elevation_talon->StopMotor();
-    elevation_zero_settings_->Initialize(RobotMap::shooter_elevation_talon);
-    return;
-  }
-  logger_->info("finished elevation zero mode");
-  RobotMap::shooter_elevation_talon->StopMotor();
-  elevation_settings_->Initialize(RobotMap::shooter_elevation_talon);
-}
-
-/**
- * IsElevationZeroLimitSwitchClosed is true
- */
-bool Shooter::IsElevationZeroLimitSwitchActive() {
-  return !RobotMap::shooter_elevation_talon->IsRevLimitSwitchClosed();
-}
-
-/**
- * SetElevationZeroDriveVoltage drives the elevation against the zero stop.
- */
-void Shooter::SetElevationZeroDriveVoltage(double volts) {
-  if (!elevation_zero_mode_) {
-    logger_->error("attempt to set voltage when not in elevation zero mode");
-    return;
-  }
-  logger_->info("setting elevation zero mode drive voltage to {}", volts);
-  RobotMap::shooter_elevation_talon->Set(volts);
-}
-
-/**
  * SetElevationEncoderZero sets the encoder for the elevation at known zero.
  */
 void Shooter::SetElevationEncoderZero() {
-  RobotMap::shooter_elevation_talon->SetPosition(0.0);
+  auto pos = RobotMap::shooter_elevation_talon->GetPulseWidthPosition() & 0xFFF;
+  logger_->debug("elevation_talon absolute encoder = {}", pos);
+  int error = elevation_zero_ - pos;
+  error += pos > elevation_zero_ ? 0xFFF : 0;
+  logger_->debug("elevation_talon error = {}", error);
+  logger_->debug("setting elevation_talon zero = {}", error);
+  RobotMap::shooter_elevation_talon->SetPosition(error);
 }
 
 /**

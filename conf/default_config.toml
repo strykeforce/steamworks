@@ -31,6 +31,9 @@ right_gear_clamp_release = 0.2
 left_gear_clamp_stow     = 0.45 # not used
 right_gear_clamp_stow    = 0.6  # not used
 
+# elevation motor absolute encoder position at zero
+elevation_zero = 440
+
 # settings for the gear pivot motor position mode
 gear_pivot_up   = 1080 # ticks
 gear_pivot_down =   10 # ticks
@@ -87,6 +90,8 @@ gear_pivot_down =   10 # ticks
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 
     [[STEAMWORKS.TALON]]
+    # range 0-900 ticks/100ms
+    # 650 practical max
     name = "shooter_wheel"
     type = "velocity"
 
@@ -103,21 +108,22 @@ gear_pivot_down =   10 # ticks
     voltage_ramp_rate              =   0.0 # v/s, 0 disables
     close_loop_ramp_rate           =   0.0 # v/s, 0 disables
     peak_output_voltage_forward    =  12.0 # v
-    peak_output_voltage_reverse    =  -2.0 # v
+    peak_output_voltage_reverse    =  -0.5 # v
     nominal_output_voltage_forward =   0.0 # v
     nominal_output_voltage_reverse =   0.0 # v
     allowable_closed_loop_error    =     0 # encoder ticks
     encoder_reversed = false
     output_reversed  = false
-    current_limit    = 60 # amps, 0 disables
+    current_limit    = 50 # amps, 0 disables
 
     [[STEAMWORKS.TALON]]
+    # range 0 - 4500
     name = "shooter_elevation"
     type = "position"
 
     feedback_device = 0 # quad
     neutral_mode    = 1 # brake
-    limit_mode      = 0 # use switches
+    limit_mode      = 2 # soft and hard disabled
 
     P      =   10.0
     I      =    0.0
@@ -127,26 +133,14 @@ gear_pivot_down =   10 # ticks
 
     voltage_ramp_rate              =   0.0 # v/s, 0 disables
     close_loop_ramp_rate           =   0.0 # v/s, 0 disables
-    peak_output_voltage_forward    =   4.0 # v
-    peak_output_voltage_reverse    =  -5.0 # v
+    peak_output_voltage_forward    =   7.0 # v
+    peak_output_voltage_reverse    =  -6.0 # v
     nominal_output_voltage_forward =   0.0 # v
     nominal_output_voltage_reverse =   0.0 # v
     allowable_closed_loop_error    =     0 # encoder ticks
     encoder_reversed = false
     output_reversed  = false
-    current_limit    = 0 # amps, 0 disables
-
-    [[STEAMWORKS.TALON]]
-    name = "shooter_elevation_zero"
-    type = "voltage"
-    feedback_device = 0 # quad
-    neutral_mode    = 2 # coast
-    limit_mode      = 0 # use switches, will disable in software during zero
-    encoder_reversed = false
-    output_reversed  = false
-    current_limit    = 0 # amps, 0 disables
-
-    voltage_ramp_rate = 0.0 # v/s, 0 disables
+    current_limit    = 5 # amps, 0 disables
 
     [[STEAMWORKS.TALON]]
     name = "gear_loader"

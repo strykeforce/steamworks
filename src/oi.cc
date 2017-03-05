@@ -172,7 +172,7 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Zero Pivot", new gear::ZeroPivot());
 
-  SmartDashboard::PutData("Default Elevation", new SetShooterElevation(900));
+  SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));
   SmartDashboard::PutData("Increment Elevation",
                           new IncrementShooterElevation());
   SmartDashboard::PutData("Decrement Elevation",
