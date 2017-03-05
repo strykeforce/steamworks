@@ -64,7 +64,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
  * input.
  */
 double OI::GetTeleDriveForwardAxis() {
-  double axis = -flight_sim_joystick_.GetRawAxis(kFlightSimLeftYAxis);
+  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftYAxis);
   return drive_expo_(axis);
 }
 
@@ -73,7 +73,7 @@ double OI::GetTeleDriveForwardAxis() {
  * input.
  */
 double OI::GetTeleDriveStrafeAxis() {
-  double axis = flight_sim_joystick_.GetRawAxis(kFlightSimLeftXAxis);
+  double axis = -flight_sim_joystick_.GetRawAxis(kFlightSimLeftXAxis);
   return drive_expo_(axis);
 }
 
