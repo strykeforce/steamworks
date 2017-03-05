@@ -5,12 +5,13 @@
 namespace steamworks {
 namespace command {
 
-class SetShooterElevation : public frc::InstantCommand {
+class SetShooterElevation : public frc::Command {
  public:
   SetShooterElevation(unsigned elevation);
 
  protected:
   void Initialize() override;
+  bool IsFinished() override;
 
  private:
   unsigned elevation_;

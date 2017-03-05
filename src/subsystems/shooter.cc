@@ -34,14 +34,14 @@ Shooter::Shooter(const std::shared_ptr<cpptoml::table> config)
 }
 
 namespace {
-const unsigned kElevationIncrement = 25;
-const unsigned kSpeedIncrement = 10;
+const int kElevationIncrement = 25;
+const int kSpeedIncrement = 10;
 
-const unsigned kMinElevation = 1;
-const unsigned kMaxElevation = 1600;
+const int kMinElevation = 1;
+const int kMaxElevation = 1600;
 
-const unsigned kMinSpeed = 350;
-const unsigned kMaxSpeed = 700;
+const int kMinSpeed = 350;
+const int kMaxSpeed = 700;
 }
 
 /**
@@ -80,13 +80,13 @@ void Shooter::DecrementElevation() {
  * GetElevationSetpoint returns the current elevation setpoint.
  * @returns elevation in encoder ticks
  */
-unsigned Shooter::GetElevationSetpoint() { return elevation_setpoint_; }
+int Shooter::GetElevationSetpoint() { return elevation_setpoint_; }
 
 /**
  * GetElevation returns the current elevation encoder position.
  * @returns elevation in encoder ticks
  */
-unsigned Shooter::GetElevation() {
+int Shooter::GetElevation() {
   auto position = RobotMap::shooter_elevation_talon->GetPosition();
   return static_cast<unsigned>(position);
 }

@@ -4,12 +4,17 @@
 
 using namespace steamworks::command;
 
+namespace {
+const double kTimeout = 1.5;
+const int kGoodEnough = 5;
+}
+
 /**
  * SetShooterElevation sets elevation to given encoder position. It should be
  * in the range 0-1600
  */
 SetShooterElevation::SetShooterElevation(unsigned elevation)
-    : frc::InstantCommand("SetShooterElevation"), elevation_(elevation) {
+    : frc::Command("SetShooterElevation", kTimeout), elevation_(elevation) {
   Requires(Robot::shooter);
 }
 
@@ -20,6 +25,17 @@ void SetShooterElevation::Initialize() {
   Robot::shooter->SetElevation(elevation_);
 }
 
+/**
+ * Returns true when elevation position is reached.
+ */
+bool SetShooterElevation::IsFinished() {
+  int error = std::abs(elevation_ - Robot::shooter->GetElevation());
+  return error < kGoodEnough || IsTimedOut();
+}
+
+//
+// IncrementShooterElevation
+//
 /**
  * IncrementShooterElevation raises elevation by a small number of encoder
  * ticks.

@@ -20,8 +20,8 @@ class Shooter : public frc::Subsystem {
   void SetElevation(unsigned elevation);
   void IncrementElevation();
   void DecrementElevation();
-  unsigned GetElevationSetpoint();
-  unsigned GetElevation();
+  int GetElevationSetpoint();
+  int GetElevation();
 
   void SetElevationEncoderZero();
 
