@@ -49,3 +49,35 @@ void ToggleHopper::Initialize() {
   }
   start_cmd_.Start();
 }
+
+//
+// IncrementHopperVoltage
+//
+IncrementHopperVoltage::IncrementHopperVoltage()
+    : frc::InstantCommand("IncrementHopperVoltage") {
+  Requires(Robot::hopper);
+}
+
+void IncrementHopperVoltage::Initialize() {
+  double voltage = Robot::hopper->GetVoltage() + 1.0;
+  if (voltage > 12.0) {
+    voltage = 12.0;
+  }
+  Robot::hopper->SetVoltage(voltage);
+}
+
+//
+// DecrementHopperVoltage
+//
+DecrementHopperVoltage::DecrementHopperVoltage()
+    : frc::InstantCommand("DecrementHopperVoltage") {
+  Requires(Robot::hopper);
+}
+
+void DecrementHopperVoltage::Initialize() {
+  double voltage = Robot::hopper->GetVoltage() - 1.0;
+  if (voltage < 0.0) {
+    voltage = 0.0;
+  }
+  Robot::hopper->SetVoltage(voltage);
+}

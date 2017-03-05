@@ -42,5 +42,21 @@ class ToggleHopper : public frc::InstantCommand {
   StopHopper stop_cmd_;
 };
 
+class IncrementHopperVoltage : public frc::InstantCommand {
+ public:
+  IncrementHopperVoltage();
+
+ protected:
+  void Initialize() override;
+};
+
+class DecrementHopperVoltage : public frc::InstantCommand {
+ public:
+  DecrementHopperVoltage();
+
+ protected:
+  void Initialize() override;
+};
+
 } /* command */
 } /* steamworks */

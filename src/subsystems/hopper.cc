@@ -33,6 +33,7 @@ Hopper::Hopper(const std::shared_ptr<cpptoml::table> config)
 void Hopper::Start() {
   RobotMap::hopper_talon->Set(voltage_);
   is_running_ = true;
+  SmartDashboard::PutNumber("Hopper Voltage", voltage_);
 }
 
 void Hopper::Stop() {
@@ -41,3 +42,10 @@ void Hopper::Stop() {
 }
 
 bool Hopper::IsRunning() { return is_running_; }
+
+double Hopper::GetVoltage() { return voltage_; }
+
+void Hopper::SetVoltage(double volts) {
+  voltage_ = volts;
+  Start();
+}

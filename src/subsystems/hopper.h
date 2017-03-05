@@ -17,6 +17,9 @@ class Hopper : public frc::Subsystem {
   void Stop();
   bool IsRunning();
 
+  double GetVoltage();
+  void SetVoltage(double voltage);
+
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   double voltage_;

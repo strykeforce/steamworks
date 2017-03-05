@@ -188,4 +188,7 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Gear LED Off", new deadeye::GearLED(false));
   SmartDashboard::PutData("Shooter LED On", new deadeye::ShooterLED(true));
   SmartDashboard::PutData("Shooter LED Off", new deadeye::ShooterLED(false));
+
+  SmartDashboard::PutData("Inc. Hopper Volts", new IncrementHopperVoltage());
+  SmartDashboard::PutData("Dec. Hopper Volts", new DecrementHopperVoltage());
 }
