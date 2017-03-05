@@ -3,6 +3,7 @@
 #include <string>
 
 #include "link/boiler.h"
+#include "link/gear.h"
 #include "link/no_target.h"
 #include "link/mode.h"
 
@@ -72,6 +73,16 @@ void Link::SendBoilerSolution(int azimuth_error,
       azimuth_error, range, angle, speed);
   BoilerSentence bts(azimuth_error, range, angle, speed);
   serial_->write(bts.ToString() + "\n");
+}
+
+/**
+ * Send the gear azimuth error.
+ */
+void Link::SendGearSolution(int azimuth_error, int range) {
+  logger_->debug("gear solution: az error = {}, range = {}", azimuth_error,
+                 range);
+  GearSentence gaz(azimuth_error, range);
+  serial_->write(gaz.ToString() + "\n");
 }
 
 /**

@@ -99,21 +99,17 @@ void Deadeye::ProcessBoilerTarget() {
 }
 
 void Deadeye::ProcessGearTarget() {
-  int x;  // horizontal target separation
   int azimuth_error;
-  std::tie(azimuth_error, x) = gear_camera_.ProcessFrame();
+  int target_width;
+  bool success = gear_camera_.ProcessFrame(azimuth_error, target_width);
+  int range = azimuth_error + target_width;  // FIXME: NOPE!
 #if !NDEBUG
   gear_camera_.DisplayFrame();
 #endif
-  // y -= boiler_target_offset;
-  // if (y < 0 || y > boiler_target_data_size - 1) {
-  //   logger_->warn("boiler target separation distance out of range: {} px",
-  //   y); link_.SendNoTarget(); std::this_thread::sleep_for(NTGT_SLEEP_MS);
-  //   return;
-  // }
-  // link_.SendBoilerSolution(azimuth_error, boiler_target_data[y][kRange],
-  //                          boiler_target_data[y][kAngle],
-  //                          boiler_target_data[y][kSpeed]);
-
-  // TODO: config file should decide
+  if (success) {
+    link_.SendGearSolution(azimuth_error, range);
+    return;
+  }
+  link_.SendNoTarget();
+  std::this_thread::sleep_for(NTGT_SLEEP_MS);
 }

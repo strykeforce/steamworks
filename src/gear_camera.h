@@ -21,7 +21,8 @@ class GearCamera {
   bool IsConnected();
   void StartCapture();
   void StopCapture();
-  std::tuple<int, int> ProcessFrame();
+
+  bool ProcessFrame(int& azimuth_error, int& target_width);
   void DisplayFrame();
 
  private:
@@ -29,11 +30,12 @@ class GearCamera {
 
   // hardware
   std::unique_ptr<cv::VideoCapture> camera_{nullptr};
+  int azimuth_offset_;
   bool connected_, capture_started_, has_gui_;
   cv::Mat frame_;
-  double exposure_;
 
-  static const std::tuple<int, int> PROCESS_ERROR;
+  int img_count_ = 0;
+
   // frame processing
   GearFrame frame_process_;
 };

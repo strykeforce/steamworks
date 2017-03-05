@@ -13,7 +13,8 @@ class GearFrame {
   cv::Mat hsv, blur, mask;
   std::vector<cv::Point> left_contour, right_contour;
   cv::Rect left_rect, right_rect;
-  int azimuth_error, target_separation;
+  bool has_left_target;
+  int azimuth_error;
 
   GearFrame(std::shared_ptr<cpptoml::table> config);
   virtual ~GearFrame() = default;

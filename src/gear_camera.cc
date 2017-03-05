@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <stdlib.h>
+#include <sstream>
 
 using namespace deadeye;
 using namespace std;
@@ -13,7 +14,6 @@ GearCamera::GearCamera(std::shared_ptr<cpptoml::table> config_in)
       connected_(false),
       capture_started_(false),
       has_gui_(!!std::getenv("DISPLAY")),
-      exposure_(-1.0),
       frame_process_(config_in) {
   assert(config_in);
   auto config = config_in->get_table("GEAR");
@@ -26,13 +26,13 @@ GearCamera::GearCamera(std::shared_ptr<cpptoml::table> config_in)
     throw invalid_argument("GEAR.CAMERA config table missing");
   }
 
-  auto d_opt = config->get_as<double>("exposure");
-  if (d_opt) {
-    exposure_ = *d_opt;
+  auto i_opt = config->get_as<int>("azimuth_offset");
+  if (i_opt) {
+    azimuth_offset_ = *i_opt;
   } else {
-    logger_->warn("CAMERA exposure setting missing, using default");
+    logger_->warn("CAMERA azimuth_offset setting missing, using default");
   }
-  logger_->info("camera frame exposure: {}", exposure_);
+  logger_->info("gear camera azimuth offset: {}", azimuth_offset_);
 }
 
 GearCamera::~GearCamera() {
@@ -111,44 +111,44 @@ void GearCamera::StopCapture() {
   capture_started_ = false;
 }
 
-const std::tuple<int, int> GearCamera::PROCESS_ERROR = std::make_tuple(-1, -1);
-
 /**
  * Process a single frame.
  * Returns azumith error and target top-edge distance in pixels.
  */
-std::tuple<int, int> GearCamera::ProcessFrame() {
+bool GearCamera::ProcessFrame(int& azimuth_error, int& target_width) {
   if (!connected_ && !capture_started_) {
     logger_->error("not connected or capture not started");
-    return PROCESS_ERROR;
+    return -1;
   }
 
   *camera_ >> frame_;
 
+  // process frame to find targets and return target data
+  if (frame_process_.FindTargets(frame_)) {
+    azimuth_error = frame_process_.azimuth_error;
+    target_width = 0;
+    return true;
+  }
+
   // no targets found
-  return PROCESS_ERROR;
+  return false;
 }
 
 void GearCamera::DisplayFrame() {
   if (has_gui_) {
+    cv::line(frame_, cv::Point(azimuth_offset_, 0),
+             cv::Point(azimuth_offset_, frame_.rows), cv::Scalar(255, 0, 0));
+
     // draw contours and bounding boxes around targets into captured frame
-    // cv::drawContours(
-    //     frame_,
-    //     std::vector<std::vector<cv::Point>>{frame_process_.left_contour}, 0,
-    //     cv::Scalar(0, 0, 255), 1);
-    // cv::drawContours(
-    //     frame_,
-    //     std::vector<std::vector<cv::Point>>{frame_process_.right_contour}, 0,
-    //     cv::Scalar(0, 0, 255), 1);
-    //
-    // cv::rectangle(frame_, frame_process_.left_rect, cv::Scalar(0, 255, 0),
-    // 1); cv::rectangle(frame_, frame_process_.right_rect, cv::Scalar(0, 255,
-    // 0), 1);
-    //
-    // cv::line(frame_, cv::Point((frame_.cols / 2), 0),
-    //          cv::Point((frame_.cols / 2), frame_.rows), cv::Scalar(255, 0,
-    //          0));
-    //
+    if (!frame_process_.right_contour.empty()) {
+      cv::drawContours(
+          frame_,
+          std::vector<std::vector<cv::Point>>{frame_process_.right_contour}, 0,
+          cv::Scalar(0, 0, 255), 1);
+      cv::rectangle(frame_, frame_process_.right_rect, cv::Scalar(0, 255, 0),
+                    1);
+    }
+
     // std::string range = "target separation (px) = " +
     //                     std::to_string(frame_process_.target_separation);
     // std::string coords =
@@ -162,6 +162,7 @@ void GearCamera::DisplayFrame() {
 
     // display capture frame in GUI window
     cv::imshow("frame", frame_);
+
     // if (frame_process_.target_separation < 90 ||
     //     frame_process_.target_separation > 110) {
     //   cv::waitKey(10000);

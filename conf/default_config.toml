@@ -11,12 +11,12 @@ hsv_upper = [100, 255, 255]
 min_arc_length = 250.0
 
 [GEAR.CAMERA]
-exposure = -1.0
+azimuth_offset = 177
 
 [GEAR.FRAME]
-hsv_lower = [80, 100, 100]
-hsv_upper = [100, 255, 255]
-min_arc_length = 250.0
+hsv_lower = [60, 100, 100]
+hsv_upper = [80, 255, 255]
+min_arc_length = 50.0
 
 [LINK]
 port = "/dev/ttyTHS2"

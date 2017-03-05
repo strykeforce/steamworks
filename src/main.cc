@@ -8,6 +8,7 @@
 
 int main(int argc, char const* argv[]) {
   auto logger = spdlog::stdout_color_st("deadeye");
+  logger->set_level(spdlog::level::debug);
 
   // read config file from path specified in DEADEYE_CONF env variable or
   // default to /etc/deadeye.toml

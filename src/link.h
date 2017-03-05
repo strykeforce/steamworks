@@ -15,6 +15,7 @@ class Link {
 
   Mode GetMode();
   void SendBoilerSolution(int azimuth_error, int range, int angle, int speed);
+  void SendGearSolution(int azimuth_error, int range);
   void SendNoTarget();
 
  private:
