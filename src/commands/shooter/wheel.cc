@@ -15,10 +15,7 @@ StartShooterWheel::StartShooterWheel()
 /**
  * Sends wheel speed set command to the subsystem.
  */
-void StartShooterWheel::Initialize() {
-  Robot::shooter->SetSpeed(460);
-  // SmartDashboard::PutNumber(kWheelSpeedKey, 460);
-}
+void StartShooterWheel::Initialize() { Robot::shooter->SetSpeed(460); }
 
 /**
  * StopShooterWheel ramps shooter wheel speed down to zero.
@@ -49,7 +46,6 @@ void StopShooterWheel::Execute() {
     speed_setpoint_ -= kSpeedDecrement;
   }
   Robot::shooter->SetSpeed(speed_setpoint_);
-  // SmartDashboard::PutNumber(kWheelSpeedKey, speed_setpoint_);
 }
 
 bool StopShooterWheel::IsFinished() { return speed_setpoint_ == 0; }
@@ -66,11 +62,7 @@ IncrementShooterSpeed::IncrementShooterSpeed()
 /**
  * Sends increment wheel speed command to the subsystem.
  */
-void IncrementShooterSpeed::Initialize() {
-  Robot::shooter->IncrementSpeed();
-  // SmartDashboard::PutNumber(kWheelSpeedKey,
-  // Robot::shooter->GetSpeedSetpoint());
-}
+void IncrementShooterSpeed::Initialize() { Robot::shooter->IncrementSpeed(); }
 
 /**
  * IncrementShooterSpeed lowers wheel speed by a small number of encoder
@@ -84,8 +76,4 @@ DecrementShooterSpeed::DecrementShooterSpeed()
 /**
  * Sends decrement wheel speed command to the subsystem.
  */
-void DecrementShooterSpeed::Initialize() {
-  Robot::shooter->DecrementSpeed();
-  // SmartDashboard::PutNumber(kWheelSpeedKey,
-  // Robot::shooter->GetSpeedSetpoint());
-}
+void DecrementShooterSpeed::Initialize() { Robot::shooter->DecrementSpeed(); }

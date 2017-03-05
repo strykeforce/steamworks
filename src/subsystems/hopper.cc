@@ -25,15 +25,15 @@ Hopper::Hopper(const std::shared_ptr<cpptoml::table> config)
   logger_->info("hopper motor voltage: {}", voltage_);
 
   auto talon_settings = talon::Settings::Create(steamworks_config, "hopper");
-  // logger_->debug("dumping hopper talon configuration");
-  // talon_settings->LogConfig(logger_);
   talon_settings->Initialize(RobotMap::hopper_talon);
 }
 
 void Hopper::Start() {
   RobotMap::hopper_talon->Set(voltage_);
   is_running_ = true;
+#if !NDEBUG
   SmartDashboard::PutNumber("Hopper Voltage", voltage_);
+#endif
 }
 
 void Hopper::Stop() {

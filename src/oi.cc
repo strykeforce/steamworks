@@ -172,6 +172,7 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Zero Pivot", new gear::ZeroPivot());
 
+#if !NDEBUG
   SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));
   SmartDashboard::PutData("Increment Elevation",
                           new IncrementShooterElevation());
@@ -191,4 +192,5 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Inc. Hopper Volts", new IncrementHopperVoltage());
   SmartDashboard::PutData("Dec. Hopper Volts", new DecrementHopperVoltage());
+#endif
 }

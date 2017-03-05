@@ -166,8 +166,10 @@ const std::string kWheelElevationKey("Shooter Elevation");
  * Send elevation and speed to SmartDashboard.
  */
 void Shooter::UpdateSmartDashboard() {
+#if !NDEBUG
   SmartDashboard::PutNumber(kWheelSpeedKey, speed_setpoint_);
   SmartDashboard::PutNumber(kWheelElevationKey, elevation_setpoint_);
+#endif
 }
 
 unsigned Shooter::LimitSpeed(unsigned speed) {
