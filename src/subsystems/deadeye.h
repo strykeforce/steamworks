@@ -17,6 +17,7 @@ class Deadeye : public frc::Subsystem {
   void Start();
 
   void SetGearLightEnabled(bool enable);
+  void SetShooterLightEnabled(bool enable);
 
   // Mode GetMode();
   // int GetAzimuthError();

@@ -17,6 +17,9 @@ Deadeye::Deadeye(const std::shared_ptr<cpptoml::table> config)
       thread_{},
       stop_thread_{false} {
   LoadConfigSettings(config);
+  // turn off camera LEDs at robot start-up
+  RobotMap::gear_camera_led->Set(true);
+  RobotMap::shooter_camera_led->Set(true);
 }
 
 /**
@@ -75,6 +78,11 @@ void Deadeye::SetGearLightEnabled(bool enable) {
 }
 
 /**
+ * SetShooterLightEnabled
+ */
+void Deadeye::SetShooterLightEnabled(bool enable) {
+  RobotMap::shooter_camera_led->Set(!enable);
+}
  * Load settings from global config.
  */
 void Deadeye::LoadConfigSettings(const std::shared_ptr<cpptoml::table> config) {

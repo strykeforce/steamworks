@@ -186,4 +186,6 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Gear LED On", new deadeye::GearLED(true));
   SmartDashboard::PutData("Gear LED Off", new deadeye::GearLED(false));
+  SmartDashboard::PutData("Shooter LED On", new deadeye::ShooterLED(true));
+  SmartDashboard::PutData("Shooter LED Off", new deadeye::ShooterLED(false));
 }

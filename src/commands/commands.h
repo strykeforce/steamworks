@@ -11,6 +11,7 @@
 #include "commands/auton/test.h"
 
 #include "commands/deadeye/gear_led.h"
+#include "commands/deadeye/shooter_led.h"
 
 #include "commands/drive/auton/azimuth.h"
 #include "commands/drive/auton/drive.h"
