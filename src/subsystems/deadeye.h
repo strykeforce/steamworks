@@ -4,6 +4,8 @@
 #include <cpptoml/cpptoml.h>
 #include <spdlog/spdlog.h>
 
+#include "mode.h"
+
 namespace steamworks {
 namespace subsystem {
 
@@ -19,20 +21,27 @@ class Deadeye : public frc::Subsystem {
   void SetGearLightEnabled(bool enable);
   void SetShooterLightEnabled(bool enable);
 
-  // Mode GetMode();
-  // int GetAzimuthError();
-  // int GetRange();
+  deadeye::Mode GetMode();
+  // void SetMode(deadeye::Mode mode);
+
+  int GetAzimuthError();
+  int GetRange();
+  int GetShooterElevation();
+  int GetShooterSpeed();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   std::string port_{"/dev/ttyUSB0"};
   uint32_t speed_ = 115200;
-  // Mode mode_;
-  // int azimuth_error_;
-  // int range_;
+  deadeye::Mode mode_ = deadeye::Mode::quit;
+  int azimuth_error_;
+  int range_;
+  int shooter_angle_;
+  int shooter_speed_;
   std::thread thread_;
   std::atomic_bool stop_thread_;
   std::mutex mutex_;
+  bool error_reported_ = false;
 
   void Run();
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);

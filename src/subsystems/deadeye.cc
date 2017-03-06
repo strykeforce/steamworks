@@ -1,7 +1,8 @@
 #include "deadeye.h"
 
-#include <cpptoml/cpptoml.h>
 #include <serial/serial.h>
+#include <chrono>
+#include <thread>
 
 #include "parser.h"
 #include "sentence.h"
@@ -9,8 +10,14 @@
 #include "robot_map.h"
 
 using namespace steamworks::subsystem;
+using namespace deadeye;
 using namespace std;
 
+namespace {
+constexpr auto LOOP_SLEEP_MS = std::chrono::milliseconds(20);
+}
+
+// TODO: look at Notify to run this loop; should reduce CPU load
 Deadeye::Deadeye(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("Deadeye"),
       logger_(spdlog::get("subsystem")),
@@ -40,34 +47,91 @@ void Deadeye::Start() { thread_ = std::thread{&Deadeye::Run, this}; }
  */
 void Deadeye::Run() {
   auto logger = spdlog::get("deadeye");
-  serial::Timeout timeout{0, 50, 0, 0, 0};
+  serial::Timeout timeout{0, 100, 0, 0, 0};
   serial::Serial serial{port_, speed_, timeout};
   serial.flushInput();
-  deadeye::Parser parser;
-  deadeye::Sentence sentence;
+  Parser parser;
+  Sentence sentence;
+  Mode current_mode_ = Mode::quit;
   while (!stop_thread_) {
     // QUESTION: will no read timeout block the destructor join?
+    std::this_thread::sleep_for(LOOP_SLEEP_MS);
+    if (current_mode_ != mode_) {
+      ModeSentence mode(mode_);
+      serial.write(mode.ToString() + "\n");
+      current_mode_ = mode_;
+      continue;
+    }
     std::string line = serial.readline();
     parser.ParseText(sentence, line);
     bool valid = sentence.Valid();
-    // logger->trace(
-    //     "name = {}, valid = {}, parameters[0] = {}, parameters[1] = {}",
-    //     sentence.name, valid, sentence.parameters[0],
-    //     sentence.parameters[1]);
-    logger->trace("name = {}, valid = {}", sentence.name, valid);
     if (!valid) {
-      logger->warn("sentence invalid: {}", line);
+      if (!error_reported_) {
+        logger->error("sentence invalid: {}", line);
+        error_reported_ = true;
+      }
       continue;
     }
-    // int azimuth_error = std::stoi(sentence.parameters[0]);
-    // int range = std::stoi(sentence.parameters[1]);
-    // {
-    //   std::lock_guard<std::mutex> lock(mutex_);
-    //   azimuth_error_ = azimuth_error;
-    //   range_ = range;
-    // }
+    error_reported_ = false;
+
+    {
+      std::lock_guard<std::mutex> lock(mutex_);
+      switch (sentence.Code()) {
+        case 0:
+          // no target
+          break;
+        case 1:  // boiler target
+          azimuth_error_ = stoi(sentence.parameters[1]);
+          range_ = stoi(sentence.parameters[2]);
+          shooter_angle_ = stoi(sentence.parameters[3]);
+          shooter_speed_ = stoi(sentence.parameters[4]);
+          break;
+        case 2:  // gear target
+          azimuth_error_ = stoi(sentence.parameters[1]);
+          range_ = stoi(sentence.parameters[2]);
+          logger_->trace("gear azimuth error = {} range = {}", azimuth_error_,
+                         range_);
+          break;
+        case 3:  // mode
+          break;
+        default:
+          throw logic_error("unrecognized sentence code");
+      }
+    }
   }
   serial.close();
+}
+
+/**
+ * Get the azimuth error.
+ */
+int Deadeye::GetAzimuthError() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return azimuth_error_;
+}
+
+/**
+ * Get the azimuth error.
+ */
+int Deadeye::GetRange() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return range_;
+}
+
+/**
+ * Get the azimuth error.
+ */
+int Deadeye::GetShooterElevation() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return shooter_angle_;
+}
+
+/**
+ * Get the azimuth error.
+ */
+int Deadeye::GetShooterSpeed() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return shooter_speed_;
 }
 
 /**
@@ -83,12 +147,27 @@ void Deadeye::SetGearLightEnabled(bool enable) {
 void Deadeye::SetShooterLightEnabled(bool enable) {
   RobotMap::shooter_camera_led->Set(!enable);
 }
+
+/**
+ * Get the current Deadeye mode.
+ */
+Mode Deadeye::GetMode() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return mode_;
+}
+
+/**
+ * Set the current Deadeye mode.
+ */
+// void Deadeye::SetMode(Mode mode) {}
+
+/**
  * Load settings from global config.
  */
 void Deadeye::LoadConfigSettings(const std::shared_ptr<cpptoml::table> config) {
   auto camera_config = config->get_table("STEAMWORKS")->get_table("CAMERA");
   if (!camera_config) {
-    // throw invalid_argument("STEAMWORKS CAMERA table not present");
+    throw invalid_argument("STEAMWORKS CAMERA table not present");
   }
 
   const char* missing = "STEAMWORKS CAMERA {} setting missing, using default";

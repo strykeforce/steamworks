@@ -7,9 +7,9 @@ namespace steamworks {
 namespace command {
 namespace drive {
 
-class Azimuth : public frc::Command {
+class DeadeyeAzimuth : public frc::Command {
  public:
-  Azimuth(float target);
+  DeadeyeAzimuth();
 
  protected:
   void Initialize() override;
@@ -19,7 +19,6 @@ class Azimuth : public frc::Command {
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  float target_;
   float error_;
   float abs_error_;
   int stable_count_ = 0;

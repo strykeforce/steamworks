@@ -105,8 +105,8 @@ unsigned OI::GetAutonMode() {
  * commands.
  */
 void OI::AssignFlightSimButtons() {
-  // flight sim reset button is reserved
-  reset_button_.WhenPressed(new Log("flight simulator reset button"));
+  // flight sim reset button manually re-zeros the gyro
+  reset_button_.WhenPressed(new ZeroGyroYaw());
 
   // flight sim left shoulder 3-position button controlls gear loader
   gear_auto_off_button_.WhenPressed(
@@ -114,8 +114,8 @@ void OI::AssignFlightSimButtons() {
   gear_auto_on_button_.WhenPressed(new gear::ReleaseGear());
 
   // flight sim right shoulder 2-position button controls shooter auto mode
-  shooter_auto_button_.WhenPressed(
-      new Log("flight simulator shooter auto button"));
+  shooter_auto_button_.WhenPressed(new StartShooting());
+  shooter_auto_button_.WhenReleased(new StopShooterWheel());
 }
 
 /**
@@ -192,5 +192,7 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Inc. Hopper Volts", new IncrementHopperVoltage());
   SmartDashboard::PutData("Dec. Hopper Volts", new DecrementHopperVoltage());
+
+  SmartDashboard::PutData("Deadeye Azimuth", new drive::DeadeyeAzimuth());
 #endif
 }

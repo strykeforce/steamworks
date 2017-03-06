@@ -124,7 +124,7 @@ void SwerveDrive::DriveAzimuthAutonomous(double setpoint) {
  */
 void SwerveDrive::DriveAutonomous(double forward, double strafe,
                                   double azimuth) {
-  swerve::SwerveDrive::Drive_(forward, strafe, azimuth, 0);
+  swerve::SwerveDrive::Drive_(forward, strafe, azimuth, 0.05);
 }
 
 /**

@@ -20,9 +20,9 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   AddSequential(new drive::PositionDrive(kForwardAzimuth));
   AddSequential(new drive::Drive(kForwardDistance, kForwardAzimuth, 10));
 
-  AddSequential(new Log("Azimuth 90"));
+  AddSequential(new Log("GyroAzimuth 90"));
   AddSequential(new drive::PositionAzimuth());
-  AddSequential(new drive::Azimuth(90));
+  AddSequential(new drive::GyroAzimuth(90));
 
   AddSequential(new Log("PositionDrive into Hopper"));
   AddSequential(new drive::PositionDrive(kForwardAzimuth));
@@ -35,7 +35,7 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   AddSequential(new drive::PositionDrive(0));
   AddSequential(new drive::Drive(15 * 50.72, 0, 10));
 
-  AddSequential(new Log("Azimuth back to 20"));
+  AddSequential(new Log("GyroAzimuth back to 20"));
   AddSequential(new drive::PositionAzimuth());
-  AddSequential(new drive::Azimuth(0));
+  AddSequential(new drive::GyroAzimuth(0));
 }

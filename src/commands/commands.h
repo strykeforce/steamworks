@@ -13,14 +13,17 @@
 #include "commands/deadeye/gear_led.h"
 #include "commands/deadeye/shooter_led.h"
 
-#include "commands/drive/auton/azimuth.h"
+#include "commands/drive/auton/deadeye_azimuth.h"
 #include "commands/drive/auton/drive.h"
+#include "commands/drive/auton/gyro_azimuth.h"
 #include "commands/drive/auton/position_azimuth.h"
 #include "commands/drive/auton/position_drive.h"
 #include "commands/drive/tele_op.h"
 #include "commands/drive/zero.h"
 
 #include "commands/shooter/elevation.h"
+#include "commands/shooter/sequence.h"
+#include "commands/shooter/set_range.h"
 #include "commands/shooter/wheel.h"
 
 #include "commands/gear/clamp.h"

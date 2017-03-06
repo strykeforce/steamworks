@@ -1,4 +1,4 @@
-#include "azimuth.h"
+#include "gyro_azimuth.h"
 
 #include "robot.h"
 #include "robot_map.h"
@@ -16,11 +16,11 @@ const int kStableCountReq = 3;
 }
 
 /**
- * Azimuth is a command to spin the robot to a given field-relative
+ * GyroAzimuth is a command to spin the robot to a given field-relative
  * azimuth.
  */
-Azimuth::Azimuth(float target)
-    : frc::Command("Azimuth"),
+GyroAzimuth::GyroAzimuth(float target)
+    : frc::Command("GyroAzimuth"),
       logger_(spdlog::get("command")),
       target_(target) {
   Requires(Robot::drive);
@@ -29,7 +29,7 @@ Azimuth::Azimuth(float target)
 /**
  * Initialize starts the PID controller loop.
  */
-void Azimuth::Initialize() {
+void GyroAzimuth::Initialize() {
   Robot::drive->SetAzimuthMode();
   float initial = RobotMap::gyro->GetYaw();
   error_ = target_ - initial;
@@ -42,7 +42,7 @@ void Azimuth::Initialize() {
  * Execute is called periodically during command execution and sends azimuth
  * rate commands to the swerve drive based on current error calculations.
  */
-void Azimuth::Execute() {
+void GyroAzimuth::Execute() {
   error_ = target_ - RobotMap::gyro->GetYaw();
   abs_error_ = fabs(error_);
   double speed;
@@ -68,7 +68,7 @@ void Azimuth::Execute() {
  * IsFinished is called periodically during command execution and returns true
  * if desired azimuth is reached.
  */
-bool Azimuth::IsFinished() {
+bool GyroAzimuth::IsFinished() {
   if (abs_error_ < kCloseEnough) {
     stable_count_++;
     logger_->trace("incrementing stable_count_ to {}", stable_count_);
@@ -87,4 +87,4 @@ bool Azimuth::IsFinished() {
  * End is called after IsFinished(), it stops azimuth motion and disables the
  * PID controller loop.
  */
-void Azimuth::End() { Robot::drive->SetDrive(0.0); }
+void GyroAzimuth::End() { Robot::drive->SetDrive(0.0); }
