@@ -25,9 +25,7 @@ class Deadeye : public frc::Subsystem {
   // void SetMode(deadeye::Mode mode);
 
   int GetAzimuthError();
-  int GetRange();
-  int GetShooterElevation();
-  int GetShooterSpeed();
+  int GetCenterlineError();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
@@ -35,9 +33,8 @@ class Deadeye : public frc::Subsystem {
   uint32_t speed_ = 115200;
   deadeye::Mode mode_ = deadeye::Mode::quit;
   int azimuth_error_;
+  int centerline_error_;
   int range_;
-  int shooter_angle_;
-  int shooter_speed_;
   std::thread thread_;
   std::atomic_bool stop_thread_;
   std::mutex mutex_;

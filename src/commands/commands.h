@@ -22,6 +22,7 @@
 #include "commands/drive/zero.h"
 
 #include "commands/shooter/elevation.h"
+#include "commands/shooter/get_angle.h"
 #include "commands/shooter/sequence.h"
 #include "commands/shooter/set_range.h"
 #include "commands/shooter/wheel.h"

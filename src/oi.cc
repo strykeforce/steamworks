@@ -194,5 +194,6 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Dec. Hopper Volts", new DecrementHopperVoltage());
 
   SmartDashboard::PutData("Deadeye Azimuth", new drive::DeadeyeAzimuth());
+  SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
 #endif
 }

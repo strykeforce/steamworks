@@ -32,7 +32,7 @@ left_gear_clamp_stow     = 0.45 # not used
 right_gear_clamp_stow    = 0.6  # not used
 
 # elevation motor absolute encoder position at zero
-elevation_zero = 440
+elevation_zero = 3785
 
 # settings for the gear pivot motor position mode
 gear_pivot_up   = 1080 # ticks

@@ -38,7 +38,7 @@ const int kElevationIncrement = 25;
 const int kSpeedIncrement = 10;
 
 const int kMinElevation = 1;
-const int kMaxElevation = 1600;
+const int kMaxElevation = 6000;
 
 const int kMinSpeed = 350;
 const int kMaxSpeed = 700;
@@ -47,7 +47,7 @@ const int kMaxSpeed = 700;
 /**
  * SetElevation sets the shooter elevation to the specified encoder position.
  */
-void Shooter::SetElevation(unsigned elevation) {
+void Shooter::SetElevation(int elevation) {
   elevation_setpoint_ = LimitElevation(elevation);
   logger_->debug("setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(elevation);
@@ -88,7 +88,7 @@ int Shooter::GetElevationSetpoint() { return elevation_setpoint_; }
  */
 int Shooter::GetElevation() {
   auto position = RobotMap::shooter_elevation_talon->GetPosition();
-  return static_cast<unsigned>(position);
+  return static_cast<int>(position);
 }
 
 /**
@@ -107,7 +107,7 @@ void Shooter::SetElevationEncoderZero() {
 /**
  * SetSpeed sets the shooter wheel speed.
  */
-void Shooter::SetSpeed(unsigned speed) {
+void Shooter::SetSpeed(int speed) {
   speed_setpoint_ = speed;
   logger_->debug("setting shooter wheel to {} ticks/100ms", speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
@@ -146,15 +146,15 @@ void Shooter::DecrementSpeed() {
  * GetSpeedSetpoint returns the current speed setpoint.
  * @returns speed in encoder ticks per 100 ms
  */
-unsigned Shooter::GetSpeedSetpoint() const { return speed_setpoint_; }
+int Shooter::GetSpeedSetpoint() const { return speed_setpoint_; }
 
 /**
  * GetSpeed returns the current encoder speed.
  * @returns speed in encoder ticks per 100 ms
  */
-unsigned Shooter::GetSpeed() const {
+int Shooter::GetSpeed() const {
   auto speed = RobotMap::shooter_wheel_talon->GetSpeed();
-  return static_cast<unsigned>(speed);
+  return static_cast<int>(speed);
 }
 
 namespace {
@@ -172,7 +172,7 @@ void Shooter::UpdateSmartDashboard() {
 #endif
 }
 
-unsigned Shooter::LimitSpeed(unsigned speed) {
+int Shooter::LimitSpeed(int speed) {
   if (speed < kMinSpeed) {
     logger_->warn("shooter wheel speed out of range: {}", speed);
     speed = kMinSpeed;
@@ -184,13 +184,13 @@ unsigned Shooter::LimitSpeed(unsigned speed) {
   return speed;
 }
 
-unsigned Shooter::LimitElevation(unsigned elevation) {
+int Shooter::LimitElevation(int elevation) {
   if (elevation < kMinElevation) {
     logger_->warn("shooter elevation out of range: {}", elevation);
     elevation = kMinElevation;
   }
   if (elevation > kMaxElevation) {
-    logger_->warn("shooter wheel elevation of range: {}", elevation);
+    logger_->warn("shooter elevation out of range: {}", elevation);
     elevation = kMaxElevation;
   }
   return elevation;

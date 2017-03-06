@@ -66,13 +66,13 @@ void Deadeye::Run() {
     parser.ParseText(sentence, line);
     bool valid = sentence.Valid();
     if (!valid) {
-      if (!error_reported_) {
-        logger->error("sentence invalid: {}", line);
-        error_reported_ = true;
-      }
+      //   if (!error_reported_) {
+      //     logger->error("sentence invalid: {}", line);
+      //     error_reported_ = true;
+      //   }
       continue;
     }
-    error_reported_ = false;
+    // error_reported_ = false;
 
     {
       std::lock_guard<std::mutex> lock(mutex_);
@@ -82,15 +82,13 @@ void Deadeye::Run() {
           break;
         case 1:  // boiler target
           azimuth_error_ = stoi(sentence.parameters[1]);
-          range_ = stoi(sentence.parameters[2]);
-          shooter_angle_ = stoi(sentence.parameters[3]);
-          shooter_speed_ = stoi(sentence.parameters[4]);
+          centerline_error_ = stoi(sentence.parameters[2]);
           break;
         case 2:  // gear target
           azimuth_error_ = stoi(sentence.parameters[1]);
           range_ = stoi(sentence.parameters[2]);
           logger_->trace("gear azimuth error = {} range = {}", azimuth_error_,
-                         range_);
+                         centerline_error_);
           break;
         case 3:  // mode
           break;
@@ -113,25 +111,9 @@ int Deadeye::GetAzimuthError() {
 /**
  * Get the azimuth error.
  */
-int Deadeye::GetRange() {
+int Deadeye::GetCenterlineError() {
   std::lock_guard<std::mutex> lock(mutex_);
-  return range_;
-}
-
-/**
- * Get the azimuth error.
- */
-int Deadeye::GetShooterElevation() {
-  std::lock_guard<std::mutex> lock(mutex_);
-  return shooter_angle_;
-}
-
-/**
- * Get the azimuth error.
- */
-int Deadeye::GetShooterSpeed() {
-  std::lock_guard<std::mutex> lock(mutex_);
-  return shooter_speed_;
+  return centerline_error_;
 }
 
 /**
