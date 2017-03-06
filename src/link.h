@@ -14,7 +14,7 @@ class Link {
   Link& operator=(const Link&) = delete;
 
   Mode GetMode();
-  void SendBoilerSolution(int azimuth_error, int range, int angle, int speed);
+  void SendBoilerSolution(int azimuth_error, int centerline_error);
   void SendGearSolution(int azimuth_error, int range);
   void SendNoTarget();
 

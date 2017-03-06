@@ -25,7 +25,7 @@ class BoilerCamera {
   bool IsConnected();
   void StartCapture();
   void StopCapture();
-  std::tuple<int, int> ProcessFrame();
+  bool ProcessFrame(int& azimuth_error, int& centerline_error);
   void DisplayFrame();
 
  private:

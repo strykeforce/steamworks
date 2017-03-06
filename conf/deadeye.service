@@ -1,0 +1,9 @@
+[Unit]
+Description=Deadeye Vision System
+
+[Service]
+ExecStart=/usr/local/sbin/deadeye
+Type=simple
+
+[Install]
+WantedBy=default.target  

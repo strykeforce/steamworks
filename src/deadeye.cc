@@ -78,24 +78,19 @@ void Deadeye::SwitchMode(Mode mode) {
  * Called in boiler mode after frame acquired.
  */
 void Deadeye::ProcessBoilerTarget() {
-  int y;  // vertical target separation
+  int centerline_error;  // vertical target separation
   int azimuth_error;
-  std::tie(azimuth_error, y) = boiler_camera_.ProcessFrame();
+  bool success = boiler_camera_.ProcessFrame(azimuth_error, centerline_error);
 #if !NDEBUG
   boiler_camera_.DisplayFrame();
 #endif
-  y -= boiler_target_offset;
-  if (y < 0 || y > boiler_target_data_size - 1) {
-    logger_->warn("boiler target separation distance out of range: {} px", y);
-    link_.SendNoTarget();
-    std::this_thread::sleep_for(NTGT_SLEEP_MS);
+  if (success) {
+    link_.SendBoilerSolution(azimuth_error, centerline_error);
     return;
   }
-  link_.SendBoilerSolution(azimuth_error, boiler_target_data[y][kRange],
-                           boiler_target_data[y][kAngle],
-                           boiler_target_data[y][kSpeed]);
-
-  // TODO: config file should decide
+  // logger_->warn("boiler targets not visible");
+  link_.SendNoTarget();
+  std::this_thread::sleep_for(NTGT_SLEEP_MS);
 }
 
 void Deadeye::ProcessGearTarget() {

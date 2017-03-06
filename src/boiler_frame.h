@@ -13,7 +13,7 @@ class BoilerFrame {
   cv::Mat hsv, blur, mask;
   std::vector<cv::Point> upper_contour, lower_contour;
   cv::Rect upper_rect, lower_rect;
-  int azimuth_error, target_separation;
+  int azimuth_error, centerline_error;
 
   BoilerFrame(std::shared_ptr<cpptoml::table> config);
   virtual ~BoilerFrame() = default;

@@ -196,22 +196,19 @@ void BoilerCamera::StopCapture() {
   capture_started_ = false;
 }
 
-const std::tuple<int, int> BoilerCamera::PROCESS_ERROR =
-    std::make_tuple(-1, -1);
-
 /** Process a single frame.
  * Returns azumith error and target top-edge distance in pixels.
  */
-std::tuple<int, int> BoilerCamera::ProcessFrame() {
+bool BoilerCamera::ProcessFrame(int& azimuth_error, int& centerline_error) {
   if (!connected_ && !capture_started_) {
     logger_->error("not connected or capture not started");
-    return PROCESS_ERROR;
+    return false;
   }
 
   fc::Error error = camera_.RetrieveBuffer(&raw_image_);
   if (error != fc::PGRERROR_OK) {
     logger_->error(error.GetDescription());
-    return PROCESS_ERROR;
+    return false;
   }
 
   // convert to RGB
@@ -226,12 +223,13 @@ std::tuple<int, int> BoilerCamera::ProcessFrame() {
 
   // process frame to find targets and return target data
   if (frame_process_.FindTargets(frame_)) {
-    return std::make_tuple(frame_process_.azimuth_error,
-                           frame_process_.target_separation);
+    azimuth_error = frame_process_.azimuth_error;
+    centerline_error = frame_process_.centerline_error;
+    return true;
   }
 
   // no targets found
-  return PROCESS_ERROR;
+  return false;
 }
 
 void BoilerCamera::DisplayFrame() {
@@ -252,12 +250,22 @@ void BoilerCamera::DisplayFrame() {
     cv::line(frame_, cv::Point((frame_.cols / 2), 0),
              cv::Point((frame_.cols / 2), frame_.rows), cv::Scalar(255, 0, 0));
 
-    std::string range = "target separation (px) = " +
-                        std::to_string(frame_process_.target_separation);
+    cv::line(frame_, cv::Point(0, frame_.rows / 2),
+             cv::Point(frame_.cols, frame_.rows / 2), cv::Scalar(255, 0, 0));
+
+    std::string centerline_error =
+        "centerline error (px) = " +
+        std::to_string(frame_process_.centerline_error);
     std::string coords =
         "azimuth error (px )= " + std::to_string(frame_process_.azimuth_error);
-    cv::putText(frame_, range, cv::Point(100, 50), cv::FONT_HERSHEY_SIMPLEX,
-                1.0, cv::Scalar(255, 255, 255));
+
+    // TODO: add upper rect width
+    // std::string coords =
+    //     "azimuth error (px )= " +
+    //     std::to_string(frame_process_.azimuth_error);
+
+    cv::putText(frame_, centerline_error, cv::Point(100, 50),
+                cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
     cv::putText(frame_, coords, cv::Point(100, 100), cv::FONT_HERSHEY_SIMPLEX,
                 1.0, cv::Scalar(255, 255, 255));
 

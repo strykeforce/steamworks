@@ -75,7 +75,8 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
   upper_rect = cv::boundingRect(upper_contour);
 
   // compute distance between target bounding box top edges and send to robot
-  target_separation = lower_rect.y - upper_rect.y;
+  int centerline = (lower_rect.y + upper_rect.y) / 2;
+  centerline_error = centerline - (frame.rows / 2);
   azimuth_error = (frame.cols / 2) - upper_rect.x - (upper_rect.width / 2);
 
   return true;

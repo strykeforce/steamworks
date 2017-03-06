@@ -57,21 +57,17 @@ Mode Link::GetMode() {
 #ifdef DEADEYE_TEST
   return Mode::quit;
 #else
-  return Mode::gear;
+  return Mode::boiler;
 #endif
 }
 
 /**
  *Send the boiler shooting solution across the serial line.
  */
-void Link::SendBoilerSolution(int azimuth_error,
-                              int range,
-                              int angle,
-                              int speed) {
-  logger_->debug(
-      "boiler solution: az err = {}, range = {}, angle = {}, speed = {}",
-      azimuth_error, range, angle, speed);
-  BoilerSentence bts(azimuth_error, range, angle, speed);
+void Link::SendBoilerSolution(int azimuth_error, int centerline_error) {
+  logger_->debug("boiler solution: az err = {}, centerline_error = {}", azimuth_error,
+                 centerline_error);
+  BoilerSentence bts(azimuth_error, centerline_error);
   serial_->write(bts.ToString() + "\n");
 }
 
