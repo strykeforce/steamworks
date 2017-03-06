@@ -21,6 +21,8 @@ class Intake : public frc::Subsystem {
  private:
   const std::shared_ptr<spdlog::logger> logger_;
   double voltage_;
+
+  void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
 };
 
 } /* subsystem */

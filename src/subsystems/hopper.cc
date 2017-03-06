@@ -14,18 +14,7 @@ Hopper::Hopper(const std::shared_ptr<cpptoml::table> config)
       logger_(spdlog::get("subsystem")),
       voltage_(7.0),
       is_running_(false) {
-  auto steamworks_config = config->get_table("STEAMWORKS");
-
-  auto voltage = steamworks_config->get_as<double>("hopper_voltage");
-  if (voltage) {
-    voltage_ = *voltage;
-  } else {
-    logger_->warn("STEAMWORKS hopper_voltage setting missing, using default");
-  }
-  logger_->info("hopper motor voltage: {}", voltage_);
-
-  auto talon_settings = talon::Settings::Create(steamworks_config, "hopper");
-  talon_settings->Initialize(RobotMap::hopper_talon);
+  LoadConfigSettings(config);
 }
 
 void Hopper::Start() {
@@ -48,4 +37,24 @@ double Hopper::GetVoltage() { return voltage_; }
 void Hopper::SetVoltage(double volts) {
   voltage_ = volts;
   Start();
+}
+
+void Hopper::LoadConfigSettings(
+    const std::shared_ptr<cpptoml::table> config_in) {
+  auto config = config_in->get_table("STEAMWORKS")->get_table("HOPPER");
+  if (!config) {
+    throw std::invalid_argument("STEAMWORKS.HOPPER table missing from config");
+  }
+
+  auto d_opt = config->get_as<double>("voltage");
+  if (d_opt) {
+    voltage_ = *d_opt;
+  } else {
+    logger_->warn("STEAMWORKS.HOPPER voltage setting missing, using default");
+  }
+  logger_->info("hopper motor voltage: {}", voltage_);
+
+  auto talon_settings = talon::Settings::Create(config, "hopper");
+  talon_settings->Initialize(RobotMap::hopper_talon);
+  logger_->info("hopper Talon initialized");
 }

@@ -61,8 +61,8 @@ bool GearLoader::IsLimitSwitchClosed() {
  * Set gear clamp to open position for loading.
  */
 void GearLoader::ClampStage() {
-  SPDLOG_DEBUG(logger_, "gear clamp stage, left = {}, right ={}", left_clamp_stage_,
-                 right_clamp_stage_);
+  SPDLOG_DEBUG(logger_, "gear clamp stage, left = {}, right ={}",
+               left_clamp_stage_, right_clamp_stage_);
   left_servo_.Set(left_clamp_stage_);
   right_servo_.Set(right_clamp_stage_);
 }
@@ -71,8 +71,8 @@ void GearLoader::ClampStage() {
  * Set gear clamp to clamped shut position for pivoting.
  */
 void GearLoader::ClampShut() {
-  SPDLOG_DEBUG(logger_, "gear clamp shut, left = {}, right = {}", left_clamp_shut_,
-                 right_clamp_shut_);
+  SPDLOG_DEBUG(logger_, "gear clamp shut, left = {}, right = {}",
+               left_clamp_shut_, right_clamp_shut_);
   left_servo_.Set(left_clamp_shut_);
   right_servo_.Set(right_clamp_shut_);
 }
@@ -82,7 +82,7 @@ void GearLoader::ClampShut() {
  */
 void GearLoader::ClampRelease() {
   SPDLOG_DEBUG(logger_, "gear clamp release, left = {}, right = {}",
-                 left_clamp_release_, right_clamp_release_);
+               left_clamp_release_, right_clamp_release_);
   left_servo_.Set(left_clamp_release_);
   right_servo_.Set(right_clamp_release_);
 }
@@ -91,8 +91,8 @@ void GearLoader::ClampRelease() {
  * Set gear clamp to safe stowed position.
  */
 void GearLoader::ClampStow() {
-  SPDLOG_DEBUG(logger_, "gear clamp stow, left = {}, right = {}", left_clamp_stow_,
-                 right_clamp_stow_);
+  SPDLOG_DEBUG(logger_, "gear clamp stow, left = {}, right = {}",
+               left_clamp_stow_, right_clamp_stow_);
   left_servo_.Set(left_clamp_stow_);
   right_servo_.Set(right_clamp_stow_);
 }
@@ -113,12 +113,14 @@ void GearLoader::SetPivotZeroModeEnabled(bool enabled) {
     logger_->info("enabling pivot zero mode");
     RobotMap::gear_pivot_talon->StopMotor();
     pivot_zero_settings_->Initialize(RobotMap::gear_pivot_talon);
+    logger_->info("gear pivot Talon initialized in zero mode");
     RobotMap::gear_pivot_talon->Set(kGearZeroVoltage);
     return;
   }
   SPDLOG_DEBUG(logger_, "disabling pivot zero mode");
   RobotMap::gear_pivot_talon->StopMotor();
   pivot_settings_->Initialize(RobotMap::gear_pivot_talon);
+  logger_->info("gear pivot Talon initialized in normal mode");
 }
 
 /**
@@ -134,7 +136,8 @@ int GearLoader::GetPivotPosition() {
  * Calibrate the pivot encoder after kissing off in full down position.
  */
 void GearLoader::SetPivotEncoderZero() {
-  SPDLOG_DEBUG(logger_, "setting pivot encoder position to {}", kGearZeroPosition);
+  SPDLOG_DEBUG(logger_, "setting pivot encoder position to {}",
+               kGearZeroPosition);
   RobotMap::gear_pivot_talon->SetPosition(kGearZeroPosition);
 }
 
@@ -176,136 +179,138 @@ bool GearLoader::IsPivotDown() {
  * Load configuration settings.
  */
 void GearLoader::LoadConfigSettings(
-    const std::shared_ptr<cpptoml::table> config) {
-  auto steamworks_config = config->get_table("STEAMWORKS");
+    const std::shared_ptr<cpptoml::table> config_in) {
+  auto config = config_in->get_table("STEAMWORKS")->get_table("GEAR");
+  if (!config) {
+    throw std::invalid_argument("STEAMWORKS.GEAR table missing from config");
+  }
 
   // gear_load_voltage
-  auto d_opt = steamworks_config->get_as<double>("gear_load_voltage");
+  auto d_opt = config->get_as<double>("load_voltage");
   if (d_opt) {
     load_voltage_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS gear_load_voltage setting missing, using default");
+        "STEAMWORKS.GEAR load_voltage setting missing, using default");
   }
   logger_->info("gear intake motor load voltage: {}", load_voltage_);
 
-  // gear_deploy_voltage
-  d_opt = steamworks_config->get_as<double>("gear_deploy_voltage");
+  // deploy_voltage
+  d_opt = config->get_as<double>("deploy_voltage");
   if (d_opt) {
     deploy_voltage_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS gear_deploy_voltage setting missing, using default");
+        "STEAMWORKS.GEAR deploy_voltage setting missing, using default");
   }
   logger_->info("gear intake motor deploy voltage: {}", deploy_voltage_);
 
-  // gear_clamp_stage
-  d_opt = steamworks_config->get_as<double>("left_gear_clamp_stage");
+  // clamp_stage
+  d_opt = config->get_as<double>("left_clamp_stage");
   if (d_opt) {
     left_clamp_stage_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS left_gear_clamp_stage setting missing, using default");
+        "STEAMWORKS.GEAR left_clamp_stage setting missing, using default");
   }
   logger_->info("left gear clamp stage position: {}", left_clamp_stage_);
 
-  d_opt = steamworks_config->get_as<double>("right_gear_clamp_stage");
+  d_opt = config->get_as<double>("right_clamp_stage");
   if (d_opt) {
     right_clamp_stage_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS right_gear_clamp_stage setting missing, using default");
+        "STEAMWORKS.GEAR right_clamp_stage setting missing, using default");
   }
   logger_->info("right gear clamp stage position: {}", right_clamp_stage_);
 
-  // gear_clamp_shut
-  d_opt = steamworks_config->get_as<double>("left_gear_clamp_shut");
+  // clamp_shut
+  d_opt = config->get_as<double>("left_clamp_shut");
   if (d_opt) {
     left_clamp_shut_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS left_gear_clamp_shut setting missing, using default");
+        "STEAMWORKS.GEAR left_clamp_shut setting missing, using default");
   }
   logger_->info("left gear clamp shut position: {}", left_clamp_shut_);
 
-  d_opt = steamworks_config->get_as<double>("right_gear_clamp_shut");
+  d_opt = config->get_as<double>("right_clamp_shut");
   if (d_opt) {
     right_clamp_shut_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS right_gear_clamp_shut setting missing, using default");
+        "STEAMWORKS.GEAR right_clamp_shut setting missing, using default");
   }
   logger_->info("right gear clamp shut position: {}", right_clamp_shut_);
 
-  // gear_clamp_release
-  d_opt = steamworks_config->get_as<double>("left_gear_clamp_release");
+  // clamp_release
+  d_opt = config->get_as<double>("left_clamp_release");
   if (d_opt) {
     left_clamp_release_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS left_gear_clamp_release setting missing, using default");
+        "STEAMWORKS.GEAR left_clamp_release setting missing, using default");
   }
   logger_->info("left gear clamp release position: {}", left_clamp_release_);
 
-  d_opt = steamworks_config->get_as<double>("right_gear_clamp_release");
+  d_opt = config->get_as<double>("right_clamp_release");
   if (d_opt) {
     right_clamp_release_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS right_gear_clamp_release setting missing, using default");
+        "STEAMWORKS.GEAR right_clamp_release setting missing, using default");
   }
   logger_->info("right gear clamp release position: {}", right_clamp_release_);
 
-  // gear_clamp_stow
-  d_opt = steamworks_config->get_as<double>("left_gear_clamp_stow");
+  // clamp_stow
+  d_opt = config->get_as<double>("left_clamp_stow");
   if (d_opt) {
     left_clamp_stow_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS left_gear_clamp_stow setting missing, using default");
+        "STEAMWORKS.GEAR left_clamp_stow setting missing, using default");
   }
   logger_->info("left gear clamp stow position: {}", left_clamp_stow_);
 
-  d_opt = steamworks_config->get_as<double>("right_gear_clamp_stow");
+  d_opt = config->get_as<double>("right_clamp_stow");
   if (d_opt) {
     right_clamp_stow_ = *d_opt;
   } else {
     logger_->warn(
-        "STEAMWORKS right_gear_clamp_stow setting missing, using default");
+        "STEAMWORKS.GEAR right_clamp_stow setting missing, using default");
   }
   logger_->info("right gear clamp stow position: {}", right_clamp_stow_);
 
-  // gear_pivot_up
-  auto i_opt = steamworks_config->get_as<int>("gear_pivot_up");
+  // pivot_up
+  auto i_opt = config->get_as<int>("pivot_up");
   if (i_opt) {
     pivot_up_position_ = *i_opt;
   } else {
-    logger_->warn("STEAMWORKS gear_pivot_up setting missing, using default");
+    logger_->warn("STEAMWORKS.GEAR pivot_up setting missing, using default");
   }
   logger_->info("gear pivot up position: {}", pivot_up_position_);
 
-  // gear_pivot_up
-  i_opt = steamworks_config->get_as<int>("gear_pivot_down");
+  // pivot_up
+  i_opt = config->get_as<int>("pivot_down");
   if (i_opt) {
     pivot_down_position_ = *i_opt;
   } else {
-    logger_->warn("STEAMWORKS gear_pivot_down setting missing, using default");
+    logger_->warn("STEAMWORKS.GEAR pivot_down setting missing, using default");
   }
   logger_->info("gear pivot down position: {}", pivot_down_position_);
 
   // Talons
-  auto loader_talon_settings =
-      talon::Settings::Create(steamworks_config, "gear_loader");
-  SPDLOG_DEBUG(logger_, "dumping gear loader talon configuration");
-  loader_talon_settings->LogConfig(logger_);
+  auto loader_talon_settings = talon::Settings::Create(config, "loader");
+  // SPDLOG_DEBUG(logger_, "dumping gear loader talon configuration");
+  // loader_talon_settings->LogConfig(logger_);
   loader_talon_settings->Initialize(RobotMap::gear_intake_talon);
+  logger_->info("gear intake Talon initialized");
 
-  pivot_settings_ = talon::Settings::Create(steamworks_config, "gear_pivot");
-  SPDLOG_DEBUG(logger_, "dumping gear pivot talon configuration");
-  pivot_settings_->LogConfig(logger_);
+  pivot_settings_ = talon::Settings::Create(config, "pivot");
+  // SPDLOG_DEBUG(logger_, "dumping gear pivot talon configuration");
+  // pivot_settings_->LogConfig(logger_);
 
-  pivot_zero_settings_ =
-      talon::Settings::Create(steamworks_config, "gear_pivot_zero");
-  SPDLOG_DEBUG(logger_, "dumping gear pivot zero talon configuration");
-  pivot_zero_settings_->LogConfig(logger_);
+  pivot_zero_settings_ = talon::Settings::Create(config, "pivot_zero");
+  // SPDLOG_DEBUG(logger_, "dumping gear pivot zero talon configuration");
+  // pivot_zero_settings_->LogConfig(logger_);
 }

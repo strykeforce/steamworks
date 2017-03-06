@@ -17,29 +17,33 @@ class Shooter : public frc::Subsystem {
   Shooter& operator=(Shooter&) = delete;
   Shooter(Shooter&) = delete;
 
+  // ELEVATION
   void SetElevation(int elevation);
-  void IncrementElevation();
-  void DecrementElevation();
   int GetElevationSetpoint();
   int GetElevation();
-
+  // shooter testing
+  void IncrementElevation();
+  void DecrementElevation();
+  // elevation encoder calibration
   void SetElevationEncoderZero();
 
+  // WHEEL SPEED
   void SetSpeed(int speed);
-  void IncrementSpeed();
-  void DecrementSpeed();
   int GetSpeedSetpoint() const;
   int GetSpeed() const;
+  // shooter testing
+  void IncrementSpeed();
+  void DecrementSpeed();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  std::unique_ptr<sidewinder::talon::Settings> elevation_settings_;
 
   int elevation_setpoint_ = 0;
   int speed_setpoint_ = 0;
 
   int elevation_zero_ = 0;
 
+  void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
   void UpdateSmartDashboard();
 
   int LimitSpeed(int speed);

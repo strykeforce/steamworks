@@ -26,6 +26,8 @@ class Climber : public frc::Subsystem {
   double climb_voltage_ = 12.0;
   double capture_current_ = 4.0;
   bool is_running_ = false;
+
+  void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
 };
 
 } /* subsystem */

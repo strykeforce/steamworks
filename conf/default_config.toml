@@ -1,73 +1,14 @@
 [STEAMWORKS]
 
-grapher = true
+grapher = false
 
-# settings for the fuel hopper motor voltage mode
-hopper_voltage = 8.0
+[STEAMWORKS.CLIMBER]
+capture_voltage =  4.0
+climb_voltage   =  8.0
+capture_current =  4.0
 
-# settings for the fuel intake motor voltage mode
-intake_voltage = 12.0
-
-# settings for the climber motor voltage mode
-climber_capture_voltage =  4.0
-climber_climb_voltage   =  8.0
-climber_capture_current =  4.0
-
-# settings for the gear intake motor voltage mode
-gear_load_voltage =  12.0
-gear_deploy_voltage = 8.0
-
-# settings for the gear clamp servo position
-# left servo
-left_gear_clamp_stage    = 0.75
-right_gear_clamp_stage   = 0.32
-
-left_gear_clamp_shut     = 0.5
-right_gear_clamp_shut    = 0.5
-
-left_gear_clamp_release  = 0.84
-right_gear_clamp_release = 0.2
-
-left_gear_clamp_stow     = 0.45 # not used
-right_gear_clamp_stow    = 0.6  # not used
-
-# elevation motor absolute encoder position at zero
-elevation_zero = 3785
-
-# settings for the gear pivot motor position mode
-gear_pivot_up   = 1080 # ticks
-gear_pivot_down =   10 # ticks
-
-[STEAMWORKS.DEADEYE]
-port = "/dev/ttyUSB0"
-port_speed = 115200
-
-    [[STEAMWORKS.TALON]]
-    name = "intake"
-    type = "voltage"
-    feedback_device = 0 # quad
-    neutral_mode    = 1 # brake
-    limit_mode      = 2 # disabled
-    encoder_reversed = false
-    output_reversed  = false
-    current_limit    = 20 # amps, 0 disables
-
-    voltage_ramp_rate = 14.0 # v/s, 0 disables
-
-    [[STEAMWORKS.TALON]]
-    name = "hopper"
-    type = "voltage"
-    feedback_device = 0 # quad
-    neutral_mode    = 2 # coast
-    limit_mode      = 2 # disabled
-    encoder_reversed = false
-    output_reversed  = false
-    current_limit    = 0 # amps, 0 disables
-
-    voltage_ramp_rate = 0.0 # v/s, 0 disables
-
-    [[STEAMWORKS.TALON]]
-    name = "climber_master"
+    [[STEAMWORKS.CLIMBER.TALON]]
+    name = "master"
     type = "voltage"
     feedback_device = 0 # quad
     neutral_mode    = 1 # brake
@@ -79,8 +20,8 @@ port_speed = 115200
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 
 
-    [[STEAMWORKS.TALON]]
-    name = "climber_slave"
+    [[STEAMWORKS.CLIMBER.TALON]]
+    name = "slave"
     type = "voltage"
     feedback_device = 0 # quad
     neutral_mode    = 1 # brake
@@ -91,7 +32,118 @@ port_speed = 115200
 
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 
-    [[STEAMWORKS.TALON]]
+[STEAMWORKS.DEADEYE]
+port = "/dev/ttyUSB0"
+port_speed = 115200
+
+[STEAMWORKS.GEAR]
+# settings for the gear intake motor voltage mode
+load_voltage =  12.0
+deploy_voltage = 8.0
+
+# settings for the gear clamp servo position
+# left servo
+left_clamp_stage    = 0.75
+right_clamp_stage   = 0.32
+
+left_clamp_shut     = 0.5
+right_clamp_shut    = 0.5
+
+left_clamp_release  = 0.84
+right_clamp_release = 0.2
+
+left_clamp_stow     = 0.45 # not used
+right_clamp_stow    = 0.6  # not used
+
+# settings for the gear pivot motor position mode
+pivot_up   = 1080 # ticks
+pivot_down =   10 # ticks
+
+    [[STEAMWORKS.GEAR.TALON]]
+    name = "loader"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # brake
+    limit_mode      = 0 # use photo limit switch
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 0 # amps, 0 disables
+
+    voltage_ramp_rate = 0.0 # v/s, 0 disables
+
+    [[STEAMWORKS.GEAR.TALON]]
+    name = "pivot"
+    type = "position"
+
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # brake
+    limit_mode      = 0 # use switches
+
+    P      =   10.0
+    I      =    0.0
+    D      =  150.0
+    F      =    0.0
+    I_zone =      0
+
+    voltage_ramp_rate              =   0.0 # v/s, 0 disables
+    close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+    peak_output_voltage_forward    =   3.0 # v
+    peak_output_voltage_reverse    =  -3.0 # v
+    nominal_output_voltage_forward =   0.0 # v
+    nominal_output_voltage_reverse =   0.0 # v
+    allowable_closed_loop_error    =     0 # encoder ticks
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 0 # amps, 0 disables
+
+    [[STEAMWORKS.GEAR.TALON]]
+    name = "pivot_zero"
+    type = "voltage"
+
+    feedback_device = 0 # quad
+    neutral_mode    = 2 # coast
+    limit_mode      = 2 # both disabled
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 0 # amps, 0 disables
+
+    voltage_ramp_rate = 0.0 # v/s, 0 disables
+
+[STEAMWORKS.HOPPER]
+voltage = 8.0
+
+    [[STEAMWORKS.HOPPER.TALON]]
+    name = "hopper"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 2 # coast
+    limit_mode      = 2 # disabled
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 0 # amps, 0 disables
+
+    voltage_ramp_rate = 0.0 # v/s, 0 disables
+
+[STEAMWORKS.INTAKE]
+voltage = 12.0
+
+    [[STEAMWORKS.INTAKE.TALON]]
+    name = "intake"
+    type = "voltage"
+    feedback_device = 0 # quad
+    neutral_mode    = 1 # brake
+    limit_mode      = 2 # disabled
+    encoder_reversed = false
+    output_reversed  = false
+    current_limit    = 20 # amps, 0 disables
+
+    voltage_ramp_rate = 14.0 # v/s, 0 disables
+
+[STEAMWORKS.SHOOTER]
+# elevation motor absolute encoder position at zero
+elevation_zero = 3785
+
+    [[STEAMWORKS.SHOOTER.TALON]]
     # range 0-900 ticks/100ms
     # 650 practical max
     name = "shooter_wheel"
@@ -118,7 +170,7 @@ port_speed = 115200
     output_reversed  = false
     current_limit    = 50 # amps, 0 disables
 
-    [[STEAMWORKS.TALON]]
+    [[STEAMWORKS.SHOOTER.TALON]]
     # range 0 - 4500
     name = "shooter_elevation"
     type = "position"
@@ -143,58 +195,6 @@ port_speed = 115200
     encoder_reversed = false
     output_reversed  = false
     current_limit    = 5 # amps, 0 disables
-
-    [[STEAMWORKS.TALON]]
-    name = "gear_loader"
-    type = "voltage"
-    feedback_device = 0 # quad
-    neutral_mode    = 1 # brake
-    limit_mode      = 0 # use photo limit switch
-    encoder_reversed = false
-    output_reversed  = false
-    current_limit    = 0 # amps, 0 disables
-
-    voltage_ramp_rate = 0.0 # v/s, 0 disables
-
-    [[STEAMWORKS.TALON]]
-    name = "gear_pivot"
-    type = "position"
-
-    feedback_device = 0 # quad
-    neutral_mode    = 1 # brake
-    limit_mode      = 0 # use switches
-
-    P      =   10.0
-    I      =    0.0
-    D      =  150.0
-    F      =    0.0
-    I_zone =      0
-
-    voltage_ramp_rate              =   0.0 # v/s, 0 disables
-    close_loop_ramp_rate           =   0.0 # v/s, 0 disables
-    peak_output_voltage_forward    =   3.0 # v
-    peak_output_voltage_reverse    =  -3.0 # v
-    nominal_output_voltage_forward =   0.0 # v
-    nominal_output_voltage_reverse =   0.0 # v
-    allowable_closed_loop_error    =     0 # encoder ticks
-    encoder_reversed = false
-    output_reversed  = false
-    current_limit    = 0 # amps, 0 disables
-
-    [[STEAMWORKS.TALON]]
-    name = "gear_pivot_zero"
-    type = "voltage"
-
-    feedback_device = 0 # quad
-    neutral_mode    = 2 # coast
-    limit_mode      = 2 # both disabled
-    encoder_reversed = false
-    output_reversed  = false
-    current_limit    = 0 # amps, 0 disables
-
-    voltage_ramp_rate = 0.0 # v/s, 0 disables
-
-
 
 [SIDEWINDER]
 drive_dead_zone  = 0.08

@@ -10,26 +10,7 @@ using namespace sidewinder;
  */
 Shooter::Shooter(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("Shooter"), logger_(spdlog::get("subsystem")) {
-  auto steamworks_config = config->get_table("STEAMWORKS");
-
-  auto i_opt = steamworks_config->get_as<int>("elevation_zero");
-  if (i_opt) {
-    elevation_zero_ = *i_opt;
-  } else {
-    logger_->error(
-        "STEAMWORKS elevation_zero setting not available, using default");
-  }
-  logger_->info("elevation zero position: {}", elevation_zero_);
-
-  elevation_settings_ =
-      talon::Settings::Create(steamworks_config, "shooter_elevation");
-  auto speed_settings =
-      talon::Settings::Create(steamworks_config, "shooter_wheel");
-
-  // configure talons
-  elevation_settings_->Initialize(RobotMap::shooter_elevation_talon);
-  speed_settings->Initialize(RobotMap::shooter_wheel_talon);
-
+  LoadConfigSettings(config);
   SetElevationEncoderZero();
 }
 
@@ -109,7 +90,8 @@ void Shooter::SetElevationEncoderZero() {
  */
 void Shooter::SetSpeed(int speed) {
   speed_setpoint_ = speed;
-  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms", speed_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms",
+               speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
   UpdateSmartDashboard();
 }
@@ -123,7 +105,8 @@ void Shooter::IncrementSpeed() {
   //   speed_setpoint_ = kMaxSpeed;
   //   logger_->warn("can't set wheel speed above {}", kMaxSpeed);
   // }
-  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms", speed_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms",
+               speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
   UpdateSmartDashboard();
 }
@@ -137,7 +120,8 @@ void Shooter::DecrementSpeed() {
   //   speed_setpoint_ = kMinSpeed;
   //   logger_->warn("can't set wheel speed below {}", kMinSpeed);
   // }
-  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms", speed_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms",
+               speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
   UpdateSmartDashboard();
 }
@@ -194,4 +178,31 @@ int Shooter::LimitElevation(int elevation) {
     elevation = kMaxElevation;
   }
   return elevation;
+}
+
+void Shooter::LoadConfigSettings(
+    const std::shared_ptr<cpptoml::table> config_in) {
+  auto config = config_in->get_table("STEAMWORKS")->get_table("SHOOTER");
+  if (!config) {
+    throw std::invalid_argument("STEAMWORKS.SHOOTER table missing from config");
+  }
+
+  auto i_opt = config->get_as<int>("elevation_zero");
+  if (i_opt) {
+    elevation_zero_ = *i_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS elevation_zero setting not available, using default");
+  }
+  logger_->info("elevation zero position: {}", elevation_zero_);
+
+  // configure talons
+  auto elevation_settings =
+      talon::Settings::Create(config, "shooter_elevation");
+  elevation_settings->Initialize(RobotMap::shooter_elevation_talon);
+  logger_->info("shooter elevation Talon initialized");
+
+  auto speed_settings = talon::Settings::Create(config, "shooter_wheel");
+  speed_settings->Initialize(RobotMap::shooter_wheel_talon);
+  logger_->info("shooter wheel Talon initialized");
 }
