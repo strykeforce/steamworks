@@ -14,7 +14,7 @@ StartHopper::StartHopper()
 }
 
 void StartHopper::Initialize() {
-  logger_->debug("starting hopper");
+  SPDLOG_DEBUG(logger_, "starting hopper");
   Robot::hopper->Start();
 }
 
@@ -27,7 +27,7 @@ StopHopper::StopHopper()
 }
 
 void StopHopper::Initialize() {
-  logger_->debug("stopping hopper");
+  SPDLOG_DEBUG(logger_, "stopping hopper");
   Robot::hopper->Stop();
 }
 

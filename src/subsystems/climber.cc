@@ -40,14 +40,14 @@ Climber::Climber(const std::shared_ptr<cpptoml::table> config)
   // configure master
   auto master_settings =
       talon::Settings::Create(steamworks_config, "climber_master");
-  logger_->debug("dumping climber master talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping climber master talon configuration");
   master_settings->LogConfig(logger_);
   master_settings->Initialize(RobotMap::climber_master_talon);
 
   // configure slave
   auto slave_settings =
       talon::Settings::Create(steamworks_config, "climber_slave");
-  logger_->debug("dumping climber slave talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping climber slave talon configuration");
   slave_settings->LogConfig(logger_);
   slave_settings->Initialize(RobotMap::climber_slave_talon);
 
@@ -96,6 +96,6 @@ bool Climber::IsRunning() { return is_running_; }
 bool Climber::IsCaptured() {
   double master = RobotMap::climber_master_talon->GetOutputCurrent();
   double slave = RobotMap::climber_slave_talon->GetOutputCurrent();
-  logger_->debug("master current = {}, slave current = {}", master, slave);
+  SPDLOG_DEBUG(logger_, "master current = {}, slave current = {}", master, slave);
   return (master + slave) / 2.0 > capture_current_;
 }

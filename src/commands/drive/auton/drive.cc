@@ -45,11 +45,12 @@ Drive::Drive(int distance) : Drive(distance, 0, -1) {}
 void Drive::Initialize() {
   Robot::drive->SetAutonMode();
   error_ = distance_;
-  logger_->debug("target = {}", distance_);
+  SPDLOG_DEBUG(logger_, "target = {}", distance_);
   start_decel_pos_ = distance_ - kSlopeDistance;
   stable_count_ = 0;
 
-  logger_->debug(
+  SPDLOG_DEBUG(
+      logger_,
       "distance = {}, position = {}, kSlopeDistance = {}, start_decel_pos_ = "
       "{}",
       distance_, Robot::drive->GetPosition(), kSlopeDistance, start_decel_pos_);
@@ -87,8 +88,8 @@ void Drive::Execute() {
 
   speed = speed * (signbit(error_) ? -1 : 1);
 
-  logger_->debug("position = {}, error = {}, speed = {}", position, error_,
-                 speed);
+  SPDLOG_DEBUG(logger_, "position = {}, error = {}, speed = {}", position,
+               error_, speed);
   Robot::drive->CrabDriveAutonomous(speed, azimuth_);
 }
 
@@ -106,7 +107,7 @@ bool Drive::IsFinished() {
     stable_count_ = 0;
   }
   if (stable_count_ == kStableCountReq) {
-    logger_->debug("done with auton drive, abs_error_ = {}", abs_error_);
+    SPDLOG_DEBUG(logger_, "done with auton drive, abs_error_ = {}", abs_error_);
     return true;
   }
   return false;

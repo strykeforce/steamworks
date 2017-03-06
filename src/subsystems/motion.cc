@@ -78,7 +78,7 @@ void Motion::Calculate() {
   prev_vel_ = curr_vel_;
   elapsed_time_ += period_;
 
-  logger_->debug("motion driving at {}", curr_vel_ * 100);
+  SPDLOG_DEBUG(logger_, "motion driving at {}", curr_vel_ * 100);
   drive_->CrabDriveAutonomous(curr_vel_ * 100, 0);
 }
 

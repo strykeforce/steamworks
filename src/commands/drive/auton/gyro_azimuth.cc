@@ -33,7 +33,7 @@ void GyroAzimuth::Initialize() {
   Robot::drive->SetAzimuthMode();
   float initial = RobotMap::gyro->GetYaw();
   error_ = target_ - initial;
-  logger_->debug("target = {}, initial = {}, error = {}", target_, initial,
+  SPDLOG_DEBUG(logger_, "target = {}, initial = {}, error = {}", target_, initial,
                  error_);
   stable_count_ = 0;
 }
@@ -59,7 +59,7 @@ void GyroAzimuth::Execute() {
     speed = kMaxSpeed;
   }
   speed = speed * (signbit(error_) ? 1 : -1);  // match sign to error
-  logger_->debug("abs_error_ = {}, error_ = {}, speed =  {}", abs_error_,
+  SPDLOG_DEBUG(logger_, "abs_error_ = {}, error_ = {}, speed =  {}", abs_error_,
                  error_, speed);
   Robot::drive->DriveAzimuthAutonomous(speed);
 }
@@ -71,13 +71,13 @@ void GyroAzimuth::Execute() {
 bool GyroAzimuth::IsFinished() {
   if (abs_error_ < kCloseEnough) {
     stable_count_++;
-    logger_->trace("incrementing stable_count_ to {}", stable_count_);
+    SPDLOG_TRACE(logger_, "incrementing stable_count_ to {}", stable_count_);
   } else {
     stable_count_ = 0;
-    logger_->trace("resetting stable_count_ to 0");
+    SPDLOG_TRACE(logger_, "resetting stable_count_ to 0");
   }
   if (stable_count_ == kStableCountReq) {
-    logger_->debug("done with auton azimuth, abs_error_ = {}", abs_error_);
+    SPDLOG_DEBUG(logger_, "done with auton azimuth, abs_error_ = {}", abs_error_);
     return true;
   }
   return false;

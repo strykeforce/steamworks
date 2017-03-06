@@ -31,7 +31,7 @@ DeadeyeAzimuth::DeadeyeAzimuth()
 void DeadeyeAzimuth::Initialize() {
   Robot::drive->SetAzimuthMode();
   error_ = Robot::deadeye->GetAzimuthError();
-  logger_->debug("DeadeyeAzimuth error = {}", error_);
+  SPDLOG_DEBUG(logger_, "DeadeyeAzimuth error = {}", error_);
   stable_count_ = 0;
 }
 
@@ -56,7 +56,7 @@ void DeadeyeAzimuth::Execute() {
     speed = kMaxSpeed;
   }
   speed = speed * (signbit(error_) ? 1 : -1);  // match sign to error
-  logger_->debug("abs_error_ = {}, error_ = {}, speed =  {}", abs_error_,
+  SPDLOG_DEBUG(logger_, "abs_error_ = {}, error_ = {}, speed =  {}", abs_error_,
                  error_, speed);
   Robot::drive->DriveAutonomous(0, 0, speed);
 }
@@ -72,7 +72,7 @@ bool DeadeyeAzimuth::IsFinished() {
     stable_count_ = 0;
   }
   if (stable_count_ == kStableCountReq) {
-    logger_->debug("done with auton azimuth, abs_error_ = {}", abs_error_);
+    SPDLOG_DEBUG(logger_, "done with auton azimuth, abs_error_ = {}", abs_error_);
     return true;
   }
   return false;

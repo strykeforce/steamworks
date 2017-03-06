@@ -87,8 +87,8 @@ void Deadeye::Run() {
         case 2:  // gear target
           azimuth_error_ = stoi(sentence.parameters[1]);
           range_ = stoi(sentence.parameters[2]);
-          logger_->trace("gear azimuth error = {} range = {}", azimuth_error_,
-                         centerline_error_);
+          SPDLOG_TRACE(logger_, "gear azimuth error = {} range = {}",
+                       azimuth_error_, centerline_error_);
           break;
         case 3:  // mode
           break;
@@ -146,15 +146,16 @@ Mode Deadeye::GetMode() {
 /**
  * Load settings from global config.
  */
-void Deadeye::LoadConfigSettings(const std::shared_ptr<cpptoml::table> config) {
-  auto camera_config = config->get_table("STEAMWORKS")->get_table("CAMERA");
-  if (!camera_config) {
-    throw invalid_argument("STEAMWORKS CAMERA table not present");
+void Deadeye::LoadConfigSettings(
+    const std::shared_ptr<cpptoml::table> config_in) {
+  auto config = config_in->get_table("STEAMWORKS")->get_table("DEADEYE");
+  if (!config) {
+    throw invalid_argument("STEAMWORKS DEADEYE table not present");
   }
 
-  const char* missing = "STEAMWORKS CAMERA {} setting missing, using default";
+  const char* missing = "STEAMWORKS DEADEYE {} setting missing, using default";
 
-  auto s_opt = camera_config->get_as<string>("port");
+  auto s_opt = config->get_as<string>("port");
   if (s_opt) {
     port_ = *s_opt;
   } else {
@@ -162,11 +163,11 @@ void Deadeye::LoadConfigSettings(const std::shared_ptr<cpptoml::table> config) {
   }
   logger_->info("camera serial port: {}", port_);
 
-  auto u_opt = camera_config->get_as<uint32_t>("port_speed");
+  auto u_opt = config->get_as<uint32_t>("port_speed");
   if (u_opt) {
     speed_ = *u_opt;
   } else {
     logger_->warn(missing, "port_speed");
   }
-  logger_->info("camera serial port speed: {}", port_);
+  logger_->info("camera serial port speed: {}", speed_);
 }

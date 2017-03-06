@@ -94,7 +94,8 @@ void SwerveDrive::PositionAzimuthForAuton() {
 bool SwerveDrive::IsPositionAzimuthForAutonDone() {
   int error = std::abs(GetAzimuth(swerve::SwerveDrive::kLeftFront) -
                        kWheel1AzimuthAutonPos);
-  logger_->debug(
+  SPDLOG_DEBUG(
+      logger_,
       "GetPosition(kLeftFront) = {}, kWheel2AzimuthAutonPos = {}, error = {}",
       GetAzimuth(swerve::SwerveDrive::kLeftFront), kWheel1AzimuthAutonPos,
       error);
@@ -162,7 +163,7 @@ void SwerveDrive::DriveDistance(int distance, int azimuth) {
  */
 bool SwerveDrive::IsMotionDone() {
   auto pos = GetPosition();
-  logger_->debug("magic motion distance = {}", pos);
+  SPDLOG_DEBUG(logger_, "magic motion distance = {}", pos);
   if (distance_ > 0) {
     return pos >= distance_;
   }
@@ -199,21 +200,21 @@ void SwerveDrive::LoadConfigSettings(
   }
 
   drive_settings_ = talon::Settings::Create(swerve_settings, "drive");
-  logger_->debug("dumping drive talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping drive talon configuration");
   drive_settings_->LogConfig(logger_);
 
   drive_auton_settings_ =
       talon::Settings::Create(swerve_settings, "drive_auton");
-  logger_->debug("dumping drive auton talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping drive auton talon configuration");
   drive_auton_settings_->LogConfig(logger_);
 
   drive_motion_magic_settings_ =
       talon::Settings::Create(swerve_settings, "drive_auton_motion_magic");
-  logger_->debug("dumping drive auton motion magic talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping drive auton motion magic talon configuration");
   drive_motion_magic_settings_->LogConfig(logger_);
 
   drive_azimuth_settings_ =
       talon::Settings::Create(swerve_settings, "drive_auton_slow_azimuth");
-  logger_->debug("dumping drive azimuth talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping drive azimuth talon configuration");
   drive_azimuth_settings_->LogConfig(logger_);
 }

@@ -30,7 +30,7 @@ GetAngle::GetAngle()
  */
 void GetAngle::Initialize() {
   error_ = Robot::deadeye->GetCenterlineError();
-  logger_->debug("GetAngle centerline error = {}", error_);
+  SPDLOG_DEBUG(logger_, "GetAngle centerline error = {}", error_);
   stable_count_ = 0;
 }
 
@@ -56,8 +56,9 @@ void GetAngle::Execute() {
   }
   ticks = ticks * (signbit(error_) ? -1 : 1);  // match sign to error
   int pos = Robot::shooter->GetElevationSetpoint();
-  logger_->debug("abs_error_ = {}, error_ = {}, ticks =  {}, setpoint = {}",
-                 abs_error_, error_, ticks, pos + static_cast<int>(ticks));
+  SPDLOG_DEBUG(logger_,
+               "abs_error_ = {}, error_ = {}, ticks =  {}, setpoint = {}",
+               abs_error_, error_, ticks, pos + static_cast<int>(ticks));
   Robot::shooter->SetElevation(pos + static_cast<int>(ticks));
 }
 
@@ -72,7 +73,7 @@ bool GetAngle::IsFinished() {
     stable_count_ = 0;
   }
   if (stable_count_ == kStableCountReq) {
-    logger_->debug("done with centerline, abs_error_ = {}", abs_error_);
+    SPDLOG_DEBUG(logger_, "done with centerline, abs_error_ = {}", abs_error_);
     return true;
   }
   return false;

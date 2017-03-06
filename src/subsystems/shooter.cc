@@ -49,7 +49,7 @@ const int kMaxSpeed = 700;
  */
 void Shooter::SetElevation(int elevation) {
   elevation_setpoint_ = LimitElevation(elevation);
-  logger_->debug("setting shooter elevation to {}", elevation_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(elevation);
   UpdateSmartDashboard();
 }
@@ -59,7 +59,7 @@ void Shooter::SetElevation(int elevation) {
  */
 void Shooter::IncrementElevation() {
   elevation_setpoint_ += kElevationIncrement;
-  logger_->debug("setting shooter elevation to {}", elevation_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(
       static_cast<double>(elevation_setpoint_));
   UpdateSmartDashboard();
@@ -70,7 +70,7 @@ void Shooter::IncrementElevation() {
  */
 void Shooter::DecrementElevation() {
   elevation_setpoint_ -= kElevationIncrement;
-  logger_->debug("setting shooter elevation to {}", elevation_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(
       static_cast<double>(elevation_setpoint_));
   UpdateSmartDashboard();
@@ -96,11 +96,11 @@ int Shooter::GetElevation() {
  */
 void Shooter::SetElevationEncoderZero() {
   auto pos = RobotMap::shooter_elevation_talon->GetPulseWidthPosition() & 0xFFF;
-  logger_->debug("elevation_talon absolute encoder = {}", pos);
+  SPDLOG_DEBUG(logger_, "elevation_talon absolute encoder = {}", pos);
   int error = elevation_zero_ - pos;
   error += pos > elevation_zero_ ? 0xFFF : 0;
-  logger_->debug("elevation_talon error = {}", error);
-  logger_->debug("setting elevation_talon zero = {}", error);
+  SPDLOG_DEBUG(logger_, "elevation_talon error = {}", error);
+  SPDLOG_DEBUG(logger_, "setting elevation_talon zero = {}", error);
   RobotMap::shooter_elevation_talon->SetPosition(error);
 }
 
@@ -109,7 +109,7 @@ void Shooter::SetElevationEncoderZero() {
  */
 void Shooter::SetSpeed(int speed) {
   speed_setpoint_ = speed;
-  logger_->debug("setting shooter wheel to {} ticks/100ms", speed_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms", speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
   UpdateSmartDashboard();
 }
@@ -123,7 +123,7 @@ void Shooter::IncrementSpeed() {
   //   speed_setpoint_ = kMaxSpeed;
   //   logger_->warn("can't set wheel speed above {}", kMaxSpeed);
   // }
-  logger_->debug("setting shooter wheel to {} ticks/100ms", speed_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms", speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
   UpdateSmartDashboard();
 }
@@ -137,7 +137,7 @@ void Shooter::DecrementSpeed() {
   //   speed_setpoint_ = kMinSpeed;
   //   logger_->warn("can't set wheel speed below {}", kMinSpeed);
   // }
-  logger_->debug("setting shooter wheel to {} ticks/100ms", speed_setpoint_);
+  SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms", speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
   UpdateSmartDashboard();
 }

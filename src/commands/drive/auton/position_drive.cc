@@ -35,7 +35,7 @@ void PositionDrive::Initialize() {
  */
 bool PositionDrive::IsFinished() {
   int error = (0xFFF + abs(azimuth_ - Robot::drive->GetAzimuth())) & 0xFFF;
-  logger_->debug("position wheels error {}", error);
+  SPDLOG_DEBUG(logger_, "position wheels error {}", error);
   return error < kAzimuthTolerance;
 }
 

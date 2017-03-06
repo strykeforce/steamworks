@@ -31,7 +31,7 @@ void Robot::RobotInit() {
   LoadConfig();
   RobotMap::Init(config_);
 
-  logger_->trace("initializing subsystems");
+  SPDLOG_TRACE(logger_, "initializing subsystems");
   logger_->info("running on {} robot",
                 RobotMap::IsPracticeRobot() ? "PRACTICE" : "COMPETITION");
   deadeye = new subsystem::Deadeye(config_);
@@ -42,18 +42,18 @@ void Robot::RobotInit() {
   hopper = new subsystem::Hopper(config_);
   intake = new subsystem::Intake(config_);
   shooter = new subsystem::Shooter(config_);
-  logger_->trace("done initializing subsystems");
+  SPDLOG_TRACE(logger_, "done initializing subsystems");
   oi = new OI(config_);  // keep this after subsystems
 }
 
 void Robot::RobotPeriodic() {}
 
-void Robot::DisabledInit() { logger_->trace(__PRETTY_FUNCTION__); }
+void Robot::DisabledInit() { SPDLOG_TRACE(logger_, "in DisabledInit"); }
 
 void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::AutonomousInit() {
-  logger_->trace(__PRETTY_FUNCTION__);
+  SPDLOG_TRACE(logger_, "initializing autonomous mode");
   RobotMap::gyro->ZeroYaw();
   auto auton_mode = oi->GetAutonMode();
   logger_->info("initialize auton mode {:X}", auton_mode);
@@ -76,7 +76,7 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::TeleopInit() {
-  logger_->trace("checking auto gear load switch position");
+  SPDLOG_TRACE(logger_, "checking auto gear load switch position");
   frc::Joystick fsj(OI::kFlightSimJoystick);
   if (fsj.GetRawButton(OI::kFlightSimLeftCornerDownButton)) {
     // button is already in auto on position so run command
@@ -91,7 +91,7 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::TestInit() { logger_->trace(__PRETTY_FUNCTION__); }
+void Robot::TestInit() { SPDLOG_TRACE(logger_, "in TestInit"); }
 
 void Robot::TestPeriodic() { frc::LiveWindow::GetInstance()->Run(); }
 

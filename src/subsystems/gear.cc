@@ -14,7 +14,7 @@ GearLoader::GearLoader(const std::shared_ptr<cpptoml::table> config)
  * SetLimitSwitchNormallyOpen
  */
 void GearLoader::SetLimitSwitchNormallyOpen(bool open) {
-  logger_->debug("setting limit switch normally open to {}", open);
+  SPDLOG_DEBUG(logger_, "setting limit switch normally open to {}", open);
   RobotMap::gear_intake_talon->ConfigFwdLimitSwitchNormallyOpen(open);
 }
 
@@ -22,7 +22,7 @@ void GearLoader::SetLimitSwitchNormallyOpen(bool open) {
  * Load
  */
 void GearLoader::Load() {
-  logger_->debug("starting gear load");
+  SPDLOG_DEBUG(logger_, "starting gear load");
   RobotMap::gear_intake_talon->Set(load_voltage_);
 }
 
@@ -50,7 +50,7 @@ bool GearLoader::IsLimitSwitchClosed() {
 
   bool is_closed = RobotMap::gear_intake_talon->IsFwdLimitSwitchClosed() == 1;
   if (is_closed != was_closed) {
-    logger_->debug("limit switch closed {}", is_closed);
+    SPDLOG_DEBUG(logger_, "limit switch closed {}", is_closed);
     was_closed = is_closed;
   }
 
@@ -61,7 +61,7 @@ bool GearLoader::IsLimitSwitchClosed() {
  * Set gear clamp to open position for loading.
  */
 void GearLoader::ClampStage() {
-  logger_->debug("gear clamp stage, left = {}, right ={}", left_clamp_stage_,
+  SPDLOG_DEBUG(logger_, "gear clamp stage, left = {}, right ={}", left_clamp_stage_,
                  right_clamp_stage_);
   left_servo_.Set(left_clamp_stage_);
   right_servo_.Set(right_clamp_stage_);
@@ -71,7 +71,7 @@ void GearLoader::ClampStage() {
  * Set gear clamp to clamped shut position for pivoting.
  */
 void GearLoader::ClampShut() {
-  logger_->debug("gear clamp shut, left = {}, right = {}", left_clamp_shut_,
+  SPDLOG_DEBUG(logger_, "gear clamp shut, left = {}, right = {}", left_clamp_shut_,
                  right_clamp_shut_);
   left_servo_.Set(left_clamp_shut_);
   right_servo_.Set(right_clamp_shut_);
@@ -81,7 +81,7 @@ void GearLoader::ClampShut() {
  * Set gear clamp to fully open position for releasing gear on lifter.
  */
 void GearLoader::ClampRelease() {
-  logger_->debug("gear clamp release, left = {}, right = {}",
+  SPDLOG_DEBUG(logger_, "gear clamp release, left = {}, right = {}",
                  left_clamp_release_, right_clamp_release_);
   left_servo_.Set(left_clamp_release_);
   right_servo_.Set(right_clamp_release_);
@@ -91,7 +91,7 @@ void GearLoader::ClampRelease() {
  * Set gear clamp to safe stowed position.
  */
 void GearLoader::ClampStow() {
-  logger_->debug("gear clamp stow, left = {}, right = {}", left_clamp_stow_,
+  SPDLOG_DEBUG(logger_, "gear clamp stow, left = {}, right = {}", left_clamp_stow_,
                  right_clamp_stow_);
   left_servo_.Set(left_clamp_stow_);
   right_servo_.Set(right_clamp_stow_);
@@ -116,7 +116,7 @@ void GearLoader::SetPivotZeroModeEnabled(bool enabled) {
     RobotMap::gear_pivot_talon->Set(kGearZeroVoltage);
     return;
   }
-  logger_->debug("disabling pivot zero mode");
+  SPDLOG_DEBUG(logger_, "disabling pivot zero mode");
   RobotMap::gear_pivot_talon->StopMotor();
   pivot_settings_->Initialize(RobotMap::gear_pivot_talon);
 }
@@ -126,7 +126,7 @@ void GearLoader::SetPivotZeroModeEnabled(bool enabled) {
  */
 int GearLoader::GetPivotPosition() {
   auto pos = RobotMap::gear_pivot_talon->GetPosition();
-  logger_->debug("pivot encoder position is {}", pos);
+  SPDLOG_DEBUG(logger_, "pivot encoder position is {}", pos);
   return static_cast<int>(pos);
 }
 
@@ -134,7 +134,7 @@ int GearLoader::GetPivotPosition() {
  * Calibrate the pivot encoder after kissing off in full down position.
  */
 void GearLoader::SetPivotEncoderZero() {
-  logger_->debug("setting pivot encoder position to {}", kGearZeroPosition);
+  SPDLOG_DEBUG(logger_, "setting pivot encoder position to {}", kGearZeroPosition);
   RobotMap::gear_pivot_talon->SetPosition(kGearZeroPosition);
 }
 
@@ -296,16 +296,16 @@ void GearLoader::LoadConfigSettings(
   // Talons
   auto loader_talon_settings =
       talon::Settings::Create(steamworks_config, "gear_loader");
-  logger_->debug("dumping gear loader talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping gear loader talon configuration");
   loader_talon_settings->LogConfig(logger_);
   loader_talon_settings->Initialize(RobotMap::gear_intake_talon);
 
   pivot_settings_ = talon::Settings::Create(steamworks_config, "gear_pivot");
-  logger_->debug("dumping gear pivot talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping gear pivot talon configuration");
   pivot_settings_->LogConfig(logger_);
 
   pivot_zero_settings_ =
       talon::Settings::Create(steamworks_config, "gear_pivot_zero");
-  logger_->debug("dumping gear pivot zero talon configuration");
+  SPDLOG_DEBUG(logger_, "dumping gear pivot zero talon configuration");
   pivot_zero_settings_->LogConfig(logger_);
 }

@@ -38,7 +38,9 @@ elevation_zero = 3785
 gear_pivot_up   = 1080 # ticks
 gear_pivot_down =   10 # ticks
 
-[STEAMWORKS.CAMERA]
+[STEAMWORKS.DEADEYE]
+port = "/dev/ttyUSB0"
+port_speed = 115200
 
     [[STEAMWORKS.TALON]]
     name = "intake"

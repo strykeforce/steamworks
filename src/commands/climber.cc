@@ -15,7 +15,7 @@ CaptureRope::CaptureRope()
 }
 
 void CaptureRope::Initialize() {
-  logger_->debug("starting climber");
+  SPDLOG_DEBUG(logger_, "starting climber");
   Robot::climber->SetCaptureModeEnabled(true);
   Robot::climber->StartCapture();
 }
@@ -23,7 +23,7 @@ void CaptureRope::Initialize() {
 bool CaptureRope::IsFinished() { return Robot::climber->IsCaptured(); }
 
 void CaptureRope::Interrupted() {
-  logger_->debug("capture is interrupted");
+  SPDLOG_DEBUG(logger_, "capture is interrupted");
   Robot::climber->SetCaptureModeEnabled(false);
 }
 
