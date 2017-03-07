@@ -5,29 +5,22 @@
 
 namespace steamworks {
 namespace command {
-
-class TimedTest : public frc::TimedCommand {
+namespace shooter {
+class StartupShot : public frc::Command {
  public:
-  TimedTest(std::string name, double timeout);
+  StartupShot(int speed, int elevation);
+  virtual ~StartupShot() = default;
 
  protected:
   void Initialize() override;
+  bool IsFinished() override;
   void End() override;
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  std::string name_;
+  int speed_;
+  int elevation_;
 };
-
-class StartShooting : public frc::CommandGroup {
- public:
-  StartShooting();
-};
-
-class StopShooting : public frc::CommandGroup {
- public:
-  StopShooting();
-};
-
+} /* shooter */
 } /* command */
 } /* steamworks */

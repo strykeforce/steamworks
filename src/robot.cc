@@ -116,7 +116,7 @@ void Robot::ConfigureLogging() {
   logger_->set_level(spdlog::level::trace);
   spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
   spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
-  spdlog::stdout_color_st("sidewinder")->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("sidewinder")->set_level(spdlog::level::info);
   spdlog::stdout_color_mt("deadeye")->set_level(spdlog::level::trace);
   logger_->warn("configured as DEBUG build");
 #endif

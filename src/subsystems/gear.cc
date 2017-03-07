@@ -8,6 +8,7 @@ using namespace sidewinder;
 GearLoader::GearLoader(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("GearLoader"), logger_(spdlog::get("subsystem")) {
   LoadConfigSettings(config);
+  SetPivotEncoderZero();
 }
 
 /**
@@ -106,24 +107,6 @@ const int kGearPivotDownPosition = 0;
 }
 
 /**
- * SetPivotZeroModeEnabled
- */
-void GearLoader::SetPivotZeroModeEnabled(bool enabled) {
-  if (enabled) {
-    logger_->info("enabling pivot zero mode");
-    RobotMap::gear_pivot_talon->StopMotor();
-    pivot_zero_settings_->Initialize(RobotMap::gear_pivot_talon);
-    logger_->info("gear pivot Talon initialized in zero mode");
-    RobotMap::gear_pivot_talon->Set(kGearZeroVoltage);
-    return;
-  }
-  SPDLOG_DEBUG(logger_, "disabling pivot zero mode");
-  RobotMap::gear_pivot_talon->StopMotor();
-  pivot_settings_->Initialize(RobotMap::gear_pivot_talon);
-  logger_->info("gear pivot Talon initialized in normal mode");
-}
-
-/**
  * GetPivotPosition
  */
 int GearLoader::GetPivotPosition() {
@@ -136,9 +119,12 @@ int GearLoader::GetPivotPosition() {
  * Calibrate the pivot encoder after kissing off in full down position.
  */
 void GearLoader::SetPivotEncoderZero() {
-  SPDLOG_DEBUG(logger_, "setting pivot encoder position to {}",
-               kGearZeroPosition);
-  RobotMap::gear_pivot_talon->SetPosition(kGearZeroPosition);
+  auto pos = RobotMap::gear_pivot_talon->GetPulseWidthPosition() & 0xFFF;
+  SPDLOG_DEBUG(logger_, "gear_pivot_talon absolute encoder = {}", pos);
+  int error = pos - pivot_zero_position_;
+  SPDLOG_DEBUG(logger_, "gear_pivot_talon error = {}", error);
+  SPDLOG_DEBUG(logger_, "setting gear_pivot_talon zero = {}", error);
+  RobotMap::gear_pivot_talon->SetPosition(error);
 }
 
 /**
@@ -151,28 +137,35 @@ void GearLoader::PivotUp() {
     logger_->critical("gear pivot talon not in position control mode");
     return;
   }
-  logger_->info("pivoting gear to {}", kGearPivotUpPosition);
-  RobotMap::gear_pivot_talon->Set(kGearPivotUpPosition);
+  logger_->info("pivoting gear to {}", pivot_up_position_);
+  RobotMap::gear_pivot_talon->Set(pivot_up_position_);
 }
 
 /**
  * Put pivot in fully down position.
  */
 void GearLoader::PivotDown() {
-  logger_->info("pivoting gear to {}", kGearPivotDownPosition);
-  RobotMap::gear_pivot_talon->Set(kGearPivotDownPosition);
+  logger_->info("pivoting gear to {}", pivot_down_position_);
+  RobotMap::gear_pivot_talon->Set(pivot_down_position_);
+}
+
+namespace {
+const int kGearPivotGoodEnough = 10;
 }
 
 /**
  * Return true when pivot is in fully upright position as specified in config.
  */
-bool GearLoader::IsPivotUp() { return GetPivotPosition() > pivot_up_position_; }
+bool GearLoader::IsPivotUp() {
+  return (pivot_up_position_ - GetPivotPosition()) < kGearPivotGoodEnough;
+}
 
 /**
  * Return true when pivot is in fully down position as specified in config.
  */
 bool GearLoader::IsPivotDown() {
-  return GetPivotPosition() < pivot_down_position_;
+  return std::abs(pivot_down_position_ - GetPivotPosition()) <
+         kGearPivotGoodEnough;
 }
 
 /**
@@ -299,6 +292,15 @@ void GearLoader::LoadConfigSettings(
   }
   logger_->info("gear pivot down position: {}", pivot_down_position_);
 
+  // pivot_zero
+  i_opt = config->get_as<int>("pivot_zero");
+  if (i_opt) {
+    pivot_zero_position_ = *i_opt;
+  } else {
+    logger_->warn("STEAMWORKS.GEAR pivot_zero setting missing, using default");
+  }
+  logger_->info("gear pivot zero position: {}", pivot_zero_position_);
+
   // Talons
   auto loader_talon_settings = talon::Settings::Create(config, "loader");
   // SPDLOG_DEBUG(logger_, "dumping gear loader talon configuration");
@@ -307,10 +309,8 @@ void GearLoader::LoadConfigSettings(
   logger_->info("gear intake Talon initialized");
 
   pivot_settings_ = talon::Settings::Create(config, "pivot");
-  // SPDLOG_DEBUG(logger_, "dumping gear pivot talon configuration");
-  // pivot_settings_->LogConfig(logger_);
+  pivot_settings_->Initialize(RobotMap::gear_pivot_talon);
 
-  pivot_zero_settings_ = talon::Settings::Create(config, "pivot_zero");
-  // SPDLOG_DEBUG(logger_, "dumping gear pivot zero talon configuration");
-  // pivot_zero_settings_->LogConfig(logger_);
+  SPDLOG_DEBUG(logger_, "dumping gear pivot talon configuration");
+  pivot_settings_->LogConfig(logger_);
 }

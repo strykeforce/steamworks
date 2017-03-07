@@ -57,8 +57,9 @@ left_clamp_stow     = 0.45 # not used
 right_clamp_stow    = 0.6  # not used
 
 # settings for the gear pivot motor position mode
-pivot_up   = 1080 # ticks
-pivot_down =   10 # ticks
+pivot_zero =  825
+pivot_up   = 1020 # ticks
+pivot_down =    0 # ticks
 
     [[STEAMWORKS.GEAR.TALON]]
     name = "loader"
@@ -80,7 +81,7 @@ pivot_down =   10 # ticks
     neutral_mode    = 1 # brake
     limit_mode      = 0 # use switches
 
-    P      =   10.0
+    P      =    5.0
     I      =    0.0
     D      =  150.0
     F      =    0.0
@@ -95,20 +96,8 @@ pivot_down =   10 # ticks
     allowable_closed_loop_error    =     0 # encoder ticks
     encoder_reversed = false
     output_reversed  = false
-    current_limit    = 0 # amps, 0 disables
+    current_limit    = 4 # amps, 0 disables
 
-    [[STEAMWORKS.GEAR.TALON]]
-    name = "pivot_zero"
-    type = "voltage"
-
-    feedback_device = 0 # quad
-    neutral_mode    = 2 # coast
-    limit_mode      = 2 # both disabled
-    encoder_reversed = false
-    output_reversed  = false
-    current_limit    = 0 # amps, 0 disables
-
-    voltage_ramp_rate = 0.0 # v/s, 0 disables
 
 [STEAMWORKS.HOPPER]
 voltage = 8.0
@@ -143,6 +132,12 @@ voltage = 12.0
 [STEAMWORKS.SHOOTER]
 # elevation motor absolute encoder position at zero
 elevation_zero = 3785
+elevation_zero_angle = 6.0 # degrees
+centerline_height = 83.91 # inches
+camera_height = 19.25 # inches
+camera_angle = 56.35 # degrees
+degrees_per_tick = 0.00611
+
 
     [[STEAMWORKS.SHOOTER.TALON]]
     # range 0-900 ticks/100ms

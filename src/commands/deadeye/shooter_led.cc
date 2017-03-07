@@ -6,7 +6,7 @@ using namespace steamworks::command::deadeye;
 
 ShooterLED::ShooterLED(bool enabled)
     : frc::InstantCommand("ShooterLED"), enabled_(enabled) {
-  Requires(Robot::deadeye);
+  // Requires(Robot::deadeye);
 }
 
 void ShooterLED::Initialize() {

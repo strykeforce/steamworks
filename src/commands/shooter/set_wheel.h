@@ -4,18 +4,20 @@
 
 namespace steamworks {
 namespace command {
+namespace shooter {
 
-class SetRange : public frc::Command {
+class SetWheel : public frc::Command {
  public:
-  SetRange();
+  SetWheel();
 
  protected:
   void Initialize() override;
   bool IsFinished() override;
 
  private:
-  int elevation_;
-  int speed_;
+  double speed_;
 };
+
+} /* shooter */
 } /* command */
 } /* steamworks */

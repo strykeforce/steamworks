@@ -8,9 +8,6 @@ PivotGear::PivotGear() : frc::Command("PivotGear") {
   Requires(Robot::gear_loader);
 }
 
-void PivotGear::Initialize() {
-  Robot::gear_loader->SetPivotZeroModeEnabled(false);
-  Robot::gear_loader->PivotUp();
-}
+void PivotGear::Initialize() { Robot::gear_loader->PivotUp(); }
 
 bool PivotGear::IsFinished() { return Robot::gear_loader->IsPivotUp(); }

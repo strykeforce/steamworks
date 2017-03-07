@@ -24,7 +24,9 @@
 #include "commands/shooter/elevation.h"
 #include "commands/shooter/get_angle.h"
 #include "commands/shooter/sequence.h"
-#include "commands/shooter/set_range.h"
+#include "commands/shooter/set_elevation.h"
+#include "commands/shooter/set_wheel.h"
+#include "commands/shooter/startup.h"
 #include "commands/shooter/wheel.h"
 
 #include "commands/gear/clamp.h"
@@ -33,4 +35,3 @@
 #include "commands/gear/pivot.h"
 #include "commands/gear/release.h"
 #include "commands/gear/sequence.h"
-#include "commands/gear/zero.h"

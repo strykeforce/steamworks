@@ -15,7 +15,7 @@ StartShooterWheel::StartShooterWheel()
 /**
  * Sends wheel speed set command to the subsystem.
  */
-void StartShooterWheel::Initialize() { Robot::shooter->SetSpeed(460); }
+void StartShooterWheel::Initialize() { Robot::shooter->SetSpeed(400); }
 
 /**
  * StopShooterWheel ramps shooter wheel speed down to zero.

@@ -209,9 +209,8 @@ Deadeye::State Deadeye::ReadSentence() {
   }
   line.pop_back();  // remove trailing newline
   parser_.ParseText(sentence_, line);
-  bool valid = sentence_.Valid();
-  SPDLOG_TRACE(logger_, "read {} sentence: \"{}\"", valid ? "VALID" : "INVALID",
-               line);
+  SPDLOG_TRACE(logger_, "read {} sentence: \"{}\"",
+               sentence_.Valid() ? "VALID" : "INVALID", line);
   return state_;
 }
 

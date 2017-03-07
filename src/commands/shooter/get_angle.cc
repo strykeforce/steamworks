@@ -83,4 +83,10 @@ bool GetAngle::IsFinished() {
  * End is called after IsFinished(), it stops azimuth motion and disables the
  * PID controller loop.
  */
-void GetAngle::End() { Robot::drive->SetDrive(0.0); }
+void GetAngle::End() {
+  int elevation = Robot::shooter->GetElevation();
+  Robot::shooter->SetSolutionInputs(elevation /*, error_*/);
+  SPDLOG_DEBUG(logger_,
+               "setting shooter solution inputs: elevation = {}, pixels = {}",
+               elevation, error_);
+}

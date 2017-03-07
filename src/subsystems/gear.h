@@ -28,7 +28,6 @@ class GearLoader : public frc::Subsystem {
   void ClampRelease();
   void ClampStow();
 
-  void SetPivotZeroModeEnabled(bool enabled);
   int GetPivotPosition();
   void SetPivotEncoderZero();
   void PivotUp();
@@ -57,6 +56,7 @@ class GearLoader : public frc::Subsystem {
   double left_clamp_stow_ = 0.45;
   double right_clamp_stow_ = 0.6;
 
+  int pivot_zero_position_ = 825;
   int pivot_up_position_ = 1000;
   int pivot_down_position_ = 10;
 

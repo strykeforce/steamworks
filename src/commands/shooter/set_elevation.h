@@ -4,21 +4,20 @@
 
 namespace steamworks {
 namespace command {
-namespace gear {
+namespace shooter {
 
-class ZeroPivot : public frc::Command {
+class SetElevation : public frc::Command {
  public:
-  ZeroPivot();
+  SetElevation();
 
  protected:
   void Initialize() override;
   bool IsFinished() override;
-  void End() override;
 
  private:
-  int stable_count_ = 0;
-  int last_encoder_ = 0;
+  double elevation_;
 };
-} /* gear */
+
+} /* shooter */
 } /* command */
 } /* steamworks */

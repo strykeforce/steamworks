@@ -115,7 +115,7 @@ void OI::AssignFlightSimButtons() {
 
   // flight sim right shoulder 2-position button controls shooter auto mode
   shooter_auto_button_.WhenPressed(new StartShooting());
-  shooter_auto_button_.WhenReleased(new StopShooterWheel());
+  shooter_auto_button_.WhenReleased(new StopShooting());
 }
 
 /**
@@ -169,8 +169,6 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Write Azimuth Cal", new WriteAzimuthCalibration());
   SmartDashboard::PutData("Drive Zero", new drive::Zero());
   SmartDashboard::PutData("Zero Gyro", new ZeroGyroYaw());
-
-  SmartDashboard::PutData("Zero Pivot", new gear::ZeroPivot());
 
 #if !NDEBUG
   SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));

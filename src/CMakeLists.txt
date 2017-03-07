@@ -23,7 +23,11 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
   serial
 )
 
-add_dependencies(${CMAKE_PROJECT_NAME} generate_version generate_default_config)
+add_dependencies(${CMAKE_PROJECT_NAME}
+  generate_version
+  generate_default_config
+  generate_lookup
+)
 
 # We delete version.h before each build. This forces a recompile of robot.cc
 # every build which is acceptable in order to have a guarenteed incrementing

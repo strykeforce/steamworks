@@ -1,9 +1,24 @@
 #include "shooter.h"
 
+#include <cmath>
+
 #include "robot_map.h"
+#include "shooter_target_data.h"
 
 using namespace steamworks::subsystem;
 using namespace sidewinder;
+
+// TODO: put these in config
+namespace {
+const int kElevationIncrement = 25;
+const int kSpeedIncrement = 10;
+
+const int kMinElevation = 0;
+const int kMaxElevation = 6000;
+
+const int kMinSpeed = 350;
+const int kMaxSpeed = 700;
+}
 
 /**
  * Shooter constructor.
@@ -14,16 +29,58 @@ Shooter::Shooter(const std::shared_ptr<cpptoml::table> config)
   SetElevationEncoderZero();
 }
 
-namespace {
-const int kElevationIncrement = 25;
-const int kSpeedIncrement = 10;
+/**
+ * Supply shooter solution input data.
+ */
+void Shooter::SetSolutionInputs(int centerline_elevation /*,
+                                int centerline_pixel_error*/) {
+  double shooter_angle =
+      elevation_zero_angle_ + (centerline_elevation * degrees_per_tick_);
+  logger_->debug("shooter angle = {}", shooter_angle);
 
-const int kMinElevation = 1;
-const int kMaxElevation = 6000;
+  double aiming_angle = ((camera_angle_ - shooter_angle) / 360.0) * 2.0 * M_PI;
+  logger_->debug("aiming angle = {}", aiming_angle);
 
-const int kMinSpeed = 350;
-const int kMaxSpeed = 700;
+  solution_range_ =
+      (centerline_height_ - camera_height_) / std::tan(aiming_angle);
+
+  solution_range_ += 10;  // front of target to center of boiler
+  logger_->debug("solution range = {}", solution_range_);
+
+  int range_lookup =
+      static_cast<int>(std::round(solution_range_)) - shooter_range_offset;
+  if (range_lookup < 0 || range_lookup > shooter_data_size) {
+    logger_->error("range lookup value out of range, solution range = {}",
+                   solution_range_);
+    return;
+  }
+  solution_elevation_ = shooter_data[range_lookup][kElevation];
+  solution_wheel_speed_ = shooter_data[range_lookup][kSpeed];
+  solution_azimuth_offset_ = shooter_data[range_lookup][kAzimuth];
+
+  logger_->info(
+      "shooter solution: range = {}, elevation = {}, speed = {}, azimuth = {}",
+      solution_range_, solution_elevation_, solution_wheel_speed_,
+      solution_azimuth_offset_);
 }
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Shooter::GetSolutionElevation() { return solution_elevation_; }
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Shooter::GetSolutionWheelSpeed() { return solution_wheel_speed_; }
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Shooter::GetSolutionRange() { return solution_range_; }
 
 /**
  * SetElevation sets the shooter elevation to the specified encoder position.
@@ -156,6 +213,9 @@ void Shooter::UpdateSmartDashboard() {
 #endif
 }
 
+/**
+ * Check wheel speed against limits.
+ */
 int Shooter::LimitSpeed(int speed) {
   if (speed < kMinSpeed) {
     logger_->warn("shooter wheel speed out of range: {}", speed);
@@ -168,6 +228,9 @@ int Shooter::LimitSpeed(int speed) {
   return speed;
 }
 
+/**
+ * Check shooter elevation against limits.
+ */
 int Shooter::LimitElevation(int elevation) {
   if (elevation < kMinElevation) {
     logger_->warn("shooter elevation out of range: {}", elevation);
@@ -192,9 +255,60 @@ void Shooter::LoadConfigSettings(
     elevation_zero_ = *i_opt;
   } else {
     logger_->error(
-        "STEAMWORKS elevation_zero setting not available, using default");
+        "STEAMWORKS.SHOOTER elevation_zero setting not available, using "
+        "default");
   }
-  logger_->info("elevation zero position: {}", elevation_zero_);
+  logger_->info("shooter elevation zero position: {}", elevation_zero_);
+
+  auto d_opt = config->get_as<double>("elevation_zero_angle");
+  if (d_opt) {
+    elevation_zero_angle_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER elevation_zero_angle setting not available, using "
+        "default");
+  }
+  logger_->info("shooter elevation zero angle: {}", elevation_zero_angle_);
+
+  d_opt = config->get_as<double>("centerline_height");
+  if (d_opt) {
+    centerline_height_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER centerline_height setting not available, using "
+        "default");
+  }
+  logger_->info("shooter target centerline height: {}", centerline_height_);
+
+  d_opt = config->get_as<double>("camera_height");
+  if (d_opt) {
+    camera_height_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER camera_height setting not available, using "
+        "default");
+  }
+  logger_->info("shooter camera height: {}", camera_height_);
+
+  d_opt = config->get_as<double>("camera_angle");
+  if (d_opt) {
+    camera_angle_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER camera_angle setting not available, using "
+        "default");
+  }
+  logger_->info("shooter camera angle: {}", camera_angle_);
+
+  d_opt = config->get_as<double>("degrees_per_tick");
+  if (d_opt) {
+    degrees_per_tick_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER degrees_per_tick setting not available, using "
+        "default");
+  }
+  logger_->info("shooter degrees per tick: {}", degrees_per_tick_);
 
   // configure talons
   auto elevation_settings =
