@@ -4,7 +4,7 @@
 
 namespace deadeye {
 
-enum class Mode { boiler, gear, quit };
+enum class Mode { boiler, gear, idle };
 
 class ModeSentence : public Sentence {
  public:

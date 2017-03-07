@@ -1,15 +1,11 @@
 #include "robot.h"
 
-#include "WPILib.h"
 #include "WPILibVersion.h"
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
 
 #include "commands/commands.h"
 #include "default_config.h"
 #include "robot_map.h"
 #include "sidewinder/version.h"
-#include "subsystems/drive.h"
 #include "version.h"
 
 using namespace steamworks;
@@ -35,7 +31,6 @@ void Robot::RobotInit() {
   logger_->info("running on {} robot",
                 RobotMap::IsPracticeRobot() ? "PRACTICE" : "COMPETITION");
   deadeye = new subsystem::Deadeye(config_);
-  deadeye->Start();  // start IO thread
   climber = new subsystem::Climber(config_);
   drive = new subsystem::SwerveDrive(config_);
   gear_loader = new subsystem::GearLoader(config_);
@@ -48,7 +43,11 @@ void Robot::RobotInit() {
 
 void Robot::RobotPeriodic() {}
 
-void Robot::DisabledInit() { SPDLOG_TRACE(logger_, "in DisabledInit"); }
+void Robot::DisabledInit() {
+  SPDLOG_TRACE(logger_, "in DisabledInit");
+  SPDLOG_DEBUG(logger_, "setting Deadeye mode to idle");
+  deadeye->SetMode(::deadeye::Mode::idle);
+}
 
 void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
@@ -70,6 +69,8 @@ void Robot::AutonomousInit() {
     default:
       autonomous_command_ = new Log("unrecognized command");
   }
+  SPDLOG_TRACE(logger_, "setting Deadeye mode to boiler");
+  deadeye->SetMode(::deadeye::Mode::boiler);
   autonomous_command_->Start();
 }
 
@@ -87,6 +88,8 @@ void Robot::TeleopInit() {
     // button is already in auto on position so run command
     logger_->info("auto gear load is off");
   }
+  SPDLOG_TRACE(logger_, "setting Deadeye mode to boiler");
+  deadeye->SetMode(::deadeye::Mode::boiler);
 }
 
 void Robot::TeleopPeriodic() { frc::Scheduler::GetInstance()->Run(); }

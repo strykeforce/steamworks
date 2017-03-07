@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SRC=/vagrant/build/src/${CMAKE_PROJECT_NAME}
+SRC=${PROJECT_BINARY_DIR}/src/${CMAKE_PROJECT_NAME}
 DST=/home/lvuser/${CMAKE_PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}
 
 /usr/arm-frc-linux-gnueabi/bin/strip $SRC

@@ -35,6 +35,7 @@ capture_current =  4.0
 [STEAMWORKS.DEADEYE]
 port = "/dev/ttyUSB0"
 port_speed = 115200
+period = 20 # milliseconds
 
 [STEAMWORKS.GEAR]
 # settings for the gear intake motor voltage mode
