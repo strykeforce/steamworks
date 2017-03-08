@@ -21,9 +21,11 @@ class Shooter : public frc::Subsystem {
   void SetElevation(int elevation);
   int GetElevationSetpoint();
   int GetElevation();
+
   // shooter testing
   void IncrementElevation();
   void DecrementElevation();
+
   // elevation encoder calibration
   void SetElevationEncoderZero();
 
@@ -31,6 +33,7 @@ class Shooter : public frc::Subsystem {
   void SetSpeed(int speed);
   int GetSpeedSetpoint() const;
   int GetSpeed() const;
+
   // shooter testing
   void IncrementSpeed();
   void DecrementSpeed();
@@ -38,9 +41,10 @@ class Shooter : public frc::Subsystem {
   // SHOOTER SOLUTION CALCULATION
   void SetSolutionInputs(
       int centerline_elevation /*, int centerline_pixel_error*/);
+  double GetSolutionRange();
   double GetSolutionElevation();
   double GetSolutionWheelSpeed();
-  double GetSolutionRange();
+  double GetSolutionAzimuthOffset();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;

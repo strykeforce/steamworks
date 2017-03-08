@@ -9,7 +9,7 @@ namespace drive {
 
 class DeadeyeAzimuth : public frc::Command {
  public:
-  DeadeyeAzimuth();
+  DeadeyeAzimuth(bool offset = false);
 
  protected:
   void Initialize() override;
@@ -19,8 +19,10 @@ class DeadeyeAzimuth : public frc::Command {
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  float error_;
-  float abs_error_;
+  bool has_offset_;
+  double offset_;
+  double error_;
+  double abs_error_;
   int stable_count_ = 0;
 };
 

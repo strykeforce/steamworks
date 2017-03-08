@@ -59,10 +59,17 @@ void Shooter::SetSolutionInputs(int centerline_elevation /*,
   solution_azimuth_offset_ = shooter_data[range_lookup][kAzimuth];
 
   logger_->info(
-      "shooter solution: range = {}, elevation = {}, speed = {}, azimuth = {}",
+      "Shooter solution: range = {}, elevation = {}, speed = {}, azimuth "
+      "offset = {}",
       solution_range_, solution_elevation_, solution_wheel_speed_,
       solution_azimuth_offset_);
 }
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Shooter::GetSolutionRange() { return solution_range_; }
 
 /**
  * Calculate the shooter solution based on camera angle and pixel distance from
@@ -80,7 +87,7 @@ double Shooter::GetSolutionWheelSpeed() { return solution_wheel_speed_; }
  * Calculate the shooter solution based on camera angle and pixel distance from
  * targets centerline.
  */
-double Shooter::GetSolutionRange() { return solution_range_; }
+double Shooter::GetSolutionAzimuthOffset() { return solution_azimuth_offset_; }
 
 /**
  * SetElevation sets the shooter elevation to the specified encoder position.
