@@ -10,6 +10,12 @@ class Sentence {
   friend class Parser;
 
  public:
+  enum Code {
+    kNoTarget,
+    kBoiler,
+    kGear,
+  };
+
   // FIXME: need to be private, not always calculated
   std::string text;
   std::string name;
