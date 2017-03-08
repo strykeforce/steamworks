@@ -3,7 +3,6 @@
 #include <chrono>
 #include <thread>
 
-#include "boiler_target_data.h"
 #include "link/mode.h"
 
 using namespace deadeye;
