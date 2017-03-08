@@ -146,7 +146,8 @@ void OI::AssignGamepadButtons() {
   shoot_feed_button_.WhenPressed(new Log("gamepad feed shot button"));
 
   // gamepad X button performs close shot
-  shoot_close_button_.WhenPressed(new Log("gamepad close shot button"));
+  shoot_close_button_.WhenPressed(new StartCloseShot());
+  shoot_close_button_.WhenReleased(new StopShooting());
 
   // gamepad D-pad trims shooter aimpoint
   trim_up_.WhenActive(new ToggleHopper());

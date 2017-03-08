@@ -25,8 +25,8 @@
 #include "commands/shooter/get_angle.h"
 #include "commands/shooter/sequence.h"
 #include "commands/shooter/set_elevation.h"
+#include "commands/shooter/set_shooter.h"
 #include "commands/shooter/set_wheel.h"
-#include "commands/shooter/startup.h"
 #include "commands/shooter/wheel.h"
 
 #include "commands/gear/clamp.h"

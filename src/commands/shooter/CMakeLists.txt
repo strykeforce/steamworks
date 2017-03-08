@@ -6,5 +6,5 @@ target_sources(${CMAKE_PROJECT_NAME}
   "${CMAKE_CURRENT_LIST_DIR}/set_elevation.cc"
   "${CMAKE_CURRENT_LIST_DIR}/set_wheel.cc"
   "${CMAKE_CURRENT_LIST_DIR}/wheel.cc"
-  "${CMAKE_CURRENT_LIST_DIR}/startup.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/set_shooter.cc"
 )

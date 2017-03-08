@@ -1,4 +1,4 @@
-#include "startup.h"
+#include "set_shooter.h"
 
 #include "robot.h"
 
@@ -6,12 +6,12 @@ using namespace steamworks::command::shooter;
 
 namespace {
 const double kTimeout = 2.5;
-const int kSpeedGoodEnough = 25;
+const int kSpeedGoodEnough = 5;
 const int kElevationGoodEnough = 10;
 }
 
-StartupShot::StartupShot(int speed, int elevation)
-    : frc::Command("StartupShot", kTimeout),
+SetShooter::SetShooter(int speed, int elevation)
+    : frc::Command("SetShooter", kTimeout),
       logger_(spdlog::get("command")),
       speed_(speed),
       elevation_(elevation) {
@@ -19,14 +19,14 @@ StartupShot::StartupShot(int speed, int elevation)
   Requires(Robot::shooter_wheel);
 }
 
-void StartupShot::Initialize() {
+void SetShooter::Initialize() {
   Robot::shooter_wheel->SetSpeed(speed_);
   Robot::shooter_elevation->SetElevation(elevation_);
-  logger_->info("StartupShot initialized with speed {} and elevation {}",
-                speed_, elevation_);
+  logger_->info("SetShooter initialized with speed {} and elevation {}", speed_,
+                elevation_);
 }
 
-bool StartupShot::IsFinished() {
+bool SetShooter::IsFinished() {
   int speed_error = std::abs(speed_ - Robot::shooter_wheel->GetSpeed());
   int elevation_error =
       std::abs(elevation_ - Robot::shooter_elevation->GetElevation());
@@ -38,16 +38,16 @@ bool StartupShot::IsFinished() {
 /**
  * Called once if this command is interrupted.
  */
-void StartupShot::Interrupted() {
-  logger_->info("StartupShot interrupted");
+void SetShooter::Interrupted() {
+  logger_->info("SetShooter interrupted");
   End();
 }
 
 /**
  * Called once when ending.
  */
-void StartupShot::End() {
-  logger_->info("StartupShot ended with speed {} and elevation {}",
+void SetShooter::End() {
+  logger_->info("SetShooter ended with speed {} and elevation {}",
                 Robot::shooter_wheel->GetSpeed(),
                 Robot::shooter_elevation->GetElevation());
 }

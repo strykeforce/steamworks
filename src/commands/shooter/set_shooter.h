@@ -6,10 +6,10 @@
 namespace steamworks {
 namespace command {
 namespace shooter {
-class StartupShot : public frc::Command {
+class SetShooter : public frc::Command {
  public:
-  StartupShot(int speed, int elevation);
-  virtual ~StartupShot() = default;
+  SetShooter(int speed, int elevation);
+  virtual ~SetShooter() = default;
 
  protected:
   void Initialize() override;
