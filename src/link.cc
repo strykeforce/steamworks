@@ -55,7 +55,7 @@ Link::Link(std::shared_ptr<cpptoml::table> config)
  */
 Mode Link::GetMode() {
 #ifdef DEADEYE_TEST
-  return Mode::quit;
+  return Mode::idle;
 #else
   return Mode::boiler;
 #endif

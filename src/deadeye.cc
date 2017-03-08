@@ -36,7 +36,7 @@ void Deadeye::Run() {
       case Mode::gear:
         ProcessGearTarget();
         break;
-      case Mode::quit:
+      case Mode::idle:
         return;
     }
   }
@@ -63,8 +63,8 @@ void Deadeye::SwitchMode(Mode mode) {
       }
       gear_camera_.StartCapture();
       break;
-    case Mode::quit:
-      logger_->info("deadeye mode set to quit");
+    case Mode::idle:
+      logger_->info("deadeye mode set to idle");
       gear_camera_.StopCapture();
       boiler_camera_.StopCapture();
       break;

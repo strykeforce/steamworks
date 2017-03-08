@@ -23,7 +23,7 @@ class Deadeye {
   Link link_;
   BoilerCamera boiler_camera_;
   GearCamera gear_camera_;
-  Mode current_mode_ = Mode::quit;
+  Mode current_mode_ = Mode::idle;
 
   void SwitchMode(Mode mode);
   void ProcessBoilerTarget();
