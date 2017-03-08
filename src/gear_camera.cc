@@ -95,7 +95,7 @@ void GearCamera::StartCapture() {
     logger_->error("StartCapture can't open camera");
     return;
   }
-  logger_->debug("StartCapture has opened gear camera");
+  SPDLOG_DEBUG(logger_, "StartCapture has opened gear camera");
 
   capture_started_ = true;
 }

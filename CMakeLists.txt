@@ -9,6 +9,12 @@ set(VERSION_META "-dev")
 set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 find_package(OpenCV  2.4 REQUIRED)
 
+# spdlog options
+add_definitions(-DSPDLOG_NO_THREAD_ID)
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+  add_definitions(-DSPDLOG_DEBUG_ON -DSPDLOG_TRACE_ON)
+endif(CMAKE_BUILD_TYPE MATCHES "Debug")
+
 # BOILER_LOOKUP_INPUT is used by vendor/tools/generate_lookup. It is set here so
 # we can set it separately in test/CMakeLists.txt. It needs to be set prior to
 # adding the vendor subdirectory.
