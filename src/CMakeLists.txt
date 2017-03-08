@@ -31,5 +31,3 @@ set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
   CXX_STANDARD 11
   CXX_EXTENSIONS OFF
   CXX_STANDARD_REQUIRED YES)
-
-add_dependencies(deadeye generate_lookup)
