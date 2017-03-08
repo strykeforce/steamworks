@@ -9,26 +9,26 @@ using namespace steamworks::command;
  */
 StartShooterWheel::StartShooterWheel()
     : frc::InstantCommand("StartShooterWheel") {
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_wheel);
 }
 
 /**
  * Sends wheel speed set command to the subsystem.
  */
-void StartShooterWheel::Initialize() { Robot::shooter->SetSpeed(400); }
+void StartShooterWheel::Initialize() { Robot::shooter_wheel->SetSpeed(400); }
 
 /**
  * StopShooterWheel ramps shooter wheel speed down to zero.
  */
 StopShooterWheel::StopShooterWheel() : frc::Command("StopShooterWheel") {
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_wheel);
 }
 
 /**
  * Gets the currently running speed.
  */
 void StopShooterWheel::Initialize() {
-  speed_setpoint_ = Robot::shooter->GetSpeed();
+  speed_setpoint_ = Robot::shooter_wheel->GetSpeed();
 }
 
 namespace {
@@ -45,7 +45,7 @@ void StopShooterWheel::Execute() {
   } else {
     speed_setpoint_ -= kSpeedDecrement;
   }
-  Robot::shooter->SetSpeed(speed_setpoint_);
+  Robot::shooter_wheel->SetSpeed(speed_setpoint_);
 }
 
 bool StopShooterWheel::IsFinished() { return speed_setpoint_ == 0; }
@@ -56,13 +56,15 @@ bool StopShooterWheel::IsFinished() { return speed_setpoint_ == 0; }
  */
 IncrementShooterSpeed::IncrementShooterSpeed()
     : frc::InstantCommand("IncrementShooterSpeed") {
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_wheel);
 }
 
 /**
  * Sends increment wheel speed command to the subsystem.
  */
-void IncrementShooterSpeed::Initialize() { Robot::shooter->IncrementSpeed(); }
+void IncrementShooterSpeed::Initialize() {
+  Robot::shooter_wheel->IncrementSpeed();
+}
 
 /**
  * IncrementShooterSpeed lowers wheel speed by a small number of encoder
@@ -70,10 +72,12 @@ void IncrementShooterSpeed::Initialize() { Robot::shooter->IncrementSpeed(); }
  */
 DecrementShooterSpeed::DecrementShooterSpeed()
     : frc::InstantCommand("DecrementShooterSpeed") {
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_wheel);
 }
 
 /**
  * Sends decrement wheel speed command to the subsystem.
  */
-void DecrementShooterSpeed::Initialize() { Robot::shooter->DecrementSpeed(); }
+void DecrementShooterSpeed::Initialize() {
+  Robot::shooter_wheel->DecrementSpeed();
+}

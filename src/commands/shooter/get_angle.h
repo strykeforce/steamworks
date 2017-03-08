@@ -3,6 +3,8 @@
 #include <WPILib.h>
 #include <spdlog/spdlog.h>
 
+#include "sequence.h"
+
 namespace steamworks {
 namespace command {
 namespace shooter {
@@ -15,6 +17,7 @@ class GetAngle : public frc::Command {
   void Initialize() override;
   void Execute() override;
   bool IsFinished() override;
+  void Interrupted() override;
   void End() override;
 
  private:

@@ -18,7 +18,8 @@ subsystem::SwerveDrive* Robot::drive = nullptr;
 subsystem::GearLoader* Robot::gear_loader = nullptr;
 subsystem::Hopper* Robot::hopper = nullptr;
 subsystem::Intake* Robot::intake = nullptr;
-subsystem::Shooter* Robot::shooter = nullptr;
+subsystem::ShooterElevation* Robot::shooter_elevation = nullptr;
+subsystem::ShooterWheel* Robot::shooter_wheel = nullptr;
 
 Robot::Robot() : frc::IterativeRobot(), logger_(nullptr) { ConfigureLogging(); }
 
@@ -36,7 +37,8 @@ void Robot::RobotInit() {
   gear_loader = new subsystem::GearLoader(config_);
   hopper = new subsystem::Hopper(config_);
   intake = new subsystem::Intake(config_);
-  shooter = new subsystem::Shooter(config_);
+  shooter_elevation = new subsystem::ShooterElevation(config_);
+  shooter_wheel = new subsystem::ShooterWheel(config_);
   SPDLOG_TRACE(logger_, "done initializing subsystems");
   oi = new OI(config_);  // keep this after subsystems
 }

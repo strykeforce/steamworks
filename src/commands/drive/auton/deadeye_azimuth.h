@@ -15,6 +15,7 @@ class DeadeyeAzimuth : public frc::Command {
   void Initialize() override;
   void Execute() override;
   bool IsFinished() override;
+  void Interrupted() override;
   void End() override;
 
  private:

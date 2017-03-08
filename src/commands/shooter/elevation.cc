@@ -15,21 +15,21 @@ const int kGoodEnough = 5;
  */
 SetShooterElevation::SetShooterElevation(unsigned elevation)
     : frc::Command("SetShooterElevation", kTimeout), elevation_(elevation) {
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_elevation);
 }
 
 /**
  * Sends elevation set command to the subsystem.
  */
 void SetShooterElevation::Initialize() {
-  Robot::shooter->SetElevation(elevation_);
+  Robot::shooter_elevation->SetElevation(elevation_);
 }
 
 /**
  * Returns true when elevation position is reached.
  */
 bool SetShooterElevation::IsFinished() {
-  int error = std::abs(elevation_ - Robot::shooter->GetElevation());
+  int error = std::abs(elevation_ - Robot::shooter_elevation->GetElevation());
   return error < kGoodEnough || IsTimedOut();
 }
 
@@ -42,14 +42,14 @@ bool SetShooterElevation::IsFinished() {
  */
 IncrementShooterElevation::IncrementShooterElevation()
     : frc::InstantCommand("IncrementShooterElevation") {
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_elevation);
 }
 
 /**
  * Sends increment elevation command to the subsystem.
  */
 void IncrementShooterElevation::Initialize() {
-  Robot::shooter->IncrementElevation();
+  Robot::shooter_elevation->IncrementElevation();
 }
 
 /**
@@ -58,12 +58,12 @@ void IncrementShooterElevation::Initialize() {
  */
 DecrementShooterElevation::DecrementShooterElevation()
     : frc::InstantCommand("DecrementShooterElevation") {
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_elevation);
 }
 
 /**
  * Sends decrement elevation command to the subsystem.
  */
 void DecrementShooterElevation::Initialize() {
-  Robot::shooter->DecrementElevation();
+  Robot::shooter_elevation->DecrementElevation();
 }

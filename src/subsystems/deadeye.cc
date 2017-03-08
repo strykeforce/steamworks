@@ -1,6 +1,7 @@
 #include "deadeye.h"
 
 #include "robot_map.h"
+#include "shooter_target_data.h"
 
 using namespace steamworks::subsystem;
 using namespace deadeye;
@@ -243,6 +244,72 @@ void Deadeye::SetGearLightEnabled(bool enable) {
 void Deadeye::SetShooterLightEnabled(bool enable) {
   RobotMap::shooter_camera_led->Set(!enable);
 }
+
+/**
+ * Calculates shooter solution based on given input, returns true if valid
+ * solution found.
+ */
+bool Deadeye::CalculateSolution(int centerline_elevation) {
+  // logger_->error("Deadeye testing failed shooter solution");
+  // return false;
+
+  double shooter_angle =
+      elevation_zero_angle_ + (centerline_elevation * degrees_per_tick_);
+  logger_->debug("Deadeye shooter angle = {}", shooter_angle);
+
+  double aiming_angle = ((camera_angle_ - shooter_angle) / 360.0) * 2.0 * M_PI;
+  logger_->debug("Deadeye aiming angle = {}", aiming_angle);
+
+  solution_range_ =
+      (centerline_height_ - camera_height_) / std::tan(aiming_angle);
+
+  solution_range_ += 10;  // front of target to center of boiler
+  logger_->debug("Deadeye solution range = {}", solution_range_);
+
+  int range_lookup =
+      static_cast<int>(std::round(solution_range_)) - shooter_range_offset;
+  if (range_lookup < 0 || range_lookup > shooter_data_size) {
+    logger_->error(
+        "Deadeye range lookup value out of range, solution range = {}",
+        solution_range_);
+    return false;
+  }
+  solution_elevation_ = shooter_data[range_lookup][kElevation];
+  solution_wheel_speed_ = shooter_data[range_lookup][kSpeed];
+  solution_azimuth_offset_ = shooter_data[range_lookup][kAzimuth];
+
+  logger_->info(
+      "Deadeye solution: range = {}, elevation = {}, speed = {}, "
+      "azimuth "
+      "offset = {}",
+      solution_range_, solution_elevation_, solution_wheel_speed_,
+      solution_azimuth_offset_);
+  return true;
+}
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Deadeye::GetSolutionRange() { return solution_range_; }
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Deadeye::GetSolutionElevation() { return solution_elevation_; }
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Deadeye::GetSolutionWheelSpeed() { return solution_wheel_speed_; }
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Deadeye::GetSolutionAzimuthOffset() { return solution_azimuth_offset_; }
 
 /**
  * Load settings from global config.

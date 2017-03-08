@@ -32,6 +32,15 @@ class Deadeye : public frc::Subsystem {
   int GetAzimuthError();
   int GetCenterlineError();
 
+  // SHOOTER SOLUTION CALCULATION
+  // void CalculateSolution(int centerline_elevation, int
+  // centerline_pixel_error);
+  bool CalculateSolution(int centerline_elevation);
+  double GetSolutionRange();
+  double GetSolutionElevation();
+  double GetSolutionWheelSpeed();
+  double GetSolutionAzimuthOffset();
+
  private:
   // can replace the init_* states with on_enter transitions
   enum class State {
@@ -65,6 +74,19 @@ class Deadeye : public frc::Subsystem {
   int azimuth_error_;
   int centerline_error_;
   int range_;
+
+  // shooter solution outputs
+  double solution_elevation_;
+  double solution_wheel_speed_;
+  double solution_range_;
+  double solution_azimuth_offset_;
+
+  // shooter solution config constants from config file
+  double elevation_zero_angle_ = 6.0;  // angle corresponding to encoder zero
+  double centerline_height_ = 84.0;  // height of target centerline above ground
+  double camera_height_ = 19.25;     // camera focal point distance from ground
+  double camera_angle_ = 53.0;       // camera to shooter offset angle
+  double degrees_per_tick_ = 0.00611;
 
   State CheckMode();
   State ReadSentence();

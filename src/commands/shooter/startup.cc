@@ -15,23 +15,39 @@ StartupShot::StartupShot(int speed, int elevation)
       logger_(spdlog::get("command")),
       speed_(speed),
       elevation_(elevation) {
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_elevation);
+  Requires(Robot::shooter_wheel);
 }
 
 void StartupShot::Initialize() {
-  Robot::shooter->SetSpeed(speed_);
-  Robot::shooter->SetElevation(elevation_);
+  Robot::shooter_wheel->SetSpeed(speed_);
+  Robot::shooter_elevation->SetElevation(elevation_);
+  logger_->info("StartupShot initialized with speed {} and elevation {}",
+                speed_, elevation_);
 }
 
 bool StartupShot::IsFinished() {
-  int speed_error = std::abs(speed_ - Robot::shooter->GetSpeed());
-  int elevation_error = std::abs(elevation_ - Robot::shooter->GetElevation());
+  int speed_error = std::abs(speed_ - Robot::shooter_wheel->GetSpeed());
+  int elevation_error =
+      std::abs(elevation_ - Robot::shooter_elevation->GetElevation());
   return ((speed_error < kSpeedGoodEnough) &&
           (elevation_error < kElevationGoodEnough)) ||
          IsTimedOut();
 }
 
+/**
+ * Called once if this command is interrupted.
+ */
+void StartupShot::Interrupted() {
+  logger_->info("StartupShot interrupted");
+  End();
+}
+
+/**
+ * Called once when ending.
+ */
 void StartupShot::End() {
-  SPDLOG_DEBUG(logger_, "StartupShot finished, time since initialization: {}",
-               TimeSinceInitialized());
+  logger_->info("StartupShot ended with speed {} and elevation {}",
+                Robot::shooter_wheel->GetSpeed(),
+                Robot::shooter_elevation->GetElevation());
 }

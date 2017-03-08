@@ -1,5 +1,6 @@
 #include "get_angle.h"
 
+#include "oi.h"
 #include "robot.h"
 #include "robot_map.h"
 
@@ -21,8 +22,7 @@ const int kStableCountReq = 3;
  */
 GetAngle::GetAngle()
     : frc::Command("GetAngle"), logger_(spdlog::get("command")) {
-  Requires(Robot::deadeye);
-  Requires(Robot::shooter);
+  Requires(Robot::shooter_elevation);
 }
 
 /**
@@ -30,7 +30,7 @@ GetAngle::GetAngle()
  */
 void GetAngle::Initialize() {
   error_ = Robot::deadeye->GetCenterlineError();
-  SPDLOG_DEBUG(logger_, "GetAngle centerline error = {}", error_);
+  logger_->info("GetAngle initialized with error {}", error_);
   stable_count_ = 0;
 }
 
@@ -55,11 +55,10 @@ void GetAngle::Execute() {
     ticks = kMaxSpeed;
   }
   ticks = ticks * (signbit(error_) ? -1 : 1);  // match sign to error
-  int pos = Robot::shooter->GetElevationSetpoint();
-  SPDLOG_DEBUG(logger_,
-               "abs_error_ = {}, error_ = {}, ticks =  {}, setpoint = {}",
-               abs_error_, error_, ticks, pos + static_cast<int>(ticks));
-  Robot::shooter->SetElevation(pos + static_cast<int>(ticks));
+  int pos = Robot::shooter_elevation->GetElevationSetpoint();
+  SPDLOG_DEBUG(logger_, "GetAngle error_ = {}, ticks =  {}, setpoint = {}",
+               error_, ticks, pos + static_cast<int>(ticks));
+  Robot::shooter_elevation->SetElevation(pos + static_cast<int>(ticks));
 }
 
 /**
@@ -80,13 +79,28 @@ bool GetAngle::IsFinished() {
 }
 
 /**
+ * Called once if this command is interrupted.
+ */
+void GetAngle::Interrupted() {
+  logger_->info("GetAngle interrupted");
+  End();
+}
+
+/**
  * End is called after IsFinished(), it stops azimuth motion and disables the
  * PID controller loop.
  */
 void GetAngle::End() {
-  int elevation = Robot::shooter->GetElevation();
-  Robot::shooter->SetSolutionInputs(elevation /*, error_*/);
-  SPDLOG_DEBUG(logger_,
-               "setting shooter solution inputs: elevation = {}, pixels = {}",
-               elevation, error_);
+  int elevation = Robot::shooter_elevation->GetElevation();
+  logger_->info("GetAngle ended with elevation {} and pixel error {}",
+                elevation, error_);
+  if (!Robot::deadeye->CalculateSolution(elevation)) {
+    logger_->warn("GetAngle invalid shooting solution");
+    DriverStation::ReportWarning(
+        "Invalid shooting solution, cancelling shooter sequence");
+    frc::CommandGroup* group = GetGroup();
+    if (group != nullptr) {
+      group->Cancel();
+    }
+  }
 }

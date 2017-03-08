@@ -21,7 +21,8 @@ class Robot : public frc::IterativeRobot {
   static subsystem::GearLoader* gear_loader;
   static subsystem::Hopper* hopper;
   static subsystem::Intake* intake;
-  static subsystem::Shooter* shooter;
+  static subsystem::ShooterElevation* shooter_elevation;
+  static subsystem::ShooterWheel* shooter_wheel;
 
   Robot();
 

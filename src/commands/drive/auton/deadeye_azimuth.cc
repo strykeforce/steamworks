@@ -23,7 +23,6 @@ DeadeyeAzimuth::DeadeyeAzimuth(bool offset)
     : frc::Command("DeadeyeAzimuth"),
       logger_(spdlog::get("command")),
       has_offset_(offset) {
-  Requires(Robot::deadeye);
   Requires(Robot::drive);
 }
 
@@ -33,7 +32,7 @@ DeadeyeAzimuth::DeadeyeAzimuth(bool offset)
 void DeadeyeAzimuth::Initialize() {
   Robot::drive->SetAzimuthMode();
   error_ = Robot::deadeye->GetAzimuthError();
-  offset_ = has_offset_ ? Robot::shooter->GetSolutionAzimuthOffset() : 0;
+  offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
   logger_->info("DeadeyeAzimuth initialized with error {} and offset {}",
                 error_, offset_);
   stable_count_ = 0;
@@ -79,6 +78,14 @@ bool DeadeyeAzimuth::IsFinished() {
     return true;
   }
   return false;
+}
+
+/**
+ * Called if this command is interrupted.
+ */
+void DeadeyeAzimuth::Interrupted() {
+  logger_->info("DeadeyeAzimuth interrupted");
+  End();
 }
 
 /**

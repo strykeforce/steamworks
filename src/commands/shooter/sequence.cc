@@ -10,32 +10,37 @@ const int kPrepareSpeed = 400;
 const int kPrepareElevation = 1800;
 }
 
-StartShooting::StartShooting() : frc::CommandGroup("StartShooting") {
-  Requires(Robot::shooter);
+StartShooting::StartShooting()
+    : frc::CommandGroup("StartShooting"), logger_(spdlog::get("command")) {
+  // Requires(Robot::shooter_elevation);
+  // Requires(Robot::shooter_wheel);
   SetInterruptible(true);
   AddSequential(new Log("start shooting setup"));
   AddParallel(new deadeye::ShooterLED(true));
-  AddParallel(new shooter::StartupShot(kPrepareSpeed, kPrepareElevation));
+  AddSequential(new shooter::StartupShot(kPrepareSpeed, kPrepareElevation));
 
-  AddSequential(new Log("start azimuth"));
-  AddSequential(new drive::DeadeyeAzimuth());
-
-  AddSequential(new Log(
-      "start elevation angle measurement and calculating shooter solution"));
+  AddParallel(new drive::DeadeyeAzimuth());
   AddSequential(new shooter::GetAngle());
 
   AddParallel(new deadeye::ShooterLED(false));
-  AddSequential(new Log("setting solution elevation and speed"));
-
   AddParallel(new shooter::SetWheel());
   AddSequential(new shooter::SetElevation());
 
   AddSequential(new StartHopper());
 }
 
+/**
+ * Called if shooting sequence cancelled by button or bad solution.
+ */
+void StartShooting::Interrupted() {
+  logger_->warn("StartShooting shooting sequence cancelled");
+  End();
+}
+
 StopShooting::StopShooting() : frc::CommandGroup("StopShooting") {
-  Requires(Robot::shooter);
-  SetInterruptible(false);
+  // Requires(Robot::shooter_elevation);
+  // Requires(Robot::shooter_wheel);
+  // SetInterruptible(true);
   AddParallel(new deadeye::ShooterLED(false));
   AddParallel(new StopHopper());
   AddSequential(new StopShooterWheel());

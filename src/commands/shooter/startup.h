@@ -14,6 +14,7 @@ class StartupShot : public frc::Command {
  protected:
   void Initialize() override;
   bool IsFinished() override;
+  void Interrupted() override;
   void End() override;
 
  private:

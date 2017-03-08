@@ -6,4 +6,5 @@
 #include "subsystems/gear.h"
 #include "subsystems/hopper.h"
 #include "subsystems/intake.h"
-#include "subsystems/shooter.h"
+#include "subsystems/shooter_elevation.h"
+#include "subsystems/shooter_wheel.h"

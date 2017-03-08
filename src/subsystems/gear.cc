@@ -311,6 +311,6 @@ void GearLoader::LoadConfigSettings(
   pivot_settings_ = talon::Settings::Create(config, "pivot");
   pivot_settings_->Initialize(RobotMap::gear_pivot_talon);
 
-  SPDLOG_DEBUG(logger_, "dumping gear pivot talon configuration");
-  pivot_settings_->LogConfig(logger_);
+  // SPDLOG_DEBUG(logger_, "dumping gear pivot talon configuration");
+  // pivot_settings_->LogConfig(logger_);
 }

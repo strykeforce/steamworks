@@ -22,6 +22,12 @@ class TimedTest : public frc::TimedCommand {
 class StartShooting : public frc::CommandGroup {
  public:
   StartShooting();
+
+ protected:
+  void Interrupted() override;
+
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
 };
 
 class StopShooting : public frc::CommandGroup {
