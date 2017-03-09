@@ -8,10 +8,10 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const float kMaxSpeed = 75;
-const float kMinSpeed = 10;
-const int kCloseEnough = 2;
-const int kSlopeStart = 20;
+const float kMaxSpeed = 75.0 / 75.0;
+const float kMinSpeed = 10.0 / 75.0;
+const int kCloseEnough = 4;
+const int kSlopeStart = 100;
 const int kStableCountReq = 3;
 }
 
@@ -33,8 +33,8 @@ void GyroAzimuth::Initialize() {
   Robot::drive->SetAzimuthMode();
   float initial = RobotMap::gyro->GetYaw();
   error_ = target_ - initial;
-  SPDLOG_DEBUG(logger_, "target = {}, initial = {}, error = {}", target_, initial,
-                 error_);
+  SPDLOG_DEBUG(logger_, "target = {}, initial = {}, error = {}", target_,
+               initial, error_);
   stable_count_ = 0;
 }
 
@@ -60,8 +60,9 @@ void GyroAzimuth::Execute() {
   }
   speed = speed * (signbit(error_) ? 1 : -1);  // match sign to error
   SPDLOG_DEBUG(logger_, "abs_error_ = {}, error_ = {}, speed =  {}", abs_error_,
-                 error_, speed);
-  Robot::drive->DriveAzimuthAutonomous(speed);
+               error_, speed);
+  // Robot::drive->DriveAzimuthAutonomous(speed);
+  Robot::drive->DriveAutonomous(0, 0, speed);
 }
 
 /**
@@ -77,7 +78,8 @@ bool GyroAzimuth::IsFinished() {
     SPDLOG_TRACE(logger_, "resetting stable_count_ to 0");
   }
   if (stable_count_ == kStableCountReq) {
-    SPDLOG_DEBUG(logger_, "done with auton azimuth, abs_error_ = {}", abs_error_);
+    SPDLOG_DEBUG(logger_, "done with auton azimuth, abs_error_ = {}",
+                 abs_error_);
     return true;
   }
   return false;

@@ -10,13 +10,18 @@ namespace drive {
 /**
  * Aligns wheel position for auton rotation.
  */
-class PositionAzimuth : public frc::Command {
+class TimedDrive : public frc::Command {
  public:
-  PositionAzimuth();
+  TimedDrive();
 
  protected:
   void Initialize() override;
   bool IsFinished() override;
+
+ private:
+  // const std::shared_ptr<spdlog::logger> logger_;
+  // int distance_;
+  // int initial_;
 };
 
 } /* drive */

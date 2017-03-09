@@ -82,11 +82,11 @@ class Deadeye : public frc::Subsystem {
   double solution_azimuth_offset_;
 
   // shooter solution config constants from config file
-  double elevation_zero_angle_ = 6.0;  // angle corresponding to encoder zero
-  double centerline_height_ = 84.0;  // height of target centerline above ground
-  double camera_height_ = 19.25;     // camera focal point distance from ground
-  double camera_angle_ = 53.0;       // camera to shooter offset angle
-  double degrees_per_tick_ = 0.00611;
+  double elevation_zero_angle_ = 0.0;  // angle corresponding to encoder zero
+  double centerline_height_ = 0.0;  // height of target centerline above ground
+  double camera_height_ = 0.0;      // camera focal point distance from ground
+  double camera_angle_ = 0.0;       // camera to shooter offset angle
+  double degrees_per_tick_ = 0.00001;
 
   State CheckMode();
   State ReadSentence();

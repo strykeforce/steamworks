@@ -257,8 +257,9 @@ bool Deadeye::CalculateSolution(int centerline_elevation) {
       elevation_zero_angle_ + (centerline_elevation * degrees_per_tick_);
   logger_->debug("Deadeye shooter angle = {}", shooter_angle);
 
-  double aiming_angle = ((camera_angle_ - shooter_angle) / 360.0) * 2.0 * M_PI;
-  logger_->debug("Deadeye aiming angle = {}", aiming_angle);
+  double aiming_angle = (camera_angle_ - shooter_angle) * M_PI / 180.0;
+  logger_->debug("Deadeye aiming angle = {} deg,  {} rad",
+                 camera_angle_ - shooter_angle, aiming_angle);
 
   solution_range_ =
       (centerline_height_ - camera_height_) / std::tan(aiming_angle);
@@ -346,4 +347,50 @@ void Deadeye::LoadConfigSettings(
     logger_->warn(missing, "period");
   }
   logger_->info("deadeye notification period: {} ms", period_);
+
+  auto d_opt = config->get_as<double>("elevation_zero_angle");
+  if (d_opt) {
+    elevation_zero_angle_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER elevation_zero_angle setting not available, using "
+        "default");
+  }
+  logger_->info("shooter elevation zero angle: {}", elevation_zero_angle_);
+  d_opt = config->get_as<double>("centerline_height");
+  if (d_opt) {
+    centerline_height_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER centerline_height setting not available, using "
+        "default");
+  }
+  logger_->info("shooter target centerline height: {}", centerline_height_);
+  d_opt = config->get_as<double>("camera_height");
+  if (d_opt) {
+    camera_height_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER camera_height setting not available, using "
+        "default");
+  }
+  logger_->info("shooter camera height: {}", camera_height_);
+  d_opt = config->get_as<double>("camera_angle");
+  if (d_opt) {
+    camera_angle_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER camera_angle setting not available, using "
+        "default");
+  }
+  logger_->info("shooter camera angle: {}", camera_angle_);
+  d_opt = config->get_as<double>("degrees_per_tick");
+  if (d_opt) {
+    degrees_per_tick_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER degrees_per_tick setting not available, using "
+        "default");
+  }
+  logger_->info("shooter degrees per tick: {}", degrees_per_tick_);
 }

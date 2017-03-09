@@ -68,6 +68,7 @@ class OI {
   frc::JoystickButton gear_auto_on_button_;
   frc::JoystickButton gear_auto_off_button_;
   frc::JoystickButton shooter_auto_button_;
+  frc::JoystickButton brake_mode_;
 
   // gamepad buttons
   trigger::Gear gear_load_button_;

@@ -41,6 +41,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       gear_auto_off_button_(&flight_sim_joystick_,
                             kFlightSimLeftCornerUpButton),
       shooter_auto_button_(&flight_sim_joystick_, kFlightSimRightCornerButton),
+      brake_mode_(&flight_sim_joystick_, kFlightSimLeftButton),
       gear_load_button_(),
       gear_stage_button_(&gamepad_joystick_, kGamepadLeftShoulderButton),
       gear_stage_reverse_button_(&gamepad_joystick_, kGamepadBackButton),
@@ -116,6 +117,9 @@ void OI::AssignFlightSimButtons() {
   // flight sim right shoulder 2-position button controls shooter auto mode
   shooter_auto_button_.WhenPressed(new StartShooting());
   shooter_auto_button_.WhenReleased(new StopShooting());
+
+  // reserved for brake mode
+  brake_mode_.WhenPressed(new Log("brake mode button"));
 }
 
 /**
@@ -164,14 +168,17 @@ void OI::AssignGamepadButtons() {
  * AssignSmartDashboardButtons hooks up smart dashboard buttons to commands.
  */
 void OI::AssignSmartDashboardButtons() {
-  SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
-  SmartDashboard::PutData("Position Azimuth", new drive::PositionAzimuth());
+// SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
+#if !NDEBUG
+  SmartDashboard::PutData("Zero Wheels",
+                          new drive::PositionDrive(121.0 / 180.0 * 2048));
+  SmartDashboard::PutData("Position Azimuth",
+                          new drive::TimedAzimuth(0.75, 0.4));
 
   SmartDashboard::PutData("Write Azimuth Cal", new WriteAzimuthCalibration());
   SmartDashboard::PutData("Drive Zero", new drive::Zero());
   SmartDashboard::PutData("Zero Gyro", new ZeroGyroYaw());
 
-#if !NDEBUG
   SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));
   SmartDashboard::PutData("Increment Elevation",
                           new IncrementShooterElevation());

@@ -18,7 +18,7 @@ StartShooting::StartShooting()
   AddParallel(new deadeye::ShooterLED(true));
   AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
-  AddParallel(new drive::DeadeyeAzimuth());
+  AddSequential(new drive::DeadeyeAzimuth());
   AddSequential(new shooter::GetAngle());
 
   AddParallel(new deadeye::ShooterLED(false));

@@ -7,8 +7,8 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const double kMaxSpeed = 250;  // 600 practical max
-const double kMinSpeed = 25;
+const double kMaxSpeed = 300;  // 600 practical max
+const double kMinSpeed = 50;
 
 const double kMaxSpeedTime = 400;
 const double kApproxPeriod = 20;
@@ -88,7 +88,7 @@ void Drive::Execute() {
 
   speed = speed * (signbit(error_) ? -1 : 1);
 
-  SPDLOG_DEBUG(logger_, "position = {}, error = {}, speed = {}", position,
+  SPDLOG_DEBUG(logger_, "Drive position = {}, error = {}, speed = {}", position,
                error_, speed);
   Robot::drive->CrabDriveAutonomous(speed, azimuth_);
 }

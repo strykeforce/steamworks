@@ -16,8 +16,10 @@
 #include "commands/drive/auton/deadeye_azimuth.h"
 #include "commands/drive/auton/drive.h"
 #include "commands/drive/auton/gyro_azimuth.h"
-#include "commands/drive/auton/position_azimuth.h"
 #include "commands/drive/auton/position_drive.h"
+#include "commands/drive/auton/timed_azimuth.h"
+#include "commands/drive/auton/timed_drive.h"
+#include "commands/drive/auton/timed_swerve_drive.h"
 #include "commands/drive/tele_op.h"
 #include "commands/drive/zero.h"
 
