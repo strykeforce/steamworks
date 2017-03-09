@@ -132,8 +132,8 @@ void BoilerCamera::Connect() {
 
   fc::Property prop;
   prop.type = fc::AUTO_EXPOSURE;
-  prop.onOff = false;           // off for full manual control
-  prop.autoManualMode = false;  // ditto
+  prop.onOff = true;            // on to control
+  prop.autoManualMode = false;  // off for full manual control
   prop.absControl = true;
   prop.absValue = exposure_;
   error = camera_.SetProperty(&prop);

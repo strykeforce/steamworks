@@ -31,7 +31,10 @@ int main(int argc, char const* argv[]) {
   logger->info("reading configuration from {}", conf_path);
   auto config = cpptoml::parse_file(conf_path);
 
-  std::this_thread::sleep_for(STARTUP_DELAY_SEC);
+  bool has_display = !!std::getenv("DISPLAY");
+  if (!has_display) {
+    std::this_thread::sleep_for(STARTUP_DELAY_SEC);
+  }
   // start processing
   deadeye::Deadeye deadeye(config);
   deadeye.Run();
