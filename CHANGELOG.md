@@ -32,6 +32,7 @@ Rewrite for StrongHold, tested very lightly.
 
 StrongHold competition code.
 
+[17.0.0]:https://gitlab.com/strykeforce2767/deadeye/compare/v16.1.0...v17.0.0
 [16.0.0]: https://gitlab.com/strykeforce2767/deadeye/compare/09a40e5c4c53778fee66cdf748963c708f3e2305...v16.0.0
 [16.1.0]: https://gitlab.com/strykeforce2767/deadeye/compare/v16.0.0...v16.1.0
 [chameleon3]: https://www.ptgrey.com/chameleon3-usb3-vision-cameras
