@@ -17,6 +17,7 @@ class TimedAzimuth : public frc::Command {
  protected:
   void Initialize() override;
   bool IsFinished() override;
+  void End() override;
 
  private:
   // const std::shared_ptr<spdlog::logger> logger_;

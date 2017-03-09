@@ -171,7 +171,7 @@ void OI::AssignSmartDashboardButtons() {
 // SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
 #if !NDEBUG
   SmartDashboard::PutData("Zero Wheels",
-                          new drive::PositionDrive(121.0 / 180.0 * 2048));
+                          new drive::PositionDrive(-121.0 / 180.0 * 2048));
   SmartDashboard::PutData("Position Azimuth",
                           new drive::TimedAzimuth(0.75, 0.4));
 

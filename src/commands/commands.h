@@ -6,9 +6,11 @@
 #include "commands/intake.h"
 #include "commands/log.h"
 
+#include "commands/auton/sequence_01.h"
 #include "commands/auton/sequence_02.h"
 #include "commands/auton/sequence_03.h"
-#include "commands/auton/test.h"
+#include "commands/auton/sequence_04.h"
+#include "commands/auton/sequence_05.h"
 
 #include "commands/deadeye/gear_led.h"
 #include "commands/deadeye/shooter_led.h"

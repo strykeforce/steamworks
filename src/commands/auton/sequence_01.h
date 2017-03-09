@@ -6,9 +6,9 @@ namespace steamworks {
 namespace command {
 namespace auton {
 
-class AutonTestSeq : public frc::CommandGroup {
+class Sequence01 : public frc::CommandGroup {
  public:
-  AutonTestSeq();
+  Sequence01();
 };
 
 } /* auton */

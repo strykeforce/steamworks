@@ -7,8 +7,8 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const double kMaxSpeed = 300;  // 600 practical max
-const double kMinSpeed = 50;
+const double kMaxSpeed = 200;  // 600 practical max
+const double kMinSpeed = 25;
 
 const double kMaxSpeedTime = 400;
 const double kApproxPeriod = 20;
@@ -44,6 +44,7 @@ Drive::Drive(int distance) : Drive(distance, 0, -1) {}
  */
 void Drive::Initialize() {
   Robot::drive->SetAutonMode();
+  Robot::drive->ZeroPosition();
   error_ = distance_;
   SPDLOG_DEBUG(logger_, "target = {}", distance_);
   start_decel_pos_ = distance_ - kSlopeDistance;

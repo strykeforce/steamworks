@@ -25,10 +25,9 @@ void TimedSwerveDrive::Initialize() {
 /**
  * Azimuth wheels are close enough
  */
-bool TimedSwerveDrive::IsFinished() {
-  return IsTimedOut();
-  // int error = std::abs(Robot::drive->GetPosition() - initial_ - distance_);
-  // return (error < kElevationGoodEnough);  // || IsTimedOut();
-}
+bool TimedSwerveDrive::IsFinished() { return IsTimedOut(); }
 
-void TimedSwerveDrive::End() { Robot::drive->SetGyroDisabled(false); }
+void TimedSwerveDrive::End() {
+  Robot::drive->Drive(0, 0, 0);
+  Robot::drive->SetGyroDisabled(false);
+}

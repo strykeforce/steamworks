@@ -21,3 +21,5 @@ void TimedAzimuth::Initialize() {
  * Azimuth wheels are close enough
  */
 bool TimedAzimuth::IsFinished() { return IsTimedOut(); }
+
+void TimedAzimuth::End() { Robot::drive->Drive(0, 0, 0); }

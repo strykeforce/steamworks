@@ -60,13 +60,19 @@ void Robot::AutonomousInit() {
   logger_->info("initialize auton mode {:X}", auton_mode);
   switch (auton_mode) {
     case 1:
-      autonomous_command_ = new auton::AutonTestSeq();
+      autonomous_command_ = new auton::Sequence01();
       break;
     case 2:
       autonomous_command_ = new auton::Sequence02();
       break;
     case 3:
       autonomous_command_ = new auton::Sequence03();
+      break;
+    case 4:
+      autonomous_command_ = new auton::Sequence04();
+      break;
+    case 5:
+      autonomous_command_ = new auton::Sequence05();
       break;
     default:
       autonomous_command_ = new Log("unrecognized command");
@@ -92,6 +98,7 @@ void Robot::TeleopInit() {
   }
   SPDLOG_TRACE(logger_, "setting Deadeye mode to boiler");
   deadeye->SetMode(::deadeye::Mode::boiler);
+  hopper->Stop();
 }
 
 void Robot::TeleopPeriodic() { frc::Scheduler::GetInstance()->Run(); }

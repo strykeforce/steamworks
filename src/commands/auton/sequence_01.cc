@@ -1,4 +1,4 @@
-#include "sequence_02.h"
+#include "sequence_01.h"
 
 #include "commands/commands.h"
 
@@ -13,20 +13,20 @@ const int kStrafeDistance = static_cast<int>(49 * 50.72);
 }
 
 /**
- * Red hopper dump and shoot
+ * Blue hopper dump and shoot
  */
-Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
+Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
   // drive on slant to hopper
-  AddSequential(new drive::TimedSwerveDrive(-0.50 / 2.0, 0.95 / 2.0, 1.75));
+  AddSequential(new drive::TimedSwerveDrive(-0.50 / 2.0, -0.95 / 2.0, 2.0));
 
   AddSequential(new WaitCommand(2.0));
 
   // move out from wall
-  AddSequential(new drive::TimedSwerveDrive(0.7, 0, 0.6));
+  AddSequential(new drive::TimedSwerveDrive(0.7, 0, 0.4));
 
   // azimuth
-  AddSequential(new drive::TimedAzimuth(-0.4, 0.6));
+  AddSequential(new drive::TimedAzimuth(0.4, 0.8));
   //
   // // start shooting
-  // AddSequential(new StartShooting());
+  AddSequential(new StartShooting());
 }
