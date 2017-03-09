@@ -8,8 +8,8 @@ using namespace steamworks::command;
 namespace {
 const int kPrepareSpeed = 400;
 const int kPrepareElevation = 1800;
-const int kCloseShotSpeed = 400;
-const int kCloseShotElevation = 1000;
+const int kCloseShotSpeed = 440;
+const int kCloseShotElevation = 50;
 }
 
 StartShooting::StartShooting()
