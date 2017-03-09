@@ -1,12 +1,16 @@
 #!/bin/bash
 
-SRC=/vagrant/build/src/${CMAKE_PROJECT_NAME}
-DST=/home/lvuser/${CMAKE_PROJECT_NAME}.${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}
+SRC=${PROJECT_BINARY_DIR}/src/${CMAKE_PROJECT_NAME}
+DST=/home/lvuser/${CMAKE_PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}
+
+/usr/arm-frc-linux-gnueabi/bin/strip $SRC
 
 scp $SRC roborio:$DST.tmp
 ssh roborio <<END_SSH
+killall -q netconsole-host || :
 mv $DST.tmp $DST
+setcap 'cap_sys_nice=pe' $DST
 ln -sf $DST /home/lvuser/FRCUserProgram
-. /etc/profile.d/natinst-path.sh
-/usr/local/frc/bin/frcKillRobot.sh -r -t > /dev/null 2>&1
+. /etc/profile.d/natinst-path.sh; /usr/local/frc/bin/frcKillRobot.sh -r -t > /dev/null 2>&1
+sync
 END_SSH

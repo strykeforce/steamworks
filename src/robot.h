@@ -5,7 +5,7 @@
 #include "spdlog/spdlog.h"
 
 #include "oi.h"
-#include "subsystems/drive.h"
+#include "subsystems/subsystems.h"
 
 namespace steamworks {
 
@@ -13,21 +13,21 @@ namespace steamworks {
  * Hardware references are managed in robot_map and operator inputs in oi.
  */
 class Robot : public frc::IterativeRobot {
- private:
-  const std::shared_ptr<spdlog::logger> logger_;
-  std::shared_ptr<cpptoml::table> config_;
-
-  void LoadConfig();
-  void LogAbsoluteEncoders();
-  void LogVersion();
-
  public:
   static OI* oi;
-  static Drive* drive;
+  static subsystem::Deadeye* deadeye;
+  static subsystem::Climber* climber;
+  static subsystem::SwerveDrive* drive;
+  static subsystem::GearLoader* gear_loader;
+  static subsystem::Hopper* hopper;
+  static subsystem::Intake* intake;
+  static subsystem::ShooterElevation* shooter_elevation;
+  static subsystem::ShooterWheel* shooter_wheel;
 
   Robot();
 
   void RobotInit() override;
+  void RobotPeriodic() override;
 
   void DisabledInit() override;
   void DisabledPeriodic() override;
@@ -40,6 +40,16 @@ class Robot : public frc::IterativeRobot {
 
   void TestInit() override;
   void TestPeriodic() override;
+
+ private:
+  std::shared_ptr<spdlog::logger> logger_;
+  std::shared_ptr<cpptoml::table> config_;
+  frc::Command* autonomous_command_;
+
+  void ConfigureLogging();
+  void LoadConfig();
+  void LogAbsoluteEncoders();
+  void LogVersion();
 };
 
 } /* steamworks */

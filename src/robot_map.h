@@ -1,26 +1,14 @@
 #pragma once
 
-#include "cpptoml/cpptoml.h"
+#include <AHRS.h>
+#include <cpptoml/cpptoml.h>
 
-#include "sidewinder/swerve/talon_map.h"
+#include <sidewinder/swerve/talon_map.h>
 
 namespace steamworks {
 
 class RobotMap {
  public:
-  // FIXME: need to sort out left/right madness
-  // device ids for swerve drive talons
-  // enum Talons {
-  //   kRightFrontAzimuth = 1,
-  //   kRightFrontDrive = 11,
-  //   kLeftFrontAzimuth = 2,
-  //   kLeftFrontDrive = 12,
-  //   kRightRearAzimuth = 4,
-  //   kRightRearDrive = 14,
-  //   kLeftRearAzimuth = 3,
-  //   kLeftRearDrive = 13,
-  // };
-
   enum Talons {
     kRightFrontAzimuth = 2,
     kRightFrontDrive = 12,
@@ -30,42 +18,56 @@ class RobotMap {
     kRightRearDrive = 13,
     kLeftRearAzimuth = 4,
     kLeftRearDrive = 14,
+    kShooterWheel = 21,
+    kShooterElevation = 22,
+    kHopper = 31,
+    kIntake = 41,
+    kGearIntake = 51,
+    kGearPivot = 52,
+    kClimberMaster = 61,  // reversed
+    kClimberSlave = 62,
   };
+
+  enum Servos {
+    kGearClampLeft = 0,
+    kGearClampRight = 1,
+  };
+
+  enum DigitalInputs {
+    kAutonSwitchLSB = 0,
+    kAutonSwitchMSB = 6,
+    kPracticeRobot = 7,
+  };
+
+  enum DigitalOutputs {
+    kGearCameraLight = 8,
+    kShooterCameraLight = 9,
+  };
+
   // pointers to talons and azimuth encoder zero count
   static sidewinder::swerve::TalonMap* swerve_talons;
 
+  static ::CANTalon* shooter_wheel_talon;
+  static ::CANTalon* shooter_elevation_talon;
+  static ::CANTalon* hopper_talon;
+  static ::CANTalon* intake_talon;
+  static ::CANTalon* gear_intake_talon;
+  static ::CANTalon* gear_pivot_talon;
+  static ::CANTalon* climber_master_talon;
+  static ::CANTalon* climber_slave_talon;
+
+  // pointer to navX gyro singleton
+  static std::shared_ptr<AHRS> gyro;
+
+  // pointers to camera LED digital control channels
+  static std::shared_ptr<frc::DigitalOutput> gear_camera_led;
+  static std::shared_ptr<frc::DigitalOutput> shooter_camera_led;
+
   // instantiate talons and read encoder zero count
   static void Init(const std::shared_ptr<cpptoml::table> config);
-};
 
-// Joysticks
-enum Joysticks {
-  kFlightSimJoystick = 0,  // global.joy1 in old code
-  kGamePadJoystick,        // global.joy2
-};
-
-// flight sim axis deadzone 0.08
-enum FlightSimAxis {
-  kFlightSimRightAxis = 0,  // FlightSim_RightX_Axis
-  kFlightSimLeftAxis = 2,   // FlightSim_LeftY_Axis
-};
-
-enum FlightSimButtons {
-  kFlightSimLeftButton = 1,
-  kFlightSimRightCornerButton,
-  kFlightSimResetButton,
-  kFlightSimLeftCornerDownButton,
-  kFlightSimLeftCornerUpButton,
-};
-
-// Joystick Buttons
-enum JoystickButtons {
-  kGameButtonA = 1,
-  kGameButtonB,  // 2
-};
-
-enum TalonProfileSlots {
-  kPrimary,
+  // tells which robot we're running on
+  static bool IsPracticeRobot();
 };
 
 } /* steamworks */

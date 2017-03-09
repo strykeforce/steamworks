@@ -1,13 +1,16 @@
 #
 # roborio-skel
 #
+hostname = 'steamworks'
+
 Vagrant.configure('2') do |config|
   config.vm.box = 'ubuntu/trusty64'
+  config.vm.hostname = hostname
 
   config.vm.provider 'virtualbox' do |v|
-    v.name = 'steamworks'
-    v.memory = 1024
-    v.cpus = 2
+    v.name = hostname
+    v.memory = 3072
+    v.cpus = 4
     v.customize ['modifyvm', :id, '--paravirtprovider', 'kvm']
   end
 

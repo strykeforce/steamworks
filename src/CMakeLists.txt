@@ -6,6 +6,7 @@ add_executable(${CMAKE_PROJECT_NAME}
 
 include(commands/CMakeLists.txt)
 include(subsystems/CMakeLists.txt)
+include(triggers/CMakeLists.txt)
 
 target_include_directories(${CMAKE_PROJECT_NAME}
   PUBLIC
@@ -19,9 +20,14 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
   TalonSRXLib
   navx_frc_cpp
   wpi
+  serial
 )
 
-add_dependencies(${CMAKE_PROJECT_NAME} generate_version generate_default_config)
+add_dependencies(${CMAKE_PROJECT_NAME}
+  generate_version
+  generate_default_config
+  generate_lookup
+)
 
 # We delete version.h before each build. This forces a recompile of robot.cc
 # every build which is acceptable in order to have a guarenteed incrementing

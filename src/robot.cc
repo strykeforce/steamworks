@@ -1,48 +1,136 @@
 #include "robot.h"
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
+#include "WPILibVersion.h"
 
+#include "commands/commands.h"
 #include "default_config.h"
 #include "robot_map.h"
 #include "sidewinder/version.h"
-#include "subsystems/drive.h"
 #include "version.h"
 
 using namespace steamworks;
+using namespace steamworks::command;
 
 OI* Robot::oi = nullptr;
-Drive* Robot::drive = nullptr;
+subsystem::Deadeye* Robot::deadeye = nullptr;
+subsystem::Climber* Robot::climber = nullptr;
+subsystem::SwerveDrive* Robot::drive = nullptr;
+subsystem::GearLoader* Robot::gear_loader = nullptr;
+subsystem::Hopper* Robot::hopper = nullptr;
+subsystem::Intake* Robot::intake = nullptr;
+subsystem::ShooterElevation* Robot::shooter_elevation = nullptr;
+subsystem::ShooterWheel* Robot::shooter_wheel = nullptr;
 
-Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("robot")) {
-  logger_->set_level(spdlog::level::trace);
-}
+Robot::Robot() : frc::IterativeRobot(), logger_(nullptr) { ConfigureLogging(); }
 
 void Robot::RobotInit() {
   LogVersion();
   LoadConfig();
   RobotMap::Init(config_);
 
-  oi = new OI(config_);
-  drive = new Drive(config_);
+  SPDLOG_TRACE(logger_, "initializing subsystems");
+  logger_->info("running on {} robot",
+                RobotMap::IsPracticeRobot() ? "PRACTICE" : "COMPETITION");
+  deadeye = new subsystem::Deadeye(config_);
+  climber = new subsystem::Climber(config_);
+  drive = new subsystem::SwerveDrive(config_);
+  gear_loader = new subsystem::GearLoader(config_);
+  hopper = new subsystem::Hopper(config_);
+  intake = new subsystem::Intake(config_);
+  shooter_elevation = new subsystem::ShooterElevation(config_);
+  shooter_wheel = new subsystem::ShooterWheel(config_);
+  SPDLOG_TRACE(logger_, "done initializing subsystems");
+  oi = new OI(config_);  // keep this after subsystems
 }
 
-void Robot::DisabledInit() { logger_->trace("DisabledInit"); }
+void Robot::RobotPeriodic() {}
 
-void Robot::DisabledPeriodic() { ::Scheduler::GetInstance()->Run(); }
+void Robot::DisabledInit() {
+  SPDLOG_TRACE(logger_, "in DisabledInit");
+  SPDLOG_DEBUG(logger_, "setting Deadeye mode to idle");
+  deadeye->SetMode(::deadeye::Mode::idle);
+}
 
-void Robot::AutonomousInit() { logger_->trace("AutonomousInit"); }
+void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::AutonomousPeriodic() { ::Scheduler::GetInstance()->Run(); }
+void Robot::AutonomousInit() {
+  SPDLOG_TRACE(logger_, "initializing autonomous mode");
+  RobotMap::gyro->ZeroYaw();
+  auto auton_mode = oi->GetAutonMode();
+  logger_->info("initialize auton mode {:X}", auton_mode);
+  switch (auton_mode) {
+    case 1:
+      autonomous_command_ = new auton::Sequence01();
+      break;
+    case 2:
+      autonomous_command_ = new auton::Sequence02();
+      break;
+    case 3:
+      autonomous_command_ = new auton::Sequence03();
+      break;
+    case 4:
+      autonomous_command_ = new auton::Sequence04();
+      break;
+    case 5:
+      autonomous_command_ = new auton::Sequence05();
+      break;
+    default:
+      autonomous_command_ = new Log("unrecognized command");
+  }
+  SPDLOG_TRACE(logger_, "setting Deadeye mode to boiler");
+  deadeye->SetMode(::deadeye::Mode::boiler);
+  autonomous_command_->Start();
+}
 
-void Robot::TeleopInit() { logger_->trace("TeleopInit"); }
+void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
-void Robot::TeleopPeriodic() { ::Scheduler::GetInstance()->Run(); }
+void Robot::TeleopInit() {
+  SPDLOG_TRACE(logger_, "checking auto gear load switch position");
+  frc::Joystick fsj(OI::kFlightSimJoystick);
+  if (fsj.GetRawButton(OI::kFlightSimLeftCornerDownButton)) {
+    // button is already in auto on position so run command
+    logger_->info("auto gear load is on");
+  }
 
-void Robot::TestInit() { logger_->trace("TestInit"); }
+  if (fsj.GetRawButton(OI::kFlightSimLeftCornerUpButton)) {
+    // button is already in auto on position so run command
+    logger_->info("auto gear load is off");
+  }
+  SPDLOG_TRACE(logger_, "setting Deadeye mode to boiler");
+  deadeye->SetMode(::deadeye::Mode::boiler);
+  hopper->Stop();
+}
 
-void Robot::TestPeriodic() { ::LiveWindow::GetInstance()->Run(); }
+void Robot::TeleopPeriodic() { frc::Scheduler::GetInstance()->Run(); }
+
+void Robot::TestInit() { SPDLOG_TRACE(logger_, "in TestInit"); }
+
+void Robot::TestPeriodic() { frc::LiveWindow::GetInstance()->Run(); }
+
+/** Configure logging based on release type.
+ * If building for Release, don't put ANSI terminal color codes in log since
+ * it will be read in driver station logs.
+ */
+void Robot::ConfigureLogging() {
+#ifdef NDEBUG
+  logger_ = spdlog::stdout_logger_st("robot");
+  logger_->set_level(spdlog::level::info);
+  spdlog::stdout_logger_st("command")->set_level(spdlog::level::info);
+  spdlog::stdout_logger_st("subsystem")->set_level(spdlog::level::info);
+  spdlog::stdout_logger_st("sidewinder")->set_level(spdlog::level::info);
+  spdlog::stdout_logger_mt("deadeye")->set_level(spdlog::level::info);
+  logger_->info("configured as RELEASE build");
+#else
+  logger_ = spdlog::stdout_color_st("robot");
+  logger_->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("sidewinder")->set_level(spdlog::level::info);
+  spdlog::stdout_color_mt("deadeye")->set_level(spdlog::level::trace);
+  logger_->warn("configured as DEBUG build");
+#endif
+  spdlog::set_pattern("[%H:%M:%S.%e][%n][%l] %v");
+}
 
 /** Reads our configuration file from ~lvuser/steamworks.toml.
  * If not present or unable to parse, will read the default compiled-in
@@ -73,6 +161,12 @@ void Robot::LogVersion() {
   logger_->info(" build {} compiled at {} {}", STEAMWORKS_VERSION_BUILD,
                 STEAMWORKS_COMPILE_DATE, STEAMWORKS_COMPILE_TIME);
   logger_->info(sidewinder::GetVersion());
+  logger_->info("WPILib version: {}", WPILibVersion);
+#ifdef NDEBUG
+  logger_->info("configured as RELEASE build");
+#else
+  logger_->warn("configured as DEBUG build");
+#endif
 }
 
 // used for: strings steamworks | grep STEAMWORKS_VERSION
