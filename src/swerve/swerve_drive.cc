@@ -121,6 +121,17 @@ void SwerveDrive::SetDrive(double setpoint) {
 void SwerveDrive::ZeroAzimuth() { SetAzimuth(0.0); }
 
 /**
+ * This sets the relative encoders of all four drive wheels to zero. It is used
+ * before measuring distance travelled during autonomous routines.
+ */
+void SwerveDrive::ZeroPosition() {
+  map_->lf_drive->SetPosition(0);
+  map_->rf_drive->SetPosition(0);
+  map_->lr_drive->SetPosition(0);
+  map_->rr_drive->SetPosition(0);
+}
+
+/**
  * Disable driving in field-oriented mode if disired or required by hardware
  *  failure.
  */
@@ -167,7 +178,8 @@ void SwerveDrive::WriteAzimuthCalibration() {
   logger_->info("  rr = {}", *(cal->get_as<int>("rr")));
 }
 
-/** Read in wheel zero azimuth data from ~lvuser/sidewinder_calibration.toml
+/**
+ *  Read in wheel zero azimuth data from ~lvuser/sidewinder_calibration.toml
  * and set the four azimuth quad encoders to match the current absolute offset
  * from zero.
  */
@@ -231,10 +243,12 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
   Drive_(rotated_forward, rotated_strafe, azimuth, dead_zone_);
 }
 
-/** Drive in swerve drive mode without gyro.
- * @param forward command forward/backwards (Y-axis) throttle, -1.0 - 1.0
- * @param strafe command left/right (X-axis) throttle, -1.0 - 1.0
- * @param azimuth command CW/CCW azimuth throttle, -1.0 - 1.0
+/**
+ * Drive in swerve drive mode without gyro.
+ *
+ * @param forward command forward/backwards (Y-axis) throttle, -1.0 to 1.0
+ * @param strafe command left/right (X-axis) throttle, -1.0 to 1.0
+ * @param azimuth command CW/CCW azimuth throttle, -1.0 to 1.0
  * @param dead_zone stop drive motors if all input magnitudes are less than this
  */
 void SwerveDrive::Drive_(double forward, double strafe, double azimuth,
@@ -281,8 +295,11 @@ void SwerveDrive::Drive_(double forward, double strafe, double azimuth,
 #endif
 }
 
-/** Rotate around an off-center point, used for pivoting on robot shooter.
- * @param azimuth command CW/CCW azimuth throttle, -1.0 - 1.0
+/**
+ * Rotate around an off-center point, used for pivoting on robot shooter.
+ * @param azimuth command CW/CCW azimuth throttle, -1.0 to 1.0
+ *
+ * @deprecated not actually as useful as we thought
  */
 void SwerveDrive::TargetRotation(double azimuth) {
   DriveData dd = DriveData();
@@ -302,7 +319,8 @@ void SwerveDrive::TargetRotation(double azimuth) {
   map_->rr_drive->Set(dd.wsrr * drive_scale_factor_);
 }
 
-/** Drive in crab drive mode.
+/**
+ * Drive in crab drive mode.
  * @param velocity command forward/backwards (Y-axis) speed in encoder ticks per
  * 100ms
  * @param azimuth command wheel azimuth to absolute position
@@ -312,7 +330,8 @@ void SwerveDrive::CrabDriveAutonomous(double setpoint, int azimuth) {
   SetDrive(setpoint);
 }
 
-/** Get encoder value of specified drive wheel.
+/**
+ * Get encoder value of specified drive wheel.
  *  @param wheel select wheel to read
  */
 int SwerveDrive::GetPosition(const Wheel wheel) const {
@@ -329,7 +348,8 @@ int SwerveDrive::GetPosition(const Wheel wheel) const {
   return 0;
 }
 
-/** Get encoder value of specified azimuth wheel.
+/**
+ * Get encoder value of specified azimuth wheel.
  *  @param wheel select wheel to read
  */
 int SwerveDrive::GetAzimuth(const Wheel wheel) const {
@@ -346,7 +366,8 @@ int SwerveDrive::GetAzimuth(const Wheel wheel) const {
   return 0;
 }
 
-/** Override the default logger.
+/**
+ * Override the default logger.
  * This logger is expected to have the name "sidewinder".
  */
 void SwerveDrive::SetLogger(const std::shared_ptr<spdlog::logger> logger) {
