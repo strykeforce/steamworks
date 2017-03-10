@@ -11,7 +11,7 @@ using namespace sidewinder;
 namespace {
 const int kElevationIncrement = 25;
 const int kMinElevation = 0;
-const int kMaxElevation = 6000;
+const int kMaxElevation = 5000;
 }
 
 /**
@@ -30,7 +30,7 @@ void ShooterElevation::SetElevation(int elevation) {
   elevation_setpoint_ = LimitElevation(elevation);
   // SPDLOG_DEBUG(logger_, "setting shooter elevation to {}",
   // elevation_setpoint_);
-  RobotMap::shooter_elevation_talon->Set(elevation);
+  RobotMap::shooter_elevation_talon->Set(elevation_setpoint_);
   UpdateSmartDashboard();
 }
 
@@ -39,6 +39,7 @@ void ShooterElevation::SetElevation(int elevation) {
  */
 void ShooterElevation::IncrementElevation() {
   elevation_setpoint_ += kElevationIncrement;
+  elevation_setpoint_ = LimitElevation(elevation_setpoint_);
   SPDLOG_DEBUG(logger_, "setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(
       static_cast<double>(elevation_setpoint_));
@@ -50,6 +51,7 @@ void ShooterElevation::IncrementElevation() {
  */
 void ShooterElevation::DecrementElevation() {
   elevation_setpoint_ -= kElevationIncrement;
+  elevation_setpoint_ = LimitElevation(elevation_setpoint_);
   SPDLOG_DEBUG(logger_, "setting shooter elevation to {}", elevation_setpoint_);
   RobotMap::shooter_elevation_talon->Set(
       static_cast<double>(elevation_setpoint_));
@@ -104,12 +106,12 @@ int ShooterElevation::LimitElevation(int elevation) {
   if (elevation < kMinElevation) {
     logger_->warn("ShooterElevation out of range {}, setting to {}", elevation,
                   kMinElevation);
-    elevation = kMinElevation;
+    return kMinElevation;
   }
   if (elevation > kMaxElevation) {
     logger_->warn("ShooterElevation out of range {}, setting to {}", elevation,
                   kMaxElevation);
-    elevation = kMaxElevation;
+    return kMaxElevation;
   }
   return elevation;
 }
