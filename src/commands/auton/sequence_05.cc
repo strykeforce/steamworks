@@ -13,11 +13,13 @@ const int kForwardAzimuth = 2048;
  * Red move out and shoot 10
  */
 Sequence05::Sequence05() : frc::CommandGroup("Sequence05") {
+  AddSequential(new Log("starting RED alliance move out and and shoot"));
+
   AddSequential(new drive::TimedSwerveDrive(-0.25, 0, 2.2));
 
   // azimuth
   AddSequential(new drive::TimedAzimuth(-0.4, 0.3));
 
   // // start shooting
-  // AddSequential(new StartShooting());
+  AddSequential(new StartShooting());
 }

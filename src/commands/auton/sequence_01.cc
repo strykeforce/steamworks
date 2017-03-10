@@ -16,6 +16,8 @@ const int kStrafeDistance = static_cast<int>(49 * 50.72);
  * Blue hopper dump and shoot
  */
 Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
+  AddSequential(new Log("starting BLUE alliance hopper dump and shoot"));
+
   // drive on slant to hopper
   AddSequential(new drive::TimedSwerveDrive(-0.50 / 2.0, -0.95 / 2.0, 2.0));
 
