@@ -14,18 +14,29 @@ class Climber : public frc::Subsystem {
   Climber(Climber&) = delete;
 
   void SetCaptureModeEnabled(bool enabled);
+  void SetFinishModeEnabled(bool enabled);
   void StartCapture();
   void StartClimb();
+  void StartFinish();
   void Stop();
+
   bool IsRunning();
   bool IsCaptured();
+  bool ShouldClimbFinish();
+  bool IsClimbFinished();
+
+  void ZeroPosition();
+  int GetPosition();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  double capture_voltage_ = 4.0;
-  double climb_voltage_ = 12.0;
-  double capture_current_ = 4.0;
+  double capture_voltage_ = 0.0;
+  double climb_voltage_ = 0.0;
+  double finish_voltage_ = 0.0;
+  double capture_current_ = 0.0;
+  double finish_current_ = 0.0;
   bool is_running_ = false;
+  int climb_distance_ = 0;
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
 };

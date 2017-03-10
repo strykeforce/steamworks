@@ -25,7 +25,7 @@ class RobotMap {
     kGearIntake = 51,
     kGearPivot = 52,
     kClimberMaster = 61,  // reversed
-    kClimberSlave = 62,
+    kClimberSlave = 62,   // counts forward during climb
   };
 
   enum Servos {

@@ -13,6 +13,7 @@ Climber::Climber(const std::shared_ptr<cpptoml::table> config)
 
 namespace {
 const double kCaptureRampRate = 8.0;
+const int kClimbDistanceGoodEnough = 100;
 }
 
 void Climber::SetCaptureModeEnabled(bool enabled) {
@@ -27,6 +28,19 @@ void Climber::SetCaptureModeEnabled(bool enabled) {
   RobotMap::climber_slave_talon->SetVoltageRampRate(0.0);
 }
 
+void Climber::SetFinishModeEnabled(bool enabled) {
+  if (enabled) {
+    logger_->info(
+        "starting climber finish climb mode, position {}, current limit {}",
+        GetPosition(), finish_current_);
+    RobotMap::climber_master_talon->SetCurrentLimit(finish_current_);
+    RobotMap::climber_slave_talon->SetCurrentLimit(finish_current_);
+  }
+  logger_->info("finished climber finish climb mode, position {}",
+                GetPosition());
+}
+
+// TODO: combine these climb methods, use voltage_
 void Climber::StartCapture() {
   RobotMap::climber_master_talon->Set(capture_voltage_);
   RobotMap::climber_slave_talon->Set(capture_voltage_);
@@ -38,6 +52,13 @@ void Climber::StartClimb() {
   RobotMap::climber_slave_talon->Set(climb_voltage_);
   is_running_ = true;
 }
+
+void Climber::StartFinish() {
+  RobotMap::climber_master_talon->Set(finish_voltage_);
+  RobotMap::climber_slave_talon->Set(finish_voltage_);
+  is_running_ = true;
+}
+
 void Climber::Stop() {
   RobotMap::climber_master_talon->StopMotor();
   RobotMap::climber_slave_talon->StopMotor();
@@ -46,12 +67,44 @@ void Climber::Stop() {
 
 bool Climber::IsRunning() { return is_running_; }
 
+/**
+ * Returns true when motor current increases due to rope tension.
+ */
 bool Climber::IsCaptured() {
   double master = RobotMap::climber_master_talon->GetOutputCurrent();
   double slave = RobotMap::climber_slave_talon->GetOutputCurrent();
   SPDLOG_DEBUG(logger_, "master current = {}, slave current = {}", master,
                slave);
   return (master + slave) / 2.0 > capture_current_;
+}
+
+/**
+ * Returns true when climber has moved required distance.
+ */
+bool Climber::ShouldClimbFinish() {
+  int pos = GetPosition();
+  SPDLOG_DEBUG(logger_, "Climber position absolute error {}", pos);
+  return pos > climb_distance_;
+}
+
+/**
+ * Returns true when climber has moved required distance.
+ */
+bool Climber::IsClimbFinished() {
+  // TODO: will look at motor current to detect
+  return false;
+}
+
+/**
+ * Returns the current encoder position.
+ */
+void Climber::ZeroPosition() { RobotMap::climber_slave_talon->SetPosition(0); }
+
+/**
+ * Returns the current encoder position.
+ */
+int Climber::GetPosition() {
+  return static_cast<int>(RobotMap::climber_slave_talon->GetPosition());
 }
 
 /**
@@ -64,32 +117,59 @@ void Climber::LoadConfigSettings(
     throw std::invalid_argument("STEAMWORKS.CLIMBER table missing from config");
   }
 
-  auto val = config->get_as<double>("capture_voltage");
-  if (val) {
-    capture_voltage_ = *val;
+  auto d_opt = config->get_as<double>("capture_voltage");
+  if (d_opt) {
+    capture_voltage_ = *d_opt;
   } else {
     logger_->warn(
         "STEAMWORKS.CLIMBER capture_voltage setting missing, using default");
   }
   logger_->info("climber capture motor voltage: {}", capture_voltage_);
 
-  val = config->get_as<double>("climb_voltage");
-  if (val) {
-    climb_voltage_ = *val;
+  d_opt = config->get_as<double>("climb_voltage");
+  if (d_opt) {
+    climb_voltage_ = *d_opt;
   } else {
     logger_->warn(
         "STEAMWORKS.CLIMBER climb_voltage setting missing, using default");
   }
   logger_->info("climber climb motor voltage: {}", climb_voltage_);
 
-  val = config->get_as<double>("capture_current");
-  if (val) {
-    capture_current_ = *val;
+  d_opt = config->get_as<double>("finish_voltage");
+  if (d_opt) {
+    finish_voltage_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS.CLIMBER finish_voltage setting missing, using default");
+  }
+  logger_->info("climber finish motor voltage: {}", finish_voltage_);
+
+  d_opt = config->get_as<double>("capture_current");
+  if (d_opt) {
+    capture_current_ = *d_opt;
   } else {
     logger_->warn(
         "STEAMWORKS.CLIMBER capture_current setting missing, using default");
   }
   logger_->info("climber capture current setpoint: {}", capture_current_);
+
+  d_opt = config->get_as<double>("finish_current");
+  if (d_opt) {
+    finish_current_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS.CLIMBER finish_current setting missing, using default");
+  }
+  logger_->info("climber finish current setpoint: {}", finish_current_);
+
+  auto i_opt = config->get_as<int>("climb_distance");
+  if (i_opt) {
+    climb_distance_ = *i_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS.CLIMBER climb_distance setting missing, using default");
+  }
+  logger_->info("climber climb distance: {}", climb_distance_);
 
   // configure master
   auto master_settings = talon::Settings::Create(config, "master");

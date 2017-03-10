@@ -6,17 +6,41 @@
 namespace steamworks {
 namespace command {
 
-class StartClimb : public frc::InstantCommand {
+//
+// FinishClimb
+//
+class FinishClimb : public frc::InstantCommand {
  public:
-  StartClimb();
+  FinishClimb();
 
  protected:
-  void Initialize() override;
+  void Initialize();
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
 };
 
+//
+// StartClimb
+//
+class StartClimb : public frc::Command {
+ public:
+  StartClimb();
+
+ protected:
+  void Initialize() override;
+  bool IsFinished() override;
+  void Interrupted() override;
+  void End() override;
+
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
+  FinishClimb finish_;
+};
+
+//
+// CaptureRope
+//
 class CaptureRope : public frc::Command {
  public:
   CaptureRope();
