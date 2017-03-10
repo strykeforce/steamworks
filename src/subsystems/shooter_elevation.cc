@@ -30,7 +30,8 @@ void ShooterElevation::SetElevation(int elevation) {
   elevation_setpoint_ = LimitElevation(elevation);
   // SPDLOG_DEBUG(logger_, "setting shooter elevation to {}",
   // elevation_setpoint_);
-  RobotMap::shooter_elevation_talon->Set(elevation_setpoint_);
+  RobotMap::shooter_elevation_talon->Set(
+      static_cast<double>(elevation_setpoint_));
   UpdateSmartDashboard();
 }
 
@@ -78,12 +79,11 @@ int ShooterElevation::GetElevation() {
  */
 void ShooterElevation::SetElevationEncoderZero() {
   auto pos = RobotMap::shooter_elevation_talon->GetPulseWidthPosition() & 0xFFF;
-  SPDLOG_DEBUG(logger_, "elevation_talon absolute encoder = {}", pos);
-  int error = elevation_zero_ - pos;
-  error += pos > elevation_zero_ ? 0xFFF : 0;
-  SPDLOG_DEBUG(logger_, "elevation_talon error = {}", error);
-  SPDLOG_DEBUG(logger_, "setting elevation_talon zero = {}", error);
+  double error = static_cast<double>(elevation_zero_ - pos);
   RobotMap::shooter_elevation_talon->SetPosition(error);
+  logger_->info(
+      "ShooterElevation position {}, configured zero {}, set position {}", pos,
+      elevation_zero_, error);
 }
 
 namespace {

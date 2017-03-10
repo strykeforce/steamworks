@@ -8,7 +8,7 @@ set(SIDEWINDER_LIBS /opt/sidewinder CACHE PATH "Sidewinder directory.")
 
 set(VERSION_MAJOR 17)
 set(VERSION_MINOR 1)
-set(VERSION_PATCH 5)
+set(VERSION_PATCH 6)
 set(VERSION_META "")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
