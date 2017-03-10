@@ -168,17 +168,16 @@ void OI::AssignGamepadButtons() {
  * AssignSmartDashboardButtons hooks up smart dashboard buttons to commands.
  */
 void OI::AssignSmartDashboardButtons() {
-// SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
-#if !NDEBUG
-  SmartDashboard::PutData("Zero Wheels",
-                          new drive::PositionDrive(-121.0 / 180.0 * 2048));
-  SmartDashboard::PutData("Position Azimuth",
-                          new drive::TimedAzimuth(0.75, 0.4));
+  // SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
+  SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
 
   SmartDashboard::PutData("Write Azimuth Cal", new WriteAzimuthCalibration());
   SmartDashboard::PutData("Drive Zero", new drive::Zero());
   SmartDashboard::PutData("Zero Gyro", new ZeroGyroYaw());
+#if !NDEBUG
 
+  SmartDashboard::PutData("Position Azimuth",
+                          new drive::TimedAzimuth(0.75, 0.4));
   SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));
   SmartDashboard::PutData("Increment Elevation",
                           new IncrementShooterElevation());
