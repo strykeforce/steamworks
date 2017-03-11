@@ -11,7 +11,7 @@ namespace {
 const double kMaxSpeed = 50.0 / 75.0;
 const double kMinSpeed = 10.0 / 75.0;
 const int kCloseEnough = 4;
-const int kSlopeStart = 160;
+const int kSlopeStart = 400;
 const int kStableCountReq = 3;
 }
 
