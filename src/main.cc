@@ -18,7 +18,7 @@ int main(int argc, char const* argv[]) {
   logger->set_level(spdlog::level::info);
   spdlog::set_pattern("[%n][%l] %v");
 #else
-  auto logger = spdlog::stdout_color_st("deadeye");
+  auto logger = spdlog::stdout_logger_st("deadeye");
   logger->set_level(spdlog::level::debug);
   spdlog::set_pattern("[%H:%M:%S.%e][%n][%l] %v");
 #endif
