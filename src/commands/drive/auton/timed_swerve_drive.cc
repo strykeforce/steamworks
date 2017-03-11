@@ -28,6 +28,6 @@ void TimedSwerveDrive::Initialize() {
 bool TimedSwerveDrive::IsFinished() { return IsTimedOut(); }
 
 void TimedSwerveDrive::End() {
-  Robot::drive->Drive(0, 0, 0);
+  Robot::drive->SetDrive(0.0);
   Robot::drive->SetGyroDisabled(false);
 }

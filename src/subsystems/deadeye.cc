@@ -111,7 +111,7 @@ Deadeye::State Deadeye::DoInit() {
  * Handle idle state.
  */
 Deadeye::State Deadeye::DoIdle() {
-  SPDLOG_TRACE(logger_, "entering State::idle");
+  // SPDLOG_TRACE(logger_, "entering State::idle");
   error_reported_ = false;
   return CheckMode();
 }
@@ -139,7 +139,7 @@ Deadeye::State Deadeye::DoInitMode() {
  * Handle boiler.
  */
 Deadeye::State Deadeye::DoBoiler() {
-  SPDLOG_TRACE(logger_, "entering State::boiler");
+  // SPDLOG_TRACE(logger_, "entering State::boiler");
   if (ReadSentence() == Deadeye::State::error) {
     return Deadeye::State::error;
   }
