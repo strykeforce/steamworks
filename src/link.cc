@@ -65,8 +65,14 @@ Mode Link::GetMode() {
  *Send the boiler shooting solution across the serial line.
  */
 void Link::SendBoilerSolution(int azimuth_error, int centerline_error) {
-  SPDLOG_DEBUG(logger_, "boiler solution: az err = {}, centerline_error = {}",
-               azimuth_error, centerline_error);
+#if !NDEBUG
+  static int count = 0;
+  if (count++ > 500) {
+    SPDLOG_DEBUG(logger_, "boiler solution: az err = {}, centerline_error = {}",
+                 azimuth_error, centerline_error);
+    count = 0;
+  }
+#endif
   BoilerSentence bts(azimuth_error, centerline_error);
   serial_->write(bts.ToString() + "\n");
 }
@@ -85,7 +91,7 @@ void Link::SendGearSolution(int azimuth_error, int range) {
  * Send a no target message on the serial line.
  */
 void Link::SendNoTarget() {
-  SPDLOG_DEBUG(logger_, "no target");
+  // SPDLOG_DEBUG(logger_, "no target");
   NoTargetSentence nts;
   serial_->write(nts.ToString() + "\n");
 }

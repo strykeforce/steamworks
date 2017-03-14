@@ -24,6 +24,8 @@ class BoilerFrame {
   std::shared_ptr<spdlog::logger> logger_;
   cv::Scalar hsv_lower_, hsv_upper_;
   double min_arc_length_;
+
+  void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
 };
 
 } /* deadeye */

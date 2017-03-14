@@ -32,7 +32,8 @@ class BoilerCamera {
   std::shared_ptr<spdlog::logger> logger_;
 
   // hardware
-  bool connected_, capture_started_, has_gui_;
+  bool connected_, capture_started_;
+  bool has_gui_ = false;
   fc::Camera camera_;
   fc::Image raw_image_, rgb_image_;
   cv::Mat frame_;
@@ -43,6 +44,8 @@ class BoilerCamera {
   static const std::tuple<int, int> PROCESS_ERROR;
   // frame processing
   BoilerFrame frame_process_;
+
+  void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
 };
 
 } /* deadeye */

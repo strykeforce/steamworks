@@ -16,6 +16,7 @@ add_executable(${CMAKE_PROJECT_NAME}
   gear_frame.cc
   link.cc
   deadeye.cc
+  fps.cc
 )
 
 include(link/CMakeLists.txt)
@@ -26,6 +27,8 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
   flycapture
   serial
 )
+
+install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION sbin)
 
 set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES
   CXX_STANDARD 11

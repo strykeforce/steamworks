@@ -19,7 +19,7 @@ int main(int argc, char const* argv[]) {
   spdlog::set_pattern("[%n][%l] %v");
 #else
   auto logger = spdlog::stdout_logger_st("deadeye");
-  logger->set_level(spdlog::level::debug);
+  logger->set_level(spdlog::level::trace);
   spdlog::set_pattern("[%H:%M:%S.%e][%n][%l] %v");
 #endif
   // read config file from path specified in DEADEYE_CONF env variable or

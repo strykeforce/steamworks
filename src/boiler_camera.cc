@@ -15,7 +15,6 @@ BoilerCamera::BoilerCamera(std::shared_ptr<cpptoml::table> config)
     : logger_(spdlog::get("deadeye")),
       connected_(false),
       capture_started_(false),
-      has_gui_(!!std::getenv("DISPLAY")),
       camera_(),
       raw_image_(),
       rgb_image_(),
@@ -23,35 +22,7 @@ BoilerCamera::BoilerCamera(std::shared_ptr<cpptoml::table> config)
       height_(1080),
       exposure_(-1.0),
       frame_process_(config) {
-  assert(config);
-  auto camera_config = config->get_table("CAMERA");
-  if (camera_config) {
-    auto width = camera_config->get_as<int>("width");
-    if (width) {
-      width_ = *width;
-    } else {
-      logger_->warn("CAMERA width setting missing, using default");
-    }
-
-    auto height = camera_config->get_as<int>("height");
-    if (height) {
-      height_ = *height;
-    } else {
-      logger_->warn("CAMERA height setting missing, using default");
-    }
-
-    auto exposure = camera_config->get_as<double>("exposure");
-    if (exposure) {
-      exposure_ = *exposure;
-    } else {
-      logger_->warn("CAMERA exposure setting missing, using default");
-    }
-  } else {
-    logger_->error("CAMERA configuration section missing, using defaults");
-  }
-  logger_->info("camera frame width: {}", width_);
-  logger_->info("camera frame height: {}", height_);
-  logger_->info("camera frame exposure: {}", exposure_);
+  LoadConfigSettings(config);
 }
 
 BoilerCamera::~BoilerCamera() {
@@ -173,7 +144,9 @@ void BoilerCamera::StartCapture() {
     logger_->warn("StartCapture already called");
     return;
   }
+  SPDLOG_TRACE(logger_, "calling camera_.StartCapture()");
   fc::Error error = camera_.StartCapture();
+  SPDLOG_TRACE(logger_, "done calling camera_.StartCapture()");
   if (error != fc::PGRERROR_OK) {
     logger_->error(error.GetDescription());
   }
@@ -233,49 +206,93 @@ bool BoilerCamera::ProcessFrame(int& azimuth_error, int& centerline_error) {
 }
 
 void BoilerCamera::DisplayFrame() {
-  if (has_gui_) {
-    // draw contours and bounding boxes around targets into captured frame
-    cv::drawContours(
-        frame_,
-        std::vector<std::vector<cv::Point>>{frame_process_.lower_contour}, 0,
-        cv::Scalar(0, 0, 255), 1);
-    cv::drawContours(
-        frame_,
-        std::vector<std::vector<cv::Point>>{frame_process_.upper_contour}, 0,
-        cv::Scalar(0, 0, 255), 1);
-
-    cv::rectangle(frame_, frame_process_.lower_rect, cv::Scalar(0, 255, 0), 1);
-    cv::rectangle(frame_, frame_process_.upper_rect, cv::Scalar(0, 255, 0), 1);
-
-    cv::line(frame_, cv::Point((frame_.cols / 2), 0),
-             cv::Point((frame_.cols / 2), frame_.rows), cv::Scalar(255, 0, 0));
-
-    cv::line(frame_, cv::Point(0, frame_.rows / 2),
-             cv::Point(frame_.cols, frame_.rows / 2), cv::Scalar(255, 0, 0));
-
-    std::string centerline_error =
-        "centerline error (px) = " +
-        std::to_string(frame_process_.centerline_error);
-    std::string coords =
-        "azimuth error (px )= " + std::to_string(frame_process_.azimuth_error);
-
-    // TODO: add upper rect width
-    // std::string coords =
-    //     "azimuth error (px )= " +
-    //     std::to_string(frame_process_.azimuth_error);
-
-    cv::putText(frame_, centerline_error, cv::Point(100, 50),
-                cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
-    cv::putText(frame_, coords, cv::Point(100, 100), cv::FONT_HERSHEY_SIMPLEX,
-                1.0, cv::Scalar(255, 255, 255));
-
-    // display capture frame in GUI window
-    cv::imshow("frame", frame_);
-    // if (frame_process_.target_separation < 90 ||
-    //     frame_process_.target_separation > 110) {
-    //   cv::waitKey(10000);
-    //   return;
-    // }
-    cv::waitKey(1);
+  if (!has_gui_) {
+    return;
   }
+  // draw contours and bounding boxes around targets into captured frame
+  cv::drawContours(
+      frame_, std::vector<std::vector<cv::Point>>{frame_process_.lower_contour},
+      0, cv::Scalar(0, 0, 255), 1);
+  cv::drawContours(
+      frame_, std::vector<std::vector<cv::Point>>{frame_process_.upper_contour},
+      0, cv::Scalar(0, 0, 255), 1);
+
+  cv::rectangle(frame_, frame_process_.lower_rect, cv::Scalar(0, 255, 0), 1);
+  cv::rectangle(frame_, frame_process_.upper_rect, cv::Scalar(0, 255, 0), 1);
+
+  cv::line(frame_, cv::Point((frame_.cols / 2), 0),
+           cv::Point((frame_.cols / 2), frame_.rows), cv::Scalar(255, 0, 0));
+
+  cv::line(frame_, cv::Point(0, frame_.rows / 2),
+           cv::Point(frame_.cols, frame_.rows / 2), cv::Scalar(255, 0, 0));
+
+  std::string centerline_error =
+      "centerline error (px) = " +
+      std::to_string(frame_process_.centerline_error);
+  std::string coords =
+      "azimuth error (px )= " + std::to_string(frame_process_.azimuth_error);
+
+  // TODO: add upper rect width
+  // std::string coords =
+  //     "azimuth error (px )= " +
+  //     std::to_string(frame_process_.azimuth_error);
+
+  cv::putText(frame_, centerline_error, cv::Point(100, 50),
+              cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255, 255, 255));
+  cv::putText(frame_, coords, cv::Point(100, 100), cv::FONT_HERSHEY_SIMPLEX,
+              1.0, cv::Scalar(255, 255, 255));
+
+  // display capture frame in GUI window
+  cv::imshow("frame", frame_);
+  // if (frame_process_.target_separation < 90 ||
+  //     frame_process_.target_separation > 110) {
+  //   cv::waitKey(10000);
+  //   return;
+  // }
+  cv::waitKey(1);
+}
+
+/**
+ * Load configuration.
+ */
+void BoilerCamera::LoadConfigSettings(
+    const std::shared_ptr<cpptoml::table> config_in) {
+  assert(config_in);
+  auto config = config_in->get_table("DEADEYE");
+
+  bool has_display = !!std::getenv("DISPLAY");
+  auto b_opt = config->get_as<bool>("gui");
+  if (b_opt) {
+    has_gui_ = *b_opt && has_display;
+  }
+  logger_->info("has display = {}, gui = {}", has_display, has_gui_);
+
+  config = config->get_table("CAMERA");
+  if (config) {
+    auto width = config->get_as<int>("width");
+    if (width) {
+      width_ = *width;
+    } else {
+      logger_->warn("CAMERA width setting missing, using default");
+    }
+
+    auto height = config->get_as<int>("height");
+    if (height) {
+      height_ = *height;
+    } else {
+      logger_->warn("CAMERA height setting missing, using default");
+    }
+
+    auto exposure = config->get_as<double>("exposure");
+    if (exposure) {
+      exposure_ = *exposure;
+    } else {
+      logger_->warn("CAMERA exposure setting missing, using default");
+    }
+  } else {
+    logger_->error("CAMERA configuration section missing, using defaults");
+  }
+  logger_->info("camera frame width: {}", width_);
+  logger_->info("camera frame height: {}", height_);
+  logger_->info("camera frame exposure: {}", exposure_);
 }

@@ -7,39 +7,7 @@ BoilerFrame::BoilerFrame(std::shared_ptr<cpptoml::table> config)
       hsv_lower_(80, 100, 100),
       hsv_upper_(100, 255, 255),
       min_arc_length_(250.0) {
-  assert(config);
-  auto frame_config = config->get_table("FRAME");
-  if (frame_config) {
-    auto hsv_l = frame_config->get_array_of<int64_t>("hsv_lower");
-    if (hsv_l) {
-      hsv_lower_ = cv::Scalar((*hsv_l)[0], (*hsv_l)[1], (*hsv_l)[2]);
-    } else {
-      logger_->warn("FRAME hsv_lower setting missing, using default");
-    }
-
-    auto hsv_u = frame_config->get_array_of<int64_t>("hsv_upper");
-    if (hsv_u) {
-      hsv_upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);
-    } else {
-      logger_->warn("FRAME hsv_upper setting missing, using default");
-    }
-
-    auto min_arc = frame_config->get_as<double>("min_arc_length");
-    if (min_arc) {
-      min_arc_length_ = *min_arc;
-    } else {
-      logger_->warn("FRAME min_arc_length setting missing, using default");
-    }
-
-  } else {
-    logger_->error("FRAME configuration section missing, using defaults");
-  }
-
-  logger_->info("HSV lower: {}, {}, {}", hsv_lower_[0], hsv_lower_[1],
-                hsv_lower_[2]);
-  logger_->info("HSV upper: {}, {}, {}", hsv_upper_[0], hsv_upper_[1],
-                hsv_upper_[2]);
-  logger_->info("min arc Length: {}", min_arc_length_);
+  LoadConfigSettings(config);
 }
 
 /** Process the frame and find targets.
@@ -80,4 +48,48 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
   azimuth_error = (frame.cols / 2) - upper_rect.x - (upper_rect.width / 2);
 
   return true;
+}
+
+/**
+ * Load configuration
+ */
+void BoilerFrame::LoadConfigSettings(
+    const std::shared_ptr<cpptoml::table> config_in) {
+  assert(config_in);
+  auto config = config_in->get_table("DEADEYE")->get_table("FRAME");
+  if (!config) {
+    throw std::invalid_argument("DEADEYE.FRAME table missing from config");
+  }
+
+  if (config) {
+    auto hsv_l = config->get_array_of<int64_t>("hsv_lower");
+    if (hsv_l) {
+      hsv_lower_ = cv::Scalar((*hsv_l)[0], (*hsv_l)[1], (*hsv_l)[2]);
+    } else {
+      logger_->warn("FRAME hsv_lower setting missing, using default");
+    }
+
+    auto hsv_u = config->get_array_of<int64_t>("hsv_upper");
+    if (hsv_u) {
+      hsv_upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);
+    } else {
+      logger_->warn("FRAME hsv_upper setting missing, using default");
+    }
+
+    auto min_arc = config->get_as<double>("min_arc_length");
+    if (min_arc) {
+      min_arc_length_ = *min_arc;
+    } else {
+      logger_->warn("FRAME min_arc_length setting missing, using default");
+    }
+
+  } else {
+    logger_->error("FRAME configuration section missing, using defaults");
+  }
+
+  logger_->info("HSV lower: {}, {}, {}", hsv_lower_[0], hsv_lower_[1],
+                hsv_lower_[2]);
+  logger_->info("HSV upper: {}, {}, {}", hsv_upper_[0], hsv_upper_[1],
+                hsv_upper_[2]);
+  logger_->info("min arc Length: {}", min_arc_length_);
 }
