@@ -4,8 +4,11 @@ grapher = false
 
 [STEAMWORKS.CLIMBER]
 capture_voltage =  4.0
-climb_voltage   =  8.0
 capture_current =  4.0
+climb_voltage   =  8.0
+finish_voltage  =  4.0
+finish_current  = 10.0
+climb_distance  = 26000
 
     [[STEAMWORKS.CLIMBER.TALON]]
     name = "master"
@@ -64,8 +67,8 @@ left_clamp_stow     = 0.45 # not used
 right_clamp_stow    = 0.6  # not used
 
 # settings for the gear pivot motor position mode
-pivot_zero =  825
-pivot_up   = 1020 # ticks
+pivot_zero =  476
+pivot_up   = 980 # ticks
 pivot_down =    0 # ticks
 
     [[STEAMWORKS.GEAR.TALON]]

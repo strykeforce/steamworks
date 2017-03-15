@@ -96,7 +96,8 @@ bool Climber::IsClimbFinished() {
 }
 
 /**
- * Returns the current encoder position.
+ * Resets climber motor encoder to zero in preparation for measuring distance
+ * during climb.
  */
 void Climber::ZeroPosition() { RobotMap::climber_slave_talon->SetPosition(0); }
 
