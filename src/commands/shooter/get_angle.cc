@@ -9,7 +9,7 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const int kMaxSpeed = 50;
+const int kMaxSpeed = 45;
 const int kMinSpeed = 1;
 const int kCloseEnough = 3;
 const int kSlopeStart = 200;

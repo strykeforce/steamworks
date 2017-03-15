@@ -148,9 +148,11 @@ Deadeye::State Deadeye::DoBoiler() {
       case Sentence::kBoiler:
         azimuth_error_ = stoi(sentence_.parameters[1]);
         centerline_error_ = stoi(sentence_.parameters[2]);
+        has_target_ = true;
         break;
       case Sentence::kNoTarget:
         SPDLOG_TRACE(logger_, "no target");
+        has_target_ = false;
         break;
       case Sentence::kGear:
         throw std::logic_error("DoBoiler got GearSentence");
@@ -229,6 +231,14 @@ int Deadeye::GetAzimuthError() {
 int Deadeye::GetCenterlineError() {
   std::lock_guard<std::mutex> lock(mutex_);
   return centerline_error_;
+}
+
+/**
+ * True if the last communication from deadeye was a valid target.
+ */
+bool Deadeye::HasTarget() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return has_target_;
 }
 
 /**

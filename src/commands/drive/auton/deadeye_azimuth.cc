@@ -11,7 +11,7 @@ namespace {
 const double kMaxSpeed = 50.0 / 75.0;
 const double kMinSpeed = 10.0 / 75.0;
 const int kCloseEnough = 4;
-const int kSlopeStart = 400;
+const int kSlopeStart = 160;
 const int kStableCountReq = 3;
 }
 
@@ -43,6 +43,10 @@ void DeadeyeAzimuth::Initialize() {
  * rate commands to the swerve drive based on current error calculations.
  */
 void DeadeyeAzimuth::Execute() {
+  if (!Robot::deadeye->HasTarget()) {
+    logger_->info("DeadeyeAzimuth::Execute no target");
+    return;
+  }
   error_ = Robot::deadeye->GetAzimuthError() + offset_;
   abs_error_ = fabs(error_);
   double speed;
@@ -69,6 +73,9 @@ void DeadeyeAzimuth::Execute() {
  * if desired azimuth is reached.
  */
 bool DeadeyeAzimuth::IsFinished() {
+  if (!Robot::deadeye->HasTarget()) {
+    return false;
+  }
   if (abs_error_ < kCloseEnough) {
     stable_count_++;
   } else {

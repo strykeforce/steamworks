@@ -32,6 +32,8 @@ class Deadeye : public frc::Subsystem {
   int GetAzimuthError();
   int GetCenterlineError();
 
+  bool HasTarget();
+
   // SHOOTER SOLUTION CALCULATION
   // void CalculateSolution(int centerline_elevation, int
   // centerline_pixel_error);
@@ -71,6 +73,7 @@ class Deadeye : public frc::Subsystem {
   deadeye::Sentence sentence_;
 
   // current deadeye parameters
+  bool has_target_ = false;
   int azimuth_error_;
   int centerline_error_;
   int range_;
