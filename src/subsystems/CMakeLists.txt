@@ -9,5 +9,3 @@ target_sources(${CMAKE_PROJECT_NAME}
   "${CMAKE_CURRENT_LIST_DIR}/shooter_elevation.cc"
     "${CMAKE_CURRENT_LIST_DIR}/shooter_wheel.cc"
 )
-
-include("${PROJECT_SOURCE_DIR}/vendor/link/CMakeLists.txt")

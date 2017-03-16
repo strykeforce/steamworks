@@ -5,7 +5,15 @@
 #include "spdlog/spdlog.h"
 
 #include "oi.h"
-#include "subsystems/subsystems.h"
+#include "subsystems/climber.h"
+#include "subsystems/deadeye.h"
+#include "subsystems/drive.h"
+#include "subsystems/gear.h"
+#include "subsystems/hopper.h"
+#include "subsystems/intake.h"
+#include "subsystems/motion.h"
+#include "subsystems/shooter_elevation.h"
+#include "subsystems/shooter_wheel.h"
 
 namespace steamworks {
 

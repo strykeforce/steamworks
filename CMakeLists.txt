@@ -5,6 +5,7 @@ set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
 set(NAVX_LIBS /opt/navx CACHE PATH "NavX directory.")
 set(CTRE_LIBS /opt/ctre CACHE PATH "CTRE directory.")
 set(SIDEWINDER_LIBS /opt/sidewinder CACHE PATH "Sidewinder directory.")
+set(MSGPACK_LIBS /opt/msgpack-c CACHE PATH "Msgpack-c directory.")
 
 set(VERSION_MAJOR 17)
 set(VERSION_MINOR 1)
@@ -35,8 +36,7 @@ include_directories(
   "${NAVX_LIBS}/include"
   "${CTRE_LIBS}/include"
   "${CMAKE_SOURCE_DIR}/vendor/include"
-  "${CMAKE_SOURCE_DIR}/vendor/serial/include"
-  "${CMAKE_SOURCE_DIR}/vendor/link"
+  "${MSGPACK_LIBS}/include"
 )
 
 link_directories(

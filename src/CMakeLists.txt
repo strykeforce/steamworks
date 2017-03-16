@@ -20,7 +20,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
   TalonSRXLib
   navx_frc_cpp
   wpi
-  serial
 )
 
 add_dependencies(${CMAKE_PROJECT_NAME}

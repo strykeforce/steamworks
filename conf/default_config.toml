@@ -36,9 +36,7 @@ climb_distance  = 26000
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 
 [STEAMWORKS.DEADEYE]
-port = "/dev/ttyUSB0"
-port_speed = 115200
-period = 20 # milliseconds
+port = 5800
 
 elevation_zero_angle = 6.0 # degrees
 centerline_height = 83.91 # inches

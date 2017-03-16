@@ -4,12 +4,7 @@
 
 #include <WPILib.h>
 #include <cpptoml/cpptoml.h>
-#include <serial/serial.h>
 #include <spdlog/spdlog.h>
-
-#include "mode.h"
-#include "parser.h"
-#include "sentence.h"
 
 namespace steamworks {
 namespace subsystem {
@@ -21,13 +16,10 @@ class Deadeye : public frc::Subsystem {
   Deadeye& operator=(Deadeye&) = delete;
   Deadeye(Deadeye&) = delete;
 
-  void Communicate();
+  void Start();
 
   void SetGearLightEnabled(bool enable);
   void SetShooterLightEnabled(bool enable);
-
-  deadeye::Mode GetMode();
-  void SetMode(deadeye::Mode mode);
 
   int GetAzimuthError();
   int GetCenterlineError();
@@ -44,33 +36,24 @@ class Deadeye : public frc::Subsystem {
   double GetSolutionAzimuthOffset();
 
  private:
-  // can replace the init_* states with on_enter transitions
-  enum class State {
-    init,
-    init_mode,
-    boiler,
-    gear,
-    idle,
-    error,
+  // keep synced with deadeye
+  enum MessageType {
+    kNoTargetMesg = 0,
+    kBoilerSolutionMesg = 1,
+    kGearSolutionMesg = 2,
+    kIdleMesg = 4,
   };
 
   const std::shared_ptr<spdlog::logger> logger_;
-  std::unique_ptr<frc::Notifier> notifier_;
+  int sockfd_;
+
+  std::thread thread_;
   std::mutex mutex_;
+
   bool error_reported_ = false;
 
   // config settings
-  std::string port_{"/dev/ttyUSB0"};
-  uint32_t speed_ = 115200;
-  int period_ = 20;
-
-  // communication
-  deadeye::Mode mode_ = deadeye::Mode::idle;
-  deadeye::Mode new_mode_ = deadeye::Mode::idle;
-  State state_{State::init};
-  std::unique_ptr<serial::Serial> serial_;
-  deadeye::Parser parser_;
-  deadeye::Sentence sentence_;
+  int port_ = 5800;
 
   // current deadeye parameters
   bool has_target_ = false;
@@ -91,19 +74,10 @@ class Deadeye : public frc::Subsystem {
   double camera_angle_ = 0.0;       // camera to shooter offset angle
   double degrees_per_tick_ = 0.00001;
 
-  State CheckMode();
-  State ReadSentence();
-  void SendSentence(const deadeye::Sentence& sentence);
-
-  // states
-  State DoInit();
-  State DoIdle();
-  State DoInitMode();
-  State DoBoiler();
-  State DoGear();
-  State DoError();
+  void Run();
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
+  void ConfigureNetworking();
 };
 
 } /* subsystem */
