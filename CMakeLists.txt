@@ -8,9 +8,9 @@ set(SIDEWINDER_LIBS /opt/sidewinder CACHE PATH "Sidewinder directory.")
 set(MSGPACK_LIBS /opt/msgpack-c CACHE PATH "Msgpack-c directory.")
 
 set(VERSION_MAJOR 17)
-set(VERSION_MINOR 1)
-set(VERSION_PATCH 7)
-set(VERSION_META "")
+set(VERSION_MINOR 2)
+set(VERSION_PATCH 0)
+set(VERSION_META "-dev")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
 set(CMAKE_LD           /usr/bin/arm-frc-linux-gnueabi-ld)

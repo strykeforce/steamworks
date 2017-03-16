@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [Unreleased]
+
+### Changed
+
+- We now use the network instead of a serial line to communicate with the Deadeye vision code running on the Jetson TX1.
+- More tuning of auton routines.
+
+### Fixed
+
+- Check for no target detected condition during shooter azimuth and elevation control.
+
 ## [17.1.7] - 2017-03-11
 
 Updates made during the St. Joe event.
@@ -37,6 +48,6 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 - SmartDashboard buttons for wheel zero setting.
 - SmartDashboard buttons for development.
 
-[17.1.7]:https://gitlab.com/strykeforce2767/steamworks/compare/v17.1.0...v17.1.7
 [17.1.0]: https://gitlab.com/strykeforce2767/steamworks/compare/db95a39e1200b61adbb51dc9eabe4e147ffd2796...v17.1.0
-[unreleased]: https://gitlab.com/strykeforce2767/steamworks/compare/db95a39e1200b61adbb51dc9eabe4e147ffd2796...develop
+[17.1.7]: https://gitlab.com/strykeforce2767/steamworks/compare/v17.1.0...v17.1.7
+[unreleased]: https://gitlab.com/strykeforce2767/steamworks/compare/v17.1.7...develop
