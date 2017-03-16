@@ -18,7 +18,7 @@ const int kForwardAzimuth = 2048;
  * Blue move out and shoot 10
  */
 Sequence04::Sequence04() : frc::CommandGroup("Sequence04") {
-  AddSequential(new Log("starting BLUE alliance move out and and shoot"));
+  AddSequential(new LogCommand("starting BLUE alliance move out and and shoot"));
   AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
   AddSequential(new drive::TimedSwerveDrive(-0.25, 0, 2.2));
 

@@ -7,9 +7,9 @@
 
 namespace steamworks {
 namespace command {
-class Log : public frc::InstantCommand {
+class LogCommand : public frc::InstantCommand {
  public:
-  Log(std::string message);
+  LogCommand(std::string message);
 
   void Initialize() override;
 

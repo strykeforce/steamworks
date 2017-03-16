@@ -2,9 +2,9 @@
 
 using namespace steamworks::command;
 
-Log::Log(std::string message)
-    : frc::InstantCommand("Log"),
+LogCommand::LogCommand(std::string message)
+    : frc::InstantCommand("LogCommand"),
       logger_(spdlog::get("command")),
       message_(message) {}
 
-void Log::Initialize() { logger_->info(message_); }
+void LogCommand::Initialize() { logger_->info(message_); }

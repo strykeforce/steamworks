@@ -12,18 +12,18 @@ StageGear::StageGear() : frc::CommandGroup("StageGear") {
 }
 
 TestGearLoad::TestGearLoad() : frc::CommandGroup("TestGearLoad") {
-  AddSequential(new Log("loading gear"));
+  AddSequential(new LogCommand("loading gear"));
   AddSequential(new LoadGear());
 
-  AddSequential(new Log("waiting to deploy gear"));
+  AddSequential(new LogCommand("waiting to deploy gear"));
   AddSequential(new WaitCommand(2));
 
-  AddSequential(new Log("deploying gear"));
+  AddSequential(new LogCommand("deploying gear"));
   AddSequential(new DeployGear());
 
-  AddSequential(new Log("clamping gear"));
+  AddSequential(new LogCommand("clamping gear"));
   AddSequential(new CloseClamp());
 
-  AddSequential(new Log("pivoting gear"));
+  AddSequential(new LogCommand("pivoting gear"));
   AddSequential(new PivotGear());
 }

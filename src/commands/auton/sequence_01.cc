@@ -18,7 +18,7 @@ const int kPrepareElevation = 1800;
  * Blue hopper dump and shoot
  */
 Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
-  AddSequential(new Log("starting BLUE alliance hopper dump and shoot"));
+  AddSequential(new LogCommand("starting BLUE alliance hopper dump and shoot"));
 
   // drive on slant to hopper
   // -0.5, 0.95

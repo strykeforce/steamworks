@@ -1,9 +1,10 @@
 #include "robot.h"
 
-#include "WPILibVersion.h"
+#include <WPILibVersion.h>
 
 #include "commands/commands.h"
 #include "default_config.h"
+#include "log.h"
 #include "robot_map.h"
 #include "sidewinder/version.h"
 #include "version.h"
@@ -21,12 +22,11 @@ subsystem::Intake* Robot::intake = nullptr;
 subsystem::ShooterElevation* Robot::shooter_elevation = nullptr;
 subsystem::ShooterWheel* Robot::shooter_wheel = nullptr;
 
-Robot::Robot() : frc::IterativeRobot(), logger_(nullptr) { ConfigureLogging(); }
+Robot::Robot() : frc::IterativeRobot() {}
 
 void Robot::RobotInit() {
-  LogVersion();
-  LoadConfig();
-  RobotMap::Init(config_);
+  Configure();
+  RobotMap::Initialize(config_);
 
   SPDLOG_TRACE(logger_, "initializing subsystems");
   logger_->info("running on {} robot",
@@ -72,7 +72,7 @@ void Robot::AutonomousInit() {
       autonomous_command_ = new auton::Sequence05();
       break;
     default:
-      autonomous_command_ = new Log("unrecognized command");
+      autonomous_command_ = new LogCommand("unrecognized command");
   }
   autonomous_command_->Start();
 }
@@ -101,37 +101,16 @@ void Robot::TestInit() { SPDLOG_TRACE(logger_, "in TestInit"); }
 
 void Robot::TestPeriodic() { frc::LiveWindow::GetInstance()->Run(); }
 
-/** Configure logging based on release type.
- * If building for Release, don't put ANSI terminal color codes in log since
- * it will be read in driver station logs.
- */
-void Robot::ConfigureLogging() {
-#ifdef NDEBUG
-  logger_ = spdlog::stdout_logger_st("robot");
-  logger_->set_level(spdlog::level::info);
-  spdlog::stdout_logger_st("command")->set_level(spdlog::level::info);
-  spdlog::stdout_logger_st("subsystem")->set_level(spdlog::level::info);
-  spdlog::stdout_logger_st("sidewinder")->set_level(spdlog::level::info);
-  spdlog::stdout_logger_mt("deadeye")->set_level(spdlog::level::info);
-  logger_->info("configured as RELEASE build");
-#else
-  logger_ = spdlog::stdout_color_st("robot");
-  logger_->set_level(spdlog::level::trace);
-  spdlog::stdout_color_st("command")->set_level(spdlog::level::trace);
-  spdlog::stdout_color_st("subsystem")->set_level(spdlog::level::trace);
-  spdlog::stdout_color_st("sidewinder")->set_level(spdlog::level::info);
-  spdlog::stdout_color_mt("deadeye")->set_level(spdlog::level::trace);
-  logger_->warn("configured as DEBUG build");
-#endif
-  spdlog::set_pattern("[%H:%M:%S.%e][%n][%l] %v");
-}
-
-/** Reads our configuration file from ~lvuser/steamworks.toml.
+/**
+ Reads our configuration file from ~lvuser/steamworks.toml.
  * If not present or unable to parse, will read the default compiled-in
  * configuration from conf/default_config.toml.
  */
-void Robot::LoadConfig() {
+void Robot::Configure() {
   auto path = "/home/lvuser/steamworks.toml";
+  // configure interim logger
+  logger_ = spdlog::stdout_logger_st("config");
+  LogVersion();
   logger_->info("loading configuration from: {}", path);
 
   try {
@@ -146,8 +125,14 @@ void Robot::LoadConfig() {
   std::istringstream is{conf};
   cpptoml::parser p{is};
   config_ = p.parse();
+  Log::Initialize(config_);
+  logger_ = spdlog::get("robot");
+  spdlog::drop("config");
 }
 
+/**
+ * Log the build version.
+ */
 void Robot::LogVersion() {
   logger_->info("STEAMWORKS {}.{}.{}{} initializing...",
                 STEAMWORKS_VERSION_MAJOR, STEAMWORKS_VERSION_MINOR,

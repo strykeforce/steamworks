@@ -1,4 +1,5 @@
 add_executable(${CMAKE_PROJECT_NAME}
+  log.cc
   oi.cc
   robot_map.cc
   robot.cc

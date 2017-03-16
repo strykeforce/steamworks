@@ -111,7 +111,7 @@ void OI::AssignFlightSimButtons() {
 
   // flight sim left shoulder 3-position button controlls gear loader
   gear_auto_off_button_.WhenPressed(
-      new Log("flight simulator gear auto off button"));
+      new LogCommand("flight simulator gear auto off button"));
   gear_auto_on_button_.WhenPressed(new gear::ReleaseGear());
 
   // flight sim right shoulder 2-position button controls shooter auto mode
@@ -119,7 +119,7 @@ void OI::AssignFlightSimButtons() {
   shooter_auto_button_.WhenReleased(new StopShooting());
 
   // reserved for brake mode
-  brake_mode_.WhenPressed(new Log("brake mode button"));
+  brake_mode_.WhenPressed(new LogCommand("brake mode button"));
 }
 
 /**
@@ -134,7 +134,7 @@ void OI::AssignGamepadButtons() {
 
   // gamepad back button reverses gear loader
   gear_stage_reverse_button_.WhenPressed(
-      new Log("gamepad gear stage reverse button"));
+      new LogCommand("gamepad gear stage reverse button"));
   gear_stage_reverse_button_.WhenPressed(new ToggleHopper());
 
   // gamepad right shoulder turns on fuel intake
@@ -147,7 +147,7 @@ void OI::AssignGamepadButtons() {
   intake_reverse_button_.WhenPressed(new ClearIntake());
 
   // gamepad A button performs feed shot
-  shoot_feed_button_.WhenPressed(new Log("gamepad feed shot button"));
+  shoot_feed_button_.WhenPressed(new LogCommand("gamepad feed shot button"));
 
   // gamepad X button performs close shot
   shoot_close_button_.WhenPressed(new StartCloseShot());
@@ -155,9 +155,9 @@ void OI::AssignGamepadButtons() {
 
   // gamepad D-pad trims shooter aimpoint
   trim_up_.WhenActive(new ToggleHopper());
-  trim_down_.WhenActive(new Log("trim down active"));
-  trim_left_.WhenActive(new Log("trim left active"));
-  trim_right_.WhenActive(new Log("trim right active"));
+  trim_down_.WhenActive(new LogCommand("trim down active"));
+  trim_left_.WhenActive(new LogCommand("trim left active"));
+  trim_right_.WhenActive(new LogCommand("trim right active"));
 
   // gamepad start button toggles climber
   climber_button_.WhenPressed(new CaptureRope());
@@ -173,11 +173,8 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Write Azimuth Cal", new WriteAzimuthCalibration());
   SmartDashboard::PutData("Drive Zero", new drive::Zero());
-  SmartDashboard::PutData("Zero Gyro", new ZeroGyroYaw());
 #if !NDEBUG
 
-  SmartDashboard::PutData("Position Azimuth",
-                          new drive::TimedAzimuth(0.75, 0.4));
   SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));
   SmartDashboard::PutData("Increment Elevation",
                           new IncrementShooterElevation());

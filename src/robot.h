@@ -55,9 +55,7 @@ class Robot : public frc::IterativeRobot {
   frc::Command* autonomous_command_;
   frc::Command* stop_shooter_;
 
-  void ConfigureLogging();
-  void LoadConfig();
-  void LogAbsoluteEncoders();
+  void Configure();
   void LogVersion();
 };
 

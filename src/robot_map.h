@@ -64,7 +64,7 @@ class RobotMap {
   static std::shared_ptr<frc::DigitalOutput> shooter_camera_led;
 
   // instantiate talons and read encoder zero count
-  static void Init(const std::shared_ptr<cpptoml::table> config);
+  static void Initialize(const std::shared_ptr<cpptoml::table> config);
 
   // tells which robot we're running on
   static bool IsPracticeRobot();
