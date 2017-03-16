@@ -91,7 +91,8 @@ void Robot::TeleopInit() {
     // button is already in auto on position so run command
     logger_->info("auto gear load is off");
   }
-  hopper->Stop();
+  stop_shooter_ = new StopShooting();
+  stop_shooter_->Start();
 }
 
 void Robot::TeleopPeriodic() { frc::Scheduler::GetInstance()->Run(); }

@@ -6,6 +6,11 @@ using namespace steamworks::command::auton;
 using namespace steamworks::command;
 
 namespace {
+const int kPrepareSpeed = 400;
+const int kPrepareElevation = 1800;
+}
+
+namespace {
 const int kForwardAzimuth = 2048;
 }
 
@@ -14,6 +19,7 @@ const int kForwardAzimuth = 2048;
  */
 Sequence04::Sequence04() : frc::CommandGroup("Sequence04") {
   AddSequential(new Log("starting BLUE alliance move out and and shoot"));
+  AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
   AddSequential(new drive::TimedSwerveDrive(-0.25, 0, 2.2));
 
   // azimuth

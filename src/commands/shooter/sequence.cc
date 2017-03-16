@@ -18,7 +18,7 @@ StartShooting::StartShooting()
   AddParallel(new deadeye::ShooterLED(true));
   AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
-  AddSequential(new drive::DeadeyeAzimuth());
+  AddParallel(new drive::DeadeyeAzimuth());
   AddSequential(new shooter::GetAngle());
 
   AddParallel(new deadeye::ShooterLED(false));
@@ -60,5 +60,6 @@ void StartCloseShot::Interrupted() {
 StopShooting::StopShooting() : frc::CommandGroup("StopShooting") {
   AddParallel(new deadeye::ShooterLED(false));
   AddParallel(new StopHopper());
+  AddParallel(new StopIntake());
   AddSequential(new StopShooterWheel());
 }

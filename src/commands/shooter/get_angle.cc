@@ -39,6 +39,11 @@ void GetAngle::Initialize() {
  * rate commands to the swerve drive based on current error calculations.
  */
 void GetAngle::Execute() {
+  if (!Robot::deadeye->HasTarget()) {
+    logger_->info("GetAngle::Execute no target");
+    return;
+  }
+
   error_ = Robot::deadeye->GetCenterlineError();
   abs_error_ = fabs(error_);
   double ticks;
@@ -66,6 +71,10 @@ void GetAngle::Execute() {
  * if desired azimuth is reached.
  */
 bool GetAngle::IsFinished() {
+  if (!Robot::deadeye->HasTarget()) {
+    return false;
+  }
+
   if (abs_error_ < kCloseEnough) {
     stable_count_++;
   } else {
