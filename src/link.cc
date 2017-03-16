@@ -1,59 +1,24 @@
 #include "link.h"
 
 #include <string>
-
-#include "link/boiler.h"
-#include "link/gear.h"
-#include "link/no_target.h"
-#include "link/mode.h"
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <array>
+#include <msgpack.hpp>
 
 using namespace deadeye;
 using namespace std;
 
 Link::Link(std::shared_ptr<cpptoml::table> config)
-    : logger_(spdlog::get("deadeye")), serial_(nullptr) {
-  assert(config);
-
-  string port = "/dev/null";
-  int speed = 115200;
-  int timeout = 1000;
-
-  auto link_config = config->get_table("LINK");
-  if (link_config) {
-    auto port_setting = link_config->get_as<string>("port");
-    if (port_setting) {
-      port = *port_setting;
-    } else {
-      logger_->warn("LINK port setting missing, using default");
-    }
-
-    auto speed_setting = link_config->get_as<int>("speed");
-    if (speed_setting) {
-      speed = *speed_setting;
-    } else {
-      logger_->warn("LINK port speed setting missing, using default");
-    }
-
-    auto timeout_setting = link_config->get_as<int>("timeout");
-    if (timeout_setting) {
-      timeout = *timeout_setting;
-    } else {
-      logger_->warn("LINK timeout setting missing, using default");
-    }
-  } else {
-    logger_->error("LINK configuration section missing, using defaults");
-  }
-  logger_->info("link on port {} at {} baud with {}ms timeout", port, speed,
-                timeout);
-
-  serial_.reset(
-      new serial::Serial(port, speed, serial::Timeout::simpleTimeout(timeout)));
+    : logger_(spdlog::get("deadeye")) {
+  LoadConfigSettings(config);
+  ConfigureNetworking();
 }
 
 /**
- * Read serial line for current mode.
+ * Set current mode.
  */
-Mode Link::GetMode() {
+int Link::GetMode() {
 #ifdef DEADEYE_TEST
   return Mode::idle;
 #else
@@ -62,19 +27,18 @@ Mode Link::GetMode() {
 }
 
 /**
- *Send the boiler shooting solution across the serial line.
+ * Send the boiler shooting solution.
  */
 void Link::SendBoilerSolution(int azimuth_error, int centerline_error) {
-#if !NDEBUG
-  static int count = 0;
-  if (count++ > 500) {
-    SPDLOG_DEBUG(logger_, "boiler solution: az err = {}, centerline_error = {}",
-                 azimuth_error, centerline_error);
-    count = 0;
+  array<int, 3> t{{kBoilerSolutionMesg, azimuth_error, centerline_error}};
+  msgpack::sbuffer buf;
+  msgpack::pack(buf, t);
+  ssize_t nwrite = buf.size();
+  if (send(sockfd_, buf.data(), nwrite, 0) != nwrite) {
+    logger_->warn("Link error sending message: {}", strerror(errno));
   }
-#endif
-  BoilerSentence bts(azimuth_error, centerline_error);
-  serial_->write(bts.ToString() + "\n");
+  SPDLOG_DEBUG(logger_, "Link sent: {}",
+               msgpack::unpack(buf.data(), buf.size()).get());
 }
 
 /**
@@ -83,15 +47,70 @@ void Link::SendBoilerSolution(int azimuth_error, int centerline_error) {
 void Link::SendGearSolution(int azimuth_error, int range) {
   SPDLOG_DEBUG(logger_, "gear solution: az error = {}, range = {}",
                azimuth_error, range);
-  GearSentence gaz(azimuth_error, range);
-  serial_->write(gaz.ToString() + "\n");
 }
 
 /**
- * Send a no target message on the serial line.
+ * Send a no target message.
  */
 void Link::SendNoTarget() {
-  // SPDLOG_DEBUG(logger_, "no target");
-  NoTargetSentence nts;
-  serial_->write(nts.ToString() + "\n");
+  array<int, 3> t{{kNoTargetMesg, 0, 0}};
+  msgpack::sbuffer buf;
+  msgpack::pack(buf, t);
+  ssize_t nwrite = buf.size();
+  if (send(sockfd_, buf.data(), nwrite, 0) != nwrite) {
+    logger_->warn("Link error sending message: {}", strerror(errno));
+  }
+  SPDLOG_DEBUG(logger_, "Link sent: {}",
+               msgpack::unpack(buf.data(), buf.size()).get());
+}
+
+/**
+ * Configure UDP networking to roboRIO.
+ */
+void Link::ConfigureNetworking() {
+  sockfd_ = socket(AF_INET, SOCK_DGRAM, 0);
+  if (sockfd_ == -1) {
+    logger_->critical("Link socket error: {}", strerror(errno));
+  }
+
+  // remote host with "address" and "port" in LINK config table
+  sockaddr_in addr;
+  memset(&addr, 0, sizeof(addr));
+  addr.sin_family = AF_INET;
+  if (inet_pton(AF_INET, address_.c_str(), &addr.sin_addr) != 1) {
+    logger_->critical("Link inet_pton error for address {}", address_);
+  }
+  addr.sin_port = htons(port_);
+
+  // set up connection
+  if (connect(sockfd_, (sockaddr*)&addr, sizeof(addr)) == -1) {
+    logger_->critical("Link connect error: {}", strerror(errno));
+  }
+}
+
+/**
+ * Load configuration settings.
+ */
+void Link::LoadConfigSettings(const std::shared_ptr<cpptoml::table> config_in) {
+  assert(config_in);
+  auto config = config_in->get_table("LINK");
+  if (!config) {
+    throw invalid_argument("LINK table missing from config");
+  }
+
+  auto s_opt = config->get_as<string>("address");
+  if (s_opt) {
+    address_ = *s_opt;
+  } else {
+    logger_->warn("LINK address setting missing, using default");
+  }
+
+  auto i_opt = config->get_as<int>("port");
+  if (i_opt) {
+    port_ = *i_opt;
+  } else {
+    logger_->warn("LINK port setting missing, using default");
+  }
+
+  logger_->info("link to {}:{}", address_, port_);
 }

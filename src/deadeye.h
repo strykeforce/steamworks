@@ -6,7 +6,6 @@
 #include "link.h"
 #include "boiler_camera.h"
 #include "gear_camera.h"
-#include "link/mode.h"
 #include "fps.h"
 
 namespace deadeye {
@@ -24,7 +23,7 @@ class Deadeye {
   Link link_;
   BoilerCamera boiler_camera_;
   GearCamera gear_camera_;
-  Mode current_mode_ = Mode::idle;
+  int current_mode_ = Link::Mode::idle;
   FPS fps_;
   bool display_framerate_ = false;
   bool display_boiler_ = false;
@@ -34,7 +33,7 @@ class Deadeye {
   int display_gear_int_ = 0;
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
-  void SwitchMode(Mode mode);
+  void SwitchMode(int mode);
   void ProcessBoilerTarget();
   void ProcessGearTarget();
 };

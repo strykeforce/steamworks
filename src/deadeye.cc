@@ -3,8 +3,6 @@
 #include <chrono>
 #include <thread>
 
-#include "link/mode.h"
-
 using namespace deadeye;
 
 namespace {
@@ -24,7 +22,7 @@ Deadeye::Deadeye(std::shared_ptr<cpptoml::table> config)
  */
 void Deadeye::Run() {
   while (true) {
-    Mode mode = link_.GetMode();
+    int mode = link_.GetMode();
 
     if (mode != current_mode_) {
       SwitchMode(mode);
@@ -32,13 +30,13 @@ void Deadeye::Run() {
     }
 
     switch (mode) {
-      case Mode::boiler:
+      case Link::Mode::boiler:
         ProcessBoilerTarget();
         break;
-      case Mode::gear:
+      case Link::Mode::gear:
         ProcessGearTarget();
         break;
-      case Mode::idle:
+      case Link::Mode::idle:
         return;
     }
   }
@@ -47,9 +45,9 @@ void Deadeye::Run() {
 /**
  * Switch active mode.
  */
-void Deadeye::SwitchMode(Mode mode) {
+void Deadeye::SwitchMode(int mode) {
   switch (mode) {
-    case Mode::boiler:
+    case Link::Mode::boiler:
       logger_->info("switching to boiler camera capture");
       SPDLOG_TRACE(logger_, "start StopCapture");
       gear_camera_.StopCapture();
@@ -61,7 +59,7 @@ void Deadeye::SwitchMode(Mode mode) {
       boiler_camera_.StartCapture();
       SPDLOG_TRACE(logger_, "done configuring camera");
       break;
-    case Mode::gear:
+    case Link::Mode::gear:
       logger_->info("switching to gear camera capture");
       boiler_camera_.StopCapture();
       if (!gear_camera_.IsConnected()) {
@@ -69,7 +67,7 @@ void Deadeye::SwitchMode(Mode mode) {
       }
       gear_camera_.StartCapture();
       break;
-    case Mode::idle:
+    case Link::Mode::idle:
       logger_->info("deadeye mode set to idle");
       gear_camera_.StopCapture();
       boiler_camera_.StopCapture();

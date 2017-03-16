@@ -15,11 +15,5 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_definitions(-DSPDLOG_DEBUG_ON -DSPDLOG_TRACE_ON)
 endif(CMAKE_BUILD_TYPE MATCHES "Debug")
 
-# BOILER_LOOKUP_INPUT is used by vendor/tools/generate_lookup. It is set here so
-# we can set it separately in test/CMakeLists.txt. It needs to be set prior to
-# adding the vendor subdirectory.
-set(BOILER_LOOKUP_INPUT "${CMAKE_SOURCE_DIR}/conf/steamworks_boiler_data.xlsx")
-add_subdirectory(vendor)
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_subdirectory(src)

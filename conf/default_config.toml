@@ -28,6 +28,5 @@ hsv_upper = [80, 255, 255]
 min_arc_length = 50.0
 
 [LINK]
-port = "/dev/ttyTHS2"
-speed = 115200
-timeout = 1000 # ms
+port = 5800
+address = "10.27.67.2"

@@ -1,9 +1,9 @@
 
 include_directories(
 "${CMAKE_SOURCE_DIR}/vendor/include"
-"${CMAKE_SOURCE_DIR}/vendor/serial/include"
 "${PROJECT_BINARY_DIR}/src"
 /opt/flycapture/include
+/opt/msgpack-c/include
 )
 
 link_directories(/opt/flycapture/lib)
@@ -19,13 +19,10 @@ add_executable(${CMAKE_PROJECT_NAME}
   fps.cc
 )
 
-include(link/CMakeLists.txt)
-
 target_link_libraries(${CMAKE_PROJECT_NAME}
   pthread
   ${OpenCV_LIBS}
   flycapture
-  serial
 )
 
 install(TARGETS ${CMAKE_PROJECT_NAME} RUNTIME DESTINATION sbin)
