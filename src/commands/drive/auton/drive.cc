@@ -7,37 +7,31 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const double kMaxSpeed = 200;  // 600 practical max
-const double kMinSpeed = 25;
-
-const double kMaxSpeedTime = 400;
-const double kApproxPeriod = 20;
-
-const int kCloseEnough = 5;
+const double kMaxSpeed = 180.0 / 600;  // 600 practical max
+const double kMinSpeed = 42.0 / 600;
+const int kCloseEnough = 25;
+const int kSlopeStart = 800;
 const int kStableCountReq = 3;
-
-const int kAccelIterCount =
-    static_cast<unsigned>(ceil(kMaxSpeedTime / kApproxPeriod));
-
-const int kSlopeDistance = kMaxSpeed * (kMaxSpeedTime / 100) * 0.5;
+const int kZeroCountReq = 3;
 }
 
 /**
  * Designated constructor.
+ *
+ * @param angle the direction to travel, relative to robot forward -180.0 to
+ * 180.0
+ * @param distance the number of encoder ticks to travel
+ * @param timeout the timecount in seconds
  */
-Drive::Drive(int distance, int azimuth, double timeout)
-    : frc::Command("Drive"),
+Drive::Drive(double angle, double distance, double timeout)
+    : frc::Command("Drive", timeout),
       logger_(spdlog::get("command")),
-      distance_(distance),
-      azimuth_(azimuth),
-      timeout_(timeout) {
+      angle_(angle),
+      distance_(distance) {
   Requires(Robot::drive);
 }
 
-/**
- * Initialize with default azimuth of zero.
- */
-Drive::Drive(int distance) : Drive(distance, 0, -1) {}
+Drive::Drive(double angle, double distance) : Drive(angle, distance, -1.0) {}
 
 /**
  * Initialize
@@ -46,18 +40,16 @@ void Drive::Initialize() {
   Robot::drive->SetAutonMode();
   Robot::drive->ZeroPosition();
   error_ = distance_;
-  SPDLOG_DEBUG(logger_, "target = {}", distance_);
-  start_decel_pos_ = distance_ - kSlopeDistance;
+  forward_factor_ = cos(angle_ * M_PI / 180);
+  strafe_factor_ = sin(angle_ * M_PI / 180);
+  SPDLOG_DEBUG(logger_, "angle = {}, forward = {}, strafe = {}", angle_,
+               forward_factor_, strafe_factor_);
+  // start_decel_pos_ = distance_ - kSlopeStart;
   stable_count_ = 0;
+  zero_count_ = 0;
 
-  SPDLOG_DEBUG(
-      logger_,
-      "distance = {}, position = {}, kSlopeDistance = {}, start_decel_pos_ = "
-      "{}",
-      distance_, Robot::drive->GetPosition(), kSlopeDistance, start_decel_pos_);
-  if (timeout_ != -1) {
-    SetTimeout(timeout_);
-  }
+  SPDLOG_DEBUG(logger_, "distance = {}, position = {}, kSlopeStart = {}",
+               distance_, Robot::drive->GetPosition(), kSlopeStart);
 }
 
 /**
@@ -65,25 +57,30 @@ void Drive::Initialize() {
  * rate commands to the swerve drive based on current error calculations.
  */
 void Drive::Execute() {
-  double position = Robot::drive->GetPosition();
-  if (position < 0) {
-    position = 0;
+  // wait a few iterations for Robot::drive->ZeroPosition() to "take"
+  if (zero_count_ < kZeroCountReq) {
+    abs_error_ = distance_;
+    zero_count_++;
+    return;
   }
-  error_ = distance_ - position;
+
+  double position = Robot::drive->GetPosition();  // default to talon 13
+  error_ = distance_ - fabs(position);
   abs_error_ = abs(error_);
   double speed;
 
-  if (abs_error_ < kSlopeDistance) {
+  if (abs_error_ < kSlopeStart) {
     if (abs_error_ < kCloseEnough) {
       speed = 0;
     } else {
       speed = kMinSpeed +
-              ((abs_error_ - kCloseEnough) / (kSlopeDistance - kCloseEnough)) *
+              ((abs_error_ - kCloseEnough) / (kSlopeStart - kCloseEnough)) *
                   (kMaxSpeed - kMinSpeed);
     }
-  } else if (position < kSlopeDistance) {
-    speed = kMinSpeed + (position / kSlopeDistance) * (kMaxSpeed - kMinSpeed);
-  } else {
+  } /*else if (position < kSlopeStart) {
+    speed = kMinSpeed + (position / kSlopeStart) * (kMaxSpeed - kMinSpeed);
+  } */
+  else {
     speed = kMaxSpeed;
   }
 
@@ -91,7 +88,8 @@ void Drive::Execute() {
 
   SPDLOG_DEBUG(logger_, "Drive position = {}, error = {}, speed = {}", position,
                error_, speed);
-  Robot::drive->CrabDriveAutonomous(speed, azimuth_);
+
+  Robot::drive->Drive(forward_factor_ * speed, strafe_factor_ * speed, 0);
 }
 
 /**

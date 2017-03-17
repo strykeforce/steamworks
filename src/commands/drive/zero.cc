@@ -9,6 +9,9 @@ namespace {
 const double kDriveSetpoint = 250.0;
 }
 
+/**
+ * This command is used for aligning the wheels.
+ */
 Zero::Zero() : frc::Command("Zero") { Requires(Robot::drive); }
 
 void Zero::Initialize() {

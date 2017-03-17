@@ -197,5 +197,7 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Deadeye Azimuth", new drive::DeadeyeAzimuth());
   SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
+
+  SmartDashboard::PutData("Drive Auton", new drive::GyroAzimuth(125));
 #endif
 }

@@ -1,6 +1,6 @@
 [STEAMWORKS]
 
-grapher = false
+grapher = true
 
 [STEAMWORKS.CLIMBER]
 capture_voltage =  4.0
@@ -257,7 +257,7 @@ azimuth_sma_period = 5
         # 600 practical max, 1000 = 12v
         # 25 = .42 f/sec
         # 400 = 6.8 f/sec, linear between 25-400
-        # 48.89 ticks per inch
+        # 50.72 ticks per inch
         name = "drive_auton"
         type = "velocity"
         setpoint_max = 600.0 # ticks/100ms

@@ -9,9 +9,9 @@ using namespace std;
 // tuning parameters
 namespace {
 const float kMaxSpeed = 75.0 / 75.0;
-const float kMinSpeed = 10.0 / 75.0;
+const float kMinSpeed = 25.0 / 75.0;
 const int kCloseEnough = 4;
-const int kSlopeStart = 100;
+const int kSlopeStart = 90;
 const int kStableCountReq = 3;
 }
 
@@ -31,7 +31,7 @@ GyroAzimuth::GyroAzimuth(float target)
  */
 void GyroAzimuth::Initialize() {
   Robot::drive->SetAzimuthMode();
-  float initial = RobotMap::gyro->GetYaw();
+  float initial = RobotMap::gyro->GetAngle();
   error_ = target_ - initial;
   SPDLOG_DEBUG(logger_, "target = {}, initial = {}, error = {}", target_,
                initial, error_);
@@ -43,7 +43,7 @@ void GyroAzimuth::Initialize() {
  * rate commands to the swerve drive based on current error calculations.
  */
 void GyroAzimuth::Execute() {
-  error_ = target_ - RobotMap::gyro->GetYaw();
+  error_ = target_ - RobotMap::gyro->GetAngle();
   abs_error_ = fabs(error_);
   double speed;
 
@@ -58,11 +58,9 @@ void GyroAzimuth::Execute() {
   } else {
     speed = kMaxSpeed;
   }
-  speed = speed * (signbit(error_) ? 1 : -1);  // match sign to error
-  SPDLOG_DEBUG(logger_, "abs_error_ = {}, error_ = {}, speed =  {}", abs_error_,
-               error_, speed);
-  // Robot::drive->DriveAzimuthAutonomous(speed);
-  Robot::drive->DriveAutonomous(0, 0, speed);
+  speed = speed * (signbit(error_) ? -1 : 1);  // match sign to error
+  SPDLOG_DEBUG(logger_, "GyroAzimuth error_ = {}, speed =  {}", error_, speed);
+  Robot::drive->Drive(0, 0, speed);
 }
 
 /**
@@ -72,13 +70,11 @@ void GyroAzimuth::Execute() {
 bool GyroAzimuth::IsFinished() {
   if (abs_error_ < kCloseEnough) {
     stable_count_++;
-    SPDLOG_TRACE(logger_, "incrementing stable_count_ to {}", stable_count_);
   } else {
     stable_count_ = 0;
-    SPDLOG_TRACE(logger_, "resetting stable_count_ to 0");
   }
   if (stable_count_ == kStableCountReq) {
-    SPDLOG_DEBUG(logger_, "done with auton azimuth, abs_error_ = {}",
+    SPDLOG_DEBUG(logger_, "GyroAzimuth done with azimuth, abs_error_ = {}",
                  abs_error_);
     return true;
   }

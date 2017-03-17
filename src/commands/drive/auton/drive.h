@@ -8,8 +8,9 @@ namespace command {
 namespace drive {
 class Drive : public frc::Command {
  public:
-  Drive(int distance, int azimuth, double timeout);
-  Drive(int distance);
+  // this is called by other constructors
+  Drive(double angle, double distance, double timeout);
+  Drive(double angle, double distance);
   virtual ~Drive() = default;
 
  protected:
@@ -20,13 +21,17 @@ class Drive : public frc::Command {
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
+  double angle_;
   double distance_;
-  int azimuth_ = 0;
+  double forward_factor_;
+  double strafe_factor_;
+
   double error_;
   double abs_error_;
   double start_decel_pos_;
-  double stable_count_ = 0;
-  double timeout_ = -1;
+
+  int stable_count_ = 0;
+  int zero_count_ = 0;
 };
 } /* drive */
 } /* command */
