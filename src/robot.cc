@@ -136,7 +136,7 @@ void Robot::Configure() {
   std::istringstream is{conf};
   cpptoml::parser p{is};
   config_ = p.parse();
-  Log::Initialize(config_);
+  Log::GetInstance().Initialize(config_);
   logger_ = spdlog::get("robot");
   spdlog::drop("config");
 }

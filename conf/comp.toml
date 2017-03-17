@@ -1,6 +1,9 @@
-[STEAMWORKS]
-
-grapher = false
+[LOGGING]
+grapher = true
+color = true
+loggers = ["robot", "command", "subsystem", "sidewinder", "deadeye"]
+default = "info"
+sidewinder = "info"
 
 [STEAMWORKS.CLIMBER]
 capture_voltage =  4.0

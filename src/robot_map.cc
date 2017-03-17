@@ -18,7 +18,6 @@ inline JerrysGrapher_DeviceBundle jgdb(byte id, ::CANTalon* t) {
 static std::vector<JerrysGrapher_DeviceBundle> gd;
 
 void initialize_grapher() {
-#ifndef NDEBUG
   typedef RobotMap rm;
 
   gd.push_back(jgdb(rm::kLeftFrontDrive, rm::swerve_talons->lf_drive));
@@ -55,7 +54,6 @@ void initialize_grapher() {
   }
 
   JerrysGrapher_StartStatusThread(&gd);
-#endif
 }
 
 } /* namespace */
@@ -115,11 +113,12 @@ void RobotMap::Initialize(const std::shared_ptr<cpptoml::table> config) {
   swerve_talons->rr_azimuth = new ::CANTalon(Talons::kRightRearAzimuth);
 
   // start grapher data collection thread if enabled in config file.
-  auto c = config->get_table("STEAMWORKS");
-  assert(c);
-  if (c->get_as<bool>("grapher").value_or(false)) {
-    spdlog::get("robot")->warn("initializing grapher");
+  auto c = config->get_table("LOGGING");
+  if (c && c->get_as<bool>("grapher").value_or(false)) {
+    spdlog::get("robot")->warn("grapher is enabled");
     initialize_grapher();
+  } else {
+    spdlog::get("robot")->info("grapher is disabled");
   }
 }
 
