@@ -1,7 +1,7 @@
 #pragma once
 
-#include "WPILib.h"
-#include "spdlog/spdlog.h"
+#include <WPILib.h>
+#include <spdlog/spdlog.h>
 
 namespace steamworks {
 namespace command {

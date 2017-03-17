@@ -1,7 +1,8 @@
 #include "drive.h"
 
+#include <sidewinder/talon/settings.h>
+
 #include "commands/drive/tele_op.h"
-#include "motion.h"
 #include "robot_map.h"
 
 using namespace steamworks::subsystem;
@@ -210,8 +211,8 @@ void SwerveDrive::LoadConfigSettings(
 
   drive_motion_magic_settings_ =
       talon::Settings::Create(swerve_settings, "drive_auton_motion_magic");
-  // SPDLOG_DEBUG(logger_, "dumping drive auton motion magic talon configuration");
-  // drive_motion_magic_settings_->LogConfig(logger_);
+  // SPDLOG_DEBUG(logger_, "dumping drive auton motion magic talon
+  // configuration"); drive_motion_magic_settings_->LogConfig(logger_);
 
   drive_azimuth_settings_ =
       talon::Settings::Create(swerve_settings, "drive_auton_slow_azimuth");

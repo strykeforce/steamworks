@@ -1,6 +1,7 @@
 #include "clamp.h"
 
 #include "robot.h"
+#include "subsystems/gear.h"
 
 using namespace steamworks::command::gear;
 

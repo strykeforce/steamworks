@@ -1,6 +1,8 @@
 #include "set_wheel.h"
 
 #include "robot.h"
+#include "subsystems/deadeye.h"
+#include "subsystems/shooter_wheel.h"
 
 using namespace steamworks::command::shooter;
 

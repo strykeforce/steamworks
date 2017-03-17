@@ -1,6 +1,8 @@
 #include "set_elevation.h"
 
 #include "robot.h"
+#include "subsystems/deadeye.h"
+#include "subsystems/shooter_elevation.h"
 
 using namespace steamworks::command::shooter;
 

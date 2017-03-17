@@ -1,6 +1,7 @@
 #include "timed_azimuth.h"
 
 #include "robot.h"
+#include "subsystems/drive.h"
 
 using namespace steamworks::command::drive;
 

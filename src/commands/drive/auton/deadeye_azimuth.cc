@@ -2,6 +2,8 @@
 
 #include "robot.h"
 #include "robot_map.h"
+#include "subsystems/deadeye.h"
+#include "subsystems/drive.h"
 
 using namespace steamworks::command::drive;
 using namespace std;

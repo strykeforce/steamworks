@@ -1,6 +1,7 @@
 #include "elevation.h"
 
 #include "robot.h"
+#include "subsystems/shooter_elevation.h"
 
 using namespace steamworks::command;
 

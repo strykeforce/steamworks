@@ -1,8 +1,8 @@
 #pragma once
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
+#include <WPILib.h>
+#include <cpptoml/cpptoml.h>
+#include <spdlog/spdlog.h>
 
 namespace steamworks {
 namespace subsystem {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WPILib.h"
+#include <WPILib.h>
 
 namespace steamworks {
 namespace trigger {

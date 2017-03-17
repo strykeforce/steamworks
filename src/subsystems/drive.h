@@ -3,8 +3,13 @@
 #include <WPILib.h>
 #include <cpptoml/cpptoml.h>
 #include <sidewinder/swerve/swerve_drive.h>
-#include <sidewinder/talon/settings.h>
 #include <spdlog/spdlog.h>
+
+namespace sidewinder {
+namespace talon {
+class Settings;
+} /* talon */
+} /* sidewinder */
 
 namespace steamworks {
 namespace subsystem {

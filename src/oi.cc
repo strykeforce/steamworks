@@ -2,7 +2,23 @@
 
 #include <cmath>
 
-#include "commands/commands.h"
+#include "commands/azimuth.h"
+#include "commands/climber.h"
+#include "commands/deadeye/gear_led.h"
+#include "commands/deadeye/shooter_led.h"
+#include "commands/drive/auton/deadeye_azimuth.h"
+#include "commands/drive/auton/gyro_azimuth.h"
+#include "commands/drive/zero.h"
+#include "commands/gear/load.h"
+#include "commands/gear/release.h"
+#include "commands/gear/sequence.h"
+#include "commands/hopper.h"
+#include "commands/intake.h"
+#include "commands/log.h"
+#include "commands/shooter/elevation.h"
+#include "commands/shooter/get_angle.h"
+#include "commands/shooter/sequence.h"
+#include "commands/shooter/wheel.h"
 #include "robot_map.h"
 
 using namespace steamworks;

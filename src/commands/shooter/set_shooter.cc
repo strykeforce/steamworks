@@ -1,6 +1,8 @@
 #include "set_shooter.h"
 
 #include "robot.h"
+#include "subsystems/shooter_elevation.h"
+#include "subsystems/shooter_wheel.h"
 
 using namespace steamworks::command::shooter;
 

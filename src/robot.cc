@@ -1,12 +1,23 @@
 #include "robot.h"
 
 #include <WPILibVersion.h>
+#include <sidewinder/version.h>
 
-#include "commands/commands.h"
+#include "commands/auton/auton.h"
+#include "commands/log.h"
+#include "commands/shooter/sequence.h"
 #include "default_config.h"
 #include "log.h"
+#include "oi.h"
 #include "robot_map.h"
-#include "sidewinder/version.h"
+#include "subsystems/climber.h"
+#include "subsystems/deadeye.h"
+#include "subsystems/drive.h"
+#include "subsystems/gear.h"
+#include "subsystems/hopper.h"
+#include "subsystems/intake.h"
+#include "subsystems/shooter_elevation.h"
+#include "subsystems/shooter_wheel.h"
 #include "version.h"
 
 using namespace steamworks;

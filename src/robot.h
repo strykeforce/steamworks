@@ -1,21 +1,21 @@
 #pragma once
 
-#include "WPILib.h"
-#include "cpptoml/cpptoml.h"
-#include "spdlog/spdlog.h"
-
-#include "oi.h"
-#include "subsystems/climber.h"
-#include "subsystems/deadeye.h"
-#include "subsystems/drive.h"
-#include "subsystems/gear.h"
-#include "subsystems/hopper.h"
-#include "subsystems/intake.h"
-#include "subsystems/motion.h"
-#include "subsystems/shooter_elevation.h"
-#include "subsystems/shooter_wheel.h"
+#include <WPILib.h>
+#include <cpptoml/cpptoml.h>
+#include <spdlog/spdlog.h>
 
 namespace steamworks {
+class OI;
+namespace subsystem {
+class Climber;
+class Deadeye;
+class SwerveDrive;
+class GearLoader;
+class Hopper;
+class Intake;
+class ShooterElevation;
+class ShooterWheel;
+} /* subsystem */
 
 /** Robot is a command-based robot.
  * Hardware references are managed in robot_map and operator inputs in oi.

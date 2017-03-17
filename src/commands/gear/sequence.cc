@@ -1,6 +1,10 @@
 #include "sequence.h"
 
-#include "commands/commands.h"
+#include "clamp.h"
+#include "commands/log.h"
+#include "deploy.h"
+#include "load.h"
+#include "pivot.h"
 
 using namespace steamworks::command::gear;
 

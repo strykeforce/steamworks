@@ -1,6 +1,7 @@
 #include "position_drive.h"
 
 #include "robot.h"
+#include "subsystems/drive.h"
 
 using namespace steamworks::command::drive;
 using namespace std;

@@ -1,5 +1,6 @@
 #include "shooter_elevation.h"
 
+#include <sidewinder/talon/settings.h>
 #include <cmath>
 
 #include "robot_map.h"

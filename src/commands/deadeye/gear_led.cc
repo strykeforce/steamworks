@@ -1,6 +1,7 @@
 #include "gear_led.h"
 
 #include "robot.h"
+#include "subsystems/deadeye.h"
 
 using namespace steamworks::command::deadeye;
 

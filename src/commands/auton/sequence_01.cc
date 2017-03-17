@@ -1,6 +1,10 @@
 #include "sequence_01.h"
 
-#include "commands/commands.h"
+#include "commands/drive/auton/drive.h"
+#include "commands/drive/auton/gyro_azimuth.h"
+#include "commands/intake.h"
+#include "commands/log.h"
+#include "commands/shooter/sequence.h"
 
 using namespace steamworks::command::auton;
 using namespace steamworks::command;

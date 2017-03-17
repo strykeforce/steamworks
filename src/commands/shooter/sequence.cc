@@ -1,7 +1,15 @@
 #include "sequence.h"
 
-#include "commands/commands.h"
+#include "commands/deadeye/shooter_led.h"
+#include "commands/drive/auton/deadeye_azimuth.h"
+#include "commands/hopper.h"
+#include "commands/intake.h"
+#include "get_angle.h"
 #include "robot.h"
+#include "set_elevation.h"
+#include "set_shooter.h"
+#include "set_wheel.h"
+#include "wheel.h"
 
 using namespace steamworks::command;
 

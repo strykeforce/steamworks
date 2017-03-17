@@ -1,6 +1,10 @@
 #include "sequence_02.h"
 
-#include "commands/commands.h"
+#include "commands/drive/auton/drive.h"
+#include "commands/drive/auton/gyro_azimuth.h"
+#include "commands/intake.h"
+#include "commands/log.h"
+#include "commands/shooter/sequence.h"
 
 using namespace steamworks::command::auton;
 using namespace steamworks::command;
@@ -19,15 +23,15 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   AddSequential(new LogCommand("starting RED alliance hopper dump and shoot"));
 
   // drive on slant to hopper
-  AddSequential(new drive::TimedSwerveDrive(-0.50 / 2.0, 0.95 / 2.0, 1.75));
+  // AddSequential(new drive::TimedSwerveDrive(-0.50 / 2.0, 0.95 / 2.0, 1.75));
 
   AddSequential(new WaitCommand(2.0));
 
   // move out from wall
-  AddSequential(new drive::TimedSwerveDrive(0.7, 0, 0.6));
+  // AddSequential(new drive::TimedSwerveDrive(0.7, 0, 0.6));
 
   // azimuth
-  AddSequential(new drive::TimedAzimuth(-0.4, 0.6));
+  // AddSequential(new drive::TimedAzimuth(-0.4, 0.6));
   //
   // // start shooting
   // AddSequential(new StartShooting());

@@ -1,8 +1,8 @@
 #include "get_angle.h"
 
-#include "oi.h"
 #include "robot.h"
-#include "robot_map.h"
+#include "subsystems/deadeye.h"
+#include "subsystems/shooter_elevation.h"
 
 using namespace steamworks::command::shooter;
 using namespace std;

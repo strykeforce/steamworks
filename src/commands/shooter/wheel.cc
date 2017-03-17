@@ -1,6 +1,7 @@
 #include "wheel.h"
 
 #include "robot.h"
+#include "subsystems/shooter_wheel.h"
 
 using namespace steamworks::command;
 
