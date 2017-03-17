@@ -1,4 +1,4 @@
-#include "gear.h"
+#include "gear_trigger.h"
 
 #include "oi.h"
 
@@ -9,8 +9,8 @@ namespace {
 const double kTriggerActive = 0.5;
 }
 
-Gear::Gear() : Trigger(), gamepad_(OI::kGamePadJoystick) {}
+GearTrigger::GearTrigger() : Trigger(), gamepad_(OI::kGamePadJoystick) {}
 
-bool Gear::Get() {
+bool GearTrigger::Get() {
   return gamepad_.GetTriggerAxis(XboxController::kLeftHand) > kTriggerActive;
 }

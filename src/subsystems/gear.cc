@@ -12,9 +12,9 @@ GearLoader::GearLoader(const std::shared_ptr<cpptoml::table> config)
 }
 
 /**
- * SetLimitSwitchNormallyOpen
+ * SetLoadLimitSwitchNormallyOpen
  */
-void GearLoader::SetLimitSwitchNormallyOpen(bool open) {
+void GearLoader::SetLoadLimitSwitchNormallyOpen(bool open) {
   SPDLOG_DEBUG(logger_, "setting limit switch normally open to {}", open);
   RobotMap::gear_intake_talon->ConfigFwdLimitSwitchNormallyOpen(open);
 }
@@ -44,9 +44,9 @@ void GearLoader::StopLoader() {
 }
 
 /**
- * IsLimitSwitchClosed
+ * IsLoadLimitSwitchClosed
  */
-bool GearLoader::IsLimitSwitchClosed() {
+bool GearLoader::IsLoadLimitSwitchClosed() {
   static bool was_closed = false;
 
   bool is_closed = RobotMap::gear_intake_talon->IsFwdLimitSwitchClosed() == 1;
@@ -56,6 +56,13 @@ bool GearLoader::IsLimitSwitchClosed() {
   }
 
   return is_closed;
+}
+
+/**
+ * IsLoadLimitSwitchClosed
+ */
+bool GearLoader::IsIntakeLimitSwitchClosed() {
+  return RobotMap::gear_intake_talon->IsRevLimitSwitchClosed() == 1;
 }
 
 /**

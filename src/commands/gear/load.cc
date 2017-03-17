@@ -13,17 +13,17 @@ LoadGear::LoadGear() : frc::Command("LoadGear") {
 void LoadGear::Initialize() {
   Robot::gear_loader->StopLoader();
   Robot::gear_loader->ClampShut();
-  Robot::gear_loader->SetLimitSwitchNormallyOpen(true);
+  Robot::gear_loader->SetLoadLimitSwitchNormallyOpen(true);
   Robot::gear_loader->Load();
   SmartDashboard::PutBoolean(kGearLoadedLabel, false);
 }
 
 bool LoadGear::IsFinished() {
-  return Robot::gear_loader->IsLimitSwitchClosed();
+  return Robot::gear_loader->IsLoadLimitSwitchClosed();
 }
 
 void LoadGear::End() {
   Robot::gear_loader->StopLoader();
-  Robot::gear_loader->SetLimitSwitchNormallyOpen(false);
+  Robot::gear_loader->SetLoadLimitSwitchNormallyOpen(false);
   SmartDashboard::PutBoolean(kGearLoadedLabel, true);
 }

@@ -12,18 +12,18 @@ DeployGear::DeployGear() : frc::Command("DeployGear") {
 
 void DeployGear::Initialize() {
   Robot::gear_loader->StopLoader();
-  Robot::gear_loader->SetLimitSwitchNormallyOpen(false);
+  Robot::gear_loader->SetLoadLimitSwitchNormallyOpen(false);
   Robot::gear_loader->ClampStage();
   Robot::gear_loader->Deploy();
 }
 
 bool DeployGear::IsFinished() {
-  return !Robot::gear_loader->IsLimitSwitchClosed();
+  return !Robot::gear_loader->IsLoadLimitSwitchClosed();
 }
 
 void DeployGear::End() {
   Robot::gear_loader->StopLoader();
-  Robot::gear_loader->SetLimitSwitchNormallyOpen(true);
+  Robot::gear_loader->SetLoadLimitSwitchNormallyOpen(true);
 
   SmartDashboard::PutBoolean(kGearLoadedLabel, false);
 }

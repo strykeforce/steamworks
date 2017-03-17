@@ -71,7 +71,7 @@ class OI {
   frc::JoystickButton brake_mode_;
 
   // gamepad buttons
-  trigger::Gear gear_load_button_;
+  trigger::GearTrigger gear_load_button_;
   frc::JoystickButton gear_stage_button_;
   frc::JoystickButton gear_stage_reverse_button_;
   frc::JoystickButton climber_button_;
@@ -85,6 +85,9 @@ class OI {
   trigger::Trim trim_down_;
   trigger::Trim trim_left_;
   trigger::Trim trim_right_;
+
+  // indicators
+  trigger::GearIntake gear_intake_;
 
   void AssignFlightSimButtons();
   void AssignGamepadButtons();

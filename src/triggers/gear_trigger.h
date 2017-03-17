@@ -5,9 +5,9 @@
 namespace steamworks {
 namespace trigger {
 
-class Gear : public frc::Trigger {
+class GearTrigger : public frc::Trigger {
  public:
-  Gear();
+  GearTrigger();
 
   bool Get() override;
 

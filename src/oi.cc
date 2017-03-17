@@ -4,6 +4,7 @@
 
 #include "commands/azimuth.h"
 #include "commands/climber.h"
+#include "commands/dashboard.h"
 #include "commands/deadeye/gear_led.h"
 #include "commands/deadeye/shooter_led.h"
 #include "commands/drive/auton/deadeye_azimuth.h"
@@ -70,10 +71,13 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
       trim_up_(trigger::Trim::kUp),
       trim_down_(trigger::Trim::kDown),
       trim_left_(trigger::Trim::kLeft),
-      trim_right_(trigger::Trim::kRight) {
+      trim_right_(trigger::Trim::kRight),
+      gear_intake_() {
   AssignFlightSimButtons();
   AssignGamepadButtons();
   AssignSmartDashboardButtons();
+  gear_intake_.WhenActive(new DashboardLight("Gear Intake", true));
+  gear_intake_.WhenInactive(new DashboardLight("Gear Intake", false));
 }
 
 /**

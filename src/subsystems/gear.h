@@ -21,12 +21,13 @@ class GearLoader : public frc::Subsystem {
   GearLoader& operator=(GearLoader&) = delete;
   GearLoader(GearLoader&) = delete;
 
-  void SetLimitSwitchNormallyOpen(bool open);
   void Load();
   void Deploy();
   void StopLoader();
 
-  bool IsLimitSwitchClosed();
+  void SetLoadLimitSwitchNormallyOpen(bool open);
+  bool IsLoadLimitSwitchClosed();
+  bool IsIntakeLimitSwitchClosed();
 
   void ClampStage();
   void ClampShut();
