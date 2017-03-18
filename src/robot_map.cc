@@ -81,7 +81,7 @@ std::shared_ptr<frc::DigitalOutput> RobotMap::shooter_camera_led;
  * reference to each.
  */
 void RobotMap::Initialize(const std::shared_ptr<cpptoml::table> config) {
-  gyro = std::make_shared<AHRS>(SPI::Port::kMXP);
+  gyro = std::make_shared<AHRS>(SPI::Port::kMXP, 200);
 
   gear_camera_led = std::make_shared<frc::DigitalOutput>(kGearCameraLight);
   shooter_camera_led =

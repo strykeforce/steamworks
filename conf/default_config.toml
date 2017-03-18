@@ -220,15 +220,15 @@ azimuth_sma_period = 5
         neutral_mode    = 2 # coast
         limit_mode      = 2 # soft and hard disabled
 
-        P      =   10.0
+        P      =   13.0
         I      =    0.0
-        D      =   75.0
+        D      =  100.0
         F      =    0.8
         I_zone =      0
 
         # motion magic
-        cruise_velocity =  800.0
-        acceleration    = 6400.0
+        cruise_velocity =   800.0
+        acceleration    = 18000.0
 
         voltage_ramp_rate              =   0.0 # v/s, 0 disables
         close_loop_ramp_rate           =   0.0 # v/s, 0 disables
@@ -287,22 +287,22 @@ azimuth_sma_period = 5
         current_limit    = 40 # amps, 0 disables
 
         [[SIDEWINDER.SWERVE.TALON]]
-        # ticks 10 - 75, can experiment going down to 5 but only in down dir
+        # ticks 10 - 275, can experiment going down to 5 but only in down dir
         # at 10 will stop in 100ms
         # deadband will prevent hunting
         name = "drive_auton_slow_azimuth"
         type = "velocity"
-        setpoint_max = 75.0 # ticks/100ms
+        setpoint_max = 275.0 # ticks/100ms
 
         feedback_device = 0 # quad
         neutral_mode    = 2 # coast
         limit_mode      = 2 # soft and hard disabled
 
         P      =     2.0
-        I      =     0.017 # if jerking, take down to 0.016, 0.015
-        D      =    75.0 # then take down 5 at a time down to 50
+        I      =     0.008 # if jerking, take down to 0.016, 0.015
+        D      =    75.0   # then take down 5 at a time down to 50
         F      =     2.1
-        I_zone =    20
+        I_zone =    40
 
         voltage_ramp_rate              =   0.0 # v/s, 0 disables
         close_loop_ramp_rate           =   0.0 # v/s, 0 disables
@@ -313,7 +313,7 @@ azimuth_sma_period = 5
         allowable_closed_loop_error    =     0 # encoder ticks
         encoder_reversed = false
         output_reversed  = false
-        current_limit    = 15 # amps, 0 disables
+        current_limit    = 40 # amps, 0 disables
 
         [[SIDEWINDER.SWERVE.TALON]]
         # ticks 10 - 75, can experiment going down to 5 but only in down dir

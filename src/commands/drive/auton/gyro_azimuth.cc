@@ -9,10 +9,12 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const float kMaxSpeed = 75.0 / 75.0;
-const float kMinSpeed = 25.0 / 75.0;
+const float kMaxSpeed = 275.0 / 275.0;
+const float kMinSpeed = 25.0 / 275.0;
+const double kDeadZone = kMinSpeed * 0.9;
+
 const int kCloseEnough = 4;
-const int kSlopeStart = 90;
+const int kSlopeStart = 30;
 const int kStableCountReq = 3;
 }
 
@@ -61,7 +63,7 @@ void GyroAzimuth::Execute() {
   }
   speed = speed * (signbit(error_) ? -1 : 1);  // match sign to error
   SPDLOG_DEBUG(logger_, "GyroAzimuth error_ = {}, speed =  {}", error_, speed);
-  Robot::drive->Drive(0, 0, speed);
+  Robot::drive->Drive(0, 0, speed, kDeadZone);
 }
 
 /**
