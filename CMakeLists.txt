@@ -8,9 +8,9 @@ set(NAVX_LIBS /opt/navx CACHE PATH "NavX directory.")
 set(CMAKE_INSTALL_PREFIX /opt/sidewinder CACHE PATH "Sidewinder installation directory." FORCE)
 
 set(VERSION_MAJOR 17)
-set(VERSION_MINOR 2)
+set(VERSION_MINOR 3)
 set(VERSION_PATCH 0)
-set(VERSION_META "")
+set(VERSION_META "-dev")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
 set(CMAKE_LD           /usr/bin/arm-frc-linux-gnueabi-ld)

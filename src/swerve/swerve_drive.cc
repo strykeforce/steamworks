@@ -228,10 +228,13 @@ void SwerveDrive::ReadAzimuthCalibration() {
  * @param forward command forward/backwards (Y-axis) throttle, -1.0 - 1.0
  * @param strafe command left/right (X-axis) throttle, -1.0 - 1.0
  * @param azimuth command CW/CCW azimuth throttle, -1.0 - 1.0
+ * @param dead_zone stop drive motors if all input magnitudes are less than this
  */
-void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
+
+void SwerveDrive::Drive(double forward, double strafe, double azimuth,
+                        double dead_zone) {
   if (gyro_disabled_) {
-    Drive_(forward, strafe, azimuth, dead_zone_);
+    Drive_(forward, strafe, azimuth, dead_zone);
     return;
   }
 
@@ -240,7 +243,14 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
   double sin_rad = sin(rad);
   double rotated_forward = forward * cos_rad + strafe * sin_rad;
   double rotated_strafe = strafe * cos_rad - forward * sin_rad;
-  Drive_(rotated_forward, rotated_strafe, azimuth, dead_zone_);
+  Drive_(rotated_forward, rotated_strafe, azimuth, dead_zone);
+}
+
+/**
+ * Drive using deadzone setting from config file.
+ */
+void SwerveDrive::Drive(double forward, double strafe, double azimuth) {
+  Drive(forward, strafe, azimuth, dead_zone_);
 }
 
 /**

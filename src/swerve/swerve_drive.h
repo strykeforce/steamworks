@@ -37,6 +37,7 @@ class SwerveDrive : public frc::Subsystem {
   virtual ~SwerveDrive() = default;
 
   // normal driving methods
+  void Drive(double forward, double strafe, double azimuth, double dead_zone);
   void Drive(double forward, double strafe, double azimuth);
 
   void TargetRotation(double azimuth);
