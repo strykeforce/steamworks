@@ -8,14 +8,31 @@ using namespace steamworks::command;
 //
 // StartHopper
 //
-StartHopper::StartHopper()
-    : frc::InstantCommand("StartHopper"), logger_(spdlog::get("command")) {
+
+/**
+ * Designated initializer.
+ */
+StartHopper::StartHopper(double voltage)
+    : frc::InstantCommand("StartHopper"),
+      logger_(spdlog::get("command")),
+      voltage_(voltage) {
   Requires(Robot::hopper);
 }
 
+/**
+ * Initialize with config file voltage.
+ */
+StartHopper::StartHopper() : StartHopper(0) {}
+
+/**
+ * Start hopper.
+ */
 void StartHopper::Initialize() {
-  SPDLOG_DEBUG(logger_, "starting hopper");
-  Robot::hopper->Start();
+  if (voltage_ != 0) {
+    Robot::hopper->Start(voltage_);
+    return;
+  }
+  Robot::hopper->Start();  // use config default
 }
 
 //

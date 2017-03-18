@@ -14,6 +14,7 @@ class Hopper : public frc::Subsystem {
   Hopper(Hopper&) = delete;
 
   void Start();
+  void Start(double voltage);
   void Stop();
   bool IsRunning();
 

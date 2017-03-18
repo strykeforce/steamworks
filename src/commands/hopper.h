@@ -8,12 +8,14 @@ namespace command {
 class StartHopper : public frc::InstantCommand {
  public:
   StartHopper();
+  StartHopper(double voltage);
 
  protected:
   void Initialize() override;
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
+  double voltage_ = 0.0;
 };
 
 class StopHopper : public frc::InstantCommand {

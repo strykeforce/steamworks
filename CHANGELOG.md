@@ -6,9 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added
+
+- SmartDashboard light that signals when a gear is inside the intake.
+
 ### Changed
 
 - We now use the network instead of a serial line to communicate with the Deadeye vision code running on the Jetson TX1.
+- Short boiler shot now runs hopper slower.
 - More tuning of auton routines.
 
 ### Fixed

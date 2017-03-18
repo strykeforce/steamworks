@@ -18,6 +18,7 @@ const int kPrepareSpeed = 400;
 const int kPrepareElevation = 1800;
 const int kCloseShotSpeed = 440;
 const int kCloseShotElevation = 50;
+const double kCloseShotHopperVoltage = 6.0;
 }
 
 StartShooting::StartShooting()
@@ -51,7 +52,7 @@ StartCloseShot::StartCloseShot()
     : frc::CommandGroup("StartCloseShot"), logger_(spdlog::get("command")) {
   SetInterruptible(true);
   AddSequential(new shooter::SetShooter(kCloseShotSpeed, kCloseShotElevation));
-  AddSequential(new StartHopper());
+  AddSequential(new StartHopper(kCloseShotHopperVoltage));
 }
 
 /**
