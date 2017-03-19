@@ -23,6 +23,7 @@ class Deadeye : public frc::Subsystem {
 
   int GetAzimuthError();
   int GetCenterlineError();
+  int GetTargetHeight();
 
   bool HasTarget();
 
@@ -50,8 +51,6 @@ class Deadeye : public frc::Subsystem {
   std::thread thread_;
   std::mutex mutex_;
 
-  bool error_reported_ = false;
-
   // config settings
   int port_ = 5800;
 
@@ -59,7 +58,7 @@ class Deadeye : public frc::Subsystem {
   bool has_target_ = false;
   int azimuth_error_;
   int centerline_error_;
-  int range_;
+  int target_height_;
 
   // shooter solution outputs
   double solution_elevation_;

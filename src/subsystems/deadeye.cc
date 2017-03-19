@@ -60,6 +60,11 @@ void Deadeye::Run() {
           azimuth_error_ = message[1];
           centerline_error_ = message[2];
           break;
+        case kGearSolutionMesg:
+          has_target_ = true;
+          azimuth_error_ = message[1];
+          target_height_ = message[2];
+          break;
         default:
           has_target_ = false;
           break;
@@ -82,6 +87,14 @@ int Deadeye::GetAzimuthError() {
 int Deadeye::GetCenterlineError() {
   std::lock_guard<std::mutex> lock(mutex_);
   return centerline_error_;
+}
+
+/**
+ * Get the azimuth error.
+ */
+int Deadeye::GetTargetHeight() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return target_height_;
 }
 
 /**
