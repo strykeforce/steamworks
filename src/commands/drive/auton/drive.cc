@@ -8,8 +8,10 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const double kMaxSpeed = 180.0 / 600;  // 600 practical max
-const double kMinSpeed = 42.0 / 600;
+const double kSetpointMax = 400.0;
+const double kMaxSpeed = 180.0 / kSetpointMax;  // 600 practical max
+const double kMinSpeed = 42.0 / kSetpointMax;
+// const double kMaxAccelStep = kMaxSpeed;
 const int kCloseEnough = 25;
 const int kSlopeStart = 800;
 const int kStableCountReq = 3;
@@ -88,7 +90,7 @@ void Drive::Execute() {
   speed = speed * (signbit(error_) ? -1 : 1);
 
   SPDLOG_DEBUG(logger_, "Drive position = {}, error = {}, speed = {}", position,
-               error_, speed);
+               error_, round(speed * kSetpointMax));
 
   Robot::drive->Drive(forward_factor_ * speed, strafe_factor_ * speed, 0);
 }
