@@ -9,10 +9,10 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const int kMaxSpeed = 45;
+const int kMaxSpeed = 70;
 const int kMinSpeed = 1;
 const int kCloseEnough = 3;
-const int kSlopeStart = 200;
+const int kSlopeStart = 100;
 const int kStableCountReq = 3;
 }
 
@@ -62,7 +62,7 @@ void GetAngle::Execute() {
   ticks = ticks * (signbit(error_) ? -1 : 1);  // match sign to error
   int pos = Robot::shooter_elevation->GetElevationSetpoint();
   SPDLOG_DEBUG(logger_, "GetAngle error_ = {}, ticks =  {}, setpoint = {}",
-               error_, ticks, pos + static_cast<int>(ticks));
+               error_, round(ticks), pos + static_cast<int>(ticks));
   Robot::shooter_elevation->SetElevation(pos + static_cast<int>(ticks));
 }
 
