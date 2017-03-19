@@ -263,7 +263,7 @@ azimuth_sma_period = 5
         # 50.72 ticks per inch
         name = "drive_auton"
         type = "velocity"
-        setpoint_max = 600.0 # ticks/100ms
+        setpoint_max = 400.0 # ticks/100ms
 
         feedback_device = 0 # quad
         neutral_mode    = 2 # coast

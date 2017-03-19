@@ -15,7 +15,8 @@ using namespace steamworks::command;
 
 namespace {
 const int kPrepareSpeed = 400;
-const int kPrepareElevation = 1800;
+// const int kPrepareElevation = 1800;
+const int kPrepareElevation = 1000;
 const int kCloseShotSpeed = 440;
 const int kCloseShotElevation = 50;
 const double kCloseShotHopperVoltage = 6.0;
@@ -24,17 +25,18 @@ const double kCloseShotHopperVoltage = 6.0;
 StartShooting::StartShooting()
     : frc::CommandGroup("StartShooting"), logger_(spdlog::get("command")) {
   SetInterruptible(true);
-  AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
+
+  AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
   AddSequential(new deadeye::ShooterLED(true));
 
-  AddParallel(new drive::DeadeyeAzimuth());
-  AddSequential(new shooter::GetAngle());
+  AddParallel(new shooter::GetAngle());
+  AddSequential(new drive::DeadeyeAzimuth());
 
-  AddParallel(new deadeye::ShooterLED(false));
   AddParallel(new shooter::SetElevation());
   AddSequential(new shooter::SetWheel());
-
   AddSequential(new StartHopper());
+
+  AddSequential(new deadeye::ShooterLED(false));
 }
 
 /**

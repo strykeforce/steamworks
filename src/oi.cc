@@ -8,7 +8,8 @@
 #include "commands/deadeye/gear_led.h"
 #include "commands/deadeye/shooter_led.h"
 #include "commands/drive/auton/deadeye_azimuth.h"
-#include "commands/drive/auton/gyro_azimuth.h"
+#include "commands/drive/auton/drive.h"
+// #include "commands/drive/auton/gyro_azimuth.h"
 #include "commands/drive/zero.h"
 #include "commands/gear/load.h"
 #include "commands/gear/release.h"
@@ -218,7 +219,18 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Deadeye Azimuth", new drive::DeadeyeAzimuth());
   SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
 
-  SmartDashboard::PutData("Gyro Azimuth 0", new drive::GyroAzimuth(0));
-  SmartDashboard::PutData("Gyro Azimuth 90", new drive::GyroAzimuth(90));
+  drive::DriveConfig dconfig;
+  dconfig.angle = 0;
+  dconfig.distance = 50.72 * 50;
+  dconfig.min_speed = 40;
+  dconfig.max_speed = 200;
+  dconfig.acceleration = 400;
+  dconfig.deacceleration = 60;
+  dconfig.close_enough = 25;
+
+  SmartDashboard::PutData("Drive Forward", new drive::Drive(dconfig));
+
+  dconfig.angle = 180;
+  SmartDashboard::PutData("Drive Backwards", new drive::Drive(dconfig));
 #endif
 }

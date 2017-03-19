@@ -35,6 +35,7 @@ DeadeyeAzimuth::DeadeyeAzimuth(bool offset)
  * Initialize starts the controller loop.
  */
 void DeadeyeAzimuth::Initialize() {
+  Robot::drive->Drive(0, 0, 0);
   Robot::drive->SetAzimuthMode();
   error_ = Robot::deadeye->GetAzimuthError();
   offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
@@ -49,6 +50,7 @@ void DeadeyeAzimuth::Initialize() {
 void DeadeyeAzimuth::Execute() {
   if (!Robot::deadeye->HasTarget()) {
     logger_->info("DeadeyeAzimuth::Execute no target");
+    Robot::drive->Drive(0, 0, 0);
     return;
   }
   error_ = Robot::deadeye->GetAzimuthError() + offset_;

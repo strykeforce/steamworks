@@ -7,7 +7,7 @@
 using namespace steamworks::command::shooter;
 
 namespace {
-const double kTimeout = 2.5;
+const double kTimeout = -1.0;
 const int kElevationGoodEnough = 10;
 }
 

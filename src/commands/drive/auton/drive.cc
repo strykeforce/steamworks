@@ -9,11 +9,7 @@ using namespace std;
 // tuning parameters
 namespace {
 const double kSetpointMax = 400.0;
-const double kMaxSpeed = 180.0 / kSetpointMax;  // 600 practical max
-const double kMinSpeed = 42.0 / kSetpointMax;
-// const double kMaxAccelStep = kMaxSpeed;
-const int kCloseEnough = 25;
-const int kSlopeStart = 800;
+const double kDeadZonePct = 0.9;
 const int kStableCountReq = 3;
 const int kZeroCountReq = 3;
 }
@@ -21,20 +17,22 @@ const int kZeroCountReq = 3;
 /**
  * Designated constructor.
  *
- * @param angle the direction to travel, relative to robot forward -180.0 to
- * 180.0
- * @param distance the number of encoder ticks to travel
- * @param timeout the timecount in seconds
+ * @param config the object containing configuration parameters
  */
-Drive::Drive(double angle, double distance, double timeout)
-    : frc::Command("Drive", timeout),
+Drive::Drive(const DriveConfig& config)
+    : frc::Command("Drive", config.timeout),
       logger_(spdlog::get("command")),
-      angle_(angle),
-      distance_(distance) {
+      angle_(config.angle),
+      distance_(config.distance),
+      min_speed_(config.min_speed / kSetpointMax),
+      max_speed_(config.max_speed / kSetpointMax),
+      close_enough_(config.close_enough) {
   Requires(Robot::drive);
+  accel_dist_ = pow(config.max_speed, 2) / (2 * config.acceleration);
+  deaccel_dist_ = pow(config.max_speed, 2) / (2 * config.deacceleration);
+  accel_done_pos_ = distance_ - accel_dist_;
+  dead_zone_ = kDeadZonePct * min_speed_;
 }
-
-Drive::Drive(double angle, double distance) : Drive(angle, distance, -1.0) {}
 
 /**
  * Initialize
@@ -45,14 +43,18 @@ void Drive::Initialize() {
   error_ = distance_;
   forward_factor_ = cos(angle_ * M_PI / 180);
   strafe_factor_ = sin(angle_ * M_PI / 180);
-  SPDLOG_DEBUG(logger_, "angle = {}, forward = {}, strafe = {}", angle_,
+  SPDLOG_DEBUG(logger_, "Drive angle = {}, forward = {}, strafe = {}", angle_,
                forward_factor_, strafe_factor_);
   // start_decel_pos_ = distance_ - kSlopeStart;
   stable_count_ = 0;
   zero_count_ = 0;
-
-  SPDLOG_DEBUG(logger_, "distance = {}, position = {}, kSlopeStart = {}",
-               distance_, Robot::drive->GetPosition(), kSlopeStart);
+  logger_->info(
+      "Drive initialized with angle = {}, distance = {}, min speed = {}, max "
+      "speed = {}, close enough = {}, accel dist = {}, deaccel dist = {}, "
+      "accel done pos = {}",
+      angle_, distance_, min_speed_ * kSetpointMax, max_speed_ * kSetpointMax,
+      close_enough_, accel_dist_, deaccel_dist_, accel_done_pos_);
+  // data_.reset std::ofstream file{kCalibrationPath, std::ofstream::trunc};
 }
 
 /**
@@ -70,21 +72,21 @@ void Drive::Execute() {
   double position = Robot::drive->GetPosition();  // default to talon 13
   error_ = distance_ - fabs(position);
   abs_error_ = abs(error_);
-  double speed;
+  double speed = 0;
 
-  if (abs_error_ < kSlopeStart) {
-    if (abs_error_ < kCloseEnough) {
+  if (abs_error_ > accel_done_pos_) {  // not done accelerating
+    speed = min_speed_ + ((max_speed_ - min_speed_) / accel_dist_) *
+                             (distance_ - abs_error_);
+  } else if (abs_error_ < deaccel_dist_) {
+    if (abs_error_ < close_enough_) {
       speed = 0;
     } else {
-      speed = kMinSpeed +
-              ((abs_error_ - kCloseEnough) / (kSlopeStart - kCloseEnough)) *
-                  (kMaxSpeed - kMinSpeed);
+      speed = min_speed_ +
+              ((abs_error_ - close_enough_) / (deaccel_dist_ - close_enough_)) *
+                  (max_speed_ - min_speed_);
     }
-  } /*else if (position < kSlopeStart) {
-    speed = kMinSpeed + (position / kSlopeStart) * (kMaxSpeed - kMinSpeed);
-  } */
-  else {
-    speed = kMaxSpeed;
+  } else {
+    speed = max_speed_;
   }
 
   speed = speed * (signbit(error_) ? -1 : 1);
@@ -92,7 +94,8 @@ void Drive::Execute() {
   SPDLOG_DEBUG(logger_, "Drive position = {}, error = {}, speed = {}", position,
                error_, round(speed * kSetpointMax));
 
-  Robot::drive->Drive(forward_factor_ * speed, strafe_factor_ * speed, 0);
+  Robot::drive->Drive(forward_factor_ * speed, strafe_factor_ * speed, 0,
+                      dead_zone_);
 }
 
 /**
@@ -103,7 +106,7 @@ bool Drive::IsFinished() {
   if (IsTimedOut()) {
     return true;
   }
-  if (abs_error_ < kCloseEnough) {
+  if (abs_error_ < close_enough_) {
     stable_count_++;
   } else {
     stable_count_ = 0;
