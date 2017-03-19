@@ -10,10 +10,13 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const double kMaxSpeed = 50.0 / 75.0;
-const double kMinSpeed = 10.0 / 75.0;
-const int kCloseEnough = 4;
-const int kSlopeStart = 160;
+const double kMaxSpeed = 100.0 / 275.0;
+const double kMinSpeed = 15.0 / 275.0;
+const double kMinSpeedExact = 15.0 / 275.0;
+const double kDeadZone = kMinSpeedExact * 0.9;
+const int kCloseEnough = 20;
+const int kCloseEnoughExact = 8;
+const int kSlopeStart = 300;
 const int kStableCountReq = 3;
 }
 
@@ -35,8 +38,7 @@ void DeadeyeAzimuth::Initialize() {
   Robot::drive->SetAzimuthMode();
   error_ = Robot::deadeye->GetAzimuthError();
   offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
-  logger_->info("DeadeyeAzimuth initialized with error {} and offset {}",
-                error_, offset_);
+  logger_->info("DeadeyeAzimuth initialized with error {}", error_, offset_);
   stable_count_ = 0;
 }
 
@@ -54,8 +56,11 @@ void DeadeyeAzimuth::Execute() {
   double speed;
 
   if (abs_error_ < kSlopeStart) {
-    if (abs_error_ < kCloseEnough) {
+    if (abs_error_ < kCloseEnoughExact) {
       speed = 0;
+      Robot::drive->ClearDriveIaccum();
+    } else if (abs_error_ < kCloseEnough) {
+      speed = kMinSpeedExact;
     } else {
       speed = kMinSpeed +
               ((abs_error_ - kCloseEnough) / (kSlopeStart - kCloseEnough)) *
@@ -65,9 +70,9 @@ void DeadeyeAzimuth::Execute() {
     speed = kMaxSpeed;
   }
   speed = speed * (signbit(error_) ? 1 : -1);  // match sign to error
-  SPDLOG_DEBUG(logger_, "DeadeyeAzimuth error_ = {}, offset_ = {}, speed =  {}",
-               error_, offset_, speed);
-  Robot::drive->DriveAutonomous(0, 0, speed);
+  SPDLOG_DEBUG(logger_, "DeadeyeAzimuth error_ = {}, speed =  {}", error_,
+               round(speed * 275.0));
+  Robot::drive->Drive(0, 0, speed, kDeadZone);
 }
 
 /**
@@ -78,7 +83,7 @@ bool DeadeyeAzimuth::IsFinished() {
   if (!Robot::deadeye->HasTarget()) {
     return false;
   }
-  if (abs_error_ < kCloseEnough) {
+  if (abs_error_ < kCloseEnoughExact) {
     stable_count_++;
   } else {
     stable_count_ = 0;
