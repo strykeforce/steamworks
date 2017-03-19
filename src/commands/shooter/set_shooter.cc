@@ -8,7 +8,6 @@ using namespace steamworks::command::shooter;
 
 namespace {
 const double kTimeout = 2.5;
-const int kSpeedGoodEnough = 5;
 const int kElevationGoodEnough = 10;
 }
 
@@ -29,12 +28,9 @@ void SetShooter::Initialize() {
 }
 
 bool SetShooter::IsFinished() {
-  int speed_error = std::abs(speed_ - Robot::shooter_wheel->GetSpeed());
   int elevation_error =
       std::abs(elevation_ - Robot::shooter_elevation->GetElevation());
-  return ((speed_error < kSpeedGoodEnough) &&
-          (elevation_error < kElevationGoodEnough)) ||
-         IsTimedOut();
+  return ((elevation_error < kElevationGoodEnough)) || IsTimedOut();
 }
 
 /**

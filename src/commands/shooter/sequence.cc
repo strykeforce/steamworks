@@ -24,15 +24,15 @@ const double kCloseShotHopperVoltage = 6.0;
 StartShooting::StartShooting()
     : frc::CommandGroup("StartShooting"), logger_(spdlog::get("command")) {
   SetInterruptible(true);
-  AddParallel(new deadeye::ShooterLED(true));
-  AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
+  AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
+  AddSequential(new deadeye::ShooterLED(true));
 
   AddParallel(new drive::DeadeyeAzimuth());
   AddSequential(new shooter::GetAngle());
 
   AddParallel(new deadeye::ShooterLED(false));
-  AddParallel(new shooter::SetWheel());
-  AddSequential(new shooter::SetElevation());
+  AddParallel(new shooter::SetElevation());
+  AddSequential(new shooter::SetWheel());
 
   AddSequential(new StartHopper());
 }
