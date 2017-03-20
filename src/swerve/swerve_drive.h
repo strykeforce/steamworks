@@ -50,6 +50,7 @@ class SwerveDrive : public frc::Subsystem {
   void SetDrive(double setpoint);    // set all to same setpoint
   void ZeroAzimuth();
   void ZeroPosition();
+  void ClearDriveIaccum();
 
   void SetGyroDisabled(bool disabled);
   void SetDriveMode(const std::shared_ptr<talon::Settings> settings,

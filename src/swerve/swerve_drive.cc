@@ -132,6 +132,16 @@ void SwerveDrive::ZeroPosition() {
 }
 
 /**
+ * Clear I accumulator for drive motors.
+ */
+void SwerveDrive::ClearDriveIaccum() {
+  map_->lf_drive->ClearIaccum();
+  map_->rf_drive->ClearIaccum();
+  map_->lr_drive->ClearIaccum();
+  map_->rr_drive->ClearIaccum();
+}
+
+/**
  * Disable driving in field-oriented mode if disired or required by hardware
  *  failure.
  */
