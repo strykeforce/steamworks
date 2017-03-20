@@ -16,8 +16,6 @@ struct DriveSegment {
 };
 
 struct DriveConfig {
-  // double angle;
-  // double distance;
   double min_speed;
   double max_speed;
   double acceleration;
@@ -42,22 +40,20 @@ class Drive : public frc::Command {
  private:
   const std::shared_ptr<spdlog::logger> logger_;
 
-  // std::unique_ptr<std::ofstream> data_;
-
   // const double angle_;  // robot relative -180 to 180
   std::vector<DriveSegment> segments_;
   std::vector<DriveSegment>::iterator segments_it_;
-  double distance_;
-  double segment_end_distance_ = 0;
+  const double distance_;
   const double min_speed_;
   const double max_speed_;
   const double close_enough_;
 
-  double dead_zone_;
-  double accel_dist_;
-  double deaccel_dist_;
-  double accel_done_pos_;
+  const double dead_zone_;
+  const double accel_dist_;
+  const double deaccel_dist_;
+  const double accel_done_pos_;
 
+  double segment_end_distance_ = 0;
   double forward_factor_;
   double strafe_factor_;
 

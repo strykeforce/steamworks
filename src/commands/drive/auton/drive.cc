@@ -25,21 +25,21 @@ Drive::Drive(const DriveConfig& config)
     : frc::Command("Drive", config.timeout),
       logger_(spdlog::get("command")),
       segments_(config.segments),
-      // segments_it_(segments_.begin()),
+      distance_(accumulate(segments_.begin(), segments_.end(), 0,
+                           [](double sum, const DriveSegment& seg) {
+                             return sum + seg.distance;
+                           })),
       min_speed_(config.min_speed / kSetpointMax),
       max_speed_(config.max_speed / kSetpointMax),
-      close_enough_(config.close_enough) {
+      close_enough_(config.close_enough),
+      dead_zone_(kDeadZonePct * min_speed_),
+      accel_dist_(pow(config.max_speed, 2) / (2 * config.acceleration)),
+      deaccel_dist_(pow(config.max_speed, 2) / (2 * config.deacceleration)),
+      accel_done_pos_(distance_ - accel_dist_) {
   Requires(Robot::drive);
-  accel_dist_ = pow(config.max_speed, 2) / (2 * config.acceleration);
-  deaccel_dist_ = pow(config.max_speed, 2) / (2 * config.deacceleration);
-  accel_done_pos_ = distance_ - accel_dist_;
-  dead_zone_ = kDeadZonePct * min_speed_;
   if (config.segments.empty()) {
     throw logic_error("DriveConfig must contain at least one segment");
   }
-  distance_ = accumulate(
-      config.segments.begin(), config.segments.end(), 0,
-      [](double sum, const DriveSegment& seg) { return sum + seg.distance; });
 }
 
 /**
