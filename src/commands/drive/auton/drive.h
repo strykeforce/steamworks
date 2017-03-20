@@ -8,15 +8,23 @@ namespace steamworks {
 namespace command {
 namespace drive {
 
-struct DriveConfig {
+struct DriveSegment {
   double angle;
   double distance;
+  DriveSegment(double angle, double distance)
+      : angle(angle), distance(distance) {}
+};
+
+struct DriveConfig {
+  // double angle;
+  // double distance;
   double min_speed;
   double max_speed;
   double acceleration;
   double deacceleration;
   double close_enough;
   double timeout = -1.0;
+  std::vector<DriveSegment> segments;
 };
 
 class Drive : public frc::Command {
@@ -36,8 +44,11 @@ class Drive : public frc::Command {
 
   // std::unique_ptr<std::ofstream> data_;
 
-  const double angle_;  // robot relative -180 to 180
-  const double distance_;
+  // const double angle_;  // robot relative -180 to 180
+  std::vector<DriveSegment> segments_;
+  std::vector<DriveSegment>::iterator segments_it_;
+  double distance_;
+  double segment_end_distance_ = 0;
   const double min_speed_;
   const double max_speed_;
   const double close_enough_;
@@ -52,10 +63,11 @@ class Drive : public frc::Command {
 
   double error_;
   double abs_error_;
-  double start_decel_pos_;
 
   int stable_count_ = 0;
   int zero_count_ = 0;
+
+  void StartNextSegment();
 };
 } /* drive */
 } /* command */

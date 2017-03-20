@@ -1,5 +1,7 @@
 #include "drive.h"
 
+#include <numeric>
+
 #include "robot.h"
 #include "subsystems/drive.h"
 
@@ -22,8 +24,8 @@ const int kZeroCountReq = 3;
 Drive::Drive(const DriveConfig& config)
     : frc::Command("Drive", config.timeout),
       logger_(spdlog::get("command")),
-      angle_(config.angle),
-      distance_(config.distance),
+      segments_(config.segments),
+      // segments_it_(segments_.begin()),
       min_speed_(config.min_speed / kSetpointMax),
       max_speed_(config.max_speed / kSetpointMax),
       close_enough_(config.close_enough) {
@@ -32,6 +34,12 @@ Drive::Drive(const DriveConfig& config)
   deaccel_dist_ = pow(config.max_speed, 2) / (2 * config.deacceleration);
   accel_done_pos_ = distance_ - accel_dist_;
   dead_zone_ = kDeadZonePct * min_speed_;
+  if (config.segments.empty()) {
+    throw logic_error("DriveConfig must contain at least one segment");
+  }
+  distance_ = accumulate(
+      config.segments.begin(), config.segments.end(), 0,
+      [](double sum, const DriveSegment& seg) { return sum + seg.distance; });
 }
 
 /**
@@ -41,20 +49,37 @@ void Drive::Initialize() {
   Robot::drive->SetAutonMode();
   Robot::drive->ZeroPosition();
   error_ = distance_;
-  forward_factor_ = cos(angle_ * M_PI / 180);
-  strafe_factor_ = sin(angle_ * M_PI / 180);
-  SPDLOG_DEBUG(logger_, "Drive angle = {}, forward = {}, strafe = {}", angle_,
-               forward_factor_, strafe_factor_);
-  // start_decel_pos_ = distance_ - kSlopeStart;
+  segments_it_ = segments_.begin();
   stable_count_ = 0;
   zero_count_ = 0;
+  segment_end_distance_ = 0;
   logger_->info(
-      "Drive initialized with angle = {}, distance = {}, min speed = {}, max "
+      "Drive initialized with distance = {}, min speed = {}, max "
       "speed = {}, close enough = {}, accel dist = {}, deaccel dist = {}, "
       "accel done pos = {}",
-      angle_, distance_, min_speed_ * kSetpointMax, max_speed_ * kSetpointMax,
+      distance_, min_speed_ * kSetpointMax, max_speed_ * kSetpointMax,
       close_enough_, accel_dist_, deaccel_dist_, accel_done_pos_);
   // data_.reset std::ofstream file{kCalibrationPath, std::ofstream::trunc};
+}
+
+/**
+ * Initializes the next segement of the drive sequence.
+ */
+void Drive::StartNextSegment() {
+  if (segments_it_ == segments_.end()) {
+    SPDLOG_DEBUG(logger_, "StartNextSegment called at end of segments");
+    return;
+  }
+
+  forward_factor_ = cos(segments_it_->angle * M_PI / 180);
+  strafe_factor_ = sin(segments_it_->angle * M_PI / 180);
+  segment_end_distance_ += segments_it_->distance;
+  SPDLOG_DEBUG(
+      logger_,
+      "Drive seg {} distance = {}, angle = {}, forward = {}, strafe = {}",
+      distance(segments_.begin(), segments_it_), segment_end_distance_,
+      segments_it_->angle, forward_factor_, strafe_factor_);
+  segments_it_++;
 }
 
 /**
@@ -72,6 +97,12 @@ void Drive::Execute() {
   double position = Robot::drive->GetPosition();  // default to talon 13
   error_ = distance_ - fabs(position);
   abs_error_ = abs(error_);
+
+  double distance_travelled = distance_ - error_;
+  if (distance_travelled >= segment_end_distance_) {
+    StartNextSegment();
+  }
+
   double speed = 0;
 
   if (abs_error_ > accel_done_pos_) {  // not done accelerating

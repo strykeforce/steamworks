@@ -220,8 +220,8 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
 
   drive::DriveConfig dconfig;
-  dconfig.angle = 0;
-  dconfig.distance = 50.72 * 50;
+  // dconfig.angle = 0;
+  // dconfig.distance = 50.72 * 50;
   dconfig.min_speed = 40;
   dconfig.max_speed = 200;
   dconfig.acceleration = 400;
@@ -230,7 +230,7 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Drive Forward", new drive::Drive(dconfig));
 
-  dconfig.angle = 180;
+  // dconfig.angle = 180;
   SmartDashboard::PutData("Drive Backwards", new drive::Drive(dconfig));
 #endif
 }

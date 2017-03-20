@@ -24,8 +24,8 @@ Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
   AddSequential(new LogCommand("starting BLUE alliance hopper dump and shoot"));
 
   drive::DriveConfig dconfig;
-  dconfig.angle = -105;
-  dconfig.distance = 79 * kTicksPerInch;
+  // dconfig.angle = -105;
+  // dconfig.distance = 79 * kTicksPerInch;
   dconfig.min_speed = 40;
   dconfig.max_speed = 300;
   dconfig.acceleration = 400;
@@ -36,16 +36,16 @@ Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
   AddSequential(new drive::Drive(dconfig));
 
   // drive into hopper
-  dconfig.angle = 180;
-  dconfig.distance = 26 * kTicksPerInch;
+  // dconfig.angle = 180;
+  // dconfig.distance = 26 * kTicksPerInch;
   dconfig.deacceleration = 10000;
   dconfig.close_enough = 10 * kTicksPerInch;
   dconfig.timeout = 2.0;
   AddSequential(new drive::Drive(dconfig));
 
   // drive down wall
-  dconfig.angle = 100;
-  dconfig.distance = 9 * kTicksPerInch;
+  // dconfig.angle = 100;
+  // dconfig.distance = 9 * kTicksPerInch;
   dconfig.deacceleration = 60;
   dconfig.close_enough = 25;
   dconfig.timeout = 1.0;
@@ -56,8 +56,8 @@ Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
 
   // drive out from hopper
   AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
-  dconfig.angle = 0;
-  dconfig.distance = 16 * kTicksPerInch;
+  // dconfig.angle = 0;
+  // dconfig.distance = 16 * kTicksPerInch;
   dconfig.timeout = -1.0;
   AddSequential(new drive::Drive(dconfig));
 
