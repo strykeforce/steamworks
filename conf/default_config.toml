@@ -1,6 +1,6 @@
 [LOGGING]
 grapher = true
-file = true
+file = false
 loggers = ["robot", "command", "subsystem", "sidewinder", "deadeye"]
 default = "trace"
 sidewinder = "info"

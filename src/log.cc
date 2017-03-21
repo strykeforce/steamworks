@@ -10,9 +10,9 @@ using namespace spdlog;
 using namespace std;
 
 namespace {
-const char* kFlashDriveMount = "/";
+const char* kFlashDriveMount = "/media/sda1";
 const char* kLocalPath = "/home/lvuser/logs/";
-const char* kFlashDrivePath = kLocalPath;
+const char* kFlashDrivePath = "/media/sda1/logs/";
 }
 
 Log& Log::GetInstance() {
@@ -50,7 +50,9 @@ void Log::Initialize(const std::shared_ptr<cpptoml::table> config_in) {
 
   shared_ptr<sinks::simple_file_sink_mt> file_sink;
   if (is_file) {
-    file_sink = make_shared<sinks::simple_file_sink_mt>(GetLogFilePath());
+    auto path = GetLogFilePath();
+    file_sink = make_shared<sinks::simple_file_sink_mt>(path);
+    logger->info("Log logging to {}", path);
   }
 
   for (const auto& log : *loggers) {
