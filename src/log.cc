@@ -1,8 +1,19 @@
 #include "log.h"
 
+#include <mntent.h>
+#include <cstdio>
+#include <cstring>
+#include <ctime>
+
 using namespace steamworks;
 using namespace spdlog;
 using namespace std;
+
+namespace {
+const char* kFlashDriveMount = "/";
+const char* kLocalPath = "/home/lvuser/logs/";
+const char* kFlashDrivePath = kLocalPath;
+}
 
 Log& Log::GetInstance() {
   static Log log;
@@ -27,7 +38,7 @@ void Log::Initialize(const std::shared_ptr<cpptoml::table> config_in) {
   auto logger = spdlog::stdout_logger_st("log");
 
   auto config = config_in->get_table("LOGGING");
-  bool color = config->get_as<bool>("color").value_or(false);
+  bool is_file = config->get_as<bool>("file").value_or(false);
   default_level_ =
       GetLevel(config->get_as<string>("default").value_or("trace"));
 
@@ -36,6 +47,12 @@ void Log::Initialize(const std::shared_ptr<cpptoml::table> config_in) {
     logger->warn("LOGGING loggers setting missing, skipping configuration");
     return;
   }
+
+  shared_ptr<sinks::simple_file_sink_mt> file_sink;
+  if (is_file) {
+    file_sink = make_shared<sinks::simple_file_sink_mt>(GetLogFilePath());
+  }
+
   for (const auto& log : *loggers) {
     // is the default logging level overidden for this log?
     auto level_name = config->get_as<string>(log);
@@ -45,12 +62,14 @@ void Log::Initialize(const std::shared_ptr<cpptoml::table> config_in) {
     }
 
     logger->info("configuring {} at level {}", log, level::to_str(level));
-    // use ANSI color logging?
-    if (color) {
-      stdout_color_st(log)->set_level(level);
+
+    if (is_file) {
+      auto flog = make_shared<spdlog::logger>(log, file_sink);
+      flog->set_level(level);
+      register_logger(flog);
       continue;
     }
-    stdout_logger_st(log)->set_level(level);
+    stdout_color_st(log)->set_level(level);
   }
 
   set_pattern("[%H:%M:%S.%e][%n][%l] %v");
@@ -69,4 +88,40 @@ level::level_enum Log::GetLevel(const std::string level) {
   } else {
     return default_level_;
   }
+}
+
+/**
+* Returns true if a flash drive is mounted.
+*/
+bool Log::IsFlashDriveMounted() {
+  FILE* mtab = NULL;
+  mntent* part = NULL;
+  bool is_mounted = false;
+  if ((mtab = setmntent(_PATH_MOUNTED, "r")) != NULL) {
+    while ((part = getmntent(mtab)) != NULL) {
+      if ((part->mnt_dir != NULL) &&
+          (strcmp(part->mnt_dir, kFlashDriveMount) == 0)) {
+        is_mounted = true;
+        break;
+      }
+    }
+    endmntent(mtab);
+  }
+  return is_mounted;
+}
+
+/**
+* Create a log file name from timestamp.
+*/
+string Log::GetLogFilePath() {
+  char ts[16];
+  ostringstream name;
+  const char* dir = IsFlashDriveMounted() ? kFlashDrivePath : kLocalPath;
+  time_t t = std::time(nullptr);
+  if (strftime(ts, sizeof(ts), "%Y%m%d_%H%M%S", localtime(&t))) {
+    name << dir << ts << ".log";
+  } else {
+    name << dir << "steamworks.log";
+  }
+  return name.str();
 }
