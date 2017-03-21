@@ -1,4 +1,4 @@
-#include "zero.h"
+#include "drive_zero.h"
 
 #include "robot.h"
 #include "robot_map.h"
@@ -13,13 +13,13 @@ const double kDriveSetpoint = 250.0;
 /**
  * This command is used for aligning the wheels.
  */
-Zero::Zero() : frc::Command("Zero") { Requires(Robot::drive); }
+DriveZero::DriveZero() : frc::Command("DriveZero") { Requires(Robot::drive); }
 
-void Zero::Initialize() {
+void DriveZero::Initialize() {
   Robot::drive->SetAutonMode();
   Robot::drive->CrabDriveAutonomous(kDriveSetpoint, 0);
 }
 
-bool Zero::IsFinished() { return false; }
+bool DriveZero::IsFinished() { return false; }
 
-void Zero::End() { Robot::drive->CrabDriveAutonomous(0.0, 0); }
+void DriveZero::End() { Robot::drive->CrabDriveAutonomous(0.0, 0); }

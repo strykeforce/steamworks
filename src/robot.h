@@ -54,6 +54,7 @@ class Robot : public frc::IterativeRobot {
   std::shared_ptr<cpptoml::table> config_;
   frc::Command* autonomous_command_;
   frc::Command* stop_shooter_;
+  double gyro_offset_ = 0;
 
   void Configure();
   void LogVersion();

@@ -2,6 +2,7 @@
 
 #include <WPILibVersion.h>
 #include <sidewinder/version.h>
+#include <cmath>
 
 #include "commands/auton/auton.h"
 #include "commands/log.h"
@@ -62,13 +63,17 @@ void Robot::DisabledInit() { SPDLOG_TRACE(logger_, "in DisabledInit"); }
 void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::AutonomousInit() {
-  SPDLOG_TRACE(logger_, "initializing autonomous mode");
-  RobotMap::gyro->ZeroYaw();
+  RobotMap::gyro->SetAngleAdjustment(0);
+  auto angle_adj = -std::fmod(RobotMap::gyro->GetAngle(), 360.0);
+  logger_->info("AutonomousInit setting gyro to zero ({})", angle_adj);
+  RobotMap::gyro->SetAngleAdjustment(angle_adj);
+
   auto auton_mode = oi->GetAutonMode();
-  logger_->info("initialize auton mode {:X}", auton_mode);
+  logger_->info("AutonomousInit initialize auton mode {:X}", auton_mode);
   switch (auton_mode) {
     case 1:
       autonomous_command_ = new auton::Sequence01();
+      gyro_offset_ = -90.0;
       break;
     case 2:
       autonomous_command_ = new auton::Sequence02();
@@ -78,9 +83,11 @@ void Robot::AutonomousInit() {
       break;
     case 4:
       autonomous_command_ = new auton::Sequence04();
+      gyro_offset_ = 90;
       break;
     case 5:
       autonomous_command_ = new auton::Sequence05();
+      gyro_offset_ = -90.0;
       break;
     default:
       autonomous_command_ = new LogCommand("unrecognized command");
@@ -91,17 +98,24 @@ void Robot::AutonomousInit() {
 void Robot::AutonomousPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 
 void Robot::TeleopInit() {
-  SPDLOG_TRACE(logger_, "checking auto gear load switch position");
+  auto angle_adj = RobotMap::gyro->GetAngleAdjustment() + gyro_offset_;
+  logger_->info("AutonomousInit offsetting gyro {} deg. to zero ({})",
+                gyro_offset_, angle_adj);
+  RobotMap::gyro->SetAngleAdjustment(angle_adj);
+
   frc::Joystick fsj(OI::kFlightSimJoystick);
   if (fsj.GetRawButton(OI::kFlightSimLeftCornerDownButton)) {
     // button is already in auto on position so run command
-    logger_->info("auto gear load is on");
+    logger_->info("TeleopInit auto gear load is on");
   }
 
   if (fsj.GetRawButton(OI::kFlightSimLeftCornerUpButton)) {
     // button is already in auto on position so run command
-    logger_->info("auto gear load is off");
+    logger_->info("TeleopInit auto gear load is off");
   }
+
+  // reset the gyro for driving
+
   stop_shooter_ = new StopShooting();
   stop_shooter_->Start();
 }

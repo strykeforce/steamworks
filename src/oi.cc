@@ -2,7 +2,6 @@
 
 #include <cmath>
 
-#include "commands/azimuth.h"
 #include "commands/climber.h"
 #include "commands/dashboard.h"
 #include "commands/deadeye/gear_led.h"
@@ -10,7 +9,9 @@
 #include "commands/drive/auton/deadeye_azimuth.h"
 #include "commands/drive/auton/drive.h"
 // #include "commands/drive/auton/gyro_azimuth.h"
-#include "commands/drive/zero.h"
+#include "commands/drive/drive_zero.h"
+#include "commands/drive/set_zero.h"
+#include "commands/drive/zero_gyro.h"
 #include "commands/gear/load.h"
 #include "commands/gear/release.h"
 #include "commands/gear/sequence.h"
@@ -128,7 +129,7 @@ unsigned OI::GetAutonMode() {
  */
 void OI::AssignFlightSimButtons() {
   // flight sim reset button manually re-zeros the gyro
-  reset_button_.WhenPressed(new ZeroGyroYaw());
+  reset_button_.WhenPressed(new drive::ZeroGyro());
 
   // flight sim left shoulder 3-position button controlls gear loader
   gear_auto_off_button_.WhenPressed(
@@ -190,10 +191,11 @@ void OI::AssignGamepadButtons() {
  */
 void OI::AssignSmartDashboardButtons() {
   // SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
-  SmartDashboard::PutData("Zero Wheels", new ZeroWheelAzimuth());
+  SmartDashboard::PutData("Zero Wheels", new drive::ZeroWheelAzimuth());
 
-  SmartDashboard::PutData("Write Azimuth Cal", new WriteAzimuthCalibration());
-  SmartDashboard::PutData("Drive Zero", new drive::Zero());
+  SmartDashboard::PutData("Write Azimuth Cal",
+                          new drive::WriteAzimuthCalibration());
+  SmartDashboard::PutData("Drive Zero", new drive::DriveZero());
 #if !NDEBUG
 
   SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));

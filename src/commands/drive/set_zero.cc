@@ -1,4 +1,4 @@
-#include "azimuth.h"
+#include "set_zero.h"
 
 #include "CANTalon.h"
 
@@ -6,7 +6,7 @@
 #include "robot_map.h"
 #include "subsystems/drive.h"
 
-using namespace steamworks::command;
+using namespace steamworks::command::drive;
 
 //
 // WriteAzimuthCalibration
@@ -54,12 +54,3 @@ void ZeroWheelAzimuth::End() {
   RobotMap::swerve_talons->lr_azimuth->StopMotor();
   RobotMap::swerve_talons->rr_azimuth->StopMotor();
 }
-
-//
-// WriteAzimuthCalibration
-//
-ZeroGyroYaw::ZeroGyroYaw() : frc::InstantCommand("ZeroGyroYaw") {
-  Requires(Robot::drive);
-}
-
-void ZeroGyroYaw::Initialize() { RobotMap::gyro->ZeroYaw(); }

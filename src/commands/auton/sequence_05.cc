@@ -26,5 +26,5 @@ Sequence05::Sequence05() : frc::CommandGroup("Sequence05") {
   // AddSequential(new drive::TimedAzimuth(-0.4, 0.3));
 
   // // start shooting
-  AddSequential(new StartShooting());
+  // AddSequential(new StartShooting());
 }

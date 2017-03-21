@@ -4,6 +4,7 @@
 
 namespace steamworks {
 namespace command {
+namespace drive {
 
 class ReadAzimuthCalibration : public frc::InstantCommand {
  public:
@@ -34,13 +35,6 @@ class ZeroWheelAzimuth : public frc::Command {
   void End() override;
 };
 
-class ZeroGyroYaw : public frc::InstantCommand {
- public:
-  ZeroGyroYaw();
-
- protected:
-  void Initialize() override;
-};
-
+} /* drive */
 } /* command */
 } /* steamworks */

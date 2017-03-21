@@ -1,18 +1,21 @@
 #pragma once
 
 #include <WPILib.h>
+#include <spdlog/spdlog.h>
 
 namespace steamworks {
 namespace command {
 namespace drive {
-class Zero : public frc::Command {
+
+class ZeroGyro : public frc::InstantCommand {
  public:
-  Zero();
+  ZeroGyro();
 
  protected:
   void Initialize() override;
-  bool IsFinished() override;
-  void End() override;
+
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
 };
 
 } /* drive */
