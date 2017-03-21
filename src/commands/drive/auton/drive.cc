@@ -11,7 +11,7 @@ using namespace std;
 // tuning parameters
 namespace {
 const double kSetpointMax = 400.0;
-const double kDeadZonePct = 0.9;
+const double kDeadZonePct = 0.1;
 const int kStableCountReq = 3;
 const int kZeroCountReq = 3;
 }
@@ -32,7 +32,7 @@ Drive::Drive(const DriveConfig& config)
       min_speed_(config.min_speed / kSetpointMax),
       max_speed_(config.max_speed / kSetpointMax),
       close_enough_(config.close_enough),
-      dead_zone_(kDeadZonePct * min_speed_),
+      dead_zone_(min_speed_ * kDeadZonePct),
       accel_dist_(pow(config.max_speed, 2) / (2 * config.acceleration)),
       deaccel_dist_(pow(config.max_speed, 2) / (2 * config.deacceleration)),
       accel_done_pos_(distance_ - accel_dist_) {
@@ -100,6 +100,7 @@ void Drive::Execute() {
 
   double distance_travelled = distance_ - error_;
   if (distance_travelled >= segment_end_distance_) {
+    SPDLOG_DEBUG(logger_, "calling StartNextSegment()");
     StartNextSegment();
   }
 
@@ -122,8 +123,12 @@ void Drive::Execute() {
 
   speed = speed * (signbit(error_) ? -1 : 1);
 
-  SPDLOG_DEBUG(logger_, "Drive position = {}, error = {}, speed = {}", position,
-               error_, round(speed * kSetpointMax));
+  SPDLOG_DEBUG(
+      logger_,
+      "Drive position = {}, error = {}, speed = {}, forward = {}, strafe = {}",
+      position, error_, round(speed * kSetpointMax),
+      round(speed * forward_factor_ * kSetpointMax),
+      round(speed * strafe_factor_ * kSetpointMax));
 
   Robot::drive->Drive(forward_factor_ * speed, strafe_factor_ * speed, 0,
                       dead_zone_);

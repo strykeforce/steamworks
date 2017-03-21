@@ -218,19 +218,5 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Deadeye Azimuth", new drive::DeadeyeAzimuth());
   SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
-
-  drive::DriveConfig dconfig;
-  // dconfig.angle = 0;
-  // dconfig.distance = 50.72 * 50;
-  dconfig.min_speed = 40;
-  dconfig.max_speed = 200;
-  dconfig.acceleration = 400;
-  dconfig.deacceleration = 60;
-  dconfig.close_enough = 25;
-
-  SmartDashboard::PutData("Drive Forward", new drive::Drive(dconfig));
-
-  // dconfig.angle = 180;
-  SmartDashboard::PutData("Drive Backwards", new drive::Drive(dconfig));
 #endif
 }

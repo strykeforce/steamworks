@@ -284,7 +284,7 @@ azimuth_sma_period = 5
         allowable_closed_loop_error    =     0 # encoder ticks
         encoder_reversed = false
         output_reversed  = false
-        current_limit    = 40 # amps, 0 disables
+        current_limit    = 60 # amps, 0 disables
 
         [[SIDEWINDER.SWERVE.TALON]]
         # ticks 10 - 275, can experiment going down to 5 but only in down dir
