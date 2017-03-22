@@ -248,7 +248,7 @@ void SwerveDrive::Drive(double forward, double strafe, double azimuth,
     return;
   }
 
-  double rad = ahrs_->GetYaw() * (2.0 * M_PI) / 360.0;
+  double rad = ahrs_->GetAngle() * (2.0 * M_PI) / 360.0;
   double cos_rad = cos(rad);
   double sin_rad = sin(rad);
   double rotated_forward = forward * cos_rad + strafe * sin_rad;
