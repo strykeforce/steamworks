@@ -1,6 +1,7 @@
 #pragma once
 
 #include <WPILib.h>
+#include <spdlog/spdlog.h>
 
 namespace steamworks {
 namespace command {
@@ -13,8 +14,10 @@ class SetWheel : public frc::Command {
  protected:
   void Initialize() override;
   bool IsFinished() override;
+  void End() override;
 
  private:
+  const std::shared_ptr<spdlog::logger> logger_;
   double speed_;
 };
 

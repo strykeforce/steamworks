@@ -72,11 +72,14 @@ void Robot::AutonomousInit() {
   logger_->info("AutonomousInit initialize auton mode {:X}", auton_mode);
   switch (auton_mode) {
     case 1:
+      // BLUE alliance hopper dump and shoot
       autonomous_command_ = new auton::Sequence01();
       gyro_offset_ = -90.0;
       break;
     case 2:
+      // RED alliance hopper dump and shoot
       autonomous_command_ = new auton::Sequence02();
+      gyro_offset_ = 90.0;
       break;
     case 3:
       autonomous_command_ = new auton::Sequence03();

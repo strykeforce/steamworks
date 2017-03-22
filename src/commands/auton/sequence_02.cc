@@ -2,18 +2,19 @@
 
 #include "commands/drive/auton/drive.h"
 #include "commands/drive/auton/gyro_azimuth.h"
+#include "commands/gear/sequence.h"
 #include "commands/intake.h"
 #include "commands/log.h"
 #include "commands/shooter/sequence.h"
+#include "commands/shooter/set_shooter.h"
 
 using namespace steamworks::command::auton;
 using namespace steamworks::command;
 
 namespace {
-const int kForwardAzimuth = 2048;
-const int kStrafeAzimuth = 4096 - 1024;
-const int kForwardDistance = static_cast<int>(78 * 50.72);
-const int kStrafeDistance = static_cast<int>(49 * 50.72);
+const double kTicksPerInch = 50.72;
+const int kPrepareSpeed = 440;
+const int kPrepareElevation = 1300;
 }
 
 /**
@@ -22,17 +23,40 @@ const int kStrafeDistance = static_cast<int>(49 * 50.72);
 Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   AddSequential(new LogCommand("starting RED alliance hopper dump and shoot"));
 
-  // drive on slant to hopper
-  // AddSequential(new drive::TimedSwerveDrive(-0.50 / 2.0, 0.95 / 2.0, 1.75));
+  drive::DriveConfig dc;
+  dc.min_speed = 40;
+  dc.max_speed = 400;
+  dc.acceleration = 400;
+  dc.deacceleration = 10000;
+  dc.close_enough = 10 * kTicksPerInch;
+  dc.segments.emplace_back(100, 70 * kTicksPerInch);  // drive out
+  dc.segments.emplace_back(180, 40 * kTicksPerInch);  // drive into hopper
+  dc.timeout = 2.2;
+  AddSequential(new drive::Drive(dc));
 
-  AddSequential(new WaitCommand(2.0));
+  // drive down wall
+  dc.deacceleration = 60;
+  dc.close_enough = 25;
+  dc.timeout = 1.2;
+  dc.segments.clear();
+  dc.segments.emplace_back(-95, 16 * kTicksPerInch);  // strafe down wall
+  AddSequential(new drive::Drive(dc));
 
-  // move out from wall
-  // AddSequential(new drive::TimedSwerveDrive(0.7, 0, 0.6));
+  // wait for balls
+  AddSequential(new WaitCommand(0.5));
+  AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
-  // azimuth
-  // AddSequential(new drive::TimedAzimuth(-0.4, 0.6));
-  //
-  // // start shooting
-  // AddSequential(new StartShooting());
+  // drive out from hopper
+  dc.timeout = -1.0;
+  dc.segments.clear();
+  dc.segments.emplace_back(0, 16 * kTicksPerInch);  // drive out from hopper
+  AddSequential(new drive::Drive(dc));
+
+  // pre-azimuth towards boiler
+  AddSequential(new drive::GyroAzimuth(-90));
+
+  // // // start shooting
+  AddParallel(new StartShooting());
+  AddSequential(new WaitCommand(4.0));
+  AddSequential(new gear::StageGear());
 }

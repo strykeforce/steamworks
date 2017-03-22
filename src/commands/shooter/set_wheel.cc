@@ -7,14 +7,14 @@
 using namespace steamworks::command::shooter;
 
 namespace {
-const double kTimeout = 2.0;
 const int kSpeedGoodEnough = 5;
 }
 
 /**
  * SetWheel sets wheel speed to shooting solution speed.
  */
-SetWheel::SetWheel() : frc::Command("SetWheel", kTimeout) {
+SetWheel::SetWheel()
+    : frc::Command("SetWheel"), logger_(spdlog::get("command")) {
   Requires(Robot::shooter_wheel);
 }
 
@@ -32,4 +32,12 @@ void SetWheel::Initialize() {
 bool SetWheel::IsFinished() {
   int speed_error = std::abs(speed_ - Robot::shooter_wheel->GetSpeed());
   return (speed_error < kSpeedGoodEnough) || IsTimedOut();
+}
+
+/**
+ * Tell us when wheel is up to speed.
+ */
+void SetWheel::End() {
+  logger_->info("SetWheel ended with setpoint {} and actual {}", speed_,
+                Robot::shooter_wheel->GetSpeed());
 }

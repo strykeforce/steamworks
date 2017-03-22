@@ -6,16 +6,13 @@
 namespace steamworks {
 namespace command {
 namespace shooter {
-class SetShooter : public frc::Command {
+class SetShooter : public frc::InstantCommand {
  public:
   SetShooter(int speed, int elevation);
   virtual ~SetShooter() = default;
 
  protected:
   void Initialize() override;
-  bool IsFinished() override;
-  void Interrupted() override;
-  void End() override;
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;

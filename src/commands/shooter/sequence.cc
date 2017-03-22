@@ -1,5 +1,7 @@
 #include "sequence.h"
 
+#include <Commands/ConditionalCommand.h>
+
 #include "commands/deadeye/shooter_led.h"
 #include "commands/drive/auton/deadeye_azimuth.h"
 #include "commands/hopper.h"
@@ -14,9 +16,8 @@
 using namespace steamworks::command;
 
 namespace {
-const int kPrepareSpeed = 400;
-// const int kPrepareElevation = 1800;
-const int kPrepareElevation = 1000;
+const int kPrepareSpeed = 440;
+const int kPrepareElevation = 1800;
 const int kCloseShotSpeed = 440;
 const int kCloseShotElevation = 50;
 const double kCloseShotHopperVoltage = 6.0;
@@ -26,14 +27,18 @@ StartShooting::StartShooting()
     : frc::CommandGroup("StartShooting"), logger_(spdlog::get("command")) {
   SetInterruptible(true);
 
-  AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
   AddSequential(new deadeye::ShooterLED(true));
+  // SetShooter checks to see if wheel already has speed commanded
+  AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
   AddParallel(new shooter::GetAngle());
-  AddSequential(new drive::DeadeyeAzimuth());
+  AddParallel(new drive::DeadeyeAzimuth());
+  AddSequential(new frc::WaitForChildren(10));
 
   AddParallel(new shooter::SetElevation());
-  AddSequential(new shooter::SetWheel());
+  AddParallel(new shooter::SetWheel());
+  AddSequential(new frc::WaitForChildren(10));
+
   AddSequential(new StartHopper());
 
   AddSequential(new deadeye::ShooterLED(false));
@@ -72,5 +77,5 @@ StopShooting::StopShooting() : frc::CommandGroup("StopShooting") {
   AddParallel(new deadeye::ShooterLED(false));
   AddParallel(new StopHopper());
   AddParallel(new StopIntake());
-  AddSequential(new StopShooterWheel());
+  AddParallel(new StopShooterWheel());
 }

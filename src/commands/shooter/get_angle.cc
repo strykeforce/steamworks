@@ -101,8 +101,10 @@ void GetAngle::Interrupted() {
  */
 void GetAngle::End() {
   int elevation = Robot::shooter_elevation->GetElevation();
-  logger_->info("GetAngle ended with elevation {} and pixel error {}",
-                elevation, error_);
+  int setpoint = Robot::shooter_elevation->GetElevationSetpoint();
+  logger_->info(
+      "GetAngle ended with setpoint {}, elevation {} and pixel error {}",
+      setpoint, elevation, error_);
   if (!Robot::deadeye->CalculateSolution(elevation)) {
     logger_->warn("GetAngle invalid shooting solution");
     DriverStation::ReportWarning(

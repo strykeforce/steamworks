@@ -7,14 +7,14 @@
 using namespace steamworks::command::shooter;
 
 namespace {
-const double kTimeout = 2.0;
 const int kElevationGoodEnough = 10;
 }
 
 /**
  * SetElevation sets shooter elevation to shooting solution elevation.
  */
-SetElevation::SetElevation() : frc::Command("SetElevation", kTimeout) {
+SetElevation::SetElevation()
+    : frc::Command("SetElevation"), logger_(spdlog::get("command")) {
   Requires(Robot::shooter_elevation);
 }
 
@@ -33,4 +33,12 @@ bool SetElevation::IsFinished() {
   int elevation_error =
       std::abs(elevation_ - Robot::shooter_elevation->GetElevation());
   return (elevation_error < kElevationGoodEnough) || IsTimedOut();
+}
+
+/**
+ * Tell us when elevation is reached
+ */
+void SetElevation::End() {
+  logger_->info("SetElevation ended with setpoint {} and actual {}", elevation_,
+                Robot::shooter_elevation->GetElevation());
 }

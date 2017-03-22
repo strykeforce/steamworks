@@ -6,46 +6,22 @@
 
 using namespace steamworks::command::shooter;
 
-namespace {
-const double kTimeout = -1.0;
-const int kElevationGoodEnough = 10;
-}
+// namespace {
+// const double kTimeout = -1.0;
+// const int kElevationGoodEnough = 10;
+// }
 
 SetShooter::SetShooter(int speed, int elevation)
-    : frc::Command("SetShooter", kTimeout),
+    : frc::InstantCommand("SetShooter"),
       logger_(spdlog::get("command")),
       speed_(speed),
-      elevation_(elevation) {
-  Requires(Robot::shooter_elevation);
-  Requires(Robot::shooter_wheel);
-}
+      elevation_(elevation) {}
 
 void SetShooter::Initialize() {
-  Robot::shooter_wheel->SetSpeed(speed_);
-  Robot::shooter_elevation->SetElevation(elevation_);
-  logger_->info("SetShooter initialized with speed {} and elevation {}", speed_,
-                elevation_);
-}
-
-bool SetShooter::IsFinished() {
-  int elevation_error =
-      std::abs(elevation_ - Robot::shooter_elevation->GetElevation());
-  return ((elevation_error < kElevationGoodEnough)) || IsTimedOut();
-}
-
-/**
- * Called once if this command is interrupted.
- */
-void SetShooter::Interrupted() {
-  logger_->info("SetShooter interrupted");
-  End();
-}
-
-/**
- * Called once when ending.
- */
-void SetShooter::End() {
-  logger_->info("SetShooter ended with speed {} and elevation {}",
-                Robot::shooter_wheel->GetSpeed(),
-                Robot::shooter_elevation->GetElevation());
+  if (Robot::shooter_wheel->GetSpeedSetpoint() == 0) {
+    Robot::shooter_wheel->SetSpeed(speed_);
+    Robot::shooter_elevation->SetElevation(elevation_);
+    logger_->info("SetShooter initialized with speed {} and elevation {}",
+                  speed_, elevation_);
+  }
 }
