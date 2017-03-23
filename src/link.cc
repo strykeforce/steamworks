@@ -19,11 +19,7 @@ Link::Link(std::shared_ptr<cpptoml::table> config)
  * Set current mode.
  */
 int Link::GetMode() {
-#ifdef DEADEYE_TEST
-  return Mode::idle;
-#else
-  return Mode::boiler;
-#endif
+  return current_mode_;
 }
 
 /**
@@ -37,16 +33,21 @@ void Link::SendBoilerSolution(int azimuth_error, int centerline_error) {
   if (send(sockfd_, buf.data(), nwrite, 0) != nwrite) {
     logger_->warn("Link error sending message: {}", strerror(errno));
   }
-  SPDLOG_DEBUG(logger_, "Link sent: {}",
-               msgpack::unpack(buf.data(), buf.size()).get());
 }
 
 /**
  * Send the gear azimuth error.
  */
-void Link::SendGearSolution(int azimuth_error, int range) {
-  SPDLOG_DEBUG(logger_, "gear solution: az error = {}, range = {}",
-               azimuth_error, range);
+void Link::SendGearSolution(int azimuth_error, int target_height) {
+  SPDLOG_DEBUG(logger_, "gear solution: az error = {}, target_height = {}",
+               azimuth_error, target_height);
+  array<int, 3> t{{kGearSolutionMesg, azimuth_error, target_height}};
+  msgpack::sbuffer buf;
+  msgpack::pack(buf, t);
+  ssize_t nwrite = buf.size();
+  if (send(sockfd_, buf.data(), nwrite, 0) != nwrite) {
+    logger_->warn("Link error sending message: {}", strerror(errno));
+  }
 }
 
 /**
@@ -60,8 +61,6 @@ void Link::SendNoTarget() {
   if (send(sockfd_, buf.data(), nwrite, 0) != nwrite) {
     logger_->warn("Link error sending message: {}", strerror(errno));
   }
-  SPDLOG_DEBUG(logger_, "Link sent: {}",
-               msgpack::unpack(buf.data(), buf.size()).get());
 }
 
 /**
@@ -110,6 +109,19 @@ void Link::LoadConfigSettings(const std::shared_ptr<cpptoml::table> config_in) {
     port_ = *i_opt;
   } else {
     logger_->warn("LINK port setting missing, using default");
+  }
+
+  s_opt = config->get_as<string>("mode");
+  if (s_opt) {
+    if (*s_opt == "boiler") {
+      current_mode_ = Mode::boiler;
+      logger_->info("LINK mode set to boiler");
+    } else if (*s_opt == "gear") {
+      current_mode_ = Mode::gear;
+      logger_->info("LINK mode set to gear");
+    }
+  } else {
+    logger_->warn("LINK mode not set");
   }
 
   logger_->info("link to {}:{}", address_, port_);

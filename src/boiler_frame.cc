@@ -41,6 +41,7 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
   // using upright bounding box to find top edges of targets
   lower_rect = cv::boundingRect(lower_contour);
   upper_rect = cv::boundingRect(upper_contour);
+  // logger_->info("lower rect width = {}", lower_rect.width);
 
   // compute distance between target bounding box top edges and send to robot
   int centerline = (lower_rect.y + upper_rect.y) / 2;
@@ -56,9 +57,9 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
 void BoilerFrame::LoadConfigSettings(
     const std::shared_ptr<cpptoml::table> config_in) {
   assert(config_in);
-  auto config = config_in->get_table("DEADEYE")->get_table("FRAME");
+  auto config = config_in->get_table("BOILER")->get_table("FRAME");
   if (!config) {
-    throw std::invalid_argument("DEADEYE.FRAME table missing from config");
+    throw std::invalid_argument("BOILER.FRAME table missing from config");
   }
 
   if (config) {
@@ -66,30 +67,32 @@ void BoilerFrame::LoadConfigSettings(
     if (hsv_l) {
       hsv_lower_ = cv::Scalar((*hsv_l)[0], (*hsv_l)[1], (*hsv_l)[2]);
     } else {
-      logger_->warn("FRAME hsv_lower setting missing, using default");
+      logger_->warn("BOILER.FRAME hsv_lower setting missing, using default");
     }
 
     auto hsv_u = config->get_array_of<int64_t>("hsv_upper");
     if (hsv_u) {
       hsv_upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);
     } else {
-      logger_->warn("FRAME hsv_upper setting missing, using default");
+      logger_->warn("BOILER.FRAME hsv_upper setting missing, using default");
     }
 
     auto min_arc = config->get_as<double>("min_arc_length");
     if (min_arc) {
       min_arc_length_ = *min_arc;
     } else {
-      logger_->warn("FRAME min_arc_length setting missing, using default");
+      logger_->warn(
+          "BOILER.FRAME min_arc_length setting missing, using default");
     }
 
   } else {
-    logger_->error("FRAME configuration section missing, using defaults");
+    logger_->error(
+        "BOILER.FRAME configuration section missing, using defaults");
   }
 
-  logger_->info("HSV lower: {}, {}, {}", hsv_lower_[0], hsv_lower_[1],
+  logger_->info("BOILER HSV lower: {}, {}, {}", hsv_lower_[0], hsv_lower_[1],
                 hsv_lower_[2]);
-  logger_->info("HSV upper: {}, {}, {}", hsv_upper_[0], hsv_upper_[1],
+  logger_->info("BOILER HSV upper: {}, {}, {}", hsv_upper_[0], hsv_upper_[1],
                 hsv_upper_[2]);
-  logger_->info("min arc Length: {}", min_arc_length_);
+  logger_->info("BOILER min arc Length: {}", min_arc_length_);
 }

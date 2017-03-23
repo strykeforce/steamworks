@@ -30,11 +30,8 @@ class GearCamera {
 
   // hardware
   std::unique_ptr<cv::VideoCapture> camera_{nullptr};
-  int azimuth_offset_;
   bool connected_, capture_started_, has_gui_;
   cv::Mat frame_;
-
-  int img_count_ = 0;
 
   // frame processing
   GearFrame frame_process_;

@@ -23,28 +23,43 @@ GearFrame::GearFrame(shared_ptr<cpptoml::table> config_in)
   if (hsv_l) {
     hsv_lower_ = cv::Scalar((*hsv_l)[0], (*hsv_l)[1], (*hsv_l)[2]);
   } else {
-    logger_->warn("FRAME hsv_lower setting missing, using default");
+    logger_->warn("GEAR.FRAME hsv_lower setting missing, using default");
   }
 
   auto hsv_u = config->get_array_of<int64_t>("hsv_upper");
   if (hsv_u) {
     hsv_upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);
   } else {
-    logger_->warn("FRAME hsv_upper setting missing, using default");
+    logger_->warn("GEAR.FRAME hsv_upper setting missing, using default");
   }
 
-  auto min_arc = config->get_as<double>("min_arc_length");
-  if (min_arc) {
-    min_arc_length_ = *min_arc;
+  auto d_opt = config->get_as<double>("min_arc_length");
+  if (d_opt) {
+    min_arc_length_ = *d_opt;
   } else {
-    logger_->warn("FRAME min_arc_length setting missing, using default");
+    logger_->warn("GEAR.FRAME min_arc_length setting missing, using default");
   }
 
-  logger_->info("HSV lower: {}, {}, {}", hsv_lower_[0], hsv_lower_[1],
+  auto i_opt = config->get_as<int>("azimuth_offset");
+  if (i_opt) {
+    azimuth_offset_ = *i_opt;
+  } else {
+    logger_->warn("CAMERA azimuth_offset setting missing, using default");
+  }
+  logger_->info("gear camera azimuth offset: {}", azimuth_offset_);
+
+  logger_->info("GEAR HSV lower: {}, {}, {}", hsv_lower_[0], hsv_lower_[1],
                 hsv_lower_[2]);
-  logger_->info("HSV upper: {}, {}, {}", hsv_upper_[0], hsv_upper_[1],
+  logger_->info("GEAR HSV upper: {}, {}, {}", hsv_upper_[0], hsv_upper_[1],
                 hsv_upper_[2]);
-  logger_->info("min arc Length: {}", min_arc_length_);
+  logger_->info("GEAR min arc Length: {}", min_arc_length_);
+}
+
+/**
+ * Azimuth offset is used by gear camera.
+ */
+int GearFrame::GetAzimuthOffset() {
+  return azimuth_offset_;
 }
 
 /** Process the frame and find targets.
@@ -61,7 +76,7 @@ bool GearFrame::FindTargets(const cv::Mat& frame) {
   cv::findContours(mask.clone(), contours, CV_RETR_LIST,
                    CV_CHAIN_APPROX_SIMPLE);
 
-  SPDLOG_DEBUG(logger_, "found {} contours", contours.size());
+  SPDLOG_DEBUG(logger_, "GearFrame found {} contours", contours.size());
   sort(contours.begin(), contours.end(),
        [](vector<cv::Point> a, vector<cv::Point> b) {
          return cv::arcLength(b, true) < cv::arcLength(a, true);
@@ -81,8 +96,8 @@ bool GearFrame::FindTargets(const cv::Mat& frame) {
     if (error > 0.05) {
       continue;
     }
-    SPDLOG_DEBUG(logger_, "contour {} has aspect {:f} with area {}", found,
-                 aspect_ratio, contourArea(contours[i]));
+    SPDLOG_DEBUG(logger_, "GearFrame contour {} has aspect {:f} with area {}",
+                 found, aspect_ratio, contourArea(contours[i]));
     auto area = contourArea(contours[i]);
     if (area > 300) {
       target_idx.push_back(i);
@@ -119,7 +134,9 @@ bool GearFrame::FindTargets(const cv::Mat& frame) {
   }
 
   // compute distance between target bounding box top edges and send to robot
-  azimuth_error = 177 - right_rect.x - (right_rect.width / 2);
+  azimuth_error = azimuth_offset_ - right_rect.x - (right_rect.width / 2);
+  target_height = right_rect.height;
+  target_width = right_rect.width;
 
   return true;
 }

@@ -15,16 +15,20 @@ class GearFrame {
   cv::Rect left_rect, right_rect;
   bool has_left_target;
   int azimuth_error;
+  int target_height;
+  int target_width;
 
   GearFrame(std::shared_ptr<cpptoml::table> config);
   virtual ~GearFrame() = default;
 
   bool FindTargets(const cv::Mat& frame);
+  int GetAzimuthOffset();
 
  private:
   std::shared_ptr<spdlog::logger> logger_;
   cv::Scalar hsv_lower_, hsv_upper_;
   double min_arc_length_;
+  int azimuth_offset_;
 };
 
 } /* deadeye */

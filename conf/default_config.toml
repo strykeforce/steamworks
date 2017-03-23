@@ -20,13 +20,14 @@ hsv_upper = [100, 255, 255]
 min_arc_length = 250.0
 
 [GEAR.CAMERA]
-azimuth_offset = 177
 
 [GEAR.FRAME]
-hsv_lower = [60, 100, 100]
-hsv_upper = [80, 255, 255]
+hsv_lower = [70, 100, 100]
+hsv_upper = [90, 255, 255]
 min_arc_length = 50.0
+azimuth_offset = 190
 
 [LINK]
 port = 5800
 address = "10.27.67.2"
+mode = "gear"

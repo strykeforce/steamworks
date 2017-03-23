@@ -33,6 +33,7 @@ class Link {
   std::string address_ = "10.27.67.2";
   int port_;
   int sockfd_;
+  int current_mode_ = Mode::idle;
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
   void ConfigureNetworking();

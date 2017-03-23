@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+### Added
+
+- Measurement and logging of average FPS.
+
 ### Changed
 
 - We now use the network instead of a serial line to communicate with the robot code running on the roboRIO.

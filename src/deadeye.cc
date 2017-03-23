@@ -116,12 +116,11 @@ void Deadeye::ProcessBoilerTarget() {
 
 void Deadeye::ProcessGearTarget() {
   int azimuth_error;
-  int target_width;
-  bool success = gear_camera_.ProcessFrame(azimuth_error, target_width);
-  int range = azimuth_error + target_width;  // FIXME: NOPE!
+  int target_height;
+  bool success = gear_camera_.ProcessFrame(azimuth_error, target_height);
   gear_camera_.DisplayFrame();
   if (success) {
-    link_.SendGearSolution(azimuth_error, range);
+    link_.SendGearSolution(azimuth_error, target_height);
     return;
   }
   link_.SendNoTarget();

@@ -25,14 +25,6 @@ GearCamera::GearCamera(std::shared_ptr<cpptoml::table> config_in)
   if (!config) {
     throw invalid_argument("GEAR.CAMERA config table missing");
   }
-
-  auto i_opt = config->get_as<int>("azimuth_offset");
-  if (i_opt) {
-    azimuth_offset_ = *i_opt;
-  } else {
-    logger_->warn("CAMERA azimuth_offset setting missing, using default");
-  }
-  logger_->info("gear camera azimuth offset: {}", azimuth_offset_);
 }
 
 GearCamera::~GearCamera() {
@@ -113,9 +105,9 @@ void GearCamera::StopCapture() {
 
 /**
  * Process a single frame.
- * Returns azumith error and target top-edge distance in pixels.
+ * Returns azumith error and target height in pixels.
  */
-bool GearCamera::ProcessFrame(int& azimuth_error, int& target_width) {
+bool GearCamera::ProcessFrame(int& azimuth_error, int& target_height) {
   if (!connected_ && !capture_started_) {
     logger_->error("not connected or capture not started");
     return -1;
@@ -126,7 +118,7 @@ bool GearCamera::ProcessFrame(int& azimuth_error, int& target_width) {
   // process frame to find targets and return target data
   if (frame_process_.FindTargets(frame_)) {
     azimuth_error = frame_process_.azimuth_error;
-    target_width = 0;
+    target_height = frame_process_.target_height;
     return true;
   }
 
@@ -136,8 +128,9 @@ bool GearCamera::ProcessFrame(int& azimuth_error, int& target_width) {
 
 void GearCamera::DisplayFrame() {
   if (has_gui_) {
-    cv::line(frame_, cv::Point(azimuth_offset_, 0),
-             cv::Point(azimuth_offset_, frame_.rows), cv::Scalar(255, 0, 0));
+    auto azimuth_offset = frame_process_.GetAzimuthOffset();
+    cv::line(frame_, cv::Point(azimuth_offset, 0),
+             cv::Point(azimuth_offset, frame_.rows), cv::Scalar(255, 0, 0));
 
     // draw contours and bounding boxes around targets into captured frame
     if (!frame_process_.right_contour.empty()) {
@@ -161,7 +154,9 @@ void GearCamera::DisplayFrame() {
     //             1.0, cv::Scalar(255, 255, 255));
 
     // display capture frame in GUI window
+
     cv::imshow("frame", frame_);
+    // cv::imshow("frame", frame_process_.mask);
 
     // if (frame_process_.target_separation < 90 ||
     //     frame_process_.target_separation > 110) {
