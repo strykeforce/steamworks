@@ -15,6 +15,7 @@ Deadeye::Deadeye(std::shared_ptr<cpptoml::table> config)
       boiler_camera_(config),
       gear_camera_(config) {
   LoadConfigSettings(config);
+  link_.Start();
 }
 
 /**
@@ -37,7 +38,8 @@ void Deadeye::Run() {
         ProcessGearTarget();
         break;
       case Link::Mode::idle:
-        return;
+        std::this_thread::sleep_for(NTGT_SLEEP_MS);
+        continue;
     }
   }
 }
@@ -48,9 +50,8 @@ void Deadeye::Run() {
 void Deadeye::SwitchMode(int mode) {
   switch (mode) {
     case Link::Mode::boiler:
-      logger_->info("switching to boiler camera capture");
+      logger_->info("Deadeye switching to boiler camera capture");
       SPDLOG_TRACE(logger_, "start StopCapture");
-      gear_camera_.StopCapture();
       if (!boiler_camera_.IsConnected()) {
         SPDLOG_TRACE(logger_, "start Connect");
         boiler_camera_.Connect();
@@ -60,16 +61,14 @@ void Deadeye::SwitchMode(int mode) {
       SPDLOG_TRACE(logger_, "done configuring camera");
       break;
     case Link::Mode::gear:
-      logger_->info("switching to gear camera capture");
+      logger_->info("Deadeye switching to gear camera capture");
       boiler_camera_.StopCapture();
       if (!gear_camera_.IsConnected()) {
         gear_camera_.Connect();
       }
-      gear_camera_.StartCapture();
       break;
     case Link::Mode::idle:
       logger_->info("deadeye mode set to idle");
-      gear_camera_.StopCapture();
       boiler_camera_.StopCapture();
       break;
     default:
@@ -93,6 +92,7 @@ void Deadeye::ProcessBoilerTarget() {
     }
   }
   fps_.Update();
+
   int centerline_error;  // vertical target separation
   int azimuth_error;
   bool success = boiler_camera_.ProcessFrame(azimuth_error, centerline_error);
@@ -115,6 +115,19 @@ void Deadeye::ProcessBoilerTarget() {
 }
 
 void Deadeye::ProcessGearTarget() {
+  if (display_framerate_) {
+    static int framerate_count = 0;
+    if (framerate_count == 0) {
+      fps_.Start();
+    }
+    if (framerate_count++ > display_framerate_int_) {
+      fps_.Stop();
+      logger_->info("FPS = {}", fps_.FramesPerSecond());
+      framerate_count = 0;
+    }
+  }
+  fps_.Update();
+
   int azimuth_error;
   int target_height;
   bool success = gear_camera_.ProcessFrame(azimuth_error, target_height);

@@ -17,10 +17,7 @@ class GearCamera {
   GearCamera& operator=(const GearCamera&) = delete;
 
   void Connect();
-  void Disconnect();
   bool IsConnected();
-  void StartCapture();
-  void StopCapture();
 
   bool ProcessFrame(int& azimuth_error, int& target_width);
   void DisplayFrame();

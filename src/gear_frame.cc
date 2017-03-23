@@ -76,7 +76,7 @@ bool GearFrame::FindTargets(const cv::Mat& frame) {
   cv::findContours(mask.clone(), contours, CV_RETR_LIST,
                    CV_CHAIN_APPROX_SIMPLE);
 
-  SPDLOG_DEBUG(logger_, "GearFrame found {} contours", contours.size());
+  // SPDLOG_DEBUG(logger_, "GearFrame found {} contours", contours.size());
   sort(contours.begin(), contours.end(),
        [](vector<cv::Point> a, vector<cv::Point> b) {
          return cv::arcLength(b, true) < cv::arcLength(a, true);
@@ -96,8 +96,9 @@ bool GearFrame::FindTargets(const cv::Mat& frame) {
     if (error > 0.05) {
       continue;
     }
-    SPDLOG_DEBUG(logger_, "GearFrame contour {} has aspect {:f} with area {}",
-                 found, aspect_ratio, contourArea(contours[i]));
+    // SPDLOG_DEBUG(logger_, "GearFrame contour {} has aspect {:f} with area
+    // {}",
+    //              found, aspect_ratio, contourArea(contours[i]));
     auto area = contourArea(contours[i]);
     if (area > 300) {
       target_idx.push_back(i);

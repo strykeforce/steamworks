@@ -16,6 +16,8 @@ class Link {
   Link(const Link&) = delete;
   Link& operator=(const Link&) = delete;
 
+  void Start();
+
   int GetMode();
   void SendBoilerSolution(int azimuth_error, int centerline_error);
   void SendGearSolution(int azimuth_error, int range);
@@ -30,13 +32,18 @@ class Link {
   };
 
   std::shared_ptr<spdlog::logger> logger_;
+  std::thread thread_;
+  std::mutex mutex_;
   std::string address_ = "10.27.67.2";
   int port_;
-  int sockfd_;
+  int sendfd_;
+  int recvfd_;
   int current_mode_ = Mode::idle;
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
   void ConfigureNetworking();
+
+  void Run();
 };
 
 } /* deadeye */

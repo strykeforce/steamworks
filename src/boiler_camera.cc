@@ -258,7 +258,7 @@ void BoilerCamera::DisplayFrame() {
 void BoilerCamera::LoadConfigSettings(
     const std::shared_ptr<cpptoml::table> config_in) {
   assert(config_in);
-  auto config = config_in->get_table("DEADEYE");
+  auto config = config_in->get_table("BOILER");
 
   bool has_display = !!std::getenv("DISPLAY");
   auto b_opt = config->get_as<bool>("gui");

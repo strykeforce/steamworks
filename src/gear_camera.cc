@@ -28,9 +28,7 @@ GearCamera::GearCamera(std::shared_ptr<cpptoml::table> config_in)
 }
 
 GearCamera::~GearCamera() {
-  StopCapture();
-  Disconnect();
-  if (has_gui_) {
+  if (connected_ && has_gui_) {
     cv::destroyAllWindows();
   }
 }
@@ -42,21 +40,24 @@ void GearCamera::Connect() {
   if (connected_) {
     return;
   }
+
   auto ret = system("/usr/bin/uvcdynctrl --load=/etc/deadeye/lifecam.conf");
   if (ret != 0) {
     logger_->error("error setting LifeCam exposure with uvcdynctrl");
   }
-  connected_ = true;
-}
 
-/**
- * Disconnect the camera.
- */
-void GearCamera::Disconnect() {
-  if (!connected_) {
+  camera_.reset(new cv::VideoCapture(0));
+  if (!camera_->isOpened()) {
+    logger_->error("GearCamera::Connect can't open camera");
     return;
   }
-  connected_ = false;
+  SPDLOG_DEBUG(logger_, "GearCamera::Connect has opened gear camera");
+
+  if (has_gui_) {
+    cv::namedWindow("frame");
+  }
+
+  connected_ = true;
 }
 
 /**
@@ -67,50 +68,13 @@ bool GearCamera::IsConnected() {
 }
 
 /**
- * Start camera capturing
- */
-void GearCamera::StartCapture() {
-  if (!connected_) {
-    logger_->error("must call Connect before calling StartCapture");
-    return;
-  }
-  if (capture_started_) {
-    logger_->warn("StartCapture already called");
-    return;
-  }
-  if (has_gui_) {
-    cv::namedWindow("frame");
-  }
-
-  camera_.reset(new cv::VideoCapture(0));
-  if (!camera_->isOpened()) {
-    logger_->error("StartCapture can't open camera");
-    return;
-  }
-  SPDLOG_DEBUG(logger_, "StartCapture has opened gear camera");
-
-  capture_started_ = true;
-}
-
-/**
- * Stop camera capturing
- */
-void GearCamera::StopCapture() {
-  if (!connected_ && !capture_started_) {
-    return;
-  }
-  camera_.reset(nullptr);
-  capture_started_ = false;
-}
-
-/**
  * Process a single frame.
  * Returns azumith error and target height in pixels.
  */
 bool GearCamera::ProcessFrame(int& azimuth_error, int& target_height) {
-  if (!connected_ && !capture_started_) {
-    logger_->error("not connected or capture not started");
-    return -1;
+  if (!connected_) {
+    logger_->error("GearCamera::ProcessFrame not connected");
+    return false;
   }
 
   *camera_ >> frame_;
