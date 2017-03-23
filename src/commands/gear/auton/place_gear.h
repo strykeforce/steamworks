@@ -23,17 +23,11 @@ class PlaceGear : public frc::Command {
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
-  double azimuth_error_;
-  double azimuth_abs_error_;
-  double height_;
-  double height_error_;
-  double height_abs_error_;
+  double strafe_error_;
+  double strafe_abs_error_;
   int stable_count_;
   // std::unique_ptr<motion::AzimuthMotion> azimuth_controller_;
   // std::unique_ptr<motion::AzimuthMotion> distance_controller_;
-
-  double CalculateAzimuthSetpoint();
-  double CalculateDriveSetpoint();
 };
 
 } /* gear */

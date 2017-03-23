@@ -1,4 +1,4 @@
-#include "sequence_06.h"
+#include "sequence_07.h"
 
 #include "commands/deadeye/gear_led.h"
 #include "commands/drive/auton/drive.h"
@@ -22,11 +22,11 @@ const int kPrepareElevation = 1300;
 /**
  * Red move out and shoot 10
  */
-Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
-  AddSequential(new LogCommand("starting BLUE alliance center gear"));
+Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
+  AddSequential(new LogCommand("starting BLUE alliance left gear"));
 
   // stage the gear
-  AddParallel(new gear::StageGear());
+  // AddParallel(new gear::StageGear());
 
   // drive out
   drive::DriveConfig dc;
@@ -35,17 +35,18 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
   dc.acceleration = 200;
   dc.deacceleration = 60;
   dc.close_enough = 25;
-  dc.segments.emplace_back(-180, 62 * kTicksPerInch);  // drive out
+  dc.segments.emplace_back(-180, 96 * kTicksPerInch);  // drive out
   AddSequential(new drive::Drive(dc));
 
   // square up
-  AddSequential(new drive::GyroAzimuth(0));
+  AddSequential(new drive::GyroAzimuth(60));
 
   // strafe to target
   AddSequential(new deadeye::GearLED(true));
   AddSequential(new gear::PlaceGear());
 
-  // push to wall
+#if 0
+// push to wall
   dc.max_speed = 100;
   dc.segments.clear();
   dc.segments.emplace_back(-180, 14 * kTicksPerInch);
@@ -62,4 +63,5 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
 
   // azimuth to boiler
   AddSequential(new drive::GyroAzimuth(75));
+#endif
 }

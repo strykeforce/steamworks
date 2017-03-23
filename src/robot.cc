@@ -96,6 +96,10 @@ void Robot::AutonomousInit() {
       autonomous_command_ = new auton::Sequence06();
       gyro_offset_ = 0.0;
       break;
+    case 7:
+      autonomous_command_ = new auton::Sequence07();
+      gyro_offset_ = 0.0;
+      break;
     default:
       autonomous_command_ = new LogCommand("unrecognized command");
   }
