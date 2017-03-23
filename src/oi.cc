@@ -12,6 +12,7 @@
 #include "commands/drive/drive_zero.h"
 #include "commands/drive/set_zero.h"
 #include "commands/drive/zero_gyro.h"
+#include "commands/gear/auton/place_gear.h"
 #include "commands/gear/load.h"
 #include "commands/gear/release.h"
 #include "commands/gear/sequence.h"
@@ -220,5 +221,7 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Deadeye Azimuth", new drive::DeadeyeAzimuth());
   SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
+
+  SmartDashboard::PutData("Place Gear", new gear::PlaceGear());
 #endif
 }

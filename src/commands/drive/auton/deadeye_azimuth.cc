@@ -10,10 +10,11 @@ using namespace std;
 
 // tuning parameters
 namespace {
-const double kMaxSpeed = 100.0 / 275.0;
-const double kMinSpeed = 15.0 / 275.0;
-const double kMinSpeedExact = 15.0 / 275.0;
-const double kDeadZone = kMinSpeedExact * 0.9;
+const float kSetpointMax = 275.0;
+const double kMaxSpeed = 100.0 / kSetpointMax;
+const double kMinSpeed = 15.0 / kSetpointMax;
+const double kMinSpeedExact = 15.0 / kSetpointMax;
+const double kDeadZone = 0.1 * kMinSpeedExact;
 const int kCloseEnough = 20;
 const int kCloseEnoughExact = 8;
 const int kSlopeStart = 300;
@@ -73,7 +74,7 @@ void DeadeyeAzimuth::Execute() {
   }
   speed = speed * (signbit(error_) ? 1 : -1);  // match sign to error
   SPDLOG_DEBUG(logger_, "DeadeyeAzimuth error_ = {}, speed =  {}", error_,
-               round(speed * 275.0));
+               round(speed * kSetpointMax));
   Robot::drive->Drive(0, 0, speed, kDeadZone);
 }
 
