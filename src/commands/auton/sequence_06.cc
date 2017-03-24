@@ -1,6 +1,7 @@
 #include "sequence_06.h"
 
 #include "commands/deadeye/gear_led.h"
+#include "commands/deadeye/mode.h"
 #include "commands/drive/auton/drive.h"
 #include "commands/drive/auton/gyro_azimuth.h"
 #include "commands/gear/auton/place_gear.h"
@@ -24,6 +25,7 @@ const int kPrepareElevation = 1300;
  */
 Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
   AddSequential(new LogCommand("starting BLUE alliance center gear"));
+  AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
 
   // stage the gear
   AddParallel(new gear::StageGear());
@@ -53,6 +55,7 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
 
   // release gear
   AddParallel(new gear::ReleaseGear());
+  AddParallel(new deadeye::GearLED(false));
 
   // back off
   dc.max_speed = 200;
@@ -62,4 +65,7 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
 
   // azimuth to boiler
   AddSequential(new drive::GyroAzimuth(75));
+
+  // and shoot
+  AddParallel(new StartShooting());
 }

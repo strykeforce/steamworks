@@ -1,6 +1,7 @@
 #include "sequence_07.h"
 
 #include "commands/deadeye/gear_led.h"
+#include "commands/deadeye/mode.h"
 #include "commands/drive/auton/drive.h"
 #include "commands/drive/auton/gyro_azimuth.h"
 #include "commands/gear/auton/place_gear.h"
@@ -24,9 +25,10 @@ const int kPrepareElevation = 1300;
  */
 Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
   AddSequential(new LogCommand("starting BLUE alliance left gear"));
+  AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
 
   // stage the gear
-  // AddParallel(new gear::StageGear());
+  AddParallel(new gear::StageGear());
 
   // drive out
   drive::DriveConfig dc;
@@ -45,15 +47,15 @@ Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
   AddSequential(new deadeye::GearLED(true));
   AddSequential(new gear::PlaceGear());
 
-#if 0
-// push to wall
+  // push to wall
   dc.max_speed = 100;
   dc.segments.clear();
-  dc.segments.emplace_back(-180, 14 * kTicksPerInch);
+  dc.segments.emplace_back(-120, 16 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // release gear
   AddParallel(new gear::ReleaseGear());
+#if 0
 
   // back off
   dc.max_speed = 200;

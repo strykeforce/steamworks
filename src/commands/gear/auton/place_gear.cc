@@ -29,6 +29,7 @@ PlaceGear::PlaceGear()
  */
 void PlaceGear::Initialize() {
   Robot::drive->SetAzimuthMode();
+  Robot::drive->SetGyroDisabled(true);
   strafe_error_ = Robot::deadeye->GetAzimuthError();
   logger_->info("PlaceGear initialized with strafe error {}", strafe_error_);
   stable_count_ = 0;
@@ -82,4 +83,12 @@ bool PlaceGear::IsFinished() {
     return true;
   }
   return false;
+}
+
+/**
+ * End
+ */
+void PlaceGear::End() {
+  Robot::drive->SetGyroDisabled(false);
+  logger_->info("PlaceGear ended with strafe error {}", strafe_error_);
 }

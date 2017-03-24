@@ -2,6 +2,7 @@
 
 #include <Commands/ConditionalCommand.h>
 
+#include "commands/deadeye/mode.h"
 #include "commands/deadeye/shooter_led.h"
 #include "commands/drive/auton/deadeye_azimuth.h"
 #include "commands/hopper.h"
@@ -27,7 +28,9 @@ StartShooting::StartShooting()
     : frc::CommandGroup("StartShooting"), logger_(spdlog::get("command")) {
   SetInterruptible(true);
 
+  AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::boiler));
   AddSequential(new deadeye::ShooterLED(true));
+
   // SetShooter checks to see if wheel already has speed commanded
   AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 

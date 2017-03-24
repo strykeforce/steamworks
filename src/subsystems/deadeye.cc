@@ -1,6 +1,5 @@
 #include "deadeye.h"
 
-#include <sys/socket.h>
 #include <msgpack.hpp>
 
 #include "robot_map.h"
@@ -37,13 +36,14 @@ void Deadeye::Start() {
  * The main IO loop.
  */
 void Deadeye::Run() {
-  char recv[256];
+  char buf[256];
   for (;;) {
-    auto nread = recvfrom(sockfd_, recv, sizeof(recv), 0, NULL, 0);
+    // auto nread = recvfrom(recvfd_, recv, sizeof(recv), 0, NULL, NULL);
+    auto nread = recvfrom(recvfd_, buf, sizeof(buf), 0, NULL, NULL);
     if (nread == -1) {
       logger_->error("Deadeye recvfrom: {}", strerror(errno));
     }
-    auto oh = msgpack::unpack(recv, nread);
+    auto oh = msgpack::unpack(buf, nread);
     auto obj = oh.get();
     array<int, 3> message;
     obj.convert(message);
@@ -120,6 +120,34 @@ void Deadeye::SetShooterLightEnabled(bool enable) {
 }
 
 /**
+* Switch to boiler camera.
+*/
+void Deadeye::EnableBoilerCamera() {
+  array<int, 3> t{{kBoilerSolutionMesg, 0, 0}};
+  msgpack::sbuffer buf;
+  msgpack::pack(buf, t);
+  ssize_t nwrite = buf.size();
+  if (sendto(sendfd_, buf.data(), nwrite, 0, (sockaddr*)&remote_addr_,
+             sizeof(remote_addr_)) != nwrite) {
+    logger_->warn("Deadeye error sending message: {}", strerror(errno));
+  }
+}
+
+/**
+* Switch to boiler camera.
+*/
+void Deadeye::EnableGearCamera() {
+  array<int, 3> t{{kGearSolutionMesg, 0, 0}};
+  msgpack::sbuffer buf;
+  msgpack::pack(buf, t);
+  ssize_t nwrite = buf.size();
+  if (sendto(sendfd_, buf.data(), nwrite, 0, (sockaddr*)&remote_addr_,
+             sizeof(remote_addr_)) != nwrite) {
+    logger_->warn("Deadeye error sending message: {}", strerror(errno));
+  }
+}
+
+/**
  * Calculates shooter solution based on given input, returns true if valid
  * solution found.
  */
@@ -189,8 +217,8 @@ double Deadeye::GetSolutionAzimuthOffset() { return solution_azimuth_offset_; }
  * Configure UDP networking to roboRIO.
  */
 void Deadeye::ConfigureNetworking() {
-  sockfd_ = socket(AF_INET, SOCK_DGRAM, 0);
-  if (sockfd_ == -1) {
+  recvfd_ = socket(AF_INET, SOCK_DGRAM, 0);
+  if (recvfd_ == -1) {
     logger_->critical("Link socket error: {}", strerror(errno));
   }
 
@@ -201,9 +229,23 @@ void Deadeye::ConfigureNetworking() {
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
   addr.sin_port = htons(5800);
 
-  if (::bind(sockfd_, (sockaddr*)&addr, sizeof(addr)) == -1) {
+  if (::bind(recvfd_, (sockaddr*)&addr, sizeof(addr)) == -1) {
     logger_->critical("Link bind error: {}", strerror(errno));
   }
+
+  // sending to deadeye remote
+  sendfd_ = socket(AF_INET, SOCK_DGRAM, 0);
+  if (sendfd_ == -1) {
+    logger_->critical("Link socket error: {}", strerror(errno));
+  }
+
+  // remote host with "address" and "port" in LINK config table
+  memset(&remote_addr_, 0, sizeof(remote_addr_));
+  remote_addr_.sin_family = AF_INET;
+  if (inet_pton(AF_INET, remote_.c_str(), &remote_addr_.sin_addr) != 1) {
+    logger_->critical("Deadeye inet_pton error for address {}", remote_);
+  }
+  remote_addr_.sin_port = htons(port_);
 }
 
 /**
@@ -225,6 +267,14 @@ void Deadeye::LoadConfigSettings(
     logger_->warn(missing, "port");
   }
   logger_->info("deadeye port: {}", port_);
+
+  auto s_opt = config->get_as<string>("remote");
+  if (s_opt) {
+    remote_ = *s_opt;
+  } else {
+    logger_->warn(missing, "remote");
+  }
+  logger_->info("deadeye remote: {}", remote_);
 
   auto d_opt = config->get_as<double>("elevation_zero_angle");
   if (d_opt) {
@@ -262,6 +312,7 @@ void Deadeye::LoadConfigSettings(
         "default");
   }
   logger_->info("shooter camera angle: {}", camera_angle_);
+
   d_opt = config->get_as<double>("degrees_per_tick");
   if (d_opt) {
     degrees_per_tick_ = *d_opt;

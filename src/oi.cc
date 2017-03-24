@@ -5,6 +5,7 @@
 #include "commands/climber.h"
 #include "commands/dashboard.h"
 #include "commands/deadeye/gear_led.h"
+#include "commands/deadeye/mode.h"
 #include "commands/deadeye/shooter_led.h"
 #include "commands/drive/auton/deadeye_azimuth.h"
 #include "commands/drive/auton/drive.h"
@@ -223,5 +224,12 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
 
   SmartDashboard::PutData("Place Gear", new gear::PlaceGear());
+  SmartDashboard::PutData(
+      "Gear Camera",
+      new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
+  SmartDashboard::PutData(
+      "Boiler Camera",
+      new deadeye::EnableCamera(deadeye::EnableCamera::Mode::boiler));
+
 #endif
 }

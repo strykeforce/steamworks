@@ -4,7 +4,9 @@
 
 #include <WPILib.h>
 #include <cpptoml/cpptoml.h>
+#include <netinet/in.h>
 #include <spdlog/spdlog.h>
+#include <sys/socket.h>
 
 namespace steamworks {
 namespace subsystem {
@@ -20,6 +22,9 @@ class Deadeye : public frc::Subsystem {
 
   void SetGearLightEnabled(bool enable);
   void SetShooterLightEnabled(bool enable);
+
+  void EnableBoilerCamera();
+  void EnableGearCamera();
 
   int GetAzimuthError();
   int GetCenterlineError();
@@ -46,7 +51,10 @@ class Deadeye : public frc::Subsystem {
   };
 
   const std::shared_ptr<spdlog::logger> logger_;
-  int sockfd_;
+  int recvfd_;
+  int sendfd_;
+  std::string remote_;
+  struct sockaddr_in remote_addr_;
 
   std::thread thread_;
   std::mutex mutex_;
