@@ -223,7 +223,8 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Deadeye Azimuth", new drive::DeadeyeAzimuth());
   SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
 
-  SmartDashboard::PutData("Place Gear", new gear::PlaceGear());
+  SmartDashboard::PutData("Place Gear",
+                          new gear::PlaceGear(gear::Lift::center));
   SmartDashboard::PutData(
       "Gear Camera",
       new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));

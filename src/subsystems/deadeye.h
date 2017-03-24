@@ -27,6 +27,7 @@ class Deadeye : public frc::Subsystem {
   void EnableGearCamera();
 
   int GetAzimuthError();
+  int GetStrafeError();
   int GetCenterlineError();
   int GetTargetHeight();
 

@@ -45,7 +45,7 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
 
   // strafe to target
   AddSequential(new deadeye::GearLED(true));
-  AddSequential(new gear::PlaceGear());
+  AddSequential(new gear::PlaceGear(gear::Lift::center));
 
   // push to wall
   dc.max_speed = 100;

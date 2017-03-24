@@ -82,7 +82,15 @@ int Deadeye::GetAzimuthError() {
 }
 
 /**
- * Get the azimuth error.
+ * Get the strafe error.
+ */
+int Deadeye::GetStrafeError() {
+  std::lock_guard<std::mutex> lock(mutex_);
+  return azimuth_error_;
+}
+
+/**
+ * Get the centerline error.
  */
 int Deadeye::GetCenterlineError() {
   std::lock_guard<std::mutex> lock(mutex_);

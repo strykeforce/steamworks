@@ -11,9 +11,11 @@ class AzimuthMotion;
 namespace command {
 namespace gear {
 
+enum class Lift { left, center, right };
+
 class PlaceGear : public frc::Command {
  public:
-  PlaceGear();
+  PlaceGear(Lift position);
   virtual ~PlaceGear() = default;
 
  protected:
@@ -24,9 +26,25 @@ class PlaceGear : public frc::Command {
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;
+
+  double distance_;
+  double drive_error_;
+  double drive_abs_error_;
+
+  double strafe_offset_;
   double strafe_error_;
   double strafe_abs_error_;
+
+  double azimuth_angle_;
+  double azimuth_error_;
+  double azimuth_abs_error_;
+
   int stable_count_;
+  int zero_count_;
+
+  double CalculateDriveSetpoint();
+  double CalculateStrafeSetpoint();
+  double CalculateAzimuthSetpoint();
 };
 
 } /* gear */
