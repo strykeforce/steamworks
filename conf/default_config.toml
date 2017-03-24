@@ -6,11 +6,12 @@ default = "trace"
 sidewinder = "info"
 
 [STEAMWORKS.CLIMBER]
-capture_voltage =  4.0
+capture_voltage =  6.0
 capture_current =  4.0
 climb_voltage   =  8.0
 finish_voltage  =  4.0
 finish_current  = 10.0
+ratchet_voltage =  1.0
 climb_distance  = 26000
 
     [[STEAMWORKS.CLIMBER.TALON]]

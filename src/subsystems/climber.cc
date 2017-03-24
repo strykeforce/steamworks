@@ -14,8 +14,12 @@ Climber::Climber(const std::shared_ptr<cpptoml::table> config)
 namespace {
 const double kCaptureRampRate = 8.0;
 const int kClimbDistanceGoodEnough = 100;
+const int kZeroCountReq = 3;
 }
 
+/**
+ * Run in capture mode.
+ */
 void Climber::SetCaptureModeEnabled(bool enabled) {
   if (enabled) {
     logger_->info("starting climber capture mode");
@@ -28,6 +32,17 @@ void Climber::SetCaptureModeEnabled(bool enabled) {
   RobotMap::climber_slave_talon->SetVoltageRampRate(0.0);
 }
 
+/**
+ * Run in ratchet mode.
+ */
+void Climber::SetRatchetModeEnabled(bool enabled) {
+  is_ratchet_ = enabled;
+  logger_->info("climber ratchet mode enabled = {}", is_ratchet_);
+}
+
+/**
+ * Run in slow finish mode.
+ */
 void Climber::SetFinishModeEnabled(bool enabled) {
   if (enabled) {
     logger_->info(
@@ -60,9 +75,14 @@ void Climber::StartFinish() {
 }
 
 void Climber::Stop() {
+  is_running_ = false;
+  if (is_ratchet_) {
+    RobotMap::climber_master_talon->Set(ratchet_voltage_);
+    RobotMap::climber_slave_talon->Set(ratchet_voltage_);
+    return;
+  }
   RobotMap::climber_master_talon->StopMotor();
   RobotMap::climber_slave_talon->StopMotor();
-  is_running_ = false;
 }
 
 bool Climber::IsRunning() { return is_running_; }
@@ -82,6 +102,12 @@ bool Climber::IsCaptured() {
  * Returns true when climber has moved required distance.
  */
 bool Climber::ShouldClimbFinish() {
+  // wait a few iterations for Robot::drive->ZeroPosition() to "take"
+  if (zero_count_ < kZeroCountReq) {
+    zero_count_++;
+    return false;
+  }
+
   int pos = GetPosition();
   SPDLOG_DEBUG(logger_, "Climber position absolute error {}", pos);
   return pos > climb_distance_;
@@ -99,7 +125,13 @@ bool Climber::IsClimbFinished() {
  * Resets climber motor encoder to zero in preparation for measuring distance
  * during climb.
  */
-void Climber::ZeroPosition() { RobotMap::climber_slave_talon->SetPosition(0); }
+void Climber::ZeroPosition() {
+  if (is_zeroed_) {
+    return;
+  }
+  RobotMap::climber_slave_talon->SetPosition(0);
+  is_zeroed_ = true;
+}
 
 /**
  * Returns the current encoder position.
@@ -144,6 +176,15 @@ void Climber::LoadConfigSettings(
         "STEAMWORKS.CLIMBER finish_voltage setting missing, using default");
   }
   logger_->info("climber finish motor voltage: {}", finish_voltage_);
+
+  d_opt = config->get_as<double>("ratchet_voltage");
+  if (d_opt) {
+    ratchet_voltage_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS.CLIMBER ratchet_voltage setting missing, using default");
+  }
+  logger_->info("climber ratchet motor voltage: {}", ratchet_voltage_);
 
   d_opt = config->get_as<double>("capture_current");
   if (d_opt) {

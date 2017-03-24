@@ -30,6 +30,7 @@ void CaptureRope::Interrupted() {
 void CaptureRope::End() {
   logger_->info("CaptureRope rope is captured");
   Robot::climber->SetCaptureModeEnabled(false);
+  Robot::climber->SetRatchetModeEnabled(true);
   Robot::climber->ZeroPosition();
   climb_.Start();
 }
