@@ -1,5 +1,6 @@
 #include "swerve_drive.h"
 
+#include <cmath>
 #include <ctime>
 #include <fstream>
 
@@ -62,9 +63,6 @@ SwerveDrive::SwerveDrive(const std::string& name,
   azimuth_settings->Initialize(map_->lr_azimuth);
   azimuth_settings->Initialize(map_->rr_azimuth);
 
-  // zero out azimuth encoders based on stored config values
-  ReadAzimuthCalibration();
-
   // load drive Talon settings from swerve config and initialize drive
   // Talons
   logger_->trace("configuring drive talons in voltage mode");
@@ -86,6 +84,24 @@ SwerveDrive::SwerveDrive(const std::string& name,
         "SIDEWINDER drive_dead_zone setting is missing");
   }
   dead_zone_ = *d_opt;
+
+  //  calculate wheel angles for brake mode
+  auto width = swerve_settings->get_as<double>("wheelbase_width").value_or(1.0);
+  auto length =
+      swerve_settings->get_as<double>("wheelbase_length").value_or(1.0);
+  brake_ang_[0] = std::atan2(-length, width) * 180 / M_PI;
+  brake_ang_[1] = std::atan2(length, -width) * 180 / M_PI;
+  brake_ang_[2] = std::atan2(length, width) * 180 / M_PI;
+  brake_ang_[3] = std::atan2(-length, -width) * 180 / M_PI;
+
+  logger_->info(
+      "LoadConfigSettings brake angles 0 = {}, 1 = {}, 2 = {}, 3 = {}",
+      brake_ang_[0], brake_ang_[1], brake_ang_[2], brake_ang_[3]);
+
+  // zero out azimuth encoders based on stored config values
+  ReadAzimuthCalibration();
+  logger_->info("ctor1 brake angles 0 = {}, 1 = {}, 2 = {}, 3 = {}",
+                brake_ang_[0], brake_ang_[1], brake_ang_[2], brake_ang_[3]);
 }
 
 /**
@@ -93,7 +109,10 @@ SwerveDrive::SwerveDrive(const std::string& name,
  */
 SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config,
                          const TalonMap* map, std::shared_ptr<AHRS> gyro)
-    : SwerveDrive("SwerveDrive", config, map, gyro) {}
+    : SwerveDrive("SwerveDrive", config, map, gyro) {
+  logger_->info("ctor2 brake angles 0 = {}, 1 = {}, 2 = {}, 3 = {}",
+                brake_ang_[0], brake_ang_[1], brake_ang_[2], brake_ang_[3]);
+}
 
 /**
  * Set all azimuth motors to the same setpoint.
@@ -148,6 +167,80 @@ void SwerveDrive::ClearDriveIaccum() {
 void SwerveDrive::SetGyroDisabled(bool disabled) {
   logger_->info("setting swerve gyro to {}", disabled ? "DISABLED" : "ENABLED");
   gyro_disabled_ = disabled;
+}
+
+namespace {
+const double kAngleA = -40.0;
+const double kAngleB = 140.0;
+const double kAngleC = 40.0;
+const double kAngleD = -140.0;
+}
+/**
+ * Override the wheel azimuth into brake position.
+ */
+void SwerveDrive::SetBrake() {
+  brake_ang_[0] = -40.0;
+  brake_ang_[1] = 140.0;
+  brake_ang_[2] = 40.0;
+  brake_ang_[3] = -140.0;
+  logger_->info("SetBrake brake angles 0 = {}, 1 = {}, 2 = {}, 3 = {}",
+                brake_ang_[0], brake_ang_[1], brake_ang_[2], brake_ang_[3]);
+
+  DriveData dd;
+
+  // probably need to get wheel angles and
+  auto pos = static_cast<int>(map_->lf_azimuth->GetPosition()) & 0xFFF;
+  int d1 = pos - (brake_ang_[0] * 2048 / 180.0);
+  int d2 = pos - (brake_ang_[1] * 2048 / 180.0);
+
+  double setpoint = 0;
+  if (abs(d1) < abs(d2)) {
+    setpoint = dd.walf = brake_ang_[0];
+  } else {
+    setpoint = dd.walf = brake_ang_[1];
+  }
+  logger_->info("brake on lf = {}, {}", setpoint, brake_ang_[0]);
+  map_->lf_azimuth->Set(std::round(setpoint * 2048 / 180.0));
+
+  pos = static_cast<int>(map_->rf_azimuth->GetPosition()) & 0xFFF;
+  d1 = pos - (brake_ang_[2] * 2048 / 180.0);
+  d2 = pos - (brake_ang_[3] * 2048 / 180.0);
+  if (abs(d1) < abs(d2)) {
+    setpoint = dd.warf = brake_ang_[2];
+  } else {
+    setpoint = dd.warf = brake_ang_[3];
+  }
+  logger_->info("brake on rf = {}", setpoint);
+  map_->rf_azimuth->Set(std::round(setpoint * 2048 / 180.0));
+
+  pos = static_cast<int>(map_->lr_azimuth->GetPosition()) & 0xFFF;
+  d1 = pos - (brake_ang_[2] * 2048 / 180.0);
+  d2 = pos - (brake_ang_[3] * 2048 / 180.0);
+  if (abs(d1) < abs(d2)) {
+    setpoint = dd.walr = brake_ang_[2];
+  } else {
+    setpoint = dd.walr = brake_ang_[3];
+  }
+  logger_->info("brake on lr = {}", setpoint);
+  map_->lr_azimuth->Set(std::round(setpoint * 2048 / 180.0));
+
+  pos = static_cast<int>(map_->rr_azimuth->GetPosition()) & 0xFFF;
+  d1 = pos - (brake_ang_[0] * 2048 / 180.0);
+  d2 = pos - (brake_ang_[1] * 2048 / 180.0);
+  if (abs(d1) < abs(d2)) {
+    setpoint = dd.warr = brake_ang_[0];
+  } else {
+    setpoint = dd.warr = brake_ang_[1];
+  }
+  logger_->info("brake on rf = {}", setpoint);
+  map_->rr_azimuth->Set(std::round(setpoint * 2048 / 180.0));
+
+  swerve_math_.SetWheelAngles(dd);  // set wheel angle history
+
+  map_->lf_drive->SetPosition(0);
+  map_->rf_drive->SetPosition(0);
+  map_->lr_drive->SetPosition(0);
+  map_->rr_drive->SetPosition(0);
 }
 
 /**

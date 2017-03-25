@@ -39,51 +39,7 @@ Vector2f* calc_rotation_vectors(double robot_left_to_right_length,
 }
 
 SwerveMath::SwerveMath(const std::shared_ptr<cpptoml::table> config) {
-  auto settings = config->get_table("SIDEWINDER");
-  if (!settings) {
-    throw std::invalid_argument("SIDEWINDER config is missing");
-  }
-
-  settings = settings->get_table("SWERVE");
-  if (!settings) {
-    throw std::invalid_argument("SWERVE config is missing");
-  }
-
-  auto wb_w = settings->get_as<double>("wheelbase_width");
-  if (!wb_w) {
-    throw std::invalid_argument(
-        "SIDEWINDER wheelbase_width setting is missing");
-  }
-  double wheelbase_width = *wb_w;
-
-  auto wb_l = settings->get_as<double>("wheelbase_length");
-  if (!wb_l) {
-    throw std::invalid_argument(
-        "SIDEWINDER wheelbase_length setting is missing");
-  }
-  double wheelbase_length = *wb_l;
-
-  auto srx = settings->get_as<double>("shooter_rotation_point_X");
-  if (!srx) {
-    throw std::invalid_argument(
-        "SIDEWINDER shooter_rotation_point_X setting is missing");
-  }
-  double srx_value = *srx;
-
-  auto sry = settings->get_as<double>("shooter_rotation_point_Y");
-  if (!sry) {
-    throw std::invalid_argument(
-        "SIDEWINDER shooter_rotation_point_Y setting is missing");
-  }
-  double sry_value = *sry;
-
-  auto logger = spdlog::get("sidewinder");
-  logger->info("wheelbase W = {}, L = {}", wheelbase_width, wheelbase_length);
-
-  rotation_vectors[RotationPoint::Center] =
-      calc_rotation_vectors(wheelbase_width, wheelbase_length, {0.0, 0.0});
-  rotation_vectors[RotationPoint::Shooter] = calc_rotation_vectors(
-      wheelbase_width, wheelbase_length, {srx_value, sry_value});
+  LoadConfigSettings(config);
 }
 
 /** Calculate drive wheel speeds and azimuth angles for all wheels. Inputs are
@@ -149,4 +105,67 @@ void SwerveMath::operator()(DriveData& dd, enum RotationPoint rp) {
   dd.wslr = wheel_mags[2];
   dd.warr = wheel_angles[3];
   dd.wsrr = wheel_mags[3];
+}
+
+/**
+ * Override the wheel angle history. Uses DriveData members warf, walf, walr,
+ * warr only.
+ */
+void SwerveMath::SetWheelAngles(const DriveData& dd) {
+  wheel_anglesPast[0] = fmod(dd.warf + 360, 360);
+  wheel_anglesPast[1] = fmod(dd.walf + 360, 360);
+  wheel_anglesPast[2] = fmod(dd.walr + 360, 360);
+  wheel_anglesPast[3] = fmod(dd.warr + 360, 360);
+}
+
+/**
+ * Load configuration settings
+ */
+void SwerveMath::LoadConfigSettings(
+    const std::shared_ptr<cpptoml::table> config) {
+  auto settings = config->get_table("SIDEWINDER");
+  if (!settings) {
+    throw std::invalid_argument("SIDEWINDER config is missing");
+  }
+
+  settings = settings->get_table("SWERVE");
+  if (!settings) {
+    throw std::invalid_argument("SWERVE config is missing");
+  }
+
+  auto wb_w = settings->get_as<double>("wheelbase_width");
+  if (!wb_w) {
+    throw std::invalid_argument(
+        "SIDEWINDER wheelbase_width setting is missing");
+  }
+  double wheelbase_width = *wb_w;
+
+  auto wb_l = settings->get_as<double>("wheelbase_length");
+  if (!wb_l) {
+    throw std::invalid_argument(
+        "SIDEWINDER wheelbase_length setting is missing");
+  }
+  double wheelbase_length = *wb_l;
+
+  auto srx = settings->get_as<double>("shooter_rotation_point_X");
+  if (!srx) {
+    throw std::invalid_argument(
+        "SIDEWINDER shooter_rotation_point_X setting is missing");
+  }
+  double srx_value = *srx;
+
+  auto sry = settings->get_as<double>("shooter_rotation_point_Y");
+  if (!sry) {
+    throw std::invalid_argument(
+        "SIDEWINDER shooter_rotation_point_Y setting is missing");
+  }
+  double sry_value = *sry;
+
+  auto logger = spdlog::get("sidewinder");
+  logger->info("wheelbase W = {}, L = {}", wheelbase_width, wheelbase_length);
+
+  rotation_vectors[RotationPoint::Center] =
+      calc_rotation_vectors(wheelbase_width, wheelbase_length, {0.0, 0.0});
+  rotation_vectors[RotationPoint::Shooter] = calc_rotation_vectors(
+      wheelbase_width, wheelbase_length, {srx_value, sry_value});
 }

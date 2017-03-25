@@ -53,6 +53,7 @@ class SwerveDrive : public frc::Subsystem {
   void ClearDriveIaccum();
 
   void SetGyroDisabled(bool disabled);
+  void SetBrake();
   void SetDriveMode(const std::shared_ptr<talon::Settings> settings,
                     double setpoint_scale);
 
@@ -76,6 +77,8 @@ class SwerveDrive : public frc::Subsystem {
   SwerveMath swerve_math_;
   bool gyro_disabled_ = false;
   double dead_zone_;
+  std::array<double, 4> brake_ang_;
+  double angle_0_ = 123.0;
 };
 } /* swerve */
 } /* sidewinder */

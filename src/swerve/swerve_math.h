@@ -34,9 +34,12 @@ class SwerveMath {
 
   struct Vector2f* rotation_vectors[RotationPoint::END_OF_LIST];
 
+  void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
+
  public:
   SwerveMath(const std::shared_ptr<cpptoml::table> config);
   void operator()(DriveData& dd, enum RotationPoint rp);
+  void SetWheelAngles(const DriveData& dd);
 };
 }
 } /* sidewinder */
