@@ -144,7 +144,8 @@ void OI::AssignFlightSimButtons() {
   shooter_auto_button_.WhenReleased(new StopShooting());
 
   // reserved for brake mode
-  brake_mode_.WhenPressed(new LogCommand("brake mode button"));
+  brake_mode_.WhenPressed(new drive::EnableBrake());
+  brake_mode_.WhenReleased(new drive::DisableBrake());
 }
 
 /**
@@ -226,8 +227,6 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Place Gear",
                           new gear::PlaceGear(gear::Lift::center));
-
-  SmartDashboard::PutData("Brake Mode", new drive::EnableBrake());
 
 #endif
 }

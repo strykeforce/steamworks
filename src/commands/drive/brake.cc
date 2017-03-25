@@ -5,8 +5,14 @@
 
 using namespace steamworks::command::drive;
 
-EnableBrake::EnableBrake() : InstantCommand("EnableBrake") {
+EnableBrake::EnableBrake() : frc::Command("EnableBrake") {
   Requires(Robot::drive);
 }
 
-void EnableBrake::Initialize() { Robot::drive->SetBrakeEnabled(true); }
+void EnableBrake::Initialize() { Robot::drive->SetBrake(); }
+
+bool EnableBrake::IsFinished() { return false; }
+
+DisableBrake::DisableBrake() : frc::InstantCommand("DisableBrake") {
+  Requires(Robot::drive);  // cancel EnableBrake
+}
