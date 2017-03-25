@@ -10,6 +10,7 @@
 #include "commands/drive/auton/deadeye_azimuth.h"
 #include "commands/drive/auton/drive.h"
 // #include "commands/drive/auton/gyro_azimuth.h"
+#include "commands/drive/brake.h"
 #include "commands/drive/drive_zero.h"
 #include "commands/drive/set_zero.h"
 #include "commands/drive/zero_gyro.h"
@@ -225,12 +226,8 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Place Gear",
                           new gear::PlaceGear(gear::Lift::center));
-  SmartDashboard::PutData(
-      "Gear Camera",
-      new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
-  SmartDashboard::PutData(
-      "Boiler Camera",
-      new deadeye::EnableCamera(deadeye::EnableCamera::Mode::boiler));
+
+  SmartDashboard::PutData("Brake Mode", new drive::EnableBrake());
 
 #endif
 }

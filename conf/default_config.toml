@@ -3,7 +3,7 @@ grapher = true
 file = false
 loggers = ["robot", "command", "subsystem", "sidewinder", "deadeye"]
 default = "trace"
-sidewinder = "info"
+sidewinder = "debug"
 
 [STEAMWORKS.CLIMBER]
 capture_voltage =  6.0
