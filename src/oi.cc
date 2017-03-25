@@ -13,6 +13,7 @@
 #include "commands/auton/auton.h"
 #include "commands/drive/brake.h"
 #include "commands/drive/drive_zero.h"
+#include "commands/drive/health_check.h"
 #include "commands/drive/set_zero.h"
 #include "commands/drive/zero_gyro.h"
 #include "commands/gear/auton/place_gear.h"
@@ -201,6 +202,8 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Write Azimuth Cal",
                           new drive::WriteAzimuthCalibration());
   SmartDashboard::PutData("Drive Zero", new drive::DriveZero());
+
+  SmartDashboard::PutData("Drive Health Check", new drive::HealthCheck());
 #if !NDEBUG
 
   SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));
