@@ -1,13 +1,12 @@
-[DEADEYE]
-
-gui = true
-
 [DEADEYE.DEBUG]
 # display debug info if the settings below are set > 0
 # number is frame interval
 framerate = 100
 boiler = 100
 gear = 100
+
+[BOILER]
+gui = true
 
 [BOILER.CAMERA]
 width  = 1280

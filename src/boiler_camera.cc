@@ -151,7 +151,7 @@ void BoilerCamera::StartCapture() {
     logger_->error(error.GetDescription());
   }
   if (has_gui_) {
-    cv::namedWindow("frame");
+    cv::namedWindow("boiler");
   }
   capture_started_ = true;
 }
@@ -243,7 +243,7 @@ void BoilerCamera::DisplayFrame() {
               1.0, cv::Scalar(255, 255, 255));
 
   // display capture frame in GUI window
-  cv::imshow("frame", frame_);
+  cv::imshow("boiler", frame_);
   // if (frame_process_.target_separation < 90 ||
   //     frame_process_.target_separation > 110) {
   //   cv::waitKey(10000);

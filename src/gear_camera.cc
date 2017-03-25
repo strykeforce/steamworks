@@ -54,7 +54,7 @@ void GearCamera::Connect() {
   SPDLOG_DEBUG(logger_, "GearCamera::Connect has opened gear camera");
 
   if (has_gui_) {
-    cv::namedWindow("frame");
+    cv::namedWindow("gear");
   }
 
   connected_ = true;
@@ -119,7 +119,7 @@ void GearCamera::DisplayFrame() {
 
     // display capture frame in GUI window
 
-    cv::imshow("frame", frame_);
+    cv::imshow("gear", frame_);
     // cv::imshow("frame", frame_process_.mask);
 
     // if (frame_process_.target_separation < 90 ||
