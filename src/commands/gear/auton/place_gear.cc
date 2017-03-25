@@ -9,6 +9,7 @@ using namespace steamworks::command::gear;
 using namespace std;
 
 namespace {
+const double kDistanceFactor = 0.5;
 const double kSetpointMax = 275.0;
 
 const double kDriveMinSpeed = 15.0 / kSetpointMax;
@@ -61,6 +62,16 @@ PlaceGear::PlaceGear(Lift position)
   }
 }
 
+double PlaceGear::CalculateDistance() {
+  if (!Robot::deadeye->HasTarget()) {
+    logger_->warn(
+        "PlaceGear::CalculateDistance has no target, using default distance {}",
+        distance_);
+    return distance_;
+  }
+  return Robot::deadeye->GetTargetHeight() * kDistanceFactor;
+}
+
 /**
  * Initialize
  */
@@ -69,7 +80,7 @@ void PlaceGear::Initialize() {
   Robot::drive->ZeroPosition();
   Robot::drive->SetGyroDisabled(true);
 
-  drive_error_ = distance_;
+  drive_error_ = distance_ = CalculateDistance();
   strafe_error_ = Robot::deadeye->GetStrafeError() - strafe_offset_;
   azimuth_error_ = RobotMap::gyro->GetAngle() - azimuth_angle_;
 

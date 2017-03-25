@@ -45,6 +45,7 @@ class PlaceGear : public frc::Command {
   double CalculateDriveSetpoint();
   double CalculateStrafeSetpoint();
   double CalculateAzimuthSetpoint();
+  double CalculateDistance();
 };
 
 } /* gear */

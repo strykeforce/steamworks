@@ -10,6 +10,7 @@
 #include "commands/log.h"
 #include "commands/shooter/sequence.h"
 #include "commands/shooter/set_shooter.h"
+#include "robot_map.h"
 
 using namespace steamworks::command::auton;
 using namespace steamworks::command;
@@ -24,8 +25,13 @@ const int kPrepareElevation = 1300;
  * Red move out and shoot 10
  */
 Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
-  AddSequential(new LogCommand("starting BLUE alliance left gear"));
   AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
+
+  bool is_practice = RobotMap::IsPracticeRobot();
+
+  std::string msg = is_practice ? "BLUE alliance left gear on PRACTICE"
+                                : "BLUE alliance left gear on COMP";
+  AddSequential(new LogCommand(msg));
 
   // stage the gear
   AddParallel(new gear::StageGear());
