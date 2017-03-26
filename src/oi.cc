@@ -10,6 +10,7 @@
 #include "commands/drive/auton/deadeye_azimuth.h"
 #include "commands/drive/auton/drive.h"
 // #include "commands/drive/auton/gyro_azimuth.h"
+#include "commands/auton/auton.h"
 #include "commands/drive/brake.h"
 #include "commands/drive/drive_zero.h"
 #include "commands/drive/set_zero.h"
@@ -144,8 +145,8 @@ void OI::AssignFlightSimButtons() {
   shooter_auto_button_.WhenReleased(new StopShooting());
 
   // reserved for brake mode
-  brake_mode_.WhenPressed(new drive::EnableBrake());
-  brake_mode_.WhenReleased(new drive::DisableBrake());
+  // brake_mode_.WhenPressed(new drive::EnableBrake());
+  // brake_mode_.WhenReleased(new drive::DisableBrake());
 }
 
 /**
@@ -225,8 +226,7 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Deadeye Azimuth", new drive::DeadeyeAzimuth());
   SmartDashboard::PutData("Elevation Centerline", new shooter::GetAngle());
 
-  SmartDashboard::PutData("Place Gear",
-                          new gear::PlaceGear(gear::Lift::center));
+  SmartDashboard::PutData("Place Gear", new auton::Sequence03());
 
 #endif
 }

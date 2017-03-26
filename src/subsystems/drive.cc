@@ -23,7 +23,7 @@ SwerveDrive::SwerveDrive(const std::shared_ptr<cpptoml::table> config)
  * Configure the drive talons with the "drive" settings in SIDEWINDER.SWERVE.
  */
 void SwerveDrive::SetTeleOpMode() {
-  logger_->info("SetTeleOpMode drive_settings_-GetSetpointMax = {}",
+  logger_->info("SetTeleOpMode drive_settings_->GetSetpointMax = {}",
                 drive_settings_->GetSetpointMax());
   // assert(drive_settings_);
   SetDriveMode(drive_settings_, drive_settings_->GetSetpointMax());

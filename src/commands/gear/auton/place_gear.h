@@ -31,7 +31,6 @@ class PlaceGear : public frc::Command {
   double drive_error_;
   double drive_abs_error_;
 
-  double strafe_offset_;
   double strafe_error_;
   double strafe_abs_error_;
 
@@ -42,10 +41,16 @@ class PlaceGear : public frc::Command {
   int stable_count_;
   int zero_count_;
 
+  bool is_delay_done_ = false;
+  bool is_cruising_ = false;
+  bool is_initialized = false;
+
+  bool DelayForPositionZero();
+  bool CalculateDistance();
+
   double CalculateDriveSetpoint();
   double CalculateStrafeSetpoint();
   double CalculateAzimuthSetpoint();
-  double CalculateDistance();
 };
 
 } /* gear */
