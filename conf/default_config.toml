@@ -24,7 +24,7 @@ min_arc_length = 250.0
 hsv_lower = [70, 100, 100]
 hsv_upper = [90, 255, 255]
 min_arc_length = 50.0
-azimuth_offset = 190
+azimuth_offset = 0
 
 [LINK]
 port = 5800

@@ -91,20 +91,22 @@ bool GearFrame::FindTargets(const cv::Mat& frame) {
       break;
 
     auto rect = cv::boundingRect(contours[i]);
-    double aspect_ratio = static_cast<double>(rect.width) / rect.height;
-    double error = fabs((2.0 / 5) - aspect_ratio);
-    if (error > 0.05) {
-      continue;
-    }
-    // SPDLOG_DEBUG(logger_, "GearFrame contour {} has aspect {:f} with area
-    // {}",
-    //              found, aspect_ratio, contourArea(contours[i]));
     auto area = contourArea(contours[i]);
+
     if (area > 300) {
       target_idx.push_back(i);
       target_rects.push_back(rect);
       found++;
     }
+
+    // double aspect_ratio = static_cast<double>(rect.width) / rect.height;
+    // double error = fabs((2.0 / 5) - aspect_ratio);
+    // if (error > 0.05) {
+    //   continue;
+    // }
+    // SPDLOG_DEBUG(logger_, "GearFrame contour {} has aspect {:f} with area
+    // {}",
+    //              found, aspect_ratio, contourArea(contours[i]));
   }
 
   auto targets = target_idx.size();
