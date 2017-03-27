@@ -228,5 +228,12 @@ void OI::AssignSmartDashboardButtons() {
 
   SmartDashboard::PutData("Place Gear", new auton::Sequence03());
 
+  SmartDashboard::PutData(
+      "Gear Camera",
+      new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
+  SmartDashboard::PutData(
+      "Boiler Camera",
+      new deadeye::EnableCamera(deadeye::EnableCamera::Mode::boiler));
+
 #endif
 }

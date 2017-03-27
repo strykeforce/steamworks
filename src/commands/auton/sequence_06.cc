@@ -50,6 +50,7 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
   // approach target
   AddSequential(new gear::PlaceGear(gear::Lift::center));
 
+#if 0
   // release gear
   AddParallel(new gear::ReleaseGear());
   AddParallel(new deadeye::GearLED(false));
@@ -69,4 +70,5 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
 
   // and shoot
   AddParallel(new StartShooting());
+#endif
 }

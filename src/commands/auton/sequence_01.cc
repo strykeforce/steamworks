@@ -14,7 +14,7 @@ using namespace steamworks::command;
 namespace {
 const double kTicksPerInch = 50.72;
 const int kPrepareSpeed = 440;
-const int kPrepareElevation = 1300;
+const int kPrepareElevation = 2000;
 }
 
 /**
