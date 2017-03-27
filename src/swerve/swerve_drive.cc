@@ -175,6 +175,7 @@ const double kAngleB = 140.0;
 const double kAngleC = 40.0;
 const double kAngleD = -140.0;
 }
+
 /**
  * Override the wheel azimuth into brake position.
  */
@@ -187,60 +188,71 @@ void SwerveDrive::SetBrake() {
                 brake_ang_[0], brake_ang_[1], brake_ang_[2], brake_ang_[3]);
 
   DriveData dd;
+  dd.walf = 40.0;
+  dd.warf = -40;  // 140.0;
+  dd.walr = -40.0;
+  dd.warr = 40.0;
 
-  // probably need to get wheel angles and
-  auto pos = static_cast<int>(map_->lf_azimuth->GetPosition()) & 0xFFF;
-  int d1 = pos - (brake_ang_[0] * 2048 / 180.0);
-  int d2 = pos - (brake_ang_[1] * 2048 / 180.0);
+  swerve_math_.GetBrakeAzimuth(dd);
 
-  double setpoint = 0;
-  if (abs(d1) < abs(d2)) {
-    setpoint = dd.walf = brake_ang_[0];
-  } else {
-    setpoint = dd.walf = brake_ang_[1];
-  }
-  logger_->info("brake on lf = {}, {}", setpoint, brake_ang_[0]);
-  map_->lf_azimuth->Set(std::round(setpoint * 2048 / 180.0));
-
-  pos = static_cast<int>(map_->rf_azimuth->GetPosition()) & 0xFFF;
-  d1 = pos - (brake_ang_[2] * 2048 / 180.0);
-  d2 = pos - (brake_ang_[3] * 2048 / 180.0);
-  if (abs(d1) < abs(d2)) {
-    setpoint = dd.warf = brake_ang_[2];
-  } else {
-    setpoint = dd.warf = brake_ang_[3];
-  }
-  logger_->info("brake on rf = {}", setpoint);
-  map_->rf_azimuth->Set(std::round(setpoint * 2048 / 180.0));
-
-  pos = static_cast<int>(map_->lr_azimuth->GetPosition()) & 0xFFF;
-  d1 = pos - (brake_ang_[2] * 2048 / 180.0);
-  d2 = pos - (brake_ang_[3] * 2048 / 180.0);
-  if (abs(d1) < abs(d2)) {
-    setpoint = dd.walr = brake_ang_[2];
-  } else {
-    setpoint = dd.walr = brake_ang_[3];
-  }
-  logger_->info("brake on lr = {}", setpoint);
-  map_->lr_azimuth->Set(std::round(setpoint * 2048 / 180.0));
-
-  pos = static_cast<int>(map_->rr_azimuth->GetPosition()) & 0xFFF;
-  d1 = pos - (brake_ang_[0] * 2048 / 180.0);
-  d2 = pos - (brake_ang_[1] * 2048 / 180.0);
-  if (abs(d1) < abs(d2)) {
-    setpoint = dd.warr = brake_ang_[0];
-  } else {
-    setpoint = dd.warr = brake_ang_[1];
-  }
-  logger_->info("brake on rf = {}", setpoint);
-  map_->rr_azimuth->Set(std::round(setpoint * 2048 / 180.0));
-
-  swerve_math_.SetWheelAngles(dd);  // set wheel angle history
+  map_->lf_azimuth->Set(std::round(dd.walf * 2048 / 180));
+  map_->rf_azimuth->Set(std::round(dd.warf * 2048 / 180));
+  map_->lr_azimuth->Set(std::round(dd.walr * 2048 / 180));
+  map_->rr_azimuth->Set(std::round(dd.warr * 2048 / 180));
 
   map_->lf_drive->SetPosition(0);
   map_->rf_drive->SetPosition(0);
   map_->lr_drive->SetPosition(0);
   map_->rr_drive->SetPosition(0);
+
+  // probably need to get wheel angles and
+  // auto pos = static_cast<int>(map_->lf_azimuth->GetPosition()) & 0xFFF;
+  // int d1 = pos - (brake_ang_[0] * 2048 / 180.0);
+  // int d2 = pos - (brake_ang_[1] * 2048 / 180.0);
+  //
+  // double setpoint = 0;
+  // if (abs(d1) < abs(d2)) {
+  //   setpoint = dd.walf = brake_ang_[0];
+  // } else {
+  //   setpoint = dd.walf = brake_ang_[1];
+  // }
+  // logger_->info("brake on lf = {}, {}", setpoint, brake_ang_[0]);
+  // map_->lf_azimuth->Set(std::round(setpoint * 2048 / 180.0));
+  //
+  // pos = static_cast<int>(map_->rf_azimuth->GetPosition()) & 0xFFF;
+  // d1 = pos - (brake_ang_[2] * 2048 / 180.0);
+  // d2 = pos - (brake_ang_[3] * 2048 / 180.0);
+  // if (abs(d1) < abs(d2)) {
+  //   setpoint = dd.warf = brake_ang_[2];
+  // } else {
+  //   setpoint = dd.warf = brake_ang_[3];
+  // }
+  // logger_->info("brake on rf = {}", setpoint);
+  // map_->rf_azimuth->Set(std::round(setpoint * 2048 / 180.0));
+  //
+  // pos = static_cast<int>(map_->lr_azimuth->GetPosition()) & 0xFFF;
+  // d1 = pos - (brake_ang_[2] * 2048 / 180.0);
+  // d2 = pos - (brake_ang_[3] * 2048 / 180.0);
+  // if (abs(d1) < abs(d2)) {
+  //   setpoint = dd.walr = brake_ang_[2];
+  // } else {
+  //   setpoint = dd.walr = brake_ang_[3];
+  // }
+  // logger_->info("brake on lr = {}", setpoint);
+  // map_->lr_azimuth->Set(std::round(setpoint * 2048 / 180.0));
+  //
+  // pos = static_cast<int>(map_->rr_azimuth->GetPosition()) & 0xFFF;
+  // d1 = pos - (brake_ang_[0] * 2048 / 180.0);
+  // d2 = pos - (brake_ang_[1] * 2048 / 180.0);
+  // if (abs(d1) < abs(d2)) {
+  //   setpoint = dd.warr = brake_ang_[0];
+  // } else {
+  //   setpoint = dd.warr = brake_ang_[1];
+  // }
+  // logger_->info("brake on rf = {}", setpoint);
+  // map_->rr_azimuth->Set(std::round(setpoint * 2048 / 180.0));
+  //
+  // swerve_math_.SetWheelAngles(dd);  // set wheel angle history
 }
 
 /**
@@ -477,6 +489,25 @@ int SwerveDrive::GetAzimuth(const Wheel wheel) const {
       return static_cast<int>(map_->lf_azimuth->GetPosition());
   }
   return 0;
+}
+
+/**
+ * Returns average of drive wheel current.
+ */
+double SwerveDrive::GetDriveCurrent() {
+  double sum =
+      map_->rf_drive->GetOutputCurrent() + map_->lf_drive->GetOutputCurrent() +
+      map_->lr_drive->GetOutputCurrent() + map_->rr_drive->GetOutputCurrent();
+  return sum / 4.0;
+}
+
+/**
+ * Returns average of drive wheel speed.
+ */
+double SwerveDrive::GetDriveSpeed() {
+  double sum = map_->rf_drive->GetSpeed() + map_->lf_drive->GetSpeed() +
+               map_->lr_drive->GetSpeed() + map_->rr_drive->GetSpeed();
+  return sum / 4.0;
 }
 
 /**

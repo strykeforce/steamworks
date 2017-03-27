@@ -118,6 +118,52 @@ void SwerveMath::SetWheelAngles(const DriveData& dd) {
   wheel_anglesPast[3] = fmod(dd.warr + 360, 360);
 }
 
+// namespace {
+// const double kAngleA = -40.0;
+// const double kAngleB = 140.0;
+// const double kAngleC = 40.0;
+// const double kAngleD = -140.0;
+// }
+
+/**
+ * Get the current wheel angle history.
+ */
+void SwerveMath::GetBrakeAzimuth(DriveData& dd) {
+  std::array<double, 4> angles;
+  angles[0] = dd.warf;
+  angles[1] = dd.walf;
+  angles[2] = dd.walr;
+  angles[3] = dd.warr;
+  for (int i = 0; i < 4; i++) {
+    double wheel_angle = fmod(angles[i] + 270, 360);
+    double raw_angle_change = wheel_angle - wheel_anglesPast[i];
+    double option1 = raw_angle_change;
+    double option2 = 360.0 - fabs(raw_angle_change);
+    option2 = -sign(raw_angle_change) * option2;
+    // other best angle
+    // for the record, integer 'add()' would work just the same:
+    double smart_angle_change =
+        (fabs(option1) < fabs(option2)) ? option1 : option2;
+    wheel_anglesPast[i] = wheel_anglesPast[i] + smart_angle_change;
+    wheel_anglesPast[i] = fmod(wheel_anglesPast[i] + 360, 360);
+    wheel_angles[i] = wheel_angles[i] + smart_angle_change;
+#if 1
+    if (smart_angle_change > 90) {
+      wheel_angles[i] = wheel_angles[i] - 180;
+      wheel_mag_negated[i] = !wheel_mag_negated[i];
+    } else if (smart_angle_change < -90) {
+      wheel_angles[i] = wheel_angles[i] + 180;
+      wheel_mag_negated[i] = !wheel_mag_negated[i];
+    }
+#endif
+  }
+
+  dd.warf = wheel_angles[0];
+  dd.walf = wheel_angles[1];
+  dd.walr = wheel_angles[2];
+  dd.warr = wheel_angles[3];
+}
+
 /**
  * Load configuration settings
  */

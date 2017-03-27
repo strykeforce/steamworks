@@ -45,6 +45,10 @@ class SwerveDrive : public frc::Subsystem {
   int GetAzimuth(const Wheel wheel = kRightRear) const;
   int GetPosition(const Wheel wheel = kRightRear) const;
 
+  // these are averages of 4 drive wheels
+  double GetDriveCurrent();
+  double GetDriveSpeed();
+
   // special driving or troubleshooting methods
   void SetAzimuth(double setpoint);  // set all to same setpoint
   void SetDrive(double setpoint);    // set all to same setpoint

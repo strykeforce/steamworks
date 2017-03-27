@@ -40,6 +40,7 @@ class SwerveMath {
   SwerveMath(const std::shared_ptr<cpptoml::table> config);
   void operator()(DriveData& dd, enum RotationPoint rp);
   void SetWheelAngles(const DriveData& dd);
+  void GetBrakeAzimuth(DriveData& dd);
 };
 }
 } /* sidewinder */
