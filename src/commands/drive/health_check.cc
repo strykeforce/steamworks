@@ -22,11 +22,13 @@ HealthCheck::HealthCheck() : frc::Command("HealthCheck") {
 */
 void HealthCheck::Initialize() {
   Robot::drive->SetTeleOpMode();
+  Robot::drive->SetAzimuthTestModeEnabled(true);
   cout << "*** Checking Drive and Azimuth motors ***" << endl;
   drive_voltage_iter_ = drive_voltage_.begin();
   azimuth_voltage_iter_ = azimuth_voltage_.begin();
   count_ = 0;
   start_ = timer_.GetFPGATimestamp();
+  timer_.Start();
 }
 
 /**
@@ -120,7 +122,7 @@ void HealthCheck::CheckAzimuthMotors() {
     }
     // done with kCountReq measurements
     for (size_t i = 0; i < 4; i++) {
-      cout << "Drive " << i + 1 << " at " << std::setprecision(0) << fixed
+      cout << "Azimuth " << i + 1 << " at " << std::setprecision(0) << fixed
            << *azimuth_voltage_iter_
            << " volts: avg current = " << std::setprecision(2) << fixed
            << azimuth_current_sum_[i] / kCountReq
@@ -144,6 +146,10 @@ void HealthCheck::CheckAzimuthMotors() {
 * IsFinished
 */
 bool HealthCheck::IsFinished() {
-  return drive_voltage_iter_ == drive_voltage_.end() &&
-         azimuth_voltage_iter_ == azimuth_voltage_.end();
+  return azimuth_voltage_iter_ == azimuth_voltage_.end();
 }
+
+/**
+ * finis
+ */
+void HealthCheck::End() { Robot::drive->SetAzimuthTestModeEnabled(false); }

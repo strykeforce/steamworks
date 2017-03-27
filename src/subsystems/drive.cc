@@ -49,6 +49,23 @@ void SwerveDrive::SetAzimuthMode() {
 }
 
 /**
+* Set azimuth motors in voltage control mode for testing.
+*/
+void SwerveDrive::SetAzimuthTestModeEnabled(bool enabled) {
+  if (enabled) {
+    map_->lf_azimuth->SetControlMode(frc::CANSpeedController::kVoltage);
+    map_->rf_azimuth->SetControlMode(frc::CANSpeedController::kVoltage);
+    map_->lr_azimuth->SetControlMode(frc::CANSpeedController::kVoltage);
+    map_->rr_azimuth->SetControlMode(frc::CANSpeedController::kVoltage);
+    return;
+  }
+  map_->lf_azimuth->SetControlMode(frc::CANSpeedController::kPosition);
+  map_->rf_azimuth->SetControlMode(frc::CANSpeedController::kPosition);
+  map_->lr_azimuth->SetControlMode(frc::CANSpeedController::kPosition);
+  map_->rr_azimuth->SetControlMode(frc::CANSpeedController::kPosition);
+}
+
+/**
  * Configure the drive talons with the "drive_auton_motion_magic" settings in
  * SIDEWINDER SWERVE.
  */

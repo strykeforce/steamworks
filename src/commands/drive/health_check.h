@@ -15,6 +15,7 @@ class HealthCheck : public frc::Command {
   void Initialize() override;
   void Execute() override;
   bool IsFinished() override;
+  void End() override;
 
  private:
   std::array<double, 2> drive_voltage_ = {{2.0, 12.0}};
