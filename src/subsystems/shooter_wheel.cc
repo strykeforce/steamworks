@@ -10,7 +10,7 @@ using namespace sidewinder;
 
 // TODO: put these in config
 namespace {
-const int kSpeedIncrement = 10;
+const int kSpeedIncrement = 5;
 const int kMinSpeed = 350;
 const int kMaxSpeed = 700;
 }
