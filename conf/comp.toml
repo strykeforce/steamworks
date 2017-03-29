@@ -7,12 +7,12 @@ sidewinder = "info"
 
 [STEAMWORKS.CLIMBER]
 capture_voltage =  6.0
-climb_voltage   =  12.0
-finish_voltage  =  4.0
 capture_current =  4.0
+climb_voltage   =  8.0
+finish_voltage  =  4.0
 finish_current  = 10.0
 ratchet_voltage =  1.0
-climb_distance  =  26000
+climb_distance  = 26000
 
     [[STEAMWORKS.CLIMBER.TALON]]
     name = "master"
@@ -22,7 +22,7 @@ climb_distance  =  26000
     limit_mode      = 2 # disabled
     encoder_reversed = false
     output_reversed  = true
-    current_limit    = 30 # amps, 0 disables
+    current_limit    = 40 # amps, 0 disables
 
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 
@@ -35,17 +35,18 @@ climb_distance  =  26000
     limit_mode      = 2 # disabled
     encoder_reversed = false
     output_reversed  = false
-    current_limit    = 30 # amps, 0 disables
+    current_limit    = 40 # amps, 0 disables
 
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 
 [STEAMWORKS.DEADEYE]
 port = 5800
+remote = "10.27.67.6"
 
 elevation_zero_angle = 6.0 # degrees
 centerline_height = 83.91 # inches
 camera_height = 19.25 # inches
-camera_angle = 56.35 # degrees
+camera_angle = 57.25 # degrees
 degrees_per_tick = 0.00611
 
 
@@ -69,8 +70,8 @@ left_clamp_stow     = 0.45 # not used
 right_clamp_stow    = 0.6  # not used
 
 # settings for the gear pivot motor position mode
-pivot_zero =  825
-pivot_up   = 1020 # ticks
+pivot_zero =  476
+pivot_up   = 980 # ticks
 pivot_down =    0 # ticks
 
     [[STEAMWORKS.GEAR.TALON]]
@@ -143,7 +144,7 @@ voltage = 12.0
 
 [STEAMWORKS.SHOOTER]
 # elevation motor absolute encoder position at zero
-elevation_zero = 3698
+elevation_zero = 3413
 
     [[STEAMWORKS.SHOOTER.TALON]]
     # range 0-900 ticks/100ms
@@ -221,15 +222,15 @@ azimuth_sma_period = 5
         neutral_mode    = 2 # coast
         limit_mode      = 2 # soft and hard disabled
 
-        P      =   10.0
+        P      =   13.0
         I      =    0.0
-        D      =   75.0
+        D      =  100.0
         F      =    0.8
         I_zone =      0
 
         # motion magic
-        cruise_velocity =  800.0
-        acceleration    = 6400.0
+        cruise_velocity =   800.0
+        acceleration    = 18000.0
 
         voltage_ramp_rate              =   0.0 # v/s, 0 disables
         close_loop_ramp_rate           =   0.0 # v/s, 0 disables
@@ -261,10 +262,10 @@ azimuth_sma_period = 5
         # 600 practical max, 1000 = 12v
         # 25 = .42 f/sec
         # 400 = 6.8 f/sec, linear between 25-400
-        # 48.89 ticks per inch
+        # 50.72 ticks per inch
         name = "drive_auton"
         type = "velocity"
-        setpoint_max = 600.0 # ticks/100ms
+        setpoint_max = 400.0 # ticks/100ms
 
         feedback_device = 0 # quad
         neutral_mode    = 2 # coast
@@ -285,25 +286,25 @@ azimuth_sma_period = 5
         allowable_closed_loop_error    =     0 # encoder ticks
         encoder_reversed = false
         output_reversed  = false
-        current_limit    = 40 # amps, 0 disables
+        current_limit    = 60 # amps, 0 disables
 
         [[SIDEWINDER.SWERVE.TALON]]
-        # ticks 10 - 75, can experiment going down to 5 but only in down dir
+        # ticks 10 - 275, can experiment going down to 5 but only in down dir
         # at 10 will stop in 100ms
         # deadband will prevent hunting
         name = "drive_auton_slow_azimuth"
         type = "velocity"
-        setpoint_max = 75.0 # ticks/100ms
+        setpoint_max = 275.0 # ticks/100ms
 
         feedback_device = 0 # quad
         neutral_mode    = 2 # coast
         limit_mode      = 2 # soft and hard disabled
 
         P      =     2.0
-        I      =     0.017 # if jerking, take down to 0.016, 0.015
-        D      =    75.0 # then take down 5 at a time down to 50
+        I      =     0.008 # if jerking, take down to 0.016, 0.015
+        D      =    75.0   # then take down 5 at a time down to 50
         F      =     2.1
-        I_zone =    20
+        I_zone =    40
 
         voltage_ramp_rate              =   0.0 # v/s, 0 disables
         close_loop_ramp_rate           =   0.0 # v/s, 0 disables
@@ -314,7 +315,7 @@ azimuth_sma_period = 5
         allowable_closed_loop_error    =     0 # encoder ticks
         encoder_reversed = false
         output_reversed  = false
-        current_limit    = 15 # amps, 0 disables
+        current_limit    = 40 # amps, 0 disables
 
         [[SIDEWINDER.SWERVE.TALON]]
         # ticks 10 - 75, can experiment going down to 5 but only in down dir
