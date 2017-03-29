@@ -63,6 +63,6 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 - SmartDashboard buttons for wheel zero setting.
 - SmartDashboard buttons for development.
 
-[17.1.0]: https://gitlab.com/strykeforce2767/steamworks/compare/db95a39e1200b61adbb51dc9eabe4e147ffd2796...v17.1.0
-[17.1.7]: https://gitlab.com/strykeforce2767/steamworks/compare/v17.1.0...v17.1.7
-[unreleased]: https://gitlab.com/strykeforce2767/steamworks/compare/v17.1.7...develop
+[17.1.0]: ../compare/db95a39e1200b61adbb51dc9eabe4e147ffd2796...v17.1.0
+[17.1.7]: ../compare/v17.1.0...v17.1.7
+[unreleased]: ../compare/v17.1.7...develop
