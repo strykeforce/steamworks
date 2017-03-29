@@ -6,17 +6,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+This is the release for the East Kentwood District Event on March 30, 2017.
+
 ### Added
 
 - Measurement and logging of average FPS.
+- Support for both boiler and gear cameras. We now can switch between cameras when commanded over the networks by the roboRIO.
 
 ### Changed
 
-- We now use the network instead of a serial line to communicate with the robot code running on the roboRIO.
+- We reverted to using the network instead of a serial line to communicate with the robot code running on the roboRIO.
+- Stopped using aspect ratio for gear target detections since the position of our camera cuts off the bottom of the target at close range.
 
 ## [17.0.0] - 2017-03-08
 
-The St. Joseph Districts release.
+This is the release for the St. Joseph District Event on March 9, 2017.
 
 ### Added
 
