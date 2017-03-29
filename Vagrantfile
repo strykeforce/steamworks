@@ -14,6 +14,12 @@ Vagrant.configure('2') do |config|
     v.customize ['modifyvm', :id, '--paravirtprovider', 'kvm']
   end
 
+  config.vm.provider 'vmware_fusion' do |v, override|
+    override.vm.box = 'netsensia/ubuntu-trusty64'
+    v.vmx['memsize'] = '3072'
+    v.vmx['numvcpus'] = '4'
+  end
+
   config.vm.network 'public_network'
 
   # We provision using ansible_local, bootstrap our ansible roles by
