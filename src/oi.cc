@@ -146,8 +146,8 @@ void OI::AssignFlightSimButtons() {
   shooter_auto_button_.WhenReleased(new StopShooting());
 
   // reserved for brake mode
-  // brake_mode_.WhenPressed(new drive::EnableBrake());
-  // brake_mode_.WhenReleased(new drive::DisableBrake());
+  brake_mode_.WhenReleased(new drive::EnableBrake());
+  brake_mode_.WhenPressed(new drive::DisableBrake());
 }
 
 /**
