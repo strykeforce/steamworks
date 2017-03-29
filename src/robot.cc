@@ -58,7 +58,10 @@ void Robot::RobotInit() {
 
 void Robot::RobotPeriodic() {}
 
-void Robot::DisabledInit() { SPDLOG_TRACE(logger_, "in DisabledInit"); }
+void Robot::DisabledInit() {
+  logger_->info("disabled, flushing logs...");
+  Log::GetInstance().Flush();
+}
 
 void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
 

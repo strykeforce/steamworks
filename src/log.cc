@@ -127,3 +127,10 @@ string Log::GetLogFilePath() {
   }
   return name.str();
 }
+
+/**
+ * Flush all loggers.
+ */
+void Log::Flush() {
+  apply_all([&](shared_ptr<logger> l) { l->flush(); });
+}

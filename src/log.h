@@ -12,6 +12,7 @@ class Log {
   spdlog::level::level_enum GetLevel(std::string level);
   bool IsFlashDriveMounted();
   std::string GetLogFilePath();
+  void Flush();
 
  private:
   bool is_initalized_ = false;
