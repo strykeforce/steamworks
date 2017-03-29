@@ -74,9 +74,9 @@ This releases supports the swerve drive code for the Avenger t-shirt cannon.
 
 - Initial release of functional swerve drive.
 
-[16.0.0]: https://gitlab.com/strykeforce2767/sidewinder/compare/v16.0.0-alpha...v16.0.0
-[16.0.0-alpha]: https://gitlab.com/strykeforce2767/sidewinder/compare/v16.0.0-dev...v16.0.0-alpha
-[17.0.0]: https://gitlab.com/strykeforce2767/sidewinder/compare/v16.0.0...v17.0.0
-[17.1.0]: https://gitlab.com/strykeforce2767/sidewinder/compare/v17.0.0...v17.1.0
-[17.2.0]: https://gitlab.com/strykeforce2767/sidewinder/compare/v17.1.0...v17.2.0
-[unreleased]: https://gitlab.com/strykeforce2767/sidewinder/compare/v17.2.0...develop
+[16.0.0]: https://github.com/strykeforce/sidewinder/compare/v16.0.0-alpha...v16.0.0
+[16.0.0-alpha]: https://github.com/strykeforce/sidewinder/compare/v16.0.0-dev...v16.0.0-alpha
+[17.0.0]: https://github.com/strykeforce/sidewinder/compare/v16.0.0...v17.0.0
+[17.1.0]: https://github.com/strykeforce/sidewinder/compare/v17.0.0...v17.1.0
+[17.2.0]: https://github.com/strykeforce/sidewinder/compare/v17.1.0...v17.2.0
+[unreleased]: https://github.com/strykeforce/sidewinder/compare/v17.2.0...develop
