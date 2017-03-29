@@ -7,6 +7,7 @@
 #include "commands/log.h"
 #include "commands/shooter/sequence.h"
 #include "commands/shooter/set_shooter.h"
+#include "robot_map.h"
 
 using namespace steamworks::command::auton;
 using namespace steamworks::command;
@@ -19,9 +20,14 @@ const int kPrepareElevation = 2000;
 
 /**
  * Blue hopper dump and shoot
+ * Gyro offset = -90
  */
 Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
-  AddSequential(new LogCommand("starting BLUE alliance hopper dump and shoot"));
+  bool is_practice = RobotMap::IsPracticeRobot();
+
+  std::string msg = is_practice ? "BLUE alliance hopper dump on PRACTICE (01)"
+                                : "BLUE alliance hopper dump on COMP (01)";
+  AddSequential(new LogCommand(msg));
 
   drive::DriveConfig dc;
   dc.min_speed = 40;

@@ -82,23 +82,29 @@ void Robot::AutonomousInit() {
       gyro_offset_ = 90.0;
       break;
     case 3:
+      // Test
       autonomous_command_ = new auton::Sequence03();
+      gyro_offset_ = 0;
       break;
     case 4:
+      // BLUE alliance drive out and shoot
       autonomous_command_ = new auton::Sequence04();
-      gyro_offset_ = 90;
+      gyro_offset_ = 0;
       break;
     case 5:
+      // RED alliance drive out and shoot
       autonomous_command_ = new auton::Sequence05();
-      gyro_offset_ = -90.0;
+      gyro_offset_ = 0;
       break;
     case 6:
+      // BLUE alliance center gear and shoot
       autonomous_command_ = new auton::Sequence06();
-      gyro_offset_ = 0.0;
+      gyro_offset_ = 0;
       break;
     case 7:
+      // RED alliance center gear and shoot
       autonomous_command_ = new auton::Sequence07();
-      gyro_offset_ = 0.0;
+      gyro_offset_ = 0;
       break;
     default:
       autonomous_command_ = new LogCommand("unrecognized command");
