@@ -6,15 +6,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 
+This is the release for the East Kentwood District Event on March 30, 2017.
+
 ### Added
 
 - SmartDashboard light that signals when a gear is inside the intake.
+- Gear drop and shoot auton routines.
+- Gyro will automatically be adjusted for different auton robot starting orientations.
+- Auton drive routines now allow multiple contiguous segments and have acceleration and deceleration parameters.
+- Logging improved. Added option to send robot log messages to file. We automatically store files on a thumb drive if inserted into roboRIO. Logging is configured in config file. More informative log messages.
+- Climber now activates an "electronic ratchet" (1v drive) at end of climb to keep climb scoring switch engaged.
+- Drive and azimuth motor health checks. Activated by a SmartDashboard button and read from Driver Station console log.
+- Brake mode activated by flight simulator controller switch.
 
 ### Changed
 
+- Complete re-write of boiler shooting auton routines (drive out, hopper dump).
+- All drive Talon PID parameters have been re-tuned for better performance in auton.
 - We now use the network instead of a serial line to communicate with the Deadeye vision code running on the Jetson TX1.
 - Short boiler shot now runs hopper slower.
-- More tuning of auton routines.
 
 ### Fixed
 
