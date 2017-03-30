@@ -17,8 +17,8 @@ using namespace steamworks::command;
 
 namespace {
 const double kTicksPerInch = 50.72;
-const int kPrepareSpeed = 440;
-const int kPrepareElevation = 1300;
+const int kPrepareSpeed = 500;
+const int kPrepareElevation = 3400;
 }
 
 /**
@@ -35,41 +35,38 @@ Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
 
   // stage the gear
   AddParallel(new gear::StageGear());
+  AddParallel(new deadeye::GearLED(true));
 
   // drive out
   drive::DriveConfig dc;
   dc.min_speed = 40;
   dc.max_speed = 200;
   dc.acceleration = 200;
-  dc.deacceleration = 60;
+  dc.deacceleration = 40;
   dc.close_enough = 25;
-  dc.segments.emplace_back(-180, 96 * kTicksPerInch);  // drive out
+  dc.segments.emplace_back(-180, 56 * kTicksPerInch);  // drive out
   AddSequential(new drive::Drive(dc));
 
-  // square up
-  AddSequential(new drive::GyroAzimuth(60));
-
-  // strafe to target
-  AddSequential(new deadeye::GearLED(true));
-  AddSequential(new gear::PlaceGear(gear::Lift::left));
-
-  // push to wall
-  dc.max_speed = 100;
-  dc.segments.clear();
-  dc.segments.emplace_back(-120, 16 * kTicksPerInch);
-  AddSequential(new drive::Drive(dc));
+  // approach target
+  AddSequential(new gear::PlaceGear(gear::Lift::center));
 
   // release gear
   AddParallel(new gear::ReleaseGear());
-#if 0
+  AddParallel(new deadeye::GearLED(false));
+
+  // spin up shooter
+  AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
   // back off
   dc.max_speed = 200;
   dc.segments.clear();
   dc.segments.emplace_back(0, 14 * kTicksPerInch);
+  dc.segments.emplace_back(-50, 57 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // azimuth to boiler
-  AddSequential(new drive::GyroAzimuth(75));
-#endif
+  AddSequential(new drive::GyroAzimuth(-65));
+
+  // and shoot
+  AddParallel(new StartShooting());
 }
