@@ -21,6 +21,7 @@ This is the release for the East Kentwood District Event on March 30, 2017.
 
 ### Changed
 
+- Calibration for new shooter.
 - Complete re-write of boiler shooting auton routines (drive out, hopper dump).
 - All drive Talon PID parameters have been re-tuned for better performance in auton.
 - We now use the network instead of a serial line to communicate with the Deadeye vision code running on the Jetson TX1.
