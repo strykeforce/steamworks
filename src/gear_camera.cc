@@ -106,27 +106,11 @@ void GearCamera::DisplayFrame() {
                     1);
     }
 
-    // std::string range = "target separation (px) = " +
-    //                     std::to_string(frame_process_.target_separation);
-    // std::string coords =
-    //     "azimuth error (px )= " +
-    //     std::to_string(frame_process_.azimuth_error);
-    // cv::putText(frame_, range, cv::Point(100, 50), cv::FONT_HERSHEY_SIMPLEX,
-    //             1.0, cv::Scalar(255, 255, 255));
-    // cv::putText(frame_, coords, cv::Point(100, 100),
-    // cv::FONT_HERSHEY_SIMPLEX,
-    //             1.0, cv::Scalar(255, 255, 255));
-
     // display capture frame in GUI window
 
-    cv::imshow("gear", frame_);
-    // cv::imshow("frame", frame_process_.mask);
+    // cv::imshow("gear", frame_);
+    cv::imshow("frame", frame_process_.mask);
 
-    // if (frame_process_.target_separation < 90 ||
-    //     frame_process_.target_separation > 110) {
-    //   cv::waitKey(10000);
-    //   return;
-    // }
     cv::waitKey(1);
   }
 }
