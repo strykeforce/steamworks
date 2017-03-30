@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
-## [Unreleased]
+## [17.2.0] - 2017-03-29
 
 This is the release for the East Kentwood District Event on March 30, 2017.
 
@@ -65,4 +65,5 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 
 [17.1.0]: https://github.com/strykeforce/steamworks/compare/db95a39e1200b61adbb51dc9eabe4e147ffd2796...v17.1.0
 [17.1.7]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.1.7
+[17.2.0]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.2.0
 [unreleased]: https://github.com/strykeforce/steamworks/compare/v17.1.7...develop
