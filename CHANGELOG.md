@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
-## [Unreleased]
+## [17.1.0] - 2017-03-29
 
 This is the release for the East Kentwood District Event on March 30, 2017.
 
@@ -49,5 +49,6 @@ StrongHold competition code.
 [16.0.0]: https://github.com/strykeforce/deadeye/compare/09a40e5c4c53778fee66cdf748963c708f3e2305...v16.0.0
 [16.1.0]: https://github.com/strykeforce/deadeye/compare/v16.0.0...v16.1.0
 [17.0.0]: https://github.com/strykeforce/deadeye/compare/v16.1.0...v17.0.0
+[17.1.0]: https://github.com/strykeforce/deadeye/compare/v17.0.0...v17.1.0
 [chameleon3]: https://www.ptgrey.com/chameleon3-usb3-vision-cameras
 [unreleased]: https://github.com/strykeforce/deadeye/compare/v17.0.0...develop
