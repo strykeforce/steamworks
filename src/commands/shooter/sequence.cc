@@ -62,6 +62,7 @@ StartCloseShot::StartCloseShot()
     : frc::CommandGroup("StartCloseShot"), logger_(spdlog::get("command")) {
   SetInterruptible(true);
   AddSequential(new shooter::SetShooter(kCloseShotSpeed, kCloseShotElevation));
+  AddSequential(new WaitCommand(1.5));
   AddSequential(new StartHopper(kCloseShotHopperVoltage));
 }
 
