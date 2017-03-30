@@ -13,7 +13,7 @@ const double kSetpointMax = 275.0;
 const double kTicksPerInch = 50.72;
 
 const double kDriveSpeed = -50.0 / kSetpointMax;
-const double kCruiseRatio = 0.3;
+const double kCruiseRatio = 0.25;
 const double kStoppedSpeed = 10.0;
 
 const double kStrafeOffset = 125;
@@ -208,10 +208,10 @@ void PlaceGear::Execute() {
 
   Robot::drive->Drive(drive_setpoint, strafe_setpoint, azimuth_setpoint,
                       kDeadzone);
-  SPDLOG_DEBUG(logger_, "PlaceGear drive = {}, strafe = {}, azimuth = {}",
-               std::round(drive_setpoint * kSetpointMax),
-               std::round(strafe_setpoint * kSetpointMax),
-               std::round(azimuth_setpoint * kSetpointMax));
+  logger_->debug("PlaceGear drive = {}, strafe = {}, azimuth = {}",
+                 std::round(drive_setpoint * kSetpointMax),
+                 std::round(strafe_setpoint * kSetpointMax),
+                 std::round(azimuth_setpoint * kSetpointMax));
 }
 
 /**
@@ -220,10 +220,12 @@ void PlaceGear::Execute() {
 bool PlaceGear::IsFinished() {
   if (!is_initialized) return false;
   double speed = fabs(Robot::drive->GetDriveSpeed());
-  SPDLOG_DEBUG(logger_, "IsFinished avg speed = {}", speed);
+  // SPDLOG_DEBUG(logger_, "IsFinished avg speed = {}", speed);
+  logger_->debug("IsFinished avg speed = {}", speed);
 
   if (!is_cruising_) {
-    SPDLOG_DEBUG(logger_, "IsFinished not cruising");
+    // SPDLOG_DEBUG(logger_, "IsFinished not cruising");
+    logger_->debug("IsFinished not cruising");
     is_cruising_ = speed > kCruiseRatio * -kDriveSpeed * kSetpointMax;
     return false;
   }
