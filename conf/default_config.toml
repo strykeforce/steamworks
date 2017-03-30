@@ -1,5 +1,5 @@
 [LOGGING]
-grapher = true
+grapher = false
 file = true
 loggers = ["robot", "command", "subsystem", "sidewinder", "deadeye"]
 default = "debug"
