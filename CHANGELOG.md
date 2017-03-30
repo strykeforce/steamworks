@@ -4,9 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.3.0] - 2017-03-29
+
+This is the release for the East Kentwood District Event on March 30, 2017.
+
+### Added
+
+- Support for brake mode for swerve drive.
+- Support for motor health checks.
+- Ability to clear integrator for drive motors.
+- Ability to zero out encoders for drive motors to allow distance measurements.
+
+### Changed
+
+- Allow manual control of drive dead-zone.
+- Now allow programatic change of gyro orientation to accomodate different auton starting orientations.
+
+### Fixed
+
 ## [17.2.0] - 2017-03-08
 
-The St. Joseph Districts release.
+This is the release for the St. Joseph District Event on March 9, 2017.
 
 ### Added
 
@@ -79,4 +97,5 @@ This releases supports the swerve drive code for the Avenger t-shirt cannon.
 [17.0.0]: https://github.com/strykeforce/sidewinder/compare/v16.0.0...v17.0.0
 [17.1.0]: https://github.com/strykeforce/sidewinder/compare/v17.0.0...v17.1.0
 [17.2.0]: https://github.com/strykeforce/sidewinder/compare/v17.1.0...v17.2.0
+[17.3.0]: https://github.com/strykeforce/sidewinder/compare/v17.2.0...v17.3.0
 [unreleased]: https://github.com/strykeforce/sidewinder/compare/v17.2.0...develop
