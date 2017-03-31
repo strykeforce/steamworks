@@ -70,7 +70,7 @@ left_clamp_stow     = 0.45 # not used
 right_clamp_stow    = 0.6  # not used
 
 # settings for the gear pivot motor position mode
-pivot_zero =  476
+pivot_zero =  309
 pivot_up   = 980 # ticks
 pivot_down =    0 # ticks
 
