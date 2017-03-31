@@ -204,7 +204,6 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Drive Zero", new drive::DriveZero());
 
   SmartDashboard::PutData("Drive Health Check", new drive::HealthCheck());
-#if !NDEBUG
 
   SmartDashboard::PutData("Default Elevation", new SetShooterElevation(1000));
   SmartDashboard::PutData("Increment Elevation",
@@ -237,6 +236,4 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData(
       "Boiler Camera",
       new deadeye::EnableCamera(deadeye::EnableCamera::Mode::boiler));
-
-#endif
 }

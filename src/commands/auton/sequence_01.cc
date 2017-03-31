@@ -45,11 +45,11 @@ Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
   dc.close_enough = 25;
   dc.timeout = 1.0;
   dc.segments.clear();
-  dc.segments.emplace_back(95, 18 * kTicksPerInch);  // strafe down wall
+  dc.segments.emplace_back(110, 16 * kTicksPerInch);  // strafe down wall
   AddSequential(new drive::Drive(dc));
 
   // wait for balls
-  AddSequential(new WaitCommand(0.5));
+  AddSequential(new WaitCommand(1.0));
   AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
   // drive out from hopper
