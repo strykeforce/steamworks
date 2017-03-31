@@ -64,5 +64,6 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   // // // start shooting
   AddParallel(new StartShooting());
   AddSequential(new WaitCommand(4.0));
-  AddSequential(new gear::StageGear());
+  AddParallel(new StartIntake());
+  AddParallel(new gear::StageGear());
 }
