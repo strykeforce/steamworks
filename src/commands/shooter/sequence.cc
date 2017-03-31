@@ -21,7 +21,7 @@ const int kPrepareSpeed = 440;
 const int kPrepareElevation = 1800;
 const int kCloseShotSpeed = 440;
 const int kCloseShotElevation = 50;
-const double kCloseShotHopperVoltage = 6.0;
+const double kCloseShotHopperVoltage = 4.0;
 }
 
 StartShooting::StartShooting()
