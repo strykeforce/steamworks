@@ -48,7 +48,7 @@ Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
   AddSequential(new drive::Drive(dc));
 
   // approach target
-  AddSequential(new gear::PlaceGear(gear::Lift::center));
+  AddSequential(new gear::PlaceGear(gear::Lift::center), 4.5);
 
   // release gear
   AddParallel(new gear::ReleaseGear());

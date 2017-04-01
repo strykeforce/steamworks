@@ -24,6 +24,7 @@ class GearLoader : public frc::Subsystem {
   void Load();
   void Deploy();
   void StopLoader();
+  void ClearLoader();
 
   void SetLoadLimitSwitchNormallyOpen(bool open);
   bool IsLoadLimitSwitchClosed();

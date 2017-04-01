@@ -44,6 +44,14 @@ void GearLoader::StopLoader() {
 }
 
 /**
+ * ClearLoader
+ */
+void GearLoader::ClearLoader() {
+  logger_->info("stopping gear loader");
+  RobotMap::gear_intake_talon->Set(-load_voltage_);
+}
+
+/**
  * IsLoadLimitSwitchClosed
  */
 bool GearLoader::IsLoadLimitSwitchClosed() {

@@ -17,6 +17,7 @@
 #include "commands/drive/set_zero.h"
 #include "commands/drive/zero_gyro.h"
 #include "commands/gear/auton/place_gear.h"
+#include "commands/gear/clear.h"
 #include "commands/gear/load.h"
 #include "commands/gear/release.h"
 #include "commands/gear/sequence.h"
@@ -161,9 +162,8 @@ void OI::AssignGamepadButtons() {
   gear_stage_button_.WhenPressed(new gear::StageGear());
 
   // gamepad back button reverses gear loader
-  gear_stage_reverse_button_.WhenPressed(
-      new LogCommand("gamepad gear stage reverse button"));
-  gear_stage_reverse_button_.WhenPressed(new ToggleHopper());
+  gear_stage_reverse_button_.WhenPressed(new gear::StartClear());
+  gear_stage_reverse_button_.WhenReleased(new gear::StopClear());
 
   // gamepad right shoulder turns on fuel intake
   intake_on_button_.WhenPressed(new StartIntake());
