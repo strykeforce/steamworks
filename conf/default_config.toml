@@ -70,8 +70,8 @@ left_clamp_stow     = 0.45 # not used
 right_clamp_stow    = 0.6  # not used
 
 # settings for the gear pivot motor position mode
-pivot_zero =  190
-pivot_up   = 980 # ticks
+pivot_zero =  1964
+pivot_up   = 1100 # ticks
 pivot_down =    0 # ticks
 
     [[STEAMWORKS.GEAR.TALON]]

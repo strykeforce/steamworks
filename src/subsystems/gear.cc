@@ -8,7 +8,7 @@ using namespace sidewinder;
 GearLoader::GearLoader(const std::shared_ptr<cpptoml::table> config)
     : frc::Subsystem("GearLoader"), logger_(spdlog::get("subsystem")) {
   LoadConfigSettings(config);
-  SetPivotEncoderZero();
+  SetPivotEncoderAbsZero();
 }
 
 /**
@@ -123,15 +123,39 @@ int GearLoader::GetPivotPosition() {
 }
 
 /**
- * Calibrate the pivot encoder after kissing off in full down position.
+ * GetPivotPosition
  */
-void GearLoader::SetPivotEncoderZero() {
+int GearLoader::GetPivotAbsPosition() {
+  auto pos = RobotMap::gear_pivot_talon->GetPulseWidthPosition() & 0xFFF;
+  return static_cast<int>(pos);
+}
+
+/**
+ * SetPivotPosition
+ */
+void GearLoader::SetPivotPosition(int pos) {
+  logger_->info("GearLoader setting pivot to position {}", pos);
+  RobotMap::gear_pivot_talon->Set(static_cast<double>(pos));
+}
+
+/**
+ * Set to zero using absolute encoder
+ */
+void GearLoader::SetPivotEncoderAbsZero() {
   auto pos = RobotMap::gear_pivot_talon->GetPulseWidthPosition() & 0xFFF;
   SPDLOG_DEBUG(logger_, "gear_pivot_talon absolute encoder = {}", pos);
   int error = pos - pivot_zero_position_;
   SPDLOG_DEBUG(logger_, "gear_pivot_talon error = {}", error);
   SPDLOG_DEBUG(logger_, "setting gear_pivot_talon zero = {}", error);
   RobotMap::gear_pivot_talon->SetPosition(error);
+}
+
+/**
+ * Calibrate the pivot encoder after kissing off in full down position.
+ */
+void GearLoader::SetPivotEncoderZero() {
+  logger_->info("GearLoader setting pivot encoder to zero");
+  RobotMap::gear_pivot_talon->SetPosition(-40);
 }
 
 /**

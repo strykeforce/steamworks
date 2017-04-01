@@ -35,7 +35,12 @@ class GearLoader : public frc::Subsystem {
   void ClampStow();
 
   int GetPivotPosition();
+  int GetPivotAbsPosition();
+  void SetPivotPosition(int pos);
+
+  void SetPivotEncoderAbsZero();
   void SetPivotEncoderZero();
+
   void PivotUp();
   void PivotDown();
   bool IsPivotUp();

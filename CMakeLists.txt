@@ -9,7 +9,7 @@ set(MSGPACK_LIBS /opt/msgpack-c CACHE PATH "Msgpack-c directory.")
 
 set(VERSION_MAJOR 17)
 set(VERSION_MINOR 2)
-set(VERSION_PATCH 7)
+set(VERSION_PATCH 8)
 set(VERSION_META "")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
