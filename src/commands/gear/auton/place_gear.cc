@@ -16,7 +16,7 @@ const double kDriveSpeed = -50.0 / kSetpointMax;
 const double kCruiseRatio = 0.25;
 const double kStoppedSpeed = 10.0;
 
-const double kStrafeOffset = 125;
+const double kStrafeOffset = 50;
 const double kStrafeEndDistance = 12 * kTicksPerInch;
 
 const double kStrafeMinSpeed = 0.0 / kSetpointMax;

@@ -29,8 +29,8 @@ Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
 
   bool is_practice = RobotMap::IsPracticeRobot();
 
-  std::string msg = is_practice ? "RED alliance left gear on PRACTICE (07)"
-                                : "RED alliance left gear on COMP (07)";
+  std::string msg = is_practice ? "RED alliance center gear on PRACTICE (07)"
+                                : "RED alliance center gear on COMP (07)";
   AddSequential(new LogCommand(msg));
 
   // stage the gear
@@ -44,7 +44,7 @@ Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
   dc.acceleration = 200;
   dc.deacceleration = 40;
   dc.close_enough = 25;
-  dc.segments.emplace_back(-180, 56 * kTicksPerInch);  // drive out
+  dc.segments.emplace_back(-180, 50 * kTicksPerInch);  // drive out
   AddSequential(new drive::Drive(dc));
 
   // approach target
