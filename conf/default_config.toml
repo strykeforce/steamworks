@@ -7,7 +7,7 @@ sidewinder = "info"
 
 [STEAMWORKS.CLIMBER]
 capture_voltage =  6.0
-capture_current =  7.0
+capture_current =  10.0
 climb_voltage   =  8.0
 finish_voltage  =  4.0
 finish_current  = 10.0
