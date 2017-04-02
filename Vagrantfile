@@ -15,8 +15,8 @@ Vagrant.configure('2') do |config|
   end
 
   config.vm.provider 'vmware_fusion' do |v, override|
-    override.vm.box = 'netsensia/ubuntu-trusty64'
-    v.vmx['memsize'] = '3072'
+    override.vm.box = 'bento/ubuntu-16.04'
+    v.vmx['memsize'] = '2048'
     v.vmx['numvcpus'] = '4'
   end
 
