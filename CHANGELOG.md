@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.2.10] - 2017-04-01
+
+Updates made during the East Kentwood event.
+
+### Added
+
+- Gear pivot initially sets its home zero position using its absolute encoder but will dynamically update this zero every time the pivot is lowered to home position.
+- Button to clear gear intake by running it backwards.
+- Hopper drop autons run fuel intake 4 seconds after shooter starts.
+
+### Changed
+
+- Climber parameters changed due to hardware repair:
+    - capture current from 4 to 10 A
+    - ratchet voltage from 1 to 1.5 v
+    - high-speed climb distance from 26,000 to 28,000 encoder ticks
+- Drive tele-operated voltage-mode current limit changed from 60 to 50 A.
+- Hopper drop autons had strafe distance and wait time adjusted for the field.
+- Center gear placement offset.
+- Close-shot hopper voltage reduced from 6 to 4v.
+- Boiler and gear camera exposure to compensate for field.
+
 ## [17.2.0] - 2017-03-29
 
 This is the release for the East Kentwood District Event on March 30, 2017.
@@ -67,4 +89,5 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 [17.1.0]: https://github.com/strykeforce/steamworks/compare/db95a39e1200b61adbb51dc9eabe4e147ffd2796...v17.1.0
 [17.1.7]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.1.7
 [17.2.0]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.2.0
+[17.2.10]: https://github.com/strykeforce/steamworks/compare/v17.2.0...v17.2.10
 [unreleased]: https://github.com/strykeforce/steamworks/compare/v17.1.7...develop
