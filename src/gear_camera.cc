@@ -109,7 +109,7 @@ void GearCamera::DisplayFrame() {
     // display capture frame in GUI window
 
     // cv::imshow("gear", frame_);
-    cv::imshow("frame", frame_process_.mask);
+    cv::imshow("gear", frame_process_.mask);
 
     cv::waitKey(1);
   }

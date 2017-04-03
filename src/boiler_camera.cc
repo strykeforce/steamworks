@@ -244,6 +244,7 @@ void BoilerCamera::DisplayFrame() {
 
   // display capture frame in GUI window
   cv::imshow("boiler", frame_);
+  // cv::imshow("boiler", frame_process_.mask);
   // if (frame_process_.target_separation < 90 ||
   //     frame_process_.target_separation > 110) {
   //   cv::waitKey(10000);
