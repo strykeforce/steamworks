@@ -14,6 +14,7 @@ class ReleaseGear : public frc::Command {
   void Initialize() override;
   bool IsFinished() override;
   void End() override;
+  void Interrupted() override;
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;

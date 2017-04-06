@@ -1,16 +1,20 @@
 cmake_minimum_required(VERSION 3.2)
 project(steamworks)
 
+set(VERSION_MAJOR 17)
+set(VERSION_MINOR 3)
+set(VERSION_PATCH 0)
+set(VERSION_META "-dev")
+
+option (LOG_GRAPHER  "Enable use of Grapher network logging" OFF)
+option (LOG_PLACEGEAR  "Enable detailed logging of PlaceGear command" OFF)
+
 set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
 set(NAVX_LIBS /opt/navx CACHE PATH "NavX directory.")
 set(CTRE_LIBS /opt/ctre CACHE PATH "CTRE directory.")
 set(SIDEWINDER_LIBS /opt/sidewinder CACHE PATH "Sidewinder directory.")
 set(MSGPACK_LIBS /opt/msgpack-c CACHE PATH "Msgpack-c directory.")
 
-set(VERSION_MAJOR 17)
-set(VERSION_MINOR 3)
-set(VERSION_PATCH 0)
-set(VERSION_META "-dev")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
 set(CMAKE_LD           /usr/bin/arm-frc-linux-gnueabi-ld)
@@ -28,6 +32,11 @@ add_definitions(-DSPDLOG_NO_THREAD_ID)
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_definitions(-DSPDLOG_DEBUG_ON -DSPDLOG_TRACE_ON)
 endif(CMAKE_BUILD_TYPE MATCHES "Debug")
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/conf/config.h.in"
+  "${PROJECT_BINARY_DIR}/src/config.h"
+)
 
 include_directories(
   SYSTEM

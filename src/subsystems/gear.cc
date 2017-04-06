@@ -115,7 +115,7 @@ void GearLoader::ClampStow() {
 
 // FIXME: hard-coded
 namespace {
-const double kGearZeroPosition = -50.0;
+const double kGearZeroPosition = -60.0;
 const double kGearZeroVoltage = -1.0;
 const int kGearPivotUpPosition = 1150;
 const int kGearPivotDownPosition = 0;
@@ -163,7 +163,7 @@ void GearLoader::SetPivotEncoderAbsZero() {
  */
 void GearLoader::SetPivotEncoderZero() {
   logger_->info("GearLoader setting pivot encoder to zero");
-  RobotMap::gear_pivot_talon->SetPosition(-40);
+  RobotMap::gear_pivot_talon->SetPosition(kGearZeroPosition);
 }
 
 /**

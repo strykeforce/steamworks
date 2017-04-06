@@ -7,7 +7,7 @@ using namespace steamworks::command::gear;
 
 namespace {
 const double kCloseEnough = 3;
-const int kStableCountReq = 3;
+const int kStableCountReq = 10;
 }
 
 ReleaseGear::ReleaseGear()
@@ -22,6 +22,7 @@ void ReleaseGear::Initialize() {
   Robot::gear_loader->ClampRelease();
   Robot::gear_loader->SetPivotPosition(-800);
   stable_count_ = 0;
+  pivot_pos_ = 0;
 }
 
 /**
@@ -30,7 +31,7 @@ void ReleaseGear::Initialize() {
 bool ReleaseGear::IsFinished() {
   int pos = Robot::gear_loader->GetPivotPosition();
 
-  SPDLOG_DEBUG(logger_, "ReleaseGear pivot motor pos = ", pos);
+  SPDLOG_DEBUG(logger_, "ReleaseGear pivot motor pos = {}", pos);
 
   if (fabs(pivot_pos_ - pos) <= kCloseEnough) {
     stable_count_++;
@@ -42,6 +43,11 @@ bool ReleaseGear::IsFinished() {
   }
   pivot_pos_ = pos;
   return false;
+}
+
+void ReleaseGear::Interrupted() {
+  logger_->warn("ReleaseGear interrupted");
+  End();
 }
 
 /**
