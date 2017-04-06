@@ -19,22 +19,24 @@ namespace {
 const double kSetpointMax = 275.0;
 const double kTicksPerInch = 50.72;
 
-const double kDriveSpeed = -50.0 / kSetpointMax;
+const double kDriveSpeed = -60.0 / kSetpointMax;
 const double kCruiseRatio = 0.25;
-const double kStoppedSpeed = 10.0;
+const double kStoppedSpeed = 2.0;
 
-const double kStrafeOffset = 50;
+// positive offset moves stinger left relative to robot
+// about 50 per inch
+const double kStrafeOffset = 75;
 const double kStrafeEndDistance = 12 * kTicksPerInch;
 
 const double kStrafeMinSpeed = 0.0 / kSetpointMax;
-const double kStrafeMaxSpeed = 40.0 / kSetpointMax;
-const double kStrafeSlopeStart = 80;
+const double kStrafeMaxSpeed = -kDriveSpeed;
+const double kStrafeSlopeStart = 60;
 const double kStrafeCloseEnough = 3;
 
-const double kAzimuthMinSpeed = 15.0 / kSetpointMax;
-const double kAzimuthMaxSpeed = 50.0 / kSetpointMax;
-const double kAzimuthSlopeStart = 100;
-const double kAzimuthCloseEnough = 3;
+const double kAzimuthMinSpeed = 0.0 / kSetpointMax;
+const double kAzimuthMaxSpeed = -0.3 * kDriveSpeed;
+const double kAzimuthSlopeStart = 2;
+const double kAzimuthCloseEnough = 0.25;
 
 const double kDeadzone = 1.0 / kSetpointMax;
 

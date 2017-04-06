@@ -44,7 +44,7 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
   dc.acceleration = 200;
   dc.deacceleration = 40;
   dc.close_enough = 25;
-  dc.segments.emplace_back(-180, 56 * kTicksPerInch);  // drive out
+  dc.segments.emplace_back(-180, 50 * kTicksPerInch);  // drive out
   AddSequential(new drive::Drive(dc));
 
   // approach target
@@ -61,7 +61,7 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
   dc.max_speed = 200;
   dc.segments.clear();
   dc.segments.emplace_back(0, 14 * kTicksPerInch);
-  dc.segments.emplace_back(50, 57 * kTicksPerInch);
+  dc.segments.emplace_back(20, 45 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // azimuth to boiler
