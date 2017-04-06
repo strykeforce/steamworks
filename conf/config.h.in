@@ -1,0 +1,4 @@
+#pragma once
+
+#cmakedefine LOG_GRAPHER
+#cmakedefine LOG_PLACEGEAR

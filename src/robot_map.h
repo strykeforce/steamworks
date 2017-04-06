@@ -1,8 +1,6 @@
 #pragma once
 
 #include <AHRS.h>
-#include <cpptoml/cpptoml.h>
-
 #include <sidewinder/swerve/talon_map.h>
 
 namespace steamworks {
@@ -64,7 +62,7 @@ class RobotMap {
   static std::shared_ptr<frc::DigitalOutput> shooter_camera_led;
 
   // instantiate talons and read encoder zero count
-  static void Initialize(const std::shared_ptr<cpptoml::table> config);
+  static void Initialize();
 
   // tells which robot we're running on
   static bool IsPracticeRobot();

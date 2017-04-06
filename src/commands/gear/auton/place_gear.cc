@@ -1,5 +1,12 @@
 #include "place_gear.h"
 
+#ifdef LOG_PLACEGEAR
+#ifndef SPDLOG_DEBUG_ON
+#define SPDLOG_DEBUG_ON
+#endif
+#include <iomanip>
+#endif
+
 #include "robot.h"
 #include "robot_map.h"
 #include "subsystems/deadeye.h"
@@ -93,12 +100,15 @@ void PlaceGear::Initialize() {
   zero_count_ = 0;
   is_delay_done_ = false;
   is_cruising_ = false;
-  is_initialized = false;
+  is_initialized_ = false;
 
   logger_->info(
       "PlaceGear initialized with distance = {}, strafe error = {}, azimuth "
       "error = {}",
       distance_, strafe_error_, azimuth_error_);
+#ifdef LOG_PLACEGEAR
+  InitializeTelemetry();
+#endif
 }
 
 /**
@@ -177,7 +187,6 @@ inline bool PlaceGear::DelayForPositionZero() {
   if (is_delay_done_) return false;
   // wait a few iterations for Robot::drive->ZeroPosition() to "take"
   if (zero_count_ < kZeroCountReq) {
-    drive_abs_error_ = distance_;
     zero_count_++;
     return true;
   }
@@ -189,7 +198,11 @@ inline bool PlaceGear::DelayForPositionZero() {
  * Execute the main loop
  */
 void PlaceGear::Execute() {
-  if (!is_initialized) {
+#ifdef LOG_PLACEGEAR
+  LogTelemetry();
+#endif
+
+  if (!is_initialized_) {
     SPDLOG_DEBUG(logger_, "PlaceGear in initialization loop");
     if (DelayForPositionZero()) {
       return;
@@ -199,34 +212,35 @@ void PlaceGear::Execute() {
       // FIXME: give up checking and use default if can't find
       return;
     }
-    is_initialized = true;
+    is_initialized_ = true;
   }
 
-  auto drive_setpoint = CalculateDriveSetpoint();
-  auto strafe_setpoint = CalculateStrafeSetpoint();
-  auto azimuth_setpoint = CalculateAzimuthSetpoint();
+  drive_setpoint_ = CalculateDriveSetpoint();
+  strafe_setpoint_ = CalculateStrafeSetpoint();
+  azimuth_setpoint_ = CalculateAzimuthSetpoint();
 
-  Robot::drive->Drive(drive_setpoint, strafe_setpoint, azimuth_setpoint,
+  Robot::drive->Drive(drive_setpoint_, strafe_setpoint_, azimuth_setpoint_,
                       kDeadzone);
   logger_->debug("PlaceGear drive = {}, strafe = {}, azimuth = {}",
-                 std::round(drive_setpoint * kSetpointMax),
-                 std::round(strafe_setpoint * kSetpointMax),
-                 std::round(azimuth_setpoint * kSetpointMax));
+                 std::round(drive_setpoint_ * kSetpointMax),
+                 std::round(strafe_setpoint_ * kSetpointMax),
+                 std::round(azimuth_setpoint_ * kSetpointMax));
 }
 
 /**
  * Finished when distance is close enough.
  */
 bool PlaceGear::IsFinished() {
-  if (!is_initialized) return false;
+  if (!is_initialized_) return false;
   double speed = fabs(Robot::drive->GetDriveSpeed());
   // SPDLOG_DEBUG(logger_, "IsFinished avg speed = {}", speed);
-  logger_->debug("IsFinished avg speed = {}", speed);
+  // logger_->debug("IsFinished avg speed = {}", speed);
 
   if (!is_cruising_) {
     // SPDLOG_DEBUG(logger_, "IsFinished not cruising");
-    logger_->debug("IsFinished not cruising");
-    is_cruising_ = speed > kCruiseRatio * -kDriveSpeed * kSetpointMax;
+    // logger_->debug("IsFinished not cruising");
+    is_cruising_ = std::fabs(Robot::drive->GetPosition()) > (3 * kTicksPerInch);
+    // is_cruising_ = speed > kCruiseRatio * -kDriveSpeed * kSetpointMax;
     return false;
   }
 
@@ -235,7 +249,7 @@ bool PlaceGear::IsFinished() {
   } else {
     stable_count_ = 0;
   }
-  SPDLOG_DEBUG(logger_, "IsFinished stable count = {}", stable_count_);
+  // SPDLOG_DEBUG(logger_, "IsFinished stable count = {}", stable_count_);
   if (stable_count_ == kStableCountReq) {
     return true;
   }
@@ -249,4 +263,42 @@ void PlaceGear::End() {
   Robot::drive->SetGyroDisabled(false);
   logger_->info("PlaceGear ended with strafe error = {}, azimuth error = {}",
                 strafe_error_, azimuth_error_);
+#ifdef LOG_PLACEGEAR
+  EndTelemetry();
+#endif
 }
+
+#ifdef LOG_PLACEGEAR
+namespace {
+const string kTelemetryPath = "/home/lvuser/logs/placegear.csv";
+}
+
+/**
+ * Open log file for telemetry.
+ */
+void PlaceGear::InitializeTelemetry() {
+  telemetry_ = make_unique<ofstream>(kTelemetryPath, ofstream::trunc);
+  *telemetry_ << "timestamp,distance,is_cruising,strafe_error,strafe_setpoint,"
+                 "azimuth_error,azimuth_setpoint,speed\n";
+  telemetry_start_ = timer_.GetFPGATimestamp();
+}
+
+/**
+ * Log a line of telemetry.
+ */
+void PlaceGear::LogTelemetry() {
+  *telemetry_ << setprecision(0) << fixed
+              << (timer_.GetFPGATimestamp() - telemetry_start_) * 1000 << ","
+              << distance_ << "," << is_cruising_ << "," << -strafe_error_
+              << "," << strafe_setpoint_ * kSetpointMax << ","
+              << setprecision(2) << azimuth_error_ << ","
+              << azimuth_setpoint_ * kSetpointMax << ","
+              << Robot::drive->GetDriveSpeed() << "\n";
+}
+
+/**
+ * Close telemetry log file.
+ */
+void PlaceGear::EndTelemetry() { telemetry_->close(); }
+
+#endif

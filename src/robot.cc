@@ -38,7 +38,7 @@ Robot::Robot() : frc::IterativeRobot() {}
 
 void Robot::RobotInit() {
   Configure();
-  RobotMap::Initialize(config_);
+  RobotMap::Initialize();
 
   SPDLOG_TRACE(logger_, "initializing subsystems");
   logger_->info("running on {} robot",

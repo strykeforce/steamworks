@@ -1,13 +1,18 @@
 #include "robot_map.h"
 
-#include <CANTalon.h>
+#include "config.h"
+
+#ifdef LOG_GRAPHER
 #include <sidewinder/grapher/HostToObject.h>
+#endif
+#include <CANTalon.h>
 #include <sidewinder/swerve/talon_map.h>
 #include <spdlog/spdlog.h>
 
 using namespace steamworks;
 using namespace sidewinder;
 
+#ifdef LOG_GRAPHER
 // helper functions to start grapher data collection thread if enabled.
 namespace {
 inline JerrysGrapher_DeviceBundle jgdb(byte id, ::CANTalon* t) {
@@ -57,6 +62,7 @@ void initialize_grapher() {
 }
 
 } /* namespace */
+#endif
 
 /** Holds pointers to the 8 swerve drive Talons.  */
 swerve::TalonMap* RobotMap::swerve_talons = new swerve::TalonMap();
@@ -80,7 +86,7 @@ std::shared_ptr<frc::DigitalOutput> RobotMap::shooter_camera_led;
  * We allocate these as singletons since there should only be one system-wide
  * reference to each.
  */
-void RobotMap::Initialize(const std::shared_ptr<cpptoml::table> config) {
+void RobotMap::Initialize() {
   gyro = std::make_shared<AHRS>(SPI::Port::kMXP, 200);
 
   gear_camera_led = std::make_shared<frc::DigitalOutput>(kGearCameraLight);
@@ -112,23 +118,19 @@ void RobotMap::Initialize(const std::shared_ptr<cpptoml::table> config) {
   swerve_talons->rr_drive = new ::CANTalon(Talons::kRightRearDrive);
   swerve_talons->rr_azimuth = new ::CANTalon(Talons::kRightRearAzimuth);
 
-  // start grapher data collection thread if enabled in config file.
-  auto c = config->get_table("LOGGING");
-  if (c && c->get_as<bool>("grapher").value_or(false)) {
-    spdlog::get("robot")->warn("grapher is enabled");
-    initialize_grapher();
-  } else {
-    spdlog::get("robot")->info("grapher is disabled");
-  }
+// start grapher data collection thread if enabled as a cmake option.
+#ifdef LOG_GRAPHER
+  spdlog::get("robot")->warn("grapher is enabled");
+  initialize_grapher();
+#else
+  spdlog::get("robot")->info("grapher is disabled");
+#endif
 }
 
 /**
  * Determine if code is running on the practice robot.
  */
 bool RobotMap::IsPracticeRobot() {
-  frc::DigitalInput dio(kPracticeRobot);
-  if (!dio.Get()) {  // jumper pulls input low
-    return true;
-  }
-  return false;
+  frc::DigitalInput dio{kPracticeRobot};
+  return !dio.Get();  // jumper pulls input low
 }
