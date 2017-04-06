@@ -69,6 +69,9 @@ PlaceGear::PlaceGear(Lift position)
   }
 }
 
+/**
+ * Use target height to calculate distance to target.
+ */
 bool PlaceGear::CalculateDistance() {
   if (!Robot::deadeye->HasTarget()) {
     logger_->warn("PlaceGear::CalculateDistance has no target");
@@ -90,6 +93,7 @@ void PlaceGear::Initialize() {
   Robot::drive->SetAzimuthMode();
   Robot::drive->ZeroPosition();
   Robot::drive->SetGyroDisabled(true);
+  RobotMap::gyro->ZeroYaw();
 
   CalculateDistance();
 
@@ -155,9 +159,7 @@ double PlaceGear::CalculateStrafeSetpoint() {
  * Calculate azimuth setpoint based on gyro azimuth error.
  */
 double PlaceGear::CalculateAzimuthSetpoint() {
-  return 0;
-  /*
-  azimuth_error_ = Robot::deadeye->GetStrafeError();
+  azimuth_error_ = RobotMap::gyro->GetYaw();
   azimuth_abs_error_ = fabs(azimuth_error_);
   double setpoint;
 
@@ -177,7 +179,6 @@ double PlaceGear::CalculateAzimuthSetpoint() {
   SPDLOG_DEBUG(logger_, "PlaceGear azimuth error = {}, setpoint =  {}",
                azimuth_error_, round(setpoint * kSetpointMax));
   return setpoint;
-  */
 }
 
 /**

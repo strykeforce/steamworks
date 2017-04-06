@@ -70,6 +70,7 @@ void Robot::AutonomousInit() {
   auto angle_adj = -std::fmod(RobotMap::gyro->GetAngle(), 360.0);
   logger_->info("AutonomousInit setting gyro to zero ({})", angle_adj);
   RobotMap::gyro->SetAngleAdjustment(angle_adj);
+  RobotMap::gyro->ZeroYaw();
 
   auto auton_mode = oi->GetAutonMode();
   logger_->info("AutonomousInit initialize auton mode {:X}", auton_mode);
