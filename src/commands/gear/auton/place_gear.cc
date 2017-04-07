@@ -95,7 +95,6 @@ void PlaceGear::Initialize() {
   Robot::drive->SetAzimuthMode();
   Robot::drive->ZeroPosition();
   Robot::drive->SetGyroDisabled(true);
-  RobotMap::gyro->ZeroYaw();
 
   CalculateDistance();
 
@@ -161,7 +160,7 @@ double PlaceGear::CalculateStrafeSetpoint() {
  * Calculate azimuth setpoint based on gyro azimuth error.
  */
 double PlaceGear::CalculateAzimuthSetpoint() {
-  azimuth_error_ = RobotMap::gyro->GetYaw();
+  azimuth_error_ = RobotMap::gyro->GetAngle() - azimuth_angle_;
   azimuth_abs_error_ = fabs(azimuth_error_);
   double setpoint;
 
@@ -282,7 +281,7 @@ const string kTelemetryPath = "/home/lvuser/logs/placegear.csv";
 void PlaceGear::InitializeTelemetry() {
   telemetry_ = make_unique<ofstream>(kTelemetryPath, ofstream::trunc);
   *telemetry_ << "timestamp,distance,is_cruising,strafe_error,strafe_setpoint,"
-                 "azimuth_error,azimuth_setpoint,speed\n";
+                 "azimuth_error,azimuth_setpoint,speed,gyro_angle\n";
   telemetry_start_ = timer_.GetFPGATimestamp();
 }
 
@@ -296,7 +295,8 @@ void PlaceGear::LogTelemetry() {
               << "," << strafe_setpoint_ * kSetpointMax << ","
               << setprecision(2) << azimuth_error_ << ","
               << azimuth_setpoint_ * kSetpointMax << ","
-              << Robot::drive->GetDriveSpeed() << "\n";
+              << Robot::drive->GetDriveSpeed() << ","
+              << RobotMap::gyro->GetAngle() << "\n";
 }
 
 /**

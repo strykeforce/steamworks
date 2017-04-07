@@ -70,7 +70,6 @@ void Robot::AutonomousInit() {
   auto angle_adj = -std::fmod(RobotMap::gyro->GetAngle(), 360.0);
   logger_->info("AutonomousInit setting gyro to zero ({})", angle_adj);
   RobotMap::gyro->SetAngleAdjustment(angle_adj);
-  RobotMap::gyro->ZeroYaw();
 
   auto auton_mode = oi->GetAutonMode();
   logger_->info("AutonomousInit initialize auton mode {:X}", auton_mode);
@@ -108,6 +107,11 @@ void Robot::AutonomousInit() {
     case 7:
       // RED alliance center gear and shoot
       autonomous_command_ = new auton::Sequence07();
+      gyro_offset_ = 0;
+      break;
+    case 8:
+      // BLUE alliance left gear and shoot
+      autonomous_command_ = new auton::Sequence08();
       gyro_offset_ = 0;
       break;
     default:
