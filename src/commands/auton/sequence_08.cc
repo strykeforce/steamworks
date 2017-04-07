@@ -1,4 +1,4 @@
-#include "sequence_06.h"
+#include "sequence_08.h"
 
 #include "commands/deadeye/gear_led.h"
 #include "commands/deadeye/mode.h"
@@ -7,6 +7,7 @@
 #include "commands/gear/auton/place_gear.h"
 #include "commands/gear/release.h"
 #include "commands/gear/sequence.h"
+#include "commands/intake.h"
 #include "commands/log.h"
 #include "commands/shooter/sequence.h"
 #include "commands/shooter/set_shooter.h"
@@ -24,13 +25,13 @@ const int kPrepareElevation = 3400;
 /**
  * Red move out and shoot 10
  */
-Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
+Sequence08::Sequence08() : frc::CommandGroup("Sequence08") {
   AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
 
   bool is_practice = RobotMap::IsPracticeRobot();
 
-  std::string msg = is_practice ? "BLUE alliance center gear on PRACTICE (06)"
-                                : "BLUE alliance center gear on COMP (06)";
+  std::string msg = is_practice ? "BLUE alliance left gear on PRACTICE (08)"
+                                : "BLUE alliance left gear on COMP (08)";
   AddSequential(new LogCommand(msg));
 
   // stage the gear
@@ -44,28 +45,40 @@ Sequence06::Sequence06() : frc::CommandGroup("Sequence06") {
   dc.acceleration = 200;
   dc.deacceleration = 40;
   dc.close_enough = 25;
-  dc.segments.emplace_back(-180, 50 * kTicksPerInch);  // drive out
+  dc.segments.emplace_back(180, 47 * kTicksPerInch);  // drive out
+  dc.segments.emplace_back(170, 47 * kTicksPerInch);  // drive out
   AddSequential(new drive::Drive(dc));
 
+  // rotate to face gear Lift
+  AddSequential(new drive::GyroAzimuth(60));
+
   // approach target
-  AddSequential(new gear::PlaceGear(gear::Lift::center));
+  AddSequential(new gear::PlaceGear(gear::Lift::left));
 
   // release gear
   AddParallel(new gear::ReleaseGear());
   AddParallel(new deadeye::GearLED(false));
 
+  // start hopper and back off
+  AddParallel(new StartIntake());
+  dc.max_speed = 200;
+  dc.segments.clear();
+  dc.segments.emplace_back(60, 15 * kTicksPerInch);
+  AddSequential(new drive::Drive(dc));
+
+  // azimuth towards hopper`
+  AddSequential(new drive::GyroAzimuth(115));
+
   // spin up shooter
   AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
-  // back off
-  dc.max_speed = 200;
+  // drive towards hopper
   dc.segments.clear();
-  dc.segments.emplace_back(0, 14 * kTicksPerInch);
-  dc.segments.emplace_back(20, 39 * kTicksPerInch);
+  dc.segments.emplace_back(115, 60 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
-  // azimuth to boiler
-  AddSequential(new drive::GyroAzimuth(70));
+  // pivot back towards boiler
+  AddSequential(new drive::GyroAzimuth(20));
 
   // and shoot
   AddParallel(new StartShooting());

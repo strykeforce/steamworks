@@ -7,3 +7,4 @@
 #include "sequence_05.h"
 #include "sequence_06.h"
 #include "sequence_07.h"
+#include "sequence_08.h"
