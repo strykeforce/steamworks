@@ -48,7 +48,7 @@ Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
   AddSequential(new drive::Drive(dc));
 
   // approach target
-  AddSequential(new gear::PlaceGear(gear::Lift::center), 4.5);
+  AddSequential(new gear::PlaceGear(gear::Lift::center));
 
   // release gear
   AddParallel(new gear::ReleaseGear());
@@ -61,11 +61,11 @@ Sequence07::Sequence07() : frc::CommandGroup("Sequence07") {
   dc.max_speed = 200;
   dc.segments.clear();
   dc.segments.emplace_back(0, 14 * kTicksPerInch);
-  dc.segments.emplace_back(-50, 57 * kTicksPerInch);
+  dc.segments.emplace_back(-50, 39 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // azimuth to boiler
-  AddSequential(new drive::GyroAzimuth(-65));
+  AddSequential(new drive::GyroAzimuth(-60));
 
   // and shoot
   AddParallel(new StartShooting());

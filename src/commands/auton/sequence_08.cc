@@ -73,18 +73,4 @@ Sequence08::Sequence08() : frc::CommandGroup("Sequence08") {
 
   // and shoot
   AddSequential(new StartShooting());
-  AddSequential(new WaitCommand(2.5));
-
-  // stop shooting after timeout
-  AddParallel(new StopShooting());
-
-  // safe orientation
-  AddSequential(new drive::GyroAzimuth(120));
-
-  //  back off
-  dc.max_speed = 400;
-  dc.segments.clear();
-  dc.segments.emplace_back(180, 6 * 12 * kTicksPerInch);
-  dc.segments.emplace_back(-150, 19 * 12 * kTicksPerInch);
-  AddSequential(new drive::Drive(dc));
 }
