@@ -41,7 +41,7 @@ Sequence08::Sequence08() : frc::CommandGroup("Sequence08") {
   // drive out
   drive::DriveConfig dc;
   dc.min_speed = 40;
-  dc.max_speed = 200;
+  dc.max_speed = 300;
   dc.acceleration = 200;
   dc.deacceleration = 40;
   dc.close_enough = 25;
@@ -59,27 +59,32 @@ Sequence08::Sequence08() : frc::CommandGroup("Sequence08") {
   AddParallel(new gear::ReleaseGear());
   AddParallel(new deadeye::GearLED(false));
 
-  // start hopper and back off
-  AddParallel(new StartIntake());
-  dc.max_speed = 200;
-  dc.segments.clear();
-  dc.segments.emplace_back(60, 15 * kTicksPerInch);
-  AddSequential(new drive::Drive(dc));
-
-  // azimuth towards hopper`
-  AddSequential(new drive::GyroAzimuth(115));
-
   // spin up shooter
   AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
-  // drive towards hopper
+  //  back off
+  dc.max_speed = 200;
   dc.segments.clear();
-  dc.segments.emplace_back(115, 60 * kTicksPerInch);
+  dc.segments.emplace_back(60, 30 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // pivot back towards boiler
-  AddSequential(new drive::GyroAzimuth(20));
+  AddSequential(new drive::GyroAzimuth(40));
 
   // and shoot
-  AddParallel(new StartShooting());
+  AddSequential(new StartShooting());
+  AddSequential(new WaitCommand(2.5));
+
+  // stop shooting after timeout
+  AddParallel(new StopShooting());
+
+  // safe orientation
+  AddSequential(new drive::GyroAzimuth(120));
+
+  //  back off
+  dc.max_speed = 400;
+  dc.segments.clear();
+  dc.segments.emplace_back(180, 6 * 12 * kTicksPerInch);
+  dc.segments.emplace_back(-150, 19 * 12 * kTicksPerInch);
+  AddSequential(new drive::Drive(dc));
 }
