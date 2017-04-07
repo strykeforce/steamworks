@@ -234,7 +234,7 @@ void PlaceGear::Execute() {
  */
 bool PlaceGear::IsFinished() {
   if (!is_initialized_) return false;
-  double speed = fabs(Robot::drive->GetDriveSpeed());
+  double speed = fabs(Robot::drive->GetFrontWheelsDriveSpeed());
   // SPDLOG_DEBUG(logger_, "IsFinished avg speed = {}", speed);
   // logger_->debug("IsFinished avg speed = {}", speed);
 
@@ -295,7 +295,7 @@ void PlaceGear::LogTelemetry() {
               << "," << strafe_setpoint_ * kSetpointMax << ","
               << setprecision(2) << azimuth_error_ << ","
               << azimuth_setpoint_ * kSetpointMax << ","
-              << Robot::drive->GetDriveSpeed() << ","
+              << Robot::drive->GetFrontWheelsDriveSpeed() << ","
               << RobotMap::gyro->GetAngle() << "\n";
 }
 
