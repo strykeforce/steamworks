@@ -43,11 +43,11 @@ class SwerveDrive : public frc::Subsystem {
   void TargetRotation(double azimuth);
 
   int GetAzimuth(const Wheel wheel = kRightRear) const;
-  int GetPosition(const Wheel wheel = kRightRear) const;
+  int GetPosition() const;
 
   // these are averages of 4 drive wheels
   double GetDriveCurrent();
-  double GetDriveSpeed();
+  double GetFrontWheelsDriveSpeed();
 
   // special driving or troubleshooting methods
   void SetAzimuth(double setpoint);  // set all to same setpoint
@@ -82,7 +82,7 @@ class SwerveDrive : public frc::Subsystem {
   bool gyro_disabled_ = false;
   double dead_zone_;
   std::array<double, 4> brake_ang_;
-  double angle_0_ = 123.0;
+  // double angle_0_ = 123.0;
 };
 } /* swerve */
 } /* sidewinder */

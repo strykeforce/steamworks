@@ -459,18 +459,12 @@ void SwerveDrive::CrabDriveAutonomous(double setpoint, int azimuth) {
  * Get encoder value of specified drive wheel.
  *  @param wheel select wheel to read
  */
-int SwerveDrive::GetPosition(const Wheel wheel) const {
-  switch (wheel) {
-    case kRightRear:
-      return static_cast<int>(map_->rr_drive->GetPosition());
-    case kLeftRear:
-      return static_cast<int>(map_->lr_drive->GetPosition());
-    case kRightFront:
-      return static_cast<int>(map_->rf_drive->GetPosition());
-    case kLeftFront:
-      return static_cast<int>(map_->lf_drive->GetPosition());
-  }
-  return 0;
+int SwerveDrive::GetPosition() const {
+  auto sum = std::fabs(map_->rr_drive->GetPosition()) +
+             std::fabs(map_->lr_drive->GetPosition()) +
+             std::fabs(map_->rf_drive->GetPosition()) +
+             std::fabs(map_->lf_drive->GetPosition());
+  return static_cast<int>(sum / 4.0);
 }
 
 /**
@@ -502,11 +496,11 @@ double SwerveDrive::GetDriveCurrent() {
 }
 
 /**
- * Returns average of drive wheel speed.
+ * Returns average of absolute value of front drive wheel speed.
  */
-double SwerveDrive::GetDriveSpeed() {
-  double sum = map_->rf_drive->GetSpeed() + map_->lf_drive->GetSpeed() +
-               map_->lr_drive->GetSpeed() + map_->rr_drive->GetSpeed();
+double SwerveDrive::GetFrontWheelsDriveSpeed() {
+  double sum = std::fabs(map_->rf_drive->GetSpeed()) +
+               std::fabs(map_->lf_drive->GetSpeed());
   return sum / 4.0;
 }
 
