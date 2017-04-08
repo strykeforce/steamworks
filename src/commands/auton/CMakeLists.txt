@@ -11,4 +11,5 @@ target_sources(${CMAKE_PROJECT_NAME}
   "${CMAKE_CURRENT_LIST_DIR}/sequence_09.cc"
   "${CMAKE_CURRENT_LIST_DIR}/sequence_0A.cc"
   "${CMAKE_CURRENT_LIST_DIR}/sequence_0B.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_0C.cc"
 )
