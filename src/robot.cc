@@ -120,8 +120,13 @@ void Robot::AutonomousInit() {
       gyro_offset_ = 0;
       break;
     case 10:
-      // BLUE alliance right gear and run down field
+      // BLUE alliance right gear and run down field - 0A
       autonomous_command_ = new auton::Sequence0A();
+      gyro_offset_ = 0;
+      break;
+    case 11:
+      // RED alliance left gear and run down field - 0B
+      autonomous_command_ = new auton::Sequence0B();
       gyro_offset_ = 0;
       break;
     default:
