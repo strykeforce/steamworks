@@ -155,7 +155,7 @@ void GetAngle::InitializeTelemetry() {
 void GetAngle::LogTelemetry() {
   *telemetry_ << setprecision(0) << fixed
               << (timer_.GetFPGATimestamp() - telemetry_start_) * 1000 << ","
-              << has_target_ << "," << setprecision(2) << error_ << ","
+              << has_target_ * 10 << "," << setprecision(2) << error_ << ","
               << delta_ << "," << setpoint_ << "\n";
 }
 

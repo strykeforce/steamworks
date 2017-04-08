@@ -131,6 +131,7 @@ void Deadeye::SetShooterLightEnabled(bool enable) {
 * Switch to boiler camera.
 */
 void Deadeye::EnableBoilerCamera() {
+  logger_->info("Deadeye enabling boiler camera");
   array<int, 3> t{{kBoilerSolutionMesg, 0, 0}};
   msgpack::sbuffer buf;
   msgpack::pack(buf, t);
@@ -145,6 +146,7 @@ void Deadeye::EnableBoilerCamera() {
 * Switch to boiler camera.
 */
 void Deadeye::EnableGearCamera() {
+  logger_->info("Deadeye enabling gear camera");
   array<int, 3> t{{kGearSolutionMesg, 0, 0}};
   msgpack::sbuffer buf;
   msgpack::pack(buf, t);

@@ -19,9 +19,9 @@ using namespace std;
 namespace {
 const float kSetpointMax = 275.0;
 const double kMaxSpeed = 100.0 / kSetpointMax;
-const double kMinSpeed = 15.0 / kSetpointMax;
-const double kMinSpeedExact = 15.0 / kSetpointMax;
-const double kDeadZone = 0.1 * kMinSpeedExact;
+const double kMinSpeed = 20.0 / kSetpointMax;
+const double kMinSpeedExact = 25.0 / kSetpointMax;
+const double kDeadZone = 0.05 * kMinSpeed;
 const int kCloseEnough = 20;
 const int kCloseEnoughExact = 8;
 const int kSlopeStart = 300;
@@ -46,7 +46,7 @@ void DeadeyeAzimuth::Initialize() {
   Robot::drive->Drive(0, 0, 0);
   Robot::drive->SetAzimuthMode();
   error_ = Robot::deadeye->GetAzimuthError();
-  offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
+  // offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
   logger_->info("DeadeyeAzimuth initialized with error {}", error_, offset_);
   stable_count_ = 0;
 #ifdef LOG_DEADEYE
@@ -70,7 +70,7 @@ void DeadeyeAzimuth::Execute() {
     Robot::drive->Drive(0, 0, 0);
     return;
   }
-  error_ = Robot::deadeye->GetAzimuthError() + offset_;
+  error_ = Robot::deadeye->GetAzimuthError();
   abs_error_ = fabs(error_);
 
   if (abs_error_ < kSlopeStart) {
@@ -153,7 +153,7 @@ void DeadeyeAzimuth::InitializeTelemetry() {
 void DeadeyeAzimuth::LogTelemetry() {
   *telemetry_ << setprecision(0) << fixed
               << (timer_.GetFPGATimestamp() - telemetry_start_) * 1000 << ","
-              << has_target_ << "," << setprecision(2) << error_ << ","
+              << has_target_ * 10 << "," << setprecision(2) << error_ << ","
               << setpoint_ * kSetpointMax << "," << RobotMap::gyro->GetAngle()
               << "\n";
 }

@@ -13,7 +13,7 @@ namespace {
 const double kSetpointMax = 400.0;
 const double kDeadZonePct = 0.1;
 const int kStableCountReq = 3;
-const int kZeroCountReq = 3;
+const int kZeroCountReq = 4;
 }
 
 /**
@@ -89,7 +89,6 @@ void Drive::StartNextSegment() {
 void Drive::Execute() {
   // wait a few iterations for Robot::drive->ZeroPosition() to "take"
   if (zero_count_ < kZeroCountReq) {
-    abs_error_ = distance_;
     zero_count_++;
     return;
   }

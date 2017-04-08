@@ -1,5 +1,6 @@
 #include "sequence_02.h"
 
+#include "commands/deadeye/mode.h"
 #include "commands/drive/auton/drive.h"
 #include "commands/drive/auton/gyro_azimuth.h"
 #include "commands/gear/sequence.h"
@@ -28,6 +29,8 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   std::string msg = is_practice ? "RED alliance hopper dump on PRACTICE (02)"
                                 : "RED alliance hopper dump on COMP (02)";
   AddSequential(new LogCommand(msg));
+
+  AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::boiler));
 
   drive::DriveConfig dc;
   dc.min_speed = 40;
