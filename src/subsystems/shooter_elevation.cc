@@ -12,7 +12,7 @@ using namespace sidewinder;
 namespace {
 const int kElevationIncrement = 25;
 const int kMinElevation = 0;
-const int kMaxElevation = 5000;
+const int kMaxElevation = 6000;
 }
 
 /**

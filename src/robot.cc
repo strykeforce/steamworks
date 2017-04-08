@@ -114,6 +114,16 @@ void Robot::AutonomousInit() {
       autonomous_command_ = new auton::Sequence08();
       gyro_offset_ = 0;
       break;
+    case 9:
+      // BLUE alliance right gear and shoot
+      autonomous_command_ = new auton::Sequence09();
+      gyro_offset_ = 0;
+      break;
+    case 10:
+      // BLUE alliance right gear and run down field
+      autonomous_command_ = new auton::Sequence0A();
+      gyro_offset_ = 0;
+      break;
     default:
       autonomous_command_ = new LogCommand("unrecognized command");
   }
