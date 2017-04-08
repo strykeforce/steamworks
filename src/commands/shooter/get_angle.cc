@@ -1,5 +1,12 @@
 #include "get_angle.h"
 
+#ifdef LOG_DEADEYE
+#ifndef SPDLOG_DEBUG_ON
+#define SPDLOG_DEBUG_ON
+#endif
+#include <iomanip>
+#endif
+
 #include "robot.h"
 #include "subsystems/deadeye.h"
 #include "subsystems/shooter_elevation.h"
@@ -32,6 +39,9 @@ void GetAngle::Initialize() {
   error_ = Robot::deadeye->GetCenterlineError();
   logger_->info("GetAngle initialized with error {}", error_);
   stable_count_ = 0;
+#ifdef LOG_DEADEYE
+  InitializeTelemetry();
+#endif
 }
 
 /**
@@ -39,31 +49,37 @@ void GetAngle::Initialize() {
  * rate commands to the swerve drive based on current error calculations.
  */
 void GetAngle::Execute() {
-  if (!Robot::deadeye->HasTarget()) {
+  has_target_ = Robot::deadeye->HasTarget();
+
+#ifdef LOG_DEADEYE
+  LogTelemetry();
+#endif
+
+  if (!has_target_) {
     logger_->info("GetAngle::Execute no target");
     return;
   }
 
   error_ = Robot::deadeye->GetCenterlineError();
   abs_error_ = fabs(error_);
-  double ticks;
 
   if (abs_error_ < kSlopeStart) {
     if (abs_error_ < kCloseEnough) {
-      ticks = 0;
+      delta_ = 0;
     } else {
-      ticks = kMinSpeed +
-              ((abs_error_ - kCloseEnough) / (kSlopeStart - kCloseEnough)) *
-                  (kMaxSpeed - kMinSpeed);
+      delta_ = kMinSpeed +
+               ((abs_error_ - kCloseEnough) / (kSlopeStart - kCloseEnough)) *
+                   (kMaxSpeed - kMinSpeed);
     }
   } else {
-    ticks = kMaxSpeed;
+    delta_ = kMaxSpeed;
   }
-  ticks = ticks * (signbit(error_) ? -1 : 1);  // match sign to error
-  int pos = Robot::shooter_elevation->GetElevationSetpoint();
-  SPDLOG_DEBUG(logger_, "GetAngle error_ = {}, ticks =  {}, setpoint = {}",
-               error_, round(ticks), pos + static_cast<int>(ticks));
-  Robot::shooter_elevation->SetElevation(pos + static_cast<int>(ticks));
+  delta_ = delta_ * (signbit(error_) ? -1 : 1);  // match sign to error
+  setpoint_ = Robot::shooter_elevation->GetElevationSetpoint() +
+              static_cast<int>(delta_);
+  SPDLOG_DEBUG(logger_, "GetAngle error = {}, delta =  {}, setpoint = {}",
+               error_, round(delta_), setpoint_);
+  Robot::shooter_elevation->SetElevation(setpoint_);
 }
 
 /**
@@ -114,4 +130,38 @@ void GetAngle::End() {
       group->Cancel();
     }
   }
+#ifdef LOG_DEADEYE
+  EndTelemetry();
+#endif
 }
+
+#ifdef LOG_DEADEYE
+namespace {
+const string kTelemetryPath = "/home/lvuser/logs/get_angle.csv";
+}
+
+/**
+ * Open log file for telemetry.
+ */
+void GetAngle::InitializeTelemetry() {
+  telemetry_ = make_unique<ofstream>(kTelemetryPath, ofstream::trunc);
+  *telemetry_ << "timestamp,has_target,error,delta,setpoint\n";
+  telemetry_start_ = timer_.GetFPGATimestamp();
+}
+
+/**
+ * Log a line of telemetry.
+ */
+void GetAngle::LogTelemetry() {
+  *telemetry_ << setprecision(0) << fixed
+              << (timer_.GetFPGATimestamp() - telemetry_start_) * 1000 << ","
+              << has_target_ << "," << setprecision(2) << error_ << ","
+              << delta_ << "," << setpoint_ << "\n";
+}
+
+/**
+ * Close telemetry log file.
+ */
+void GetAngle::EndTelemetry() { telemetry_->close(); }
+
+#endif

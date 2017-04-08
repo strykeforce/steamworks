@@ -8,6 +8,7 @@ set(VERSION_META "-dev")
 
 option (LOG_GRAPHER  "Enable use of Grapher network logging" OFF)
 option (LOG_PLACEGEAR  "Enable detailed logging of PlaceGear command" OFF)
+option (LOG_DEADEYE  "Enable detailed logging of Deadeye commands" OFF)
 
 set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
 set(NAVX_LIBS /opt/navx CACHE PATH "NavX directory.")

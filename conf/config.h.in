@@ -2,3 +2,4 @@
 
 #cmakedefine LOG_GRAPHER
 #cmakedefine LOG_PLACEGEAR
+#cmakedefine LOG_DEADEYE

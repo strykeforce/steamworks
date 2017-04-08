@@ -1,5 +1,12 @@
 #include "deadeye_azimuth.h"
 
+#ifdef LOG_DEADEYE
+#ifndef SPDLOG_DEBUG_ON
+#define SPDLOG_DEBUG_ON
+#endif
+#include <iomanip>
+#endif
+
 #include "robot.h"
 #include "robot_map.h"
 #include "subsystems/deadeye.h"
@@ -42,6 +49,9 @@ void DeadeyeAzimuth::Initialize() {
   offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
   logger_->info("DeadeyeAzimuth initialized with error {}", error_, offset_);
   stable_count_ = 0;
+#ifdef LOG_DEADEYE
+  InitializeTelemetry();
+#endif
 }
 
 /**
@@ -49,33 +59,38 @@ void DeadeyeAzimuth::Initialize() {
  * rate commands to the swerve drive based on current error calculations.
  */
 void DeadeyeAzimuth::Execute() {
-  if (!Robot::deadeye->HasTarget()) {
+  has_target_ = Robot::deadeye->HasTarget();
+
+#ifdef LOG_DEADEYE
+  LogTelemetry();
+#endif
+
+  if (!has_target_) {
     logger_->info("DeadeyeAzimuth::Execute no target");
     Robot::drive->Drive(0, 0, 0);
     return;
   }
   error_ = Robot::deadeye->GetAzimuthError() + offset_;
   abs_error_ = fabs(error_);
-  double speed;
 
   if (abs_error_ < kSlopeStart) {
     if (abs_error_ < kCloseEnoughExact) {
-      speed = 0;
+      setpoint_ = 0;
       Robot::drive->ClearDriveIaccum();
     } else if (abs_error_ < kCloseEnough) {
-      speed = kMinSpeedExact;
+      setpoint_ = kMinSpeedExact;
     } else {
-      speed = kMinSpeed +
-              ((abs_error_ - kCloseEnough) / (kSlopeStart - kCloseEnough)) *
-                  (kMaxSpeed - kMinSpeed);
+      setpoint_ = kMinSpeed +
+                  ((abs_error_ - kCloseEnough) / (kSlopeStart - kCloseEnough)) *
+                      (kMaxSpeed - kMinSpeed);
     }
   } else {
-    speed = kMaxSpeed;
+    setpoint_ = kMaxSpeed;
   }
-  speed = speed * (signbit(error_) ? 1 : -1);  // match sign to error
-  SPDLOG_DEBUG(logger_, "DeadeyeAzimuth error_ = {}, speed =  {}", error_,
-               round(speed * kSetpointMax));
-  Robot::drive->Drive(0, 0, speed, kDeadZone);
+  setpoint_ = setpoint_ * (signbit(error_) ? 1 : -1);  // match sign to error
+  SPDLOG_DEBUG(logger_, "DeadeyeAzimuth error_ = {}, setpoint_ =  {}", error_,
+               round(setpoint_ * kSetpointMax));
+  Robot::drive->Drive(0, 0, setpoint_, kDeadZone);
 }
 
 /**
@@ -113,4 +128,39 @@ void DeadeyeAzimuth::End() {
   logger_->info("DeadeyeAzimuth ended with error {} and offset {}", error_,
                 offset_);
   Robot::drive->SetDrive(0.0);
+#ifdef LOG_DEADEYE
+  EndTelemetry();
+#endif
 }
+
+#ifdef LOG_DEADEYE
+namespace {
+const string kTelemetryPath = "/home/lvuser/logs/deadeye_azimuth.csv";
+}
+
+/**
+ * Open log file for telemetry.
+ */
+void DeadeyeAzimuth::InitializeTelemetry() {
+  telemetry_ = make_unique<ofstream>(kTelemetryPath, ofstream::trunc);
+  *telemetry_ << "timestamp,has_target,error,setpoint,angle\n";
+  telemetry_start_ = timer_.GetFPGATimestamp();
+}
+
+/**
+ * Log a line of telemetry.
+ */
+void DeadeyeAzimuth::LogTelemetry() {
+  *telemetry_ << setprecision(0) << fixed
+              << (timer_.GetFPGATimestamp() - telemetry_start_) * 1000 << ","
+              << has_target_ << "," << setprecision(2) << error_ << ","
+              << setpoint_ * kSetpointMax << "," << RobotMap::gyro->GetAngle()
+              << "\n";
+}
+
+/**
+ * Close telemetry log file.
+ */
+void DeadeyeAzimuth::EndTelemetry() { telemetry_->close(); }
+
+#endif
