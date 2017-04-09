@@ -63,7 +63,11 @@ void Robot::DisabledInit() {
   Log::GetInstance().Flush();
 }
 
-void Robot::DisabledPeriodic() { frc::Scheduler::GetInstance()->Run(); }
+void Robot::DisabledPeriodic() {
+  drive->SetDrive(0.0);
+  drive->ClearDriveIaccum();
+  frc::Scheduler::GetInstance()->Run();
+}
 
 void Robot::AutonomousInit() {
   RobotMap::gyro->SetAngleAdjustment(0);
