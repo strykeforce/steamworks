@@ -141,6 +141,7 @@ void Robot::AutonomousInit() {
     default:
       autonomous_command_ = new LogCommand("unrecognized command");
   }
+  shooter_elevation->SetElevation(0);
   autonomous_command_->Start();
 }
 
