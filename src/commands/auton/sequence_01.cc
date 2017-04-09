@@ -35,7 +35,7 @@ Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
   drive::DriveConfig dc;
   dc.min_speed = 40;
   dc.max_speed = 400;
-  dc.acceleration = 400;
+  dc.acceleration = 300;
   dc.deacceleration = 10000;
   dc.close_enough = 10 * kTicksPerInch;
   dc.segments.emplace_back(-100, 68 * kTicksPerInch);  // drive out
@@ -45,12 +45,12 @@ Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
 
   // strafe down wall
   dc.max_speed = 200;
-  dc.acceleration = 10000;
+  dc.acceleration = 100;
   dc.deacceleration = 10000;
   dc.close_enough = 25;
   dc.timeout = 2.0;
   dc.segments.clear();
-  dc.segments.emplace_back(90, 10 * kTicksPerInch);   // strafe down wall
+  dc.segments.emplace_back(90, 8 * kTicksPerInch);    // strafe down wall
   dc.segments.emplace_back(180, 15 * kTicksPerInch);  // strafe down wall
   AddSequential(new drive::Drive(dc));
 
@@ -60,7 +60,7 @@ Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
   // drive out from hopper
   dc.timeout = -1.0;
   dc.max_speed = 400;
-  dc.acceleration = 400;
+  dc.acceleration = 200;
   dc.deacceleration = 60;
   dc.segments.clear();
   dc.segments.emplace_back(0, 16 * kTicksPerInch);  // drive out from hopper
