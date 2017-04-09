@@ -48,7 +48,7 @@ Drive::Drive(const DriveConfig& config)
 void Drive::Initialize() {
   Robot::drive->SetAutonMode();
   Robot::drive->ZeroPosition();
-  error_ = distance_;
+  abs_error_ = error_ = distance_;
   segments_it_ = segments_.begin();
   stable_count_ = 0;
   zero_count_ = 0;
@@ -59,7 +59,6 @@ void Drive::Initialize() {
       "accel done pos = {}",
       distance_, min_speed_ * kSetpointMax, max_speed_ * kSetpointMax,
       close_enough_, accel_dist_, deaccel_dist_, accel_done_pos_);
-  // data_.reset std::ofstream file{kCalibrationPath, std::ofstream::trunc};
 }
 
 /**
