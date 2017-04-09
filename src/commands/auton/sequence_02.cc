@@ -16,7 +16,7 @@ using namespace steamworks::command;
 namespace {
 const double kTicksPerInch = 50.72;
 const int kPrepareSpeed = 440;
-const int kPrepareElevation = 1300;
+const int kPrepareElevation = 2000;
 }
 
 /**
@@ -35,28 +35,34 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   drive::DriveConfig dc;
   dc.min_speed = 40;
   dc.max_speed = 400;
-  dc.acceleration = 400;
+  dc.acceleration = 300;
   dc.deacceleration = 10000;
   dc.close_enough = 10 * kTicksPerInch;
-  dc.segments.emplace_back(100, 70 * kTicksPerInch);  // drive out
-  dc.segments.emplace_back(180, 40 * kTicksPerInch);  // drive into hopper
+  dc.segments.emplace_back(104, 68 * kTicksPerInch);  // drive out
+  double distance = is_practice ? 37 : 34;
+  dc.segments.emplace_back(180, distance * kTicksPerInch);  // drive into hopper
   dc.timeout = 2.2;
   AddSequential(new drive::Drive(dc));
 
-  // drive down wall
-  dc.deacceleration = 60;
+  // strafe down wall
+  dc.max_speed = 200;
+  dc.acceleration = 100;
+  dc.deacceleration = 10000;
   dc.close_enough = 25;
-  dc.timeout = 1.2;
+  dc.timeout = 2.0;
   dc.segments.clear();
-  dc.segments.emplace_back(-112, 20 * kTicksPerInch);  // strafe down wall
+  dc.segments.emplace_back(-90, 4 * kTicksPerInch);   // strafe down wall
+  dc.segments.emplace_back(180, 15 * kTicksPerInch);  // strafe down wall
   AddSequential(new drive::Drive(dc));
 
-  // wait for balls
-  AddSequential(new WaitCommand(1.0));
-  AddSequential(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
+  //
+  AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 
   // drive out from hopper
   dc.timeout = -1.0;
+  dc.max_speed = 400;
+  dc.acceleration = 200;
+  dc.deacceleration = 60;
   dc.segments.clear();
   dc.segments.emplace_back(0, 16 * kTicksPerInch);  // drive out from hopper
   AddSequential(new drive::Drive(dc));
