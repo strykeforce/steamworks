@@ -24,7 +24,7 @@ Sequence03::Sequence03() : frc::CommandGroup("Sequence03") {
   std::string msg = is_practice ? "TEST on PRACTICE (03)" : "TEST on COMP (03)";
   AddSequential(new LogCommand(msg));
 
-  AddSequential(new gear::PlaceGear(gear::Lift::center));
+  // AddSequential(new gear::PlaceGear(gear::Lift::center));
 
   // AddSequential(new
   // deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));

@@ -55,8 +55,8 @@ bool StopShooterWheel::IsFinished() { return speed_setpoint_ == 0; }
  * DecrementShooterSpeed lowers wheel speed by a small number of encoder
  * ticks.
  */
-IncrementShooterSpeed::IncrementShooterSpeed()
-    : frc::InstantCommand("IncrementShooterSpeed") {
+IncrementShooterSpeed::IncrementShooterSpeed(double amount)
+    : frc::InstantCommand("IncrementShooterSpeed"), amount_(amount) {
   Requires(Robot::shooter_wheel);
 }
 
@@ -64,15 +64,15 @@ IncrementShooterSpeed::IncrementShooterSpeed()
  * Sends increment wheel speed command to the subsystem.
  */
 void IncrementShooterSpeed::Initialize() {
-  Robot::shooter_wheel->IncrementSpeed();
+  Robot::shooter_wheel->IncrementSpeed(amount_);
 }
 
 /**
  * IncrementShooterSpeed lowers wheel speed by a small number of encoder
  * ticks.
  */
-DecrementShooterSpeed::DecrementShooterSpeed()
-    : frc::InstantCommand("DecrementShooterSpeed") {
+DecrementShooterSpeed::DecrementShooterSpeed(double amount)
+    : frc::InstantCommand("DecrementShooterSpeed"), amount_(amount) {
   Requires(Robot::shooter_wheel);
 }
 
@@ -80,5 +80,5 @@ DecrementShooterSpeed::DecrementShooterSpeed()
  * Sends decrement wheel speed command to the subsystem.
  */
 void DecrementShooterSpeed::Initialize() {
-  Robot::shooter_wheel->DecrementSpeed();
+  Robot::shooter_wheel->DecrementSpeed(amount_);
 }

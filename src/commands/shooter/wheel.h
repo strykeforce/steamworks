@@ -28,18 +28,24 @@ class StopShooterWheel : public frc::Command {
 
 class IncrementShooterSpeed : public frc::InstantCommand {
  public:
-  IncrementShooterSpeed();
+  IncrementShooterSpeed(double amount);
 
  protected:
   void Initialize() override;
+
+ private:
+  double amount_;
 };
 
 class DecrementShooterSpeed : public frc::InstantCommand {
  public:
-  DecrementShooterSpeed();
+  DecrementShooterSpeed(double amount);
 
  protected:
   void Initialize() override;
+
+ private:
+  double amount_;
 };
 } /* command */
 } /* steamworks */

@@ -22,8 +22,8 @@ class ShooterWheel : public frc::Subsystem {
   int GetSpeed() const;
 
   // shooter testing
-  void IncrementSpeed();
-  void DecrementSpeed();
+  void IncrementSpeed(double amount);
+  void DecrementSpeed(double amount);
 
  private:
   const std::shared_ptr<spdlog::logger> logger_;

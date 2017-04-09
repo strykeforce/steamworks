@@ -10,7 +10,6 @@ using namespace sidewinder;
 
 // TODO: put these in config
 namespace {
-const int kSpeedIncrement = 5;
 const int kMinSpeed = 350;
 const int kMaxSpeed = 700;
 }
@@ -37,12 +36,12 @@ void ShooterWheel::SetSpeed(int speed) {
 /**
  * SpeedIncrement raises the elevation by a small constant amount.
  */
-void ShooterWheel::IncrementSpeed() {
-  speed_setpoint_ += kSpeedIncrement;
-  // if (speed_setpoint_ > kMaxSpeed) {
-  //   speed_setpoint_ = kMaxSpeed;
-  //   logger_->warn("can't set wheel speed above {}", kMaxSpeed);
-  // }
+void ShooterWheel::IncrementSpeed(double amount) {
+  speed_setpoint_ += amount;
+  if (speed_setpoint_ > kMaxSpeed) {
+    speed_setpoint_ = kMaxSpeed;
+    logger_->warn("can't set wheel speed above {}", kMaxSpeed);
+  }
   SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms",
                speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));
@@ -52,12 +51,12 @@ void ShooterWheel::IncrementSpeed() {
 /**
  * SpeedDecrement raises the elevation by a small constant amount.
  */
-void ShooterWheel::DecrementSpeed() {
-  speed_setpoint_ -= kSpeedIncrement;
-  // if (speed_setpoint_ < kMinSpeed) {
-  //   speed_setpoint_ = kMinSpeed;
-  //   logger_->warn("can't set wheel speed below {}", kMinSpeed);
-  // }
+void ShooterWheel::DecrementSpeed(double amount) {
+  speed_setpoint_ -= amount;
+  if (speed_setpoint_ < kMinSpeed) {
+    speed_setpoint_ = kMinSpeed;
+    logger_->warn("can't set wheel speed below {}", kMinSpeed);
+  }
   SPDLOG_DEBUG(logger_, "setting shooter wheel to {} ticks/100ms",
                speed_setpoint_);
   RobotMap::shooter_wheel_talon->Set(static_cast<double>(speed_setpoint_));

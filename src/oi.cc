@@ -214,8 +214,10 @@ void OI::AssignSmartDashboardButtons() {
   SmartDashboard::PutData("Start Wheel", new StartShooterWheel());
   SmartDashboard::PutData("Stop Wheel", new StopShooterWheel());
 
-  SmartDashboard::PutData("Increment Speed", new IncrementShooterSpeed());
-  SmartDashboard::PutData("Decrement Speed", new DecrementShooterSpeed());
+  SmartDashboard::PutData("Increment Speed 5", new IncrementShooterSpeed(5));
+  SmartDashboard::PutData("Decrement Speed 5", new DecrementShooterSpeed(5));
+  SmartDashboard::PutData("Increment Speed 1", new IncrementShooterSpeed(1));
+  SmartDashboard::PutData("Decrement Speed 1", new DecrementShooterSpeed(1));
 
   SmartDashboard::PutData("Gear LED On", new deadeye::GearLED(true));
   SmartDashboard::PutData("Gear LED Off", new deadeye::GearLED(false));
