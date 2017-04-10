@@ -15,9 +15,28 @@ const char* kLocalPath = "/home/lvuser/logs/";
 const char* kFlashDrivePath = "/media/sda1/logs/";
 }
 
+/**
+ * Get singleton
+ */
 Log& Log::GetInstance() {
   static Log log;
   return log;
+}
+
+/**
+ * Create a telemetry file path name with timestamp, appending a .csv file
+ * extension.
+ */
+string Log::GetTelemetryFilePath(std::string base) {
+  char ts[8];
+  ostringstream name(base);
+  time_t t = std::time(nullptr);
+  if (strftime(ts, sizeof(ts), "%H%M%S", localtime(&t))) {
+    name << ts << ".csv";
+  } else {
+    name << ".csv";
+  }
+  return name.str();
 }
 
 /**

@@ -8,6 +8,8 @@ namespace steamworks {
 class Log {
  public:
   static Log& GetInstance();
+  static std::string GetTelemetryFilePath(std::string base);
+
   void Initialize(const std::shared_ptr<cpptoml::table> config);
   spdlog::level::level_enum GetLevel(std::string level);
   bool IsFlashDriveMounted();

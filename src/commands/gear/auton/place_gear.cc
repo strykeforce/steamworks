@@ -5,6 +5,7 @@
 #define SPDLOG_DEBUG_ON
 #endif
 #include <iomanip>
+#include "log.h"
 #endif
 
 #include "robot.h"
@@ -272,14 +273,16 @@ void PlaceGear::End() {
 
 #ifdef LOG_PLACEGEAR
 namespace {
-const string kTelemetryPath = "/home/lvuser/logs/placegear.csv";
+const string kTelemetryPath = "/home/lvuser/logs/placegear_";
 }
 
 /**
  * Open log file for telemetry.
  */
 void PlaceGear::InitializeTelemetry() {
-  telemetry_ = make_unique<ofstream>(kTelemetryPath, ofstream::trunc);
+  string path = Log::GetTelemetryFilePath(kTelemetryPath);
+  logger_->info("PlaceGear logging telemetry to {}", path);
+  telemetry_ = make_unique<ofstream>(path, ofstream::trunc);
   *telemetry_ << "timestamp,distance,is_cruising,strafe_error,strafe_setpoint,"
                  "azimuth_error,azimuth_setpoint,speed,gyro_angle\n";
   telemetry_start_ = timer_.GetFPGATimestamp();

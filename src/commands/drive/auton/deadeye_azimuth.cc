@@ -5,6 +5,7 @@
 #define SPDLOG_DEBUG_ON
 #endif
 #include <iomanip>
+#include "log.h"
 #endif
 
 #include "robot.h"
@@ -46,7 +47,7 @@ void DeadeyeAzimuth::Initialize() {
   Robot::drive->Drive(0, 0, 0);
   Robot::drive->SetAzimuthMode();
   error_ = Robot::deadeye->GetAzimuthError();
-  // offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
+  offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
   logger_->info("DeadeyeAzimuth initialized with error {}", error_, offset_);
   stable_count_ = 0;
 #ifdef LOG_DEADEYE
@@ -135,14 +136,16 @@ void DeadeyeAzimuth::End() {
 
 #ifdef LOG_DEADEYE
 namespace {
-const string kTelemetryPath = "/home/lvuser/logs/deadeye_azimuth.csv";
+const string kTelemetryPath = "/home/lvuser/logs/deadeye_azimuth_";
 }
 
 /**
  * Open log file for telemetry.
  */
 void DeadeyeAzimuth::InitializeTelemetry() {
-  telemetry_ = make_unique<ofstream>(kTelemetryPath, ofstream::trunc);
+  string path = Log::GetTelemetryFilePath(kTelemetryPath);
+  logger_->info("DeadeyeAzimuth logging telemetry to {}", path);
+  telemetry_ = make_unique<ofstream>(path, ofstream::trunc);
   *telemetry_ << "timestamp,has_target,error,setpoint,angle\n";
   telemetry_start_ = timer_.GetFPGATimestamp();
 }

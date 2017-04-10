@@ -5,6 +5,7 @@
 #define SPDLOG_DEBUG_ON
 #endif
 #include <iomanip>
+#include "log.h"
 #endif
 
 #include "robot.h"
@@ -137,14 +138,16 @@ void GetAngle::End() {
 
 #ifdef LOG_DEADEYE
 namespace {
-const string kTelemetryPath = "/home/lvuser/logs/get_angle.csv";
+const string kTelemetryPath = "/home/lvuser/logs/get_angle_";
 }
 
 /**
  * Open log file for telemetry.
  */
 void GetAngle::InitializeTelemetry() {
-  telemetry_ = make_unique<ofstream>(kTelemetryPath, ofstream::trunc);
+  string path = Log::GetTelemetryFilePath(kTelemetryPath);
+  logger_->info("GetAngle logging telemetry to {}", path);
+  telemetry_ = make_unique<ofstream>(path, ofstream::trunc);
   *telemetry_ << "timestamp,has_target,error,delta,setpoint\n";
   telemetry_start_ = timer_.GetFPGATimestamp();
 }
