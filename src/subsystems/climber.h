@@ -33,10 +33,12 @@ class Climber : public frc::Subsystem {
   const std::shared_ptr<spdlog::logger> logger_;
   double capture_voltage_ = 0.0;
   double climb_voltage_ = 0.0;
+  double climb_current_ = 0.0;
   double finish_voltage_ = 0.0;
   double ratchet_voltage_ = 0.0;
   double capture_current_ = 0.0;
   double finish_current_ = 0.0;
+  bool is_captured_ = false;
   bool is_running_ = false;
   bool is_zeroed_ = false;
   bool is_ratchet_ = false;

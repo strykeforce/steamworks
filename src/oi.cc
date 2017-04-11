@@ -2,7 +2,9 @@
 
 #include <cmath>
 
-#include "commands/climber.h"
+#include "commands/climber/capture_rope.h"
+#include "commands/climber/override.h"
+#include "commands/climber/stop_climb.h"
 #include "commands/dashboard.h"
 #include "commands/deadeye/gear_led.h"
 #include "commands/deadeye/mode.h"
@@ -171,9 +173,6 @@ void OI::AssignGamepadButtons() {
   // gamepad B button turns off fuel intake
   intake_off_button_.WhenPressed(new StopIntake());
 
-  // gamepad Y button reverses fuel intake
-  intake_reverse_button_.WhenPressed(new ClearIntake());
-
   // gamepad A button performs feed shot
   shoot_feed_button_.WhenPressed(new LogCommand("gamepad feed shot button"));
 
@@ -188,8 +187,12 @@ void OI::AssignGamepadButtons() {
   trim_right_.WhenActive(new LogCommand("trim right active"));
 
   // gamepad start button toggles climber
-  climber_button_.WhenPressed(new CaptureRope());
-  climber_button_.WhenReleased(new StopClimb());
+  climber_button_.WhenPressed(new climber::CaptureRope());
+  climber_button_.WhenReleased(new climber::StopClimb());
+
+  // gamepad Y button reverses fuel intake
+  intake_reverse_button_.WhenPressed(new climber::Override());
+  intake_reverse_button_.WhenReleased(new climber::StopClimb());
 }
 
 /**

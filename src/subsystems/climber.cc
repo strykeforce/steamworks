@@ -65,6 +65,8 @@ void Climber::StartCapture() {
 void Climber::StartClimb() {
   RobotMap::climber_master_talon->Set(climb_voltage_);
   RobotMap::climber_slave_talon->Set(climb_voltage_);
+  RobotMap::climber_master_talon->SetCurrentLimit(climb_current_);
+  RobotMap::climber_slave_talon->SetCurrentLimit(climb_current_);
   is_running_ = true;
 }
 
@@ -91,11 +93,18 @@ bool Climber::IsRunning() { return is_running_; }
  * Returns true when motor current increases due to rope tension.
  */
 bool Climber::IsCaptured() {
+  if (is_captured_) return true;
+
   double master = RobotMap::climber_master_talon->GetOutputCurrent();
   double slave = RobotMap::climber_slave_talon->GetOutputCurrent();
   SPDLOG_DEBUG(logger_, "master current = {}, slave current = {}", master,
                slave);
-  return (master + slave) / 2.0 > capture_current_;
+  if ((master + slave) / 2.0 > capture_current_) {
+    ZeroPosition();
+    is_captured_ = true;
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -167,6 +176,15 @@ void Climber::LoadConfigSettings(
         "STEAMWORKS.CLIMBER climb_voltage setting missing, using default");
   }
   logger_->info("climber climb motor voltage: {}", climb_voltage_);
+
+  d_opt = config->get_as<double>("climb_current");
+  if (d_opt) {
+    climb_current_ = *d_opt;
+  } else {
+    logger_->warn(
+        "STEAMWORKS.CLIMBER climb_current setting missing, using default");
+  }
+  logger_->info("climber climb motor current: {}", climb_current_);
 
   d_opt = config->get_as<double>("finish_voltage");
   if (d_opt) {

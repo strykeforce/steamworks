@@ -6,12 +6,13 @@ sidewinder = "info"
 
 [STEAMWORKS.CLIMBER]
 capture_voltage =  6.0
-capture_current =  10.0
-climb_voltage   =  8.0
+capture_current =  4.0
+climb_voltage   = 12.0
+climb_current   = 40.0
 finish_voltage  =  4.0
 finish_current  = 10.0
 ratchet_voltage =  1.5
-climb_distance  = 28000
+climb_distance  = 27000
 
     [[STEAMWORKS.CLIMBER.TALON]]
     name = "master"
@@ -52,7 +53,7 @@ degrees_per_tick = 0.00611
 [STEAMWORKS.GEAR]
 # settings for the gear intake motor voltage mode
 load_voltage =  12.0
-deploy_voltage = 6.5
+deploy_voltage = 10.0
 
 # settings for the gear clamp servo position
 # left servo
@@ -144,7 +145,7 @@ voltage = 12.0
 [STEAMWORKS.SHOOTER]
 # elevation motor absolute encoder position at zero
 # elevation_zero = 3535
-elevation_zero = 3430
+elevation_zero = 3510
 
     [[STEAMWORKS.SHOOTER.TALON]]
     # range 0-900 ticks/100ms
