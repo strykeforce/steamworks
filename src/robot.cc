@@ -134,7 +134,7 @@ void Robot::AutonomousInit() {
       gyro_offset_ = 0;
       break;
     case 12:
-      // RED alliance right gear and run down field - 0C
+      // RED alliance right gear and shoot - 0C
       autonomous_command_ = new auton::Sequence0C();
       gyro_offset_ = 0;
       break;

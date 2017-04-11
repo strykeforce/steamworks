@@ -46,7 +46,7 @@ remote = "10.27.67.6"
 elevation_zero_angle = 6.0 # degrees
 centerline_height = 83.91 # inches
 camera_height = 19.25 # inches
-camera_angle = 57.25 # degrees
+camera_angle = 56.9 # degrees
 degrees_per_tick = 0.00611
 
 
