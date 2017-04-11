@@ -19,8 +19,8 @@ using namespace steamworks::command;
 namespace {
 const int kPrepareSpeed = 440;
 const int kPrepareElevation = 1800;
-const int kCloseShotSpeed = 440;
-const int kCloseShotElevation = 50;
+const int kCloseShotSpeed = 425;
+const int kCloseShotElevation = 0;
 const double kCloseShotHopperVoltage = 4.0;
 }
 
