@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.3.0] - 2017-04-11
+
+This is the release for the 2017 Michigan State Games.
+
+### Added
+
+- Autonomous routines for:
+  - RED left gear (retrieval zone), run down field
+  - BLUE right gear (retrieval zone), drive down field
+  - RED left gear (retrieval zone), run down field
+  - RED right gear (boiler), shoot
+- Autonomous will move the shooter elevation down to trip the new whale-tail pin.
+- Climber has a new high-speed override button.
+- Ability to collect detailed plot data for shooter elevation, azimuth targeting and gear placement control loops.
+
+### Changed
+
+- Many improvement to autonomous routine building blocks, including tuning PID loops, control loops in the robot and the way we use encoders.
+- Tuned eight RED and BLUE alliance autonomous routines for hopper dump and gears.
+- Adjust and speed up gear staging operation after mechanical improvements.
+- Shooter solutions adjusted for hardware refinements.
+
+### Fixed
+
+- Gear placement now arms the stop motion detection using absolute value of distance travel instead of speed. In rare occasions, arming would fail since average wheel speed can stay at zero if two wheels are oriented in the opposite direction of the other two.
+- Zero out the drives in Talons when going through disabled. This prevents brief spurious motor activation when coming out of disabled.
+
 ## [17.2.10] - 2017-04-01
 
 Updates made during the East Kentwood event.
@@ -90,4 +117,5 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 [17.1.7]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.1.7
 [17.2.0]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.2.0
 [17.2.10]: https://github.com/strykeforce/steamworks/compare/v17.2.0...v17.2.10
+[17.3.0]: https://github.com/strykeforce/steamworks/compare/v17.2.10...v17.3.0
 [unreleased]: https://github.com/strykeforce/steamworks/compare/v17.1.7...develop
