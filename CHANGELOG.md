@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.4.0] - 2017-04-12
+
+The 2017 Michigan State Games release.
+
+### Added
+
+- Function to take average of front two wheels to accommodate rear wheel skidding when stopping against gear lift.
+
+### Changed
+
+- Take average of all four wheels when getting drive encoder position in `GetPosition()`.
+
 ## [17.3.0] - 2017-03-29
 
 This is the release for the East Kentwood District Event on March 30, 2017.
@@ -98,4 +110,5 @@ This releases supports the swerve drive code for the Avenger t-shirt cannon.
 [17.1.0]: https://github.com/strykeforce/sidewinder/compare/v17.0.0...v17.1.0
 [17.2.0]: https://github.com/strykeforce/sidewinder/compare/v17.1.0...v17.2.0
 [17.3.0]: https://github.com/strykeforce/sidewinder/compare/v17.2.0...v17.3.0
+[17.4.0]: https://github.com/strykeforce/sidewinder/compare/v17.3.0...v17.4.0
 [unreleased]: https://github.com/strykeforce/sidewinder/compare/v17.2.0...develop
