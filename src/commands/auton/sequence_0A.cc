@@ -30,8 +30,8 @@ Sequence0A::Sequence0A() : frc::CommandGroup("Sequence0A") {
 
   bool is_practice = RobotMap::IsPracticeRobot();
 
-  std::string msg = is_practice ? "BLUE alliance right gear on PRACTICE (08)"
-                                : "BLUE alliance right gear on COMP (08)";
+  std::string msg = is_practice ? "BLUE alliance right gear on PRACTICE (0A)"
+                                : "BLUE alliance right gear on COMP (0A)";
   AddSequential(new LogCommand(msg));
 
   // stage the gear

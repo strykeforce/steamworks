@@ -4,7 +4,7 @@ project(steamworks)
 set(VERSION_MAJOR 17)
 set(VERSION_MINOR 3)
 set(VERSION_PATCH 0)
-set(VERSION_META "-dev")
+set(VERSION_META "")
 
 option (LOG_GRAPHER  "Enable use of Grapher network logging" OFF)
 option (LOG_PLACEGEAR  "Enable detailed logging of PlaceGear command" OFF)

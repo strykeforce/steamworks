@@ -1,7 +1,7 @@
 [LOGGING]
-file = false
+file = true
 loggers = ["robot", "command", "subsystem", "sidewinder", "deadeye"]
-default = "debug"
+default = "info"
 sidewinder = "info"
 
 [STEAMWORKS.CLIMBER]
@@ -145,7 +145,7 @@ voltage = 12.0
 [STEAMWORKS.SHOOTER]
 # elevation motor absolute encoder position at zero
 # elevation_zero = 3535
-elevation_zero = 3510
+elevation_zero = 3483
 
     [[STEAMWORKS.SHOOTER.TALON]]
     # range 0-900 ticks/100ms
