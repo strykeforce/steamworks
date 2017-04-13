@@ -138,6 +138,7 @@ void Drive::Execute() {
  */
 bool Drive::IsFinished() {
   if (IsTimedOut()) {
+    logger_->info("Drive timed out");
     return true;
   }
   if (abs_error_ < close_enough_) {

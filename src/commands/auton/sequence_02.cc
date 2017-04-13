@@ -45,6 +45,7 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   AddSequential(new drive::Drive(dc));
 
   // strafe down wall
+  AddSequential(new LogCommand("starting strafe"));
   dc.max_speed = 200;
   dc.acceleration = 100;
   dc.deacceleration = 10000;
