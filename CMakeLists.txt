@@ -3,7 +3,7 @@ project(steamworks)
 
 set(VERSION_MAJOR 17)
 set(VERSION_MINOR 3)
-set(VERSION_PATCH 2)
+set(VERSION_PATCH 3)
 set(VERSION_META "")
 
 option (LOG_GRAPHER  "Enable use of Grapher network logging" OFF)

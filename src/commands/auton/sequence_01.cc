@@ -51,7 +51,7 @@ Sequence01::Sequence01() : frc::CommandGroup("Sequence01") {
   dc.timeout = 2.0;
   dc.segments.clear();
   dc.segments.emplace_back(90, 8 * kTicksPerInch);    // strafe down wall
-  dc.segments.emplace_back(180, 15 * kTicksPerInch);  // strafe down wall
+  dc.segments.emplace_back(180, 50 * kTicksPerInch);  // drive into wall
   AddSequential(new drive::Drive(dc));
 
   //
