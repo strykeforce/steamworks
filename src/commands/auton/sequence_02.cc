@@ -52,7 +52,7 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   dc.timeout = 2.0;
   dc.segments.clear();
   dc.segments.emplace_back(-90, 4 * kTicksPerInch);   // strafe down wall
-  dc.segments.emplace_back(180, 15 * kTicksPerInch);  // strafe down wall
+  dc.segments.emplace_back(180, 50 * kTicksPerInch);  // strafe down wall
   AddSequential(new drive::Drive(dc));
 
   //
