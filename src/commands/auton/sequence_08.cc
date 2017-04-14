@@ -59,6 +59,8 @@ Sequence08::Sequence08() : frc::CommandGroup("Sequence08") {
   AddParallel(new gear::ReleaseGear());
   AddParallel(new deadeye::GearLED(false));
 
+  AddParallel(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::boiler));
+
   // spin up shooter
   AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
 

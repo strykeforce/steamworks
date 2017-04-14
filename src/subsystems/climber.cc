@@ -97,8 +97,7 @@ bool Climber::IsCaptured() {
 
   double master = RobotMap::climber_master_talon->GetOutputCurrent();
   double slave = RobotMap::climber_slave_talon->GetOutputCurrent();
-  SPDLOG_DEBUG(logger_, "master current = {}, slave current = {}", master,
-               slave);
+  logger_->info("master current = {}, slave current = {}", master, slave);
   if ((master + slave) / 2.0 > capture_current_) {
     ZeroPosition();
     is_captured_ = true;
