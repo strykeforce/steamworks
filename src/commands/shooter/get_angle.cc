@@ -20,7 +20,7 @@ namespace {
 const int kMaxSpeed = 70;
 const int kMinSpeed = 1;
 const int kCloseEnough = 3;
-const int kSlopeStart = 200;
+const int kSlopeStart = 100;
 const int kStableCountReq = 3;
 }
 
