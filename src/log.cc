@@ -29,14 +29,14 @@ Log& Log::GetInstance() {
  */
 string Log::GetTelemetryFilePath(std::string base) {
   char ts[8];
-  ostringstream name(base);
+  string name = base;
   time_t t = std::time(nullptr);
   if (strftime(ts, sizeof(ts), "%H%M%S", localtime(&t))) {
-    name << ts << ".csv";
+    name += string(ts) + ".csv";
   } else {
-    name << ".csv";
+    name += ".csv";
   }
-  return name.str();
+  return name;
 }
 
 /**
