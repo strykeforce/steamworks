@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.3.8] - 2017-04-15
+
+Updates made during the 2017 Michigan State Games.
+
+### Changed
+
+- During RED hopper dump auton, drive out from alliance wall at less acute angle.
+- Activate boiler camera earlier during RED and BLUE gear placement and shoot autons.
+- Shooter elevation re-zeroed.
+
+### Fixed
+
+- During RED and BLUE hopper dump auton, drive into wall long enough for full timeout to take effect.
+- Generated log file name for telemetry data.
+
 ## [17.3.0] - 2017-04-11
 
 This is the release for the 2017 Michigan State Games.
@@ -11,10 +26,12 @@ This is the release for the 2017 Michigan State Games.
 ### Added
 
 - Autonomous routines for:
+
   - RED left gear (retrieval zone), run down field
   - BLUE right gear (retrieval zone), drive down field
   - RED left gear (retrieval zone), run down field
   - RED right gear (boiler), shoot
+
 - Autonomous will move the shooter elevation down to trip the new whale-tail pin.
 - Climber has a new high-speed override button.
 - Ability to collect detailed plot data for shooter elevation, azimuth targeting and gear placement control loops.
@@ -44,9 +61,11 @@ Updates made during the East Kentwood event.
 ### Changed
 
 - Climber parameters changed due to hardware repair:
-    - capture current from 4 to 10 A
-    - ratchet voltage from 1 to 1.5 v
-    - high-speed climb distance from 26,000 to 28,000 encoder ticks
+
+  - capture current from 4 to 10 A
+  - ratchet voltage from 1 to 1.5 v
+  - high-speed climb distance from 26,000 to 28,000 encoder ticks
+
 - Drive tele-operated voltage-mode current limit changed from 60 to 50 A.
 - Hopper drop autons had strafe distance and wait time adjusted for the field.
 - Center gear placement offset.
@@ -118,4 +137,5 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 [17.2.0]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.2.0
 [17.2.10]: https://github.com/strykeforce/steamworks/compare/v17.2.0...v17.2.10
 [17.3.0]: https://github.com/strykeforce/steamworks/compare/v17.2.10...v17.3.0
+[17.3.8]: https://github.com/strykeforce/steamworks/compare/v17.3.0...v17.3.8
 [unreleased]: https://github.com/strykeforce/steamworks/compare/v17.1.7...develop
