@@ -3,56 +3,12 @@
 using namespace deadeye;
 using namespace std;
 
-GearFrame::GearFrame(shared_ptr<cpptoml::table> config_in)
+GearFrame::GearFrame(shared_ptr<cpptoml::table> config)
     : logger_(spdlog::get("deadeye")),
       hsv_lower_(80, 100, 100),
       hsv_upper_(100, 255, 255),
       min_arc_length_(50.0) {
-  assert(config_in);
-  auto config = config_in->get_table("GEAR");
-  if (!config) {
-    throw invalid_argument("GEAR config table missing");
-  }
-
-  config = config->get_table("FRAME");
-  if (!config) {
-    throw invalid_argument("GEAR.FRAME config table missing");
-  }
-
-  auto hsv_l = config->get_array_of<int64_t>("hsv_lower");
-  if (hsv_l) {
-    hsv_lower_ = cv::Scalar((*hsv_l)[0], (*hsv_l)[1], (*hsv_l)[2]);
-  } else {
-    logger_->warn("GEAR.FRAME hsv_lower setting missing, using default");
-  }
-
-  auto hsv_u = config->get_array_of<int64_t>("hsv_upper");
-  if (hsv_u) {
-    hsv_upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);
-  } else {
-    logger_->warn("GEAR.FRAME hsv_upper setting missing, using default");
-  }
-
-  auto d_opt = config->get_as<double>("min_arc_length");
-  if (d_opt) {
-    min_arc_length_ = *d_opt;
-  } else {
-    logger_->warn("GEAR.FRAME min_arc_length setting missing, using default");
-  }
-
-  auto i_opt = config->get_as<int>("azimuth_offset");
-  if (i_opt) {
-    azimuth_offset_ = *i_opt;
-  } else {
-    logger_->warn("CAMERA azimuth_offset setting missing, using default");
-  }
-  logger_->info("gear camera azimuth offset: {}", azimuth_offset_);
-
-  logger_->info("GEAR HSV lower: {}, {}, {}", hsv_lower_[0], hsv_lower_[1],
-                hsv_lower_[2]);
-  logger_->info("GEAR HSV upper: {}, {}, {}", hsv_upper_[0], hsv_upper_[1],
-                hsv_upper_[2]);
-  logger_->info("GEAR min arc Length: {}", min_arc_length_);
+  LoadConfigSettings(config);
 }
 
 /**
@@ -142,4 +98,53 @@ bool GearFrame::FindTargets(const cv::Mat& frame) {
   target_width = right_rect.width;
 
   return true;
+}
+
+void GearFrame::LoadConfigSettings(
+    const std::shared_ptr<cpptoml::table> config_in) {
+  assert(config_in);
+  auto config = config_in->get_table("GEAR");
+  if (!config) {
+    throw invalid_argument("GEAR config table missing");
+  }
+
+  config = config->get_table("FRAME");
+  if (!config) {
+    throw invalid_argument("GEAR.FRAME config table missing");
+  }
+
+  auto hsv_l = config->get_array_of<int64_t>("hsv_lower");
+  if (hsv_l) {
+    hsv_lower_ = cv::Scalar((*hsv_l)[0], (*hsv_l)[1], (*hsv_l)[2]);
+  } else {
+    logger_->warn("GEAR.FRAME hsv_lower setting missing, using default");
+  }
+
+  auto hsv_u = config->get_array_of<int64_t>("hsv_upper");
+  if (hsv_u) {
+    hsv_upper_ = cv::Scalar((*hsv_u)[0], (*hsv_u)[1], (*hsv_u)[2]);
+  } else {
+    logger_->warn("GEAR.FRAME hsv_upper setting missing, using default");
+  }
+
+  auto d_opt = config->get_as<double>("min_arc_length");
+  if (d_opt) {
+    min_arc_length_ = *d_opt;
+  } else {
+    logger_->warn("GEAR.FRAME min_arc_length setting missing, using default");
+  }
+
+  auto i_opt = config->get_as<int>("azimuth_offset");
+  if (i_opt) {
+    azimuth_offset_ = *i_opt;
+  } else {
+    logger_->warn("CAMERA azimuth_offset setting missing, using default");
+  }
+  logger_->info("gear camera azimuth offset: {}", azimuth_offset_);
+
+  logger_->info("GEAR HSV lower: {}, {}, {}", hsv_lower_[0], hsv_lower_[1],
+                hsv_lower_[2]);
+  logger_->info("GEAR HSV upper: {}, {}, {}", hsv_upper_[0], hsv_upper_[1],
+                hsv_upper_[2]);
+  logger_->info("GEAR min arc Length: {}", min_arc_length_);
 }

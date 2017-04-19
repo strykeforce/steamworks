@@ -29,6 +29,8 @@ class GearFrame {
   cv::Scalar hsv_lower_, hsv_upper_;
   double min_arc_length_;
   int azimuth_offset_;
+
+  void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
 };
 
 } /* deadeye */
