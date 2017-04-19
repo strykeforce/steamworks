@@ -45,26 +45,29 @@ void BoilerCamera::Connect() {
   unsigned int numCameras;
   error = busMgr.GetNumOfCameras(&numCameras);
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::Connect: busMgr.GetNumOfCameras: {}",
+                   error.GetDescription());
     return;
   }
 
   if (numCameras < 1) {
-    logger_->error("no cameras detected");
+    logger_->error("BoilerCamera::Connect: busMgr.GetNumOfCameras == 0");
     return;
   }
 
   fc::PGRGuid guid;
   error = busMgr.GetCameraFromIndex(0, &guid);
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::Connect: busMgr.GetCameraFromIndex: {}",
+                   error.GetDescription());
     return;
   }
 
   // Connect to a camera
   error = camera_.Connect(&guid);
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::Connect: camera.Connect: {}",
+                   error.GetDescription());
     return;
   }
 
@@ -83,13 +86,14 @@ void BoilerCamera::Connect() {
   error = camera_.ValidateFormat7Settings(&fmt7ImageSettings, &valid,
                                           &fmt7PacketInfo);
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::Connect: camera.ValidateFormat7Settings: {}",
+                   error.GetDescription());
     return;
   }
 
   if (!valid) {
     // Settings are not valid
-    logger_->error("Format7 settings are not valid");
+    logger_->error("BoilerCamera::Connect: Format7 settings are not valid");
     return;
   }
 
@@ -97,7 +101,8 @@ void BoilerCamera::Connect() {
   error = camera_.SetFormat7Configuration(
       &fmt7ImageSettings, fmt7PacketInfo.recommendedBytesPerPacket);
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::Connect: camera.SetFormat7Configuration: {}",
+                   error.GetDescription());
     return;
   }
 
@@ -109,7 +114,8 @@ void BoilerCamera::Connect() {
   prop.absValue = exposure_;
   error = camera_.SetProperty(&prop);
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::Connect: camera.SetProperty: {}",
+                   error.GetDescription());
   }
   connected_ = true;
 }
@@ -148,7 +154,8 @@ void BoilerCamera::StartCapture() {
   fc::Error error = camera_.StartCapture();
   SPDLOG_TRACE(logger_, "done calling camera_.StartCapture()");
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::StartCapture: camera.StartCapture: {}",
+                   error.GetDescription());
   }
   if (has_gui_) {
     cv::namedWindow("boiler");
@@ -164,7 +171,8 @@ void BoilerCamera::StopCapture() {
   }
   fc::Error error = camera_.StopCapture();
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::StopCapture: camera.StopCapture: {}",
+                   error.GetDescription());
   }
   capture_started_ = false;
 }
@@ -180,7 +188,8 @@ bool BoilerCamera::ProcessFrame(int& azimuth_error, int& centerline_error) {
 
   fc::Error error = camera_.RetrieveBuffer(&raw_image_);
   if (error != fc::PGRERROR_OK) {
-    logger_->error(error.GetDescription());
+    logger_->error("BoilerCamera::ProcessFrame: camera.RetrieveBuffer: {}",
+                   error.GetDescription());
     return false;
   }
 
@@ -245,10 +254,6 @@ void BoilerCamera::DisplayFrame() {
   // display capture frame in GUI window
   cv::imshow("boiler", frame_);
   // cv::imshow("boiler", frame_process_.mask);
-  // if (frame_process_.target_separation < 90 ||
-  //     frame_process_.target_separation > 110) {
-  //   cv::waitKey(10000);
-  //   return;
   // }
   cv::waitKey(1);
 }
