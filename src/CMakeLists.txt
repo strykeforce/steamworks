@@ -10,14 +10,13 @@ link_directories(/opt/flycapture/lib)
 
 add_executable(${CMAKE_PROJECT_NAME}
   main.cc
-  boiler_camera.cc
-  boiler_frame.cc
-  gear_camera.cc
-  gear_frame.cc
   link.cc
   deadeye.cc
   fps.cc
 )
+
+include("${CMAKE_CURRENT_LIST_DIR}/boiler/CMakeLists.txt")
+include("${CMAKE_CURRENT_LIST_DIR}/gear/CMakeLists.txt")
 
 target_link_libraries(${CMAKE_PROJECT_NAME}
   pthread

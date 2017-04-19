@@ -4,8 +4,8 @@
 #include <spdlog/spdlog.h>
 
 #include "link.h"
-#include "boiler_camera.h"
-#include "gear_camera.h"
+#include "boiler/boiler_camera.h"
+#include "gear/gear_camera.h"
 #include "fps.h"
 
 namespace deadeye {
