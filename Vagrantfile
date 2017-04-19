@@ -2,19 +2,18 @@
 # roborio-skel
 #
 Vagrant.configure('2') do |config|
-  config.vm.box = 'ubuntu/xenial64'
+  config.vm.box = 'bento/ubuntu-16.04'
 
-  config.vm.provider 'virtualbox' do |v|
+  config.vm.provider 'vmware_fusion' do |v|
     v.name = 'deadeye'
-    v.memory = 2048
-    v.cpus = 2
-    v.customize ['modifyvm', :id, '--paravirtprovider', 'kvm']
+    v.vmx['memsize'] = '1024'
+    v.vmx['numvcpus'] = '2'
   end
 
   # manual provisioning
   # - FlyCapture for Linux 64
   # - OpenCV 2.4 sudo apt install libopencv-dev; http://packages.ubuntu.com/xenial/libopencv-dev
-  # - Python openpyxl: sudo apt install python3-openpyxl
+  # - Msgpack: cd /opt; sudo git clone https://github.com/msgpack/msgpack-c.git
   # We provision using ansible_local, bootstrap our ansible roles by
   # downloading them from our repo.
   # config.vm.provision 'shell', inline: <<-SCRIPT
