@@ -80,31 +80,33 @@ void Deadeye::SwitchMode(int mode) {
  * Called in boiler mode after frame acquired.
  */
 void Deadeye::ProcessBoilerTarget() {
-  if (display_framerate_) {
-    static int framerate_count = 0;
-    if (framerate_count == 0) {
-      fps_.Start();
-    }
-    if (framerate_count++ > display_framerate_int_) {
-      fps_.Stop();
-      logger_->info("FPS = {}", fps_.FramesPerSecond());
-      framerate_count = 0;
-    }
+#ifdef LOG_FPS
+  static int framerate_count = 0;
+  if (framerate_count == 0) {
+    fps_.Start();
+  }
+  if (framerate_count++ > display_framerate_int_) {
+    fps_.Stop();
+    logger_->info("FPS = {}", fps_.FramesPerSecond());
+    framerate_count = 0;
   }
   fps_.Update();
+#endif
 
   int centerline_error;  // vertical target separation
   int azimuth_error;
   bool success = boiler_camera_.ProcessFrame(azimuth_error, centerline_error);
   boiler_camera_.DisplayFrame();
-  if (display_boiler_) {
-    static int boiler_count = 0;
-    if (boiler_count++ > display_boiler_int_) {
-      logger_->info("boiler acquired = {}, azimuth = {}, centerline = {}",
-                    success, azimuth_error, centerline_error);
-      boiler_count = 0;
-    }
+
+#ifdef LOG_BOILER
+  static int boiler_count = 0;
+  if (boiler_count++ > display_boiler_int_) {
+    logger_->info("boiler acquired = {}, azimuth = {}, centerline = {}",
+                  success, azimuth_error, centerline_error);
+    boiler_count = 0;
   }
+#endif
+
   if (success) {
     link_.SendBoilerSolution(azimuth_error, centerline_error);
     return;
@@ -115,23 +117,33 @@ void Deadeye::ProcessBoilerTarget() {
 }
 
 void Deadeye::ProcessGearTarget() {
-  if (display_framerate_) {
-    static int framerate_count = 0;
-    if (framerate_count == 0) {
-      fps_.Start();
-    }
-    if (framerate_count++ > display_framerate_int_) {
-      fps_.Stop();
-      logger_->info("FPS = {}", fps_.FramesPerSecond());
-      framerate_count = 0;
-    }
+#ifdef LOG_FPS
+  static int framerate_count = 0;
+  if (framerate_count == 0) {
+    fps_.Start();
+  }
+  if (framerate_count++ > display_framerate_int_) {
+    fps_.Stop();
+    logger_->info("FPS = {}", fps_.FramesPerSecond());
+    framerate_count = 0;
   }
   fps_.Update();
+#endif
 
   int azimuth_error;
   int target_height;
   bool success = gear_camera_.ProcessFrame(azimuth_error, target_height);
   gear_camera_.DisplayFrame();
+
+#ifdef LOG_GEAR
+  static int gear_count = 0;
+  if (gear_count++ > display_gear_int_) {
+    logger_->info("gear acquired = {}, azimuth = {}, target height = {}",
+                  success, azimuth_error, target_height);
+    gear_count = 0;
+  }
+#endif
+
   if (success) {
     link_.SendGearSolution(azimuth_error, target_height);
     return;
@@ -144,27 +156,34 @@ void Deadeye::LoadConfigSettings(
     const std::shared_ptr<cpptoml::table> config_in) {
   assert(config_in);
   auto config = config_in->get_table("DEADEYE")->get_table("DEBUG");
-  auto i_opt = config->get_as<int>("framerate");
-  if (i_opt) {
-    display_framerate_int_ = *i_opt;
-  }
-  display_framerate_ = display_framerate_int_ > 0;
-  logger_->info("displaying framerate: {} every {} frames", display_framerate_,
-                display_framerate_int_);
 
-  i_opt = config->get_as<int>("boiler");
-  if (i_opt) {
-    display_boiler_int_ = *i_opt;
+#ifdef LOG_FPS
+  auto framerate_opt = config->get_as<int>("framerate");
+  if (framerate_opt) {
+    display_framerate_int_ = *framerate_opt;
   }
-  display_boiler_ = display_boiler_int_ > 0;
-  logger_->info("displaying boiler solution: {} every {} frames",
-                display_boiler_, display_boiler_int_);
+  logger_->warn("logging framerate every {} frames", display_framerate_int_);
+#else
+  logger_->info("framerate logging disabled");
+#endif
 
-  i_opt = config->get_as<int>("gear");
-  if (i_opt) {
-    display_gear_int_ = *i_opt;
+#ifdef LOG_BOILER
+  auto boiler_opt = config->get_as<int>("boiler");
+  if (boiler_opt) {
+    display_boiler_int_ = *boiler_opt;
   }
-  display_gear_ = display_gear_int_ > 0;
-  logger_->info("displaying gear solution: {} every {} frames", display_gear_,
-                display_gear_int_);
+  logger_->warn("logging boiler solution every {} frames", display_boiler_int_);
+#else
+  logger_->info("boiler solution logging disabled");
+#endif
+
+#ifdef LOG_GEAR
+  auto gear_opt = config->get_as<int>("gear");
+  if (gear_opt) {
+    display_gear_int_ = *gear_opt;
+  }
+  logger_->warn("logging gear solution every {} frames", display_gear_int_);
+#else
+  logger_->info("gear solution logging disabled");
+#endif
 }

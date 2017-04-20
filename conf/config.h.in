@@ -1,0 +1,5 @@
+#pragma once
+
+#cmakedefine LOG_FPS
+#cmakedefine LOG_BOILER
+#cmakedefine LOG_GEAR
