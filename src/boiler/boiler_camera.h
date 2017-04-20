@@ -8,6 +8,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "boiler_frame.h"
+#include "config.h"
 
 namespace fc = FlyCapture2;
 
@@ -26,7 +27,10 @@ class BoilerCamera {
   void StartCapture();
   void StopCapture();
   bool ProcessFrame(int& azimuth_error, int& centerline_error);
+
+#ifdef DISPLAY_FRAME
   void DisplayFrame();
+#endif
 
  private:
   std::shared_ptr<spdlog::logger> logger_;

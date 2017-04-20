@@ -214,6 +214,7 @@ bool BoilerCamera::ProcessFrame(int& azimuth_error, int& centerline_error) {
   return false;
 }
 
+#ifdef DISPLAY_FRAME
 void BoilerCamera::DisplayFrame() {
   if (!has_gui_) {
     return;
@@ -257,6 +258,7 @@ void BoilerCamera::DisplayFrame() {
   // }
   cv::waitKey(1);
 }
+#endif
 
 /**
  * Load configuration.
@@ -301,4 +303,7 @@ void BoilerCamera::LoadConfigSettings(
   logger_->info("camera frame width: {}", width_);
   logger_->info("camera frame height: {}", height_);
   logger_->info("camera frame exposure: {}", exposure_);
+#ifdef DISPLAY_FRAME
+  logger_->warn("boiler frame display enabled");
+#endif
 }

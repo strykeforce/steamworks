@@ -90,6 +90,7 @@ bool GearCamera::ProcessFrame(int& azimuth_error, int& target_height) {
   return false;
 }
 
+#ifdef DISPLAY_FRAME
 void GearCamera::DisplayFrame() {
   if (has_gui_) {
     auto azimuth_offset = frame_process_.GetAzimuthOffset();
@@ -114,3 +115,4 @@ void GearCamera::DisplayFrame() {
     cv::waitKey(1);
   }
 }
+#endif

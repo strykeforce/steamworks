@@ -6,6 +6,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "gear_frame.h"
+#include "config.h"
 
 namespace deadeye {
 
@@ -20,7 +21,9 @@ class GearCamera {
   bool IsConnected();
 
   bool ProcessFrame(int& azimuth_error, int& target_width);
+#ifdef DISPLAY_FRAME
   void DisplayFrame();
+#endif
 
  private:
   std::shared_ptr<spdlog::logger> logger_;

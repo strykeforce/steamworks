@@ -6,7 +6,7 @@
 using namespace deadeye;
 
 namespace {
-constexpr auto NTGT_SLEEP_MS = std::chrono::milliseconds(50);
+constexpr auto NTGT_SLEEP_MS = std::chrono::milliseconds(10);
 }
 
 Deadeye::Deadeye(std::shared_ptr<cpptoml::table> config)
@@ -96,7 +96,10 @@ void Deadeye::ProcessBoilerTarget() {
   int centerline_error;  // vertical target separation
   int azimuth_error;
   bool success = boiler_camera_.ProcessFrame(azimuth_error, centerline_error);
+
+#ifdef DISPLAY_FRAME
   boiler_camera_.DisplayFrame();
+#endif
 
 #ifdef LOG_BOILER
   static int boiler_count = 0;
@@ -133,7 +136,10 @@ void Deadeye::ProcessGearTarget() {
   int azimuth_error;
   int target_height;
   bool success = gear_camera_.ProcessFrame(azimuth_error, target_height);
+
+#ifdef DISPLAY_FRAME
   gear_camera_.DisplayFrame();
+#endif
 
 #ifdef LOG_GEAR
   static int gear_count = 0;
