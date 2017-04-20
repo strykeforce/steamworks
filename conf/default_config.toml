@@ -1,7 +1,7 @@
 [LOGGING]
-file = true
+file = false
 loggers = ["robot", "command", "subsystem", "sidewinder", "deadeye"]
-default = "info"
+default = "debug"
 sidewinder = "info"
 
 [STEAMWORKS.CLIMBER]

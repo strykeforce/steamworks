@@ -1,5 +1,13 @@
 #include "deadeye.h"
 
+#ifdef LOG_FPS
+#ifndef SPDLOG_DEBUG_ON
+#define SPDLOG_DEBUG_ON
+#endif
+#include <iomanip>
+#include "log.h"
+#endif
+
 #include <msgpack.hpp>
 
 #include "robot_map.h"
@@ -22,7 +30,11 @@ Deadeye::Deadeye(const std::shared_ptr<cpptoml::table> config)
 /**
  * Stop the IO notification loop.
  */
-Deadeye::~Deadeye() {}
+Deadeye::~Deadeye() {
+#ifdef LOG_FPS
+  EndTelemetry();
+#endif
+}
 
 /**
  * Start the IO thread, runs forever.
@@ -36,6 +48,9 @@ void Deadeye::Start() {
  * The main IO loop.
  */
 void Deadeye::Run() {
+#ifdef LOG_FPS
+  InitializeTelemetry();
+#endif
   char buf[256];
   for (;;) {
     // auto nread = recvfrom(recvfd_, recv, sizeof(recv), 0, NULL, NULL);
@@ -70,6 +85,9 @@ void Deadeye::Run() {
           break;
       }
     }
+#ifdef LOG_FPS
+    LogTelemetry();
+#endif
   }
 }
 
@@ -333,3 +351,39 @@ void Deadeye::LoadConfigSettings(
   }
   logger_->info("shooter degrees per tick: {}", degrees_per_tick_);
 }
+
+#ifdef LOG_FPS
+namespace {
+const string kTelemetryPath = "/home/lvuser/logs/deadeye_fps_";
+}
+
+/**
+ * Open log file for telemetry.
+ */
+void Deadeye::InitializeTelemetry() {
+  string path = Log::GetTelemetryFilePath(kTelemetryPath);
+  logger_->info("Deadeye logging telemetry to {}", path);
+  telemetry_ = make_unique<ofstream>(path, ofstream::trunc);
+  *telemetry_
+      << "timestamp,has_target,frame_period,azimuth_error,centerline_error\n";
+  last_frame_ = telemetry_start_ = timer_.GetFPGATimestamp();
+}
+
+/**
+ * Log a line of telemetry.
+ */
+void Deadeye::LogTelemetry() {
+  double ts = timer_.GetFPGATimestamp();
+  *telemetry_ << setprecision(0) << fixed << (ts - telemetry_start_) * 1000
+              << "," << has_target_ * 10 << "," << (ts - last_frame_) * 1000
+              << setprecision(2) << "," << azimuth_error_ << ","
+              << centerline_error_ << "\n";
+  last_frame_ = ts;
+}
+
+/**
+ * Close telemetry log file.
+ */
+void Deadeye::EndTelemetry() { telemetry_->close(); }
+
+#endif

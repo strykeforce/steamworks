@@ -9,6 +9,7 @@ set(VERSION_META "-dev")
 option (LOG_GRAPHER  "Enable use of Grapher network logging" OFF)
 option (LOG_PLACEGEAR  "Enable detailed logging of PlaceGear command" OFF)
 option (LOG_DEADEYE  "Enable detailed logging of Deadeye commands" OFF)
+option (LOG_FPS  "Enable detailed logging of Deadeye frame rate" OFF)
 option (NO_GEAR  "Gear mechanism is not installed" OFF)
 
 set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")

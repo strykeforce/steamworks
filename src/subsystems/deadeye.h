@@ -1,6 +1,10 @@
 #pragma once
 
-#undef SPDLOG_TRACE_ON
+#include "config.h"
+
+#ifdef LOG_FPS
+#include <fstream>
+#endif
 
 #include <WPILib.h>
 #include <cpptoml/cpptoml.h>
@@ -86,6 +90,16 @@ class Deadeye : public frc::Subsystem {
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
   void ConfigureNetworking();
+
+#ifdef LOG_FPS
+  frc::Timer timer_;
+  double telemetry_start_;
+  double last_frame_;
+  std::unique_ptr<std::ofstream> telemetry_;
+  void InitializeTelemetry();
+  void LogTelemetry();
+  void EndTelemetry();
+#endif
 };
 
 } /* subsystem */

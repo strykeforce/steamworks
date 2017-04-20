@@ -3,5 +3,6 @@
 #cmakedefine LOG_GRAPHER
 #cmakedefine LOG_PLACEGEAR
 #cmakedefine LOG_DEADEYE
+#cmakedefine LOG_FPS
 
 #cmakedefine NO_GEAR
