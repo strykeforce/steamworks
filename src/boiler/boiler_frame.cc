@@ -44,8 +44,8 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
 
     auto rect = cv::boundingRect(contours[i]);
     double aspect_ratio = static_cast<double>(rect.width) / rect.height;
-    if (aspect_ratio < aspect_ratio_) {
-      // SPDLOG_DEBUG(logger_, "boiler aspect ratio fail: {}", aspect_ratio);
+    if (aspect_ratio < aspect_ratio_min_ || aspect_ratio > aspect_ratio_max_) {
+      SPDLOG_DEBUG(logger_, "boiler aspect ratio fail: {}", aspect_ratio);
       continue;
     }
 
@@ -55,7 +55,7 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
   }
 
   auto targets = target_idx.size();
-  SPDLOG_DEBUG(logger_, "boiler targets found = {}", targets);
+  // SPDLOG_DEBUG(logger_, "boiler targets found = {}", targets);
 
   switch (targets) {
     case 0:
@@ -123,13 +123,22 @@ void BoilerFrame::LoadConfigSettings(
                     min_arc_length_);
     }
 
-    d_opt = config->get_as<double>("aspect_ratio");
+    d_opt = config->get_as<double>("aspect_ratio_min");
     if (d_opt) {
-      aspect_ratio_ = *d_opt;
+      aspect_ratio_min_ = *d_opt;
     } else {
-      logger_->warn("BOILER.FRAME aspect_ratio setting missing, using {}",
-                    aspect_ratio_);
+      logger_->warn("BOILER.FRAME aspect_ratio_min setting missing, using {}",
+                    aspect_ratio_min_);
     }
+
+    d_opt = config->get_as<double>("aspect_ratio_max");
+    if (d_opt) {
+      aspect_ratio_max_ = *d_opt;
+    } else {
+      logger_->warn("BOILER.FRAME aspect_ratio_max setting missing, using {}",
+                    aspect_ratio_max_);
+    }
+
   } else {
     logger_->error(
         "BOILER.FRAME configuration section missing, using defaults");

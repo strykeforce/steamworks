@@ -24,7 +24,8 @@ class BoilerFrame {
   std::shared_ptr<spdlog::logger> logger_;
   cv::Scalar hsv_lower_, hsv_upper_;
   double min_arc_length_ = 250;
-  double aspect_ratio_ = 2;
+  double aspect_ratio_min_ = 2;
+  double aspect_ratio_max_ = 3;
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
 };

@@ -3,3 +3,4 @@
 #cmakedefine LOG_FPS
 #cmakedefine LOG_BOILER
 #cmakedefine LOG_GEAR
+#cmakedefine DISPLAY_FRAME
