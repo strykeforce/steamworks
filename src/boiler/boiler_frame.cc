@@ -1,5 +1,7 @@
 #include "boiler_frame.h"
 
+#include <ctime>
+
 using namespace deadeye;
 using namespace std;
 
@@ -81,6 +83,10 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
     case 1:
       upper_contour = contours[target_idx[0]];
       upper_rect = cv::boundingRect(upper_contour);
+      logger_->warn("boiler only one target found");
+#ifdef SNAP_ONETGT
+      Snapshot();
+#endif
       // SPDLOG_DEBUG(logger_, "one target detected upper y = {}, lower y = {}",
       //              upper_rect.y, lower_rect.y);
       return false;
@@ -104,7 +110,33 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
   centerline_error = centerline - (frame.rows / 2);
   azimuth_error = (frame.cols / 2) - upper_rect.x - (upper_rect.width / 2);
 
+#ifdef SNAP_DISCON
+  // if error jumped a large amount due to image problem, save mask image to
+  // analyze later
+  if ((abs(centerline_error - centerline_error_prev_) >
+       discontinuity_threshold_) ||
+      (abs(azimuth_error - azimuth_error_prev_) > discontinuity_threshold_)) {
+    Snapshot();
+  }
+  centerline_error_prev_ = centerline_error;
+  azimuth_error_prev_ = azimuth_error;
+#endif
+
   return true;
+}
+
+/**
+ * Snapshot saves a debugging image
+ */
+void BoilerFrame::Snapshot() {
+  char ts[8];
+  string name = snapshot_base_;
+  time_t t = std::time(nullptr);
+  strftime(ts, sizeof(ts), "%H%M%S", localtime(&t));
+  name += string(ts) + ".bmp";
+
+  logger_->info("boiler taking a mask snapshot: {}", name);
+  cv::imwrite(name, mask);
 }
 
 /**
@@ -157,6 +189,26 @@ void BoilerFrame::LoadConfigSettings(
                     aspect_ratio_max_);
     }
 
+    auto s_opt = config->get_as<string>("snapshot_base");
+    if (s_opt) {
+      snapshot_base_ = *s_opt;
+    } else {
+      logger_->warn("BOILER.FRAME snapshot_base setting missing, using {}",
+                    snapshot_base_);
+    }
+
+#ifdef SNAP_DISCON
+    auto i_opt = config->get_as<int>("discontinuity_threshold");
+    if (i_opt) {
+      discontinuity_threshold_ = *i_opt;
+    } else {
+      logger_->warn(
+          "BOILER.FRAME discontinuity_threshold setting missing, using {}",
+          discontinuity_threshold_);
+    }
+#else
+    logger_->info("saving mask image on discontinuity is disabled");
+#endif
   } else {
     logger_->error(
         "BOILER.FRAME configuration section missing, using defaults");

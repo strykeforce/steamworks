@@ -6,6 +6,8 @@
 #include <opencv2/opencv.hpp>
 #include <spdlog/spdlog.h>
 
+#include "config.h"
+
 namespace deadeye {
 
 class BoilerFrame {
@@ -26,8 +28,16 @@ class BoilerFrame {
   double min_arc_length_ = 250;
   double aspect_ratio_min_ = 2;
   double aspect_ratio_max_ = 3;
+  std::string snapshot_base_ = "/tmp/deadeye-";
+
+#ifdef SNAP_DISCON
+  int azimuth_error_prev_ = 0;
+  int centerline_error_prev_ = 0;
+  int discontinuity_threshold_ = 25;
+#endif
 
   void LoadConfigSettings(const std::shared_ptr<cpptoml::table> config);
+  void Snapshot();
 };
 
 } /* deadeye */
