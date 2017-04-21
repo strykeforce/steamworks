@@ -32,6 +32,8 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
   // vector<cv::Rect> target_rects;
 
   int found = 0;
+  int lim_left;
+  int lim_right;
   for (size_t i = 0; i < contours.size(); i++) {
     if (found == 2)
       break;
@@ -45,8 +47,24 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
     auto rect = cv::boundingRect(contours[i]);
     double aspect_ratio = static_cast<double>(rect.width) / rect.height;
     if (aspect_ratio < aspect_ratio_min_ || aspect_ratio > aspect_ratio_max_) {
-      SPDLOG_DEBUG(logger_, "boiler aspect ratio fail: {}", aspect_ratio);
+      // SPDLOG_DEBUG(logger_, "boiler aspect ratio fail: {}", aspect_ratio);
       continue;
+    }
+
+    if (found == 0) {
+      // we have the upper target
+      lim_left = rect.x;
+      lim_right = rect.x + rect.width;
+      SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}", lim_left,
+                   lim_right);
+    }
+
+    if (found == 1) {
+      int center = rect.x + (rect.width / 2);
+      if (center < lim_left || center > lim_right) {
+        SPDLOG_DEBUG(logger_, "contour failed alignment: {}", center);
+        continue;
+      }
     }
 
     target_idx.push_back(i);
