@@ -80,6 +80,9 @@ void Deadeye::Run() {
           azimuth_error_ = message[1];
           target_height_ = message[2];
           break;
+        case kErrorMesg:
+          logger_->error("Deadeye hardware error");
+          break;
         default:
           has_target_ = false;
           break;
