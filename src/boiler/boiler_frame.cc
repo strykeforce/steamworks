@@ -1,5 +1,6 @@
 #include "boiler_frame.h"
 
+#include <cstdlib>
 #include <ctime>
 
 using namespace deadeye;
@@ -57,12 +58,14 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
       // we have the upper target
       lim_left = rect.x;
       lim_right = rect.x + rect.width;
-      // SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}", lim_left,
-      //              lim_right);
+      SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}", lim_left,
+                   lim_right);
     }
 
     if (found == 1) {
       int center = rect.x + (rect.width / 2);
+      SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}, center = {}",
+                   lim_left, lim_right, center);
       if (center < lim_left || center > lim_right) {
         SPDLOG_DEBUG(logger_, "contour failed alignment: {}", center);
         continue;
@@ -189,13 +192,14 @@ void BoilerFrame::LoadConfigSettings(
                     aspect_ratio_max_);
     }
 
-    auto s_opt = config->get_as<string>("snapshot_base");
-    if (s_opt) {
-      snapshot_base_ = *s_opt;
+    const char* ssd = std::getenv("SNAPSHOT_DIR");
+    if (ssd) {
+      snapshot_base_ = string(ssd) + "/boiler_";
     } else {
-      logger_->warn("BOILER.FRAME snapshot_base setting missing, using {}",
-                    snapshot_base_);
+      logger_->warn("SNAPSHOT_DIR env var not set");
     }
+
+    logger_->info("saving images to {}", snapshot_base_);
 
 #ifdef SNAP_DISCON
     auto i_opt = config->get_as<int>("discontinuity_threshold");
