@@ -9,7 +9,7 @@ set(VERSION_META "")
 option (LOG_FPS  "Log camera FPS" OFF)
 option (LOG_BOILER  "Log boiler solution data" OFF)
 option (LOG_GEAR  "Log gear solution data" OFF)
-option (DISPLAY_FRAME  "Log gear solution data" OFF)
+option (DISPLAY_FRAME  "Display video input in monitor" OFF)
 
 set(CUDA_USE_STATIC_CUDA_RUNTIME OFF)
 find_package(OpenCV  2.4 REQUIRED)
