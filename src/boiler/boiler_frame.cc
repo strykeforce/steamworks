@@ -58,14 +58,14 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
       // we have the upper target
       lim_left = rect.x;
       lim_right = rect.x + rect.width;
-      SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}", lim_left,
-                   lim_right);
+      //   SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}", lim_left,
+      //                lim_right);
     }
 
     if (found == 1) {
       int center = rect.x + (rect.width / 2);
-      SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}, center = {}",
-                   lim_left, lim_right, center);
+      // SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}, center = {}",
+      //              lim_left, lim_right, center);
       if (center < lim_left || center > lim_right) {
         SPDLOG_DEBUG(logger_, "contour failed alignment: {}", center);
         continue;
