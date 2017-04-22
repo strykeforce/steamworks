@@ -2,12 +2,10 @@
 Description=Deadeye Vision System
 
 [Service]
-ExecStart=/usr/local/sbin/deadeye
 Type=simple
+Environment=SNAPSHOT_DIR=/tmp/deadeye DEADEYE_CONF=/etc/deadeye/deadeye.toml
+ExecStartPre=-/bin/mkdir --parents --mode=0777 ${SNAPSHOT_DIR}
+ExecStart=/usr/local/sbin/deadeye
 Nice=-20
-# IOSchedulingPriority=0
 CPUSchedulingPolicy=fifo
 CPUSchedulingPriority=99
-
-[Install]
-WantedBy=default.target
