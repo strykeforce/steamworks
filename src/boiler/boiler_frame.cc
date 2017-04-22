@@ -4,7 +4,7 @@ using namespace deadeye;
 using namespace std;
 
 BoilerFrame::BoilerFrame(std::shared_ptr<cpptoml::table> config)
-    : logger_(spdlog::get("deadeye")),
+    : logger_(spdlog::get("boiler")),
       hsv_lower_(80, 100, 100),
       hsv_upper_(100, 255, 255) {
   LoadConfigSettings(config);
@@ -55,8 +55,8 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
       // we have the upper target
       lim_left = rect.x;
       lim_right = rect.x + rect.width;
-      SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}", lim_left,
-                   lim_right);
+      // SPDLOG_DEBUG(logger_, "lim_left = {}, lim_right = {}", lim_left,
+      //              lim_right);
     }
 
     if (found == 1) {

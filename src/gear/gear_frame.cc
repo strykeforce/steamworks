@@ -4,7 +4,7 @@ using namespace deadeye;
 using namespace std;
 
 GearFrame::GearFrame(shared_ptr<cpptoml::table> config)
-    : logger_(spdlog::get("deadeye")),
+    : logger_(spdlog::get("gear")),
       hsv_lower_(80, 100, 100),
       hsv_upper_(100, 255, 255),
       min_arc_length_(50.0) {

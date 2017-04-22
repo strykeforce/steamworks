@@ -10,7 +10,7 @@ using namespace deadeye;
 using namespace std;
 
 Link::Link(std::shared_ptr<cpptoml::table> config)
-    : logger_(spdlog::get("deadeye")) {
+    : logger_(spdlog::get("link")) {
   LoadConfigSettings(config);
   ConfigureNetworking();
 }
@@ -29,6 +29,7 @@ void Link::Start() {
 void Link::Run() {
   char buf[256];
   for (;;) {
+    SPDLOG_DEBUG(logger_, "waiting for command from roborio");
     auto nread = recvfrom(recvfd_, buf, sizeof(buf), 0, NULL, NULL);
     if (nread == -1) {
       logger_->error("Deadeye recvfrom: {}", strerror(errno));

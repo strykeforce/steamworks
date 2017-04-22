@@ -12,7 +12,7 @@ namespace fc = FlyCapture2;
 /** BoilerCamera is the hardware and frame processing routines.
  */
 BoilerCamera::BoilerCamera(std::shared_ptr<cpptoml::table> config)
-    : logger_(spdlog::get("deadeye")),
+    : logger_(spdlog::get("boiler")),
       connected_(false),
       capture_started_(false),
       camera_(),
@@ -37,6 +37,7 @@ BoilerCamera::~BoilerCamera() {
  */
 void BoilerCamera::Connect() {
   if (connected_) {
+    logger_->warn("Connect called on connected camera");
     return;
   }
 
@@ -150,7 +151,9 @@ void BoilerCamera::StartCapture() {
     logger_->warn("StartCapture already called");
     return;
   }
-  SPDLOG_TRACE(logger_, "calling camera_.StartCapture()");
+  SPDLOG_TRACE(logger_,
+               "calling camera_.StartCapture(), camera_.IsConnected() = {}",
+               camera_.IsConnected());
   fc::Error error = camera_.StartCapture();
   SPDLOG_TRACE(logger_, "done calling camera_.StartCapture()");
   if (error != fc::PGRERROR_OK) {

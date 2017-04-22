@@ -26,6 +26,7 @@ void Deadeye::Run() {
     int mode = link_.GetMode();
 
     if (mode != current_mode_) {
+      logger_->info("switching mode to: {}", mode);
       SwitchMode(mode);
       current_mode_ = mode;
     }

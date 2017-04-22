@@ -10,7 +10,7 @@ using namespace std;
 /** GearCamera is the hardware and frame processing routines.
  */
 GearCamera::GearCamera(std::shared_ptr<cpptoml::table> config_in)
-    : logger_(spdlog::get("deadeye")),
+    : logger_(spdlog::get("gear")),
       connected_(false),
       capture_started_(false),
       has_gui_(!!std::getenv("DISPLAY")),
