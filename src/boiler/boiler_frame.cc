@@ -50,7 +50,7 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
     auto rect = cv::boundingRect(contours[i]);
     double aspect_ratio = static_cast<double>(rect.width) / rect.height;
     if (aspect_ratio < aspect_ratio_min_ || aspect_ratio > aspect_ratio_max_) {
-      // SPDLOG_DEBUG(logger_, "boiler aspect ratio fail: {}", aspect_ratio);
+      SPDLOG_DEBUG(logger_, "boiler aspect ratio fail: {}", aspect_ratio);
       continue;
     }
 
@@ -119,6 +119,9 @@ bool BoilerFrame::FindTargets(const cv::Mat& frame) {
   if ((abs(centerline_error - centerline_error_prev_) >
        discontinuity_threshold_) ||
       (abs(azimuth_error - azimuth_error_prev_) > discontinuity_threshold_)) {
+    logger_->warn("detected discontinuity centerline = {}, azimuth = {}",
+                  abs(centerline_error - centerline_error_prev_),
+                  abs(azimuth_error - azimuth_error_prev_));
     Snapshot();
   }
   centerline_error_prev_ = centerline_error;
