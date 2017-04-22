@@ -53,6 +53,7 @@ class Deadeye : public frc::Subsystem {
     kBoilerSolutionMesg = 1,
     kGearSolutionMesg = 2,
     kIdleMesg = 4,
+    kErrorMesg = 5,
   };
 
   const std::shared_ptr<spdlog::logger> logger_;
