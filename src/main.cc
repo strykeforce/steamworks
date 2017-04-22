@@ -8,19 +8,16 @@
 // #include "boiler_camera.h"
 #include "deadeye.h"
 
-namespace {
-constexpr auto STARTUP_DELAY_SEC = std::chrono::seconds(10);
-}
-
 int main(int argc, char const* argv[]) {
+  auto logger = spdlog::stdout_logger_st("deadeye");
+  spdlog::stdout_logger_st("boiler");
+  spdlog::stdout_logger_st("gear");
+  spdlog::stdout_logger_st("link");
+  spdlog::set_pattern("[%S.%e][%n][%l] %v");
 #if NDEBUG
-  auto logger = spdlog::stdout_logger_st("deadeye");
-  logger->set_level(spdlog::level::info);
-  spdlog::set_pattern("[%n][%l] %v");
+  spdlog::set_level(spdlog::level::info);
 #else
-  auto logger = spdlog::stdout_logger_st("deadeye");
-  logger->set_level(spdlog::level::trace);
-  spdlog::set_pattern("[%H:%M:%S.%e][%n][%l] %v");
+  spdlog::set_level(spdlog::level::trace);
 #endif
   // read config file from path specified in DEADEYE_CONF env variable or
   // default to /etc/deadeye.toml
@@ -31,10 +28,6 @@ int main(int argc, char const* argv[]) {
   logger->info("reading configuration from {}", conf_path);
   auto config = cpptoml::parse_file(conf_path);
 
-  bool has_display = !!std::getenv("DISPLAY");
-  if (!has_display) {
-    std::this_thread::sleep_for(STARTUP_DELAY_SEC);
-  }
   // start processing
   deadeye::Deadeye deadeye(config);
   deadeye.Run();
