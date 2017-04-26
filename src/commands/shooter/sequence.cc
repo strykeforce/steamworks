@@ -18,7 +18,7 @@ using namespace steamworks::command;
 
 namespace {
 const int kPrepareSpeed = 440;
-const int kPrepareElevation = 1800;
+const int kPrepareElevation = 2700;
 const int kCloseShotSpeed = 425;
 const int kCloseShotElevation = 0;
 const double kCloseShotHopperVoltage = 4.0;
@@ -80,6 +80,5 @@ void StartCloseShot::Interrupted() {
 StopShooting::StopShooting() : frc::CommandGroup("StopShooting") {
   AddParallel(new deadeye::ShooterLED(false));
   AddParallel(new StopHopper());
-  AddParallel(new StopIntake());
   AddParallel(new StopShooterWheel());
 }
