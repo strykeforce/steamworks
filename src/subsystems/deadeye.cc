@@ -258,7 +258,7 @@ void Deadeye::ConfigureNetworking() {
   memset(&addr, 0, sizeof(addr));
   addr.sin_family = AF_INET;
   addr.sin_addr.s_addr = htonl(INADDR_ANY);
-  addr.sin_port = htons(5800);
+  addr.sin_port = htons(recv_port_);
 
   if (::bind(recvfd_, (sockaddr*)&addr, sizeof(addr)) == -1) {
     logger_->critical("Link bind error: {}", strerror(errno));
@@ -276,7 +276,7 @@ void Deadeye::ConfigureNetworking() {
   if (inet_pton(AF_INET, remote_.c_str(), &remote_addr_.sin_addr) != 1) {
     logger_->critical("Deadeye inet_pton error for address {}", remote_);
   }
-  remote_addr_.sin_port = htons(port_);
+  remote_addr_.sin_port = htons(send_port_);
 }
 
 /**
@@ -291,13 +291,21 @@ void Deadeye::LoadConfigSettings(
 
   const char* missing = "STEAMWORKS DEADEYE {} setting missing, using default";
 
-  auto i_opt = config->get_as<int>("port");
+  auto i_opt = config->get_as<int>("recv_port");
   if (i_opt) {
-    port_ = *i_opt;
+    recv_port_ = *i_opt;
   } else {
-    logger_->warn(missing, "port");
+    logger_->warn(missing, "recv_port");
   }
-  logger_->info("deadeye port: {}", port_);
+  logger_->info("deadeye recv_port: {}", recv_port_);
+
+  i_opt = config->get_as<int>("send_port");
+  if (i_opt) {
+    send_port_ = *i_opt;
+  } else {
+    logger_->warn(missing, "send_port");
+  }
+  logger_->info("deadeye send_port: {}", send_port_);
 
   auto s_opt = config->get_as<string>("remote");
   if (s_opt) {

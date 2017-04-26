@@ -40,7 +40,8 @@ climb_distance  = 27000
     voltage_ramp_rate = 0.0 # v/s, 0 disables
 
 [STEAMWORKS.DEADEYE]
-port = 5800
+recv_port = 5800
+send_port = 5801
 remote = "10.27.67.6"
 
 elevation_zero_angle = 6.0 # degrees

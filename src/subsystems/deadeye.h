@@ -66,7 +66,8 @@ class Deadeye : public frc::Subsystem {
   std::mutex mutex_;
 
   // config settings
-  int port_ = 5800;
+  int recv_port_ = 5800;
+  int send_port_ = 5801;
 
   // current deadeye parameters
   bool has_target_ = false;
