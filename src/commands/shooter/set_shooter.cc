@@ -13,8 +13,10 @@ SetShooter::SetShooter(int speed, int elevation)
       elevation_(elevation) {}
 
 void SetShooter::Initialize() {
-  Robot::shooter_wheel->SetSpeed(speed_);
-  Robot::shooter_elevation->SetElevation(elevation_);
-  logger_->info("SetShooter initialized with speed {} and elevation {}", speed_,
-                elevation_);
+  if (Robot::shooter_wheel->GetSpeedSetpoint() < 400) {
+    Robot::shooter_wheel->SetSpeed(speed_);
+    Robot::shooter_elevation->SetElevation(elevation_);
+    logger_->info("SetShooter initialized with speed {} and elevation {}",
+                  speed_, elevation_);
+  }
 }
