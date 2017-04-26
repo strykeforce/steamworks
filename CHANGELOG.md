@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.4.0]
+
+This is the release for the 2017 World Games.
+
+### Added
+
+- Detailed telemetry logging for camera input to robot.
+
+### Changed
+
+- Tuned shooter elevation range-finding routine.
+- Used different network port for sending and receiving to Jetson.
+
+### Fixed
+
+- Close shot would run at slow speed if started, stopped and then started again while wheel was driving speed down to zero.
+
 ## [17.3.8] - 2017-04-15
 
 Updates made during the 2017 Michigan State Games.
@@ -138,4 +155,5 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 [17.2.10]: https://github.com/strykeforce/steamworks/compare/v17.2.0...v17.2.10
 [17.3.0]: https://github.com/strykeforce/steamworks/compare/v17.2.10...v17.3.0
 [17.3.8]: https://github.com/strykeforce/steamworks/compare/v17.3.0...v17.3.8
+[17.4.0]: https://github.com/strykeforce/steamworks/compare/v17.3.8...v17.4.0
 [unreleased]: https://github.com/strykeforce/steamworks/compare/v17.1.7...develop
