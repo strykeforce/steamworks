@@ -147,7 +147,8 @@ voltage = 12.0
 # elevation motor absolute encoder position at zero
 # elevation_zero = 3483 # last comp value
 # add to this number to make the measured angle
-elevation_zero = 3508
+# 4/26 3508
+elevation_zero = 3473
 
     [[STEAMWORKS.SHOOTER.TALON]]
     # range 0-900 ticks/100ms
