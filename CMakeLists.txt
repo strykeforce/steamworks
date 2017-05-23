@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.2)
-project(Avenger)
+project(avenger)
 
 set(WPI_LIBS /opt/wpilib CACHE PATH "WPILib directory.")
 set(NAVX_LIBS /opt/navx CACHE PATH "NavX directory.")
 set(CTRE_LIBS /opt/ctre CACHE PATH "CTRE directory.")
 set(SIDEWINDER_LIBS /opt/sidewinder CACHE PATH "Sidewinder directory.")
 
-set(VERSION_MAJOR 16)
+set(VERSION_MAJOR 17)
 set(VERSION_MINOR 0)
 set(VERSION_PATCH 0)
-set(VERSION_META "-dev")
+set(VERSION_META "")
 
 set(CMAKE_CXX_COMPILER /usr/bin/arm-frc-linux-gnueabi-g++)
 set(CMAKE_LD           /usr/bin/arm-frc-linux-gnueabi-ld)
@@ -42,7 +42,6 @@ link_directories(
 )
 
 add_subdirectory(src)
-add_subdirectory(vendor)
 
 set(DEFAULT_CONFIG_H "${PROJECT_BINARY_DIR}/src/default_config.h")
-add_subdirectory(vendor/tools)
+add_subdirectory(vendor)

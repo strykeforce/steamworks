@@ -49,3 +49,10 @@ add_custom_command(
   DEPENDS version_gen
   VERBATIM
 )
+
+add_custom_target(deploy
+COMMAND /bin/bash ${CMAKE_BINARY_DIR}/vendor/tools/deploy/deploy.sh
+VERBATIM
+DEPENDS ${CMAKE_PROJECT_NAME}
+COMMENT "Deploying ${DEPLOY_DEST} to roboRIO"
+)
