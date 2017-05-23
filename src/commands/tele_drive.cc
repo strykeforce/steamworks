@@ -27,7 +27,7 @@ void TeleDrive::Execute() {
   float forward = Robot::oi->GetTeleDriveForwardAxis();
   float strafe = Robot::oi->GetTeleDriveStrafeAxis();
   float azimuth = Robot::oi->GetTeleDriveAzimuthAxis();
-  Robot::drive->CartesianDrive(forward, strafe, azimuth);
+  Robot::drive->Drive(forward, strafe, azimuth);
   if (print_timer_->HasPeriodPassed(2.0)) {
     logger_->trace("driving with forward: {}, strafe: {}, azimuth: {}", forward,
                    strafe, azimuth);
@@ -38,7 +38,7 @@ bool TeleDrive::IsFinished() { return false; }
 
 void TeleDrive::End() {
   logger_->debug("done driving.");
-  Robot::drive->CartesianDrive(0.0, 0.0, 0.0);
+  Robot::drive->Drive(0.0, 0.0, 0.0);
 }
 
 void TeleDrive::Interrupted() {

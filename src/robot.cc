@@ -6,21 +6,22 @@
 
 #include "default_config.h"
 #include "robot_map.h"
+#include "sidewinder/swerve/talon_map.h"
 #include "subsystems/cannon.h"
 #include "subsystems/drive.h"
 #include "subsystems/turret.h"
-#include "swerve/talon_map.h"
 #include "version.h"
 
 using namespace avenger;
 
 OI* Robot::oi = nullptr;
-Drive* Robot::drive = nullptr;
+AvengerDrive* Robot::drive = nullptr;
 Turret* Robot::turret = nullptr;
 Cannon* Robot::cannon = nullptr;
 
 Robot::Robot() : IterativeRobot(), logger_(spdlog::stdout_color_st("robot")) {
   logger_->set_level(spdlog::level::trace);
+  spdlog::stdout_color_st("sidewinder")->set_level(spdlog::level::info);
 }
 
 void Robot::RobotInit() {
@@ -30,10 +31,14 @@ void Robot::RobotInit() {
   LogAbsoluteEncoders();
 
   // load in order of dependency
-  drive = new Drive(config_->get_table("SIDEWINDER"));
+  drive = new AvengerDrive(config_);
+  logger_->debug("done initializing AvengerDrive");
   turret = new Turret(config_->get_table("AVENGER"));
+  logger_->debug("done initializing Turret");
   cannon = new Cannon(config_->get_table("AVENGER"));
+  logger_->debug("done initializing Cannon");
   oi = new OI(config_);
+  logger_->debug("done initializing OI");
 }
 
 void Robot::DisabledInit() { logger_->trace("DisabledInit"); }

@@ -4,8 +4,8 @@
 #include "cpptoml/cpptoml.h"
 #include "spdlog/spdlog.h"
 
-#include "HostToObject.h"
-#include "swerve/talon_map.h"
+#include "sidewinder/grapher/HostToObject.h"
+#include "sidewinder/swerve/talon_map.h"
 
 using namespace avenger;
 
@@ -48,10 +48,13 @@ void initialize_grapher() {
 } /* namespace */
 
 /** Holds pointers to the 8 swerve drive Talons.  */
-sidewinder::TalonMap* RobotMap::swerve_talons = new sidewinder::TalonMap();
+sidewinder::swerve::TalonMap* RobotMap::swerve_talons =
+    new sidewinder::swerve::TalonMap();
 
 /** Holds pointer to turret arm Talon. */
 ::CANTalon* RobotMap::turret_talon{nullptr};
+
+std::shared_ptr<AHRS> RobotMap::gyro;
 
 /** Initialize hardware design-specific components.
  * Any run-time configuration should be done in the config file where possible.
@@ -59,6 +62,7 @@ sidewinder::TalonMap* RobotMap::swerve_talons = new sidewinder::TalonMap();
  * reference to each.
  */
 void RobotMap::Init(const std::shared_ptr<cpptoml::table> config) {
+  gyro = std::make_shared<AHRS>(SPI::Port::kMXP, 200);
   turret_talon = new ::CANTalon(Talons::kTurret);
 
   swerve_talons->lf_drive = new ::CANTalon(Talons::kLeftFrontDrive);

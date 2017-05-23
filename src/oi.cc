@@ -34,9 +34,9 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
   reset_drive_button_.reset(
       new ::JoystickButton(&drive_joystick_, kFlightSimResetButton));
   fire_cannon_button_.reset(
-      new ::JoystickButton(&gamepad_joystick_, kGamepadXButton));
+      new ::JoystickButton(&drive_joystick_, kGamepadFaceXButton));
   reset_cannon_button_.reset(
-      new ::JoystickButton(&gamepad_joystick_, kGamepadSelectButton));
+      new ::JoystickButton(&drive_joystick_, kGamepadStartButton));
 
   reset_drive_button_->WhenPressed(new ZeroDriveWheels());
   fire_cannon_button_->WhenPressed(new FireCannon());
@@ -64,7 +64,7 @@ OI::OI(const std::shared_ptr<cpptoml::table> config)
  * input.
  */
 float OI::GetTeleDriveForwardAxis() const {
-  float axis = drive_joystick_.GetRawAxis(drive_forward_axis_);
+  float axis = -drive_joystick_.GetRawAxis(drive_forward_axis_);
   return JoystickExpo(axis);
 }
 
@@ -86,7 +86,7 @@ float OI::GetTeleDriveAzimuthAxis() const {
 /** Returns gamepad elevation input.
  */
 float OI::GetTurretElevationAxis() const {
-  float axis = -gamepad_joystick_.GetRawAxis(kGamepadLeftYAxis);
+  float axis = -drive_joystick_.GetRawAxis(kGamepadRightYAxis);
   return JoystickExpo(axis);
 }
 

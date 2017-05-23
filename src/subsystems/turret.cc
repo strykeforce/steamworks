@@ -3,8 +3,8 @@
 #include <cassert>
 
 #include "WPILib.h"
+#include "sidewinder/talon/settings.h"
 #include "spdlog/spdlog.h"
-#include "talon/settings.h"
 
 #include "commands/position_turret.h"
 #include "robot.h"

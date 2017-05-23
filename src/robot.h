@@ -25,7 +25,7 @@ class Robot : public ::IterativeRobot {
 
  public:
   static OI* oi;
-  static Drive* drive;
+  static AvengerDrive* drive;
   static Turret* turret;
   static Cannon* cannon;
 
@@ -46,4 +46,4 @@ class Robot : public ::IterativeRobot {
   void TestPeriodic() override;
 };
 
-} /* avenger */
+}  // namespace avenger

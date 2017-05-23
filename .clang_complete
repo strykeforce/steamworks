@@ -1,7 +1,11 @@
 -Wno-pragma-once-outside-header
 -I/opt/wpilib/include
--I/Users/jeff/sf/sidewinder/src
+-I/opt/sidewinder/include
+-I/opt/navx/include
+-I/opt/ctre/include
 -Ivendor/include
 -Isrc
 -Ibuild/src
 -Ibuild/vendor/tools/generate_version
+-I/Users/jeff/LearnYouCode/msgpack-c/include
+-I/opt/linux/include

@@ -47,7 +47,6 @@ class OI {
     kUSB5,
   };
 
-  // TODO: verify these
   enum FlightSimAxis {
     kFlightSimRightXAxis = 0,
     kFlightSimRightYAxis,
@@ -64,23 +63,25 @@ class OI {
     kFlightSimLeftCornerUpButton,
   };
 
+  enum GamepadButtons {
+    kGamepadFaceAButton = 1,
+    kGamepadFaceBButton,
+    kGamepadFaceXButton,
+    kGamepadFaceYButton,
+    kGamepadLeftShoulderButton,
+    kGamepadRightShoulderButton,
+    kGamepadBackButton,
+    kGamepadStartButton,
+    kGamepadLeftStickButton,
+    kGamepadRightStickButton,
+  };
+
   enum GamepadAxis {
     kGamepadLeftXAxis = 0,
     kGamepadLeftYAxis = 1,
     kGamepadRightXAxis = 4,
     kGamepadRightYAxis = 5,
   };
-
-  enum GamepadButtons {
-    kGamepadAButton = 1,
-    kGamepadBButton = 2,
-    kGamepadXButton = 3,
-    kGamepadYButton = 4,
-    kGamepadLeftBumperButton = 5,
-    kGamepadRightBumperButton = 6,
-    kGamepadSelectButton = 7,
-    kGamepadStartButton = 8,
-  };
 };
 
-} /* avenger */
+}  // namespace avenger

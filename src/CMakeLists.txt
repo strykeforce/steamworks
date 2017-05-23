@@ -10,14 +10,14 @@ include(subsystems/CMakeLists.txt)
 target_include_directories(avenger
   PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}"
-  "${CMAKE_SOURCE_DIR}/vendor/grapher"
   "${PROJECT_BINARY_DIR}/src"
 )
 
 target_link_libraries(avenger
   PUBLIC
   sidewinder
-  grapher
+  TalonSRXLib
+  navx_frc_cpp
   wpi
 )
 

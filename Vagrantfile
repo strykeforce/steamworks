@@ -1,13 +1,23 @@
 #
-# roborio-skel
+# Avenger VM
 #
+hostname = 'avenger'
+
 Vagrant.configure('2') do |config|
   config.vm.box = 'ubuntu/trusty64'
+  config.vm.hostname = hostname
 
   config.vm.provider 'virtualbox' do |v|
-    v.name = 'avenger'
+    v.name = hostname
     v.memory = 2048
-    v.cpus = 3
+    v.cpus = 4
+    v.customize ['modifyvm', :id, '--paravirtprovider', 'kvm']
+  end
+
+  config.vm.provider 'vmware_fusion' do |v, override|
+    override.vm.box = 'bento/ubuntu-16.04'
+    v.vmx['memsize'] = '2048'
+    v.vmx['numvcpus'] = '4'
   end
 
   config.vm.network 'public_network'
@@ -17,7 +27,7 @@ Vagrant.configure('2') do |config|
   config.vm.provision 'shell', inline: <<-SCRIPT
   GIT=/usr/bin/git
   ANSIBLE_REPO=https://github.com/strykeforce/ansible.git
-  ANSIBLE_VERSION=v16.0.1
+  ANSIBLE_VERSION=master
   ANSIBLE_DIR=/opt/ansible
 
   [[ ! -x $GIT ]] && apt-get install -y git
@@ -25,8 +35,8 @@ Vagrant.configure('2') do |config|
   [[ ! -d $ANSIBLE_DIR ]] && $GIT clone -q $ANSIBLE_REPO $ANSIBLE_DIR
 
   cd $ANSIBLE_DIR
-  $GIT fetch -q
   $GIT checkout -q $ANSIBLE_VERSION
+  $GIT pull -q
   SCRIPT
 
   config.vm.provision 'ansible_local' do |ansible|

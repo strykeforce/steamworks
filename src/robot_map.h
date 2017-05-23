@@ -1,9 +1,10 @@
 #pragma once
 
+#include <AHRS.h>
 #include "WPILib.h"
 #include "cpptoml/cpptoml.h"
 
-#include "swerve/talon_map.h"
+#include "sidewinder/swerve/talon_map.h"
 
 namespace avenger {
 
@@ -22,7 +23,10 @@ class RobotMap {
   };
 
   // pointers to talons and azimuth encoder zero count
-  static sidewinder::TalonMap* swerve_talons;
+  static sidewinder::swerve::TalonMap* swerve_talons;
+
+  // pointer to navX gyro singleton
+  static std::shared_ptr<AHRS> gyro;
 
   // pointer to turret talon
   static ::CANTalon* turret_talon;
@@ -60,4 +64,4 @@ enum TalonProfileSlots {
   kSecondary,
 };
 
-} /* avenger */
+}  // namespace avenger

@@ -1,6 +1,6 @@
 [AVENGER]
 grapher = true
-fire_duration_ms = 100
+fire_duration_ms = 90
 turret_drive_voltage = 4.0
 # drive_joystick_type = "flight_sim" # or gamepad
 drive_joystick_type = "gamepad" # or gamepad
@@ -13,73 +13,160 @@ drive_joystick_type = "gamepad" # or gamepad
     limit_mode      = 0 # use switches
     encoder_reversed = false
     output_reversed  = false
+    current_limit    = 0 # amps, 0 disables
 
     voltage_ramp_rate = 4.0 # v/s, 0 disables
 
 
-[SIDEWINDER]
-joystick_dead_zone  = 0.08
-joystick_expo_coeff = 0.75
-max_drive_voltage = 6.0 # v, max drive in voltage mode
+    [SIDEWINDER]
+    drive_dead_zone  = 0.08
+    drive_expo_scale = 0.75
+    azimuth_dead_zone  = 0.08
+    azimuth_expo_scale = 0.75
+    drive_sma_period = 5
+    azimuth_sma_period = 5
 
-    [SIDEWINDER.SWERVE]
-    lf_zero = 1008
-    rf_zero = 3252
-    lr_zero = 3415
-    rr_zero = 1297
+        [SIDEWINDER.SWERVE]
+        wheelbase_width  = 1.0 # inches
+        wheelbase_length = 1.0    # inches
+
+        shooter_rotation_point_X = 0.0
+        shooter_rotation_point_Y = 0.0
+
+            [[SIDEWINDER.SWERVE.TALON]]
+            name = "azimuth"
+            type = "motion_magic"
+
+            feedback_device = 0 # quad
+            neutral_mode    = 2 # coast
+            limit_mode      = 2 # soft and hard disabled
+
+            P      =   13.0
+            I      =    0.0
+            D      =  100.0
+            F      =    0.8
+            I_zone =      0
+
+            # motion magic
+            cruise_velocity =   800.0
+            acceleration    = 18000.0
+
+            voltage_ramp_rate              =   0.0 # v/s, 0 disables
+            close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+            peak_output_voltage_forward    =  12.0 # v
+            peak_output_voltage_reverse    = -12.0 # v
+            nominal_output_voltage_forward =   0.0 # v
+            nominal_output_voltage_reverse =   0.0 # v
+            allowable_closed_loop_error    =     0 # encoder ticks
+            encoder_reversed = false
+            output_reversed  = false
+            current_limit    = 20 # amps, 0 disables
+
+            [[SIDEWINDER.SWERVE.TALON]]
+            name = "drive"
+            type = "voltage"
+            setpoint_max = 12.0 # max volts
+
+            feedback_device = 0 # quad
+            neutral_mode    = 1 # brake
+            limit_mode      = 2 # soft and hard disabled
+            encoder_reversed = false
+            output_reversed  = false
+            current_limit    = 50 # amps, 0 disables
+
+            voltage_ramp_rate = 0.0 # v/s, 0 disables
+
+            [[SIDEWINDER.SWERVE.TALON]]
+            # ticks 25 - 400 can step change within this range
+            # 600 practical max, 1000 = 12v
+            # 25 = .42 f/sec
+            # 400 = 6.8 f/sec, linear between 25-400
+            # 50.72 ticks per inch
+            name = "drive_auton"
+            type = "velocity"
+            setpoint_max = 400.0 # ticks/100ms
+
+            feedback_device = 0 # quad
+            neutral_mode    = 2 # coast
+            limit_mode      = 2 # soft and hard disabled
+
+            P      =    2.0
+            I      =    0.008
+            D      =    0.0
+            F      =    1.4
+            I_zone =     25
+
+            voltage_ramp_rate              =   0.0 # v/s, 0 disables
+            close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+            peak_output_voltage_forward    =  12.0 # v
+            peak_output_voltage_reverse    = -12.0 # v
+            nominal_output_voltage_forward =   0.0 # v
+            nominal_output_voltage_reverse =   0.0 # v
+            allowable_closed_loop_error    =     0 # encoder ticks
+            encoder_reversed = false
+            output_reversed  = false
+            current_limit    = 60 # amps, 0 disables
+
+            [[SIDEWINDER.SWERVE.TALON]]
+            # ticks 10 - 275, can experiment going down to 5 but only in down dir
+            # at 10 will stop in 100ms
+            # deadband will prevent hunting
+            name = "drive_auton_slow_azimuth"
+            type = "velocity"
+            setpoint_max = 275.0 # ticks/100ms
+
+            feedback_device = 0 # quad
+            neutral_mode    = 2 # coast
+            limit_mode      = 2 # soft and hard disabled
+
+            P      =     2.0
+            I      =     0.008 # if jerking, take down to 0.016, 0.015
+            D      =    75.0   # then take down 5 at a time down to 50
+            F      =     2.1
+            I_zone =    40
+
+            voltage_ramp_rate              =   0.0 # v/s, 0 disables
+            close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+            peak_output_voltage_forward    =  12.0 # v
+            peak_output_voltage_reverse    = -12.0 # v
+            nominal_output_voltage_forward =   0.0 # v
+            nominal_output_voltage_reverse =   0.0 # v
+            allowable_closed_loop_error    =     0 # encoder ticks
+            encoder_reversed = false
+            output_reversed  = false
+            current_limit    = 40 # amps, 0 disables
+
+            [[SIDEWINDER.SWERVE.TALON]]
+            # ticks 10 - 75, can experiment going down to 5 but only in down dir
+            # at 10 will stop in 100ms
+            # deadband will prevent hunting
+            # ticks to inch 50.72
+            name = "drive_auton_motion_magic"
+            type = "motion_magic"
+            # setpoint_max = 400.0 # ticks/100ms
+
+            feedback_device = 0 # quad
+            neutral_mode    = 2 # coast
+            limit_mode      = 2 # soft and hard disabled
+
+            P      =     1.5
+            I      =     0.008
+            D      =   150.0
+            F      =     1.4
+            I_zone =    25
+
+            # motion magic
+            cruise_velocity =  200.0
+            acceleration    =  400.0
 
 
-        [[SIDEWINDER.SWERVE.TALON]]
-        name = "azimuth"
-        type = "position"
-
-        # feedback device
-        # quad         = 0
-        # analog pot   = 2
-        # analog enc   = 3
-        # enc rising   = 4
-        # enc falling  = 5
-        # mag relative = 6
-        # mag absolute = 7
-        # pulse width  = 8
-        feedback_device = 0 # quad
-
-        # neutral mode
-        # jumper = 0
-        # brake = 1
-        # coast = 2
-        neutral_mode    = 2 # coast
-
-        # limit mode
-        # only use switches for limits             = 0
-        # use both switches and soft limits        = 1
-        # disable switches and disable soft limits = 2
-        limit_mode      = 2 # soft and hard disabled
-
-        P      =   12.0
-        I      =    0.0
-        D      =  200.0
-        F      =    0.0
-        I_zone =      0
-
-        voltage_ramp_rate              =  0.0 # v/s, 0 disables
-        close_loop_ramp_rate           =  0.0 # v/s, 0 disables
-        peak_output_voltage_forward    =  6.0 # v
-        peak_output_voltage_reverse    = -6.0 # v
-        nominal_output_voltage_forward =  0.0 # v
-        nominal_output_voltage_reverse =  0.0 # v
-        allowable_closed_loop_error    =    0 # encoder ticks
-        encoder_reversed = false
-        output_reversed  = false
-
-        [[SIDEWINDER.SWERVE.TALON]]
-        name = "drive_voltage"
-        type = "voltage"
-
-        feedback_device = 0 # quad
-        neutral_mode    = 2 # coast
-        limit_mode      = 2 # soft and hard disabled
-        encoder_reversed = false
-        output_reversed  = false
-
-        voltage_ramp_rate = 12.0 # v/s, 0 disables
+            voltage_ramp_rate              =   0.0 # v/s, 0 disables
+            close_loop_ramp_rate           =   0.0 # v/s, 0 disables
+            peak_output_voltage_forward    =  12.0 # v
+            peak_output_voltage_reverse    = -12.0 # v
+            nominal_output_voltage_forward =   0.0 # v
+            nominal_output_voltage_reverse =   0.0 # v
+            allowable_closed_loop_error    =     0 # encoder ticks
+            encoder_reversed = false
+            output_reversed  = false
+            current_limit    = 40 # amps, 0 disables

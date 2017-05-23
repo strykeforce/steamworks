@@ -13,7 +13,7 @@ ZeroDriveWheels::ZeroDriveWheels() : ::Command("ZeroDriveWheels") {
   Requires(Robot::drive);
 }
 
-void ZeroDriveWheels::Initialize() { Robot::drive->ZeroWheels(); }
+void ZeroDriveWheels::Initialize() { Robot::drive->ZeroAzimuth(); }
 
 void ZeroDriveWheels::Execute() {}
 
