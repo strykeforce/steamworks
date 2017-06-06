@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.2)
 project(steamworks)
 
 set(VERSION_MAJOR 17)
-set(VERSION_MINOR 4)
-set(VERSION_PATCH 1)
-set(VERSION_META "")
+set(VERSION_MINOR 5)
+set(VERSION_PATCH 0)
+set(VERSION_META "-dev")
 
 option (LOG_GRAPHER  "Enable use of Grapher network logging" OFF)
 option (LOG_PLACEGEAR  "Enable detailed logging of PlaceGear command" OFF)

@@ -99,7 +99,7 @@ void Deadeye::Run() {
  */
 int Deadeye::GetAzimuthError() {
   std::lock_guard<std::mutex> lock(mutex_);
-  return azimuth_error_;
+  return azimuth_error_ + azimuth_correction_;
 }
 
 /**
@@ -149,8 +149,8 @@ void Deadeye::SetShooterLightEnabled(bool enable) {
 }
 
 /**
-* Switch to boiler camera.
-*/
+ * Switch to boiler camera.
+ */
 void Deadeye::EnableBoilerCamera() {
   logger_->info("Deadeye enabling boiler camera");
   array<int, 3> t{{kBoilerSolutionMesg, 0, 0}};
@@ -164,8 +164,8 @@ void Deadeye::EnableBoilerCamera() {
 }
 
 /**
-* Switch to boiler camera.
-*/
+ * Switch to gear camera.
+ */
 void Deadeye::EnableGearCamera() {
   logger_->info("Deadeye enabling gear camera");
   array<int, 3> t{{kGearSolutionMesg, 0, 0}};
@@ -209,14 +209,16 @@ bool Deadeye::CalculateSolution(int centerline_elevation) {
     return false;
   }
   solution_elevation_ = shooter_data[range_lookup][kElevation];
-  solution_wheel_speed_ = shooter_data[range_lookup][kSpeed];
+
+  auto range_delta =
+      solution_range_in_delta_ * shooter_data[range_lookup][kInDelta];
+  solution_wheel_speed_ = shooter_data[range_lookup][kSpeed] + range_delta;
   solution_azimuth_offset_ = shooter_data[range_lookup][kAzimuth];
   logger_->info(
       "Deadeye solution: range = {}, elevation = {}, speed = {}, "
       "azimuth "
-      "offset = {}",
-      solution_range_, solution_elevation_, solution_wheel_speed_,
-      solution_azimuth_offset_);
+      "range speed delta = {}",
+      solution_range_, solution_elevation_, solution_wheel_speed_, range_delta);
   return true;
 }
 
@@ -333,6 +335,7 @@ void Deadeye::LoadConfigSettings(
         "default");
   }
   logger_->info("shooter target centerline height: {}", centerline_height_);
+
   d_opt = config->get_as<double>("camera_height");
   if (d_opt) {
     camera_height_ = *d_opt;
@@ -342,6 +345,7 @@ void Deadeye::LoadConfigSettings(
         "default");
   }
   logger_->info("shooter camera height: {}", camera_height_);
+
   d_opt = config->get_as<double>("camera_angle");
   if (d_opt) {
     camera_angle_ = *d_opt;
@@ -361,6 +365,25 @@ void Deadeye::LoadConfigSettings(
         "default");
   }
   logger_->info("shooter degrees per tick: {}", degrees_per_tick_);
+
+  i_opt = config->get_as<int>("azimuth_correction");
+  if (i_opt) {
+    azimuth_correction_ = *i_opt;
+  } else {
+    logger_->warn(missing, "azimuth_correction");
+  }
+  logger_->info("deadeye azimuth_correction: {}", azimuth_correction_);
+
+  d_opt = config->get_as<double>("range_in_delta");
+  if (d_opt) {
+    solution_range_in_delta_ = *d_opt;
+  } else {
+    logger_->error(
+        "STEAMWORKS.SHOOTER range_in_delta setting not available, "
+        "using "
+        "default");
+  }
+  logger_->info("shooter range delta (in): {}", solution_range_in_delta_);
 }
 
 #ifdef LOG_FPS

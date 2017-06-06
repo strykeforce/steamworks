@@ -72,6 +72,7 @@ class Deadeye : public frc::Subsystem {
   // current deadeye parameters
   bool has_target_ = false;
   int azimuth_error_;
+  int azimuth_correction_;
   int centerline_error_;
   int target_height_;
 
@@ -80,6 +81,7 @@ class Deadeye : public frc::Subsystem {
   double solution_wheel_speed_;
   double solution_range_;
   double solution_azimuth_offset_;
+  double solution_range_in_delta_;
 
   // shooter solution config constants from config file
   double elevation_zero_angle_ = 0.0;  // angle corresponding to encoder zero
@@ -104,5 +106,5 @@ class Deadeye : public frc::Subsystem {
 #endif
 };
 
-} /* subsystem */
-} /* steamworks */
+}  // namespace subsystem
+}  // namespace steamworks

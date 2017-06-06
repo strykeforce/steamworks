@@ -20,8 +20,8 @@ sheet = wookbook.active
 
 print("""#pragma once
 namespace steamworks {
-enum ShooterSolutionParamaters {kAzimuth,kElevation,kSpeed,kHopper,};
-const double shooter_data[][4] = {""")
+enum ShooterSolutionParamaters {kAzimuth,kElevation,kSpeed,kHopper,kInDelta,};
+const double shooter_data[][5] = {""")
 
 for row in range(2, sheet.max_row + 1):
     print('{', end='')
