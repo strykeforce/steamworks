@@ -1,0 +1,15 @@
+target_sources(${CMAKE_PROJECT_NAME}
+  PRIVATE
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_01.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_02.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_03.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_04.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_05.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_06.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_07.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_08.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_09.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_0A.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_0B.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/sequence_0C.cc"
+)

@@ -1,0 +1,11 @@
+target_sources(${CMAKE_PROJECT_NAME}
+  PRIVATE
+  "${CMAKE_CURRENT_LIST_DIR}/climber.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/deadeye.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/drive.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/gear.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/hopper.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/intake.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/shooter_elevation.cc"
+  "${CMAKE_CURRENT_LIST_DIR}/shooter_wheel.cc"
+)
