@@ -1,0 +1,12 @@
+#!/bin/bash
+
+SRC=/vagrant/build/examples/drivetest/${CMAKE_PROJECT_NAME}-drivetest
+DST=/home/lvuser/${CMAKE_PROJECT_NAME}-${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}${VERSION_META}
+
+scp $SRC roborio:$DST.tmp
+ssh roborio <<END_SSH
+mv $DST.tmp $DST
+ln -sf $DST /home/lvuser/FRCUserProgram
+. /etc/profile.d/natinst-path.sh
+/usr/local/frc/bin/frcKillRobot.sh -r -t
+END_SSH
