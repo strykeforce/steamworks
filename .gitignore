@@ -1,3 +1,6 @@
+.vagrant
+.vault_pw
+
 # Prerequisites
 *.d
 
