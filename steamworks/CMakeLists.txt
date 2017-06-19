@@ -28,7 +28,7 @@ set(CMAKE_OBJCOPY      /usr/bin/arm-frc-linux-gnueabi-objdump)
 set(CMAKE_NM           /usr/bin/arm-frc-linux-gnueabi-nm)
 set(CMAKE_STRIP        /usr/bin/arm-frc-linux-gnueabi-strip)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -fstrict-aliasing -std=c++1y")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -fstrict-aliasing -std=c++1y -s")
 
 # spdlog options
 add_definitions(-DSPDLOG_NO_THREAD_ID)

@@ -20,7 +20,7 @@ Vagrant.configure('2') do |config|
     v.vmx['numvcpus'] = '4'
   end
 
-  config.vm.network 'public_network'
+  # config.vm.network 'public_network'
 
   # We provision using ansible_local, bootstrap our ansible roles by
   # downloading them from our repo.
