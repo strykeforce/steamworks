@@ -109,8 +109,8 @@ void HealthCheck::Execute() {
  */
 void HealthCheck::PrepareTest() {
   for (size_t i = 0; i < 4; i++) {
-    drive_current_sum_[0] = 0;
-    drive_speed_sum_[0] = 0;
+    drive_current_sum_[i] = 0;
+    drive_speed_sum_[i] = 0;
   }
   current_sum_ = 0;
   speed_sum_ = 0;
