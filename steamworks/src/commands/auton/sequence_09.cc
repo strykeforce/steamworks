@@ -19,19 +19,20 @@ using namespace steamworks::command;
 namespace {
 const double kTicksPerInch = 50.72;
 const int kPrepareSpeed = 500;
-const int kPrepareElevation = 4400;
-}
+const int kPrepareElevation = 5400;
+}  // namespace
 
 /**
- * Red move out and shoot 10
+ * BLUE right gear, shoot
  */
 Sequence09::Sequence09() : frc::CommandGroup("Sequence09") {
   AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
 
   bool is_practice = RobotMap::IsPracticeRobot();
 
-  std::string msg = is_practice ? "BLUE alliance right gear on PRACTICE (08)"
-                                : "BLUE alliance right gear on COMP (08)";
+  std::string msg = is_practice
+                        ? "BLUE alliance right gear, shoot on PRACTICE (09)"
+                        : "BLUE alliance right gear, shoot on COMP (09)";
   AddSequential(new LogCommand(msg));
 
   // stage the gear
@@ -64,8 +65,8 @@ Sequence09::Sequence09() : frc::CommandGroup("Sequence09") {
   //  back off
   dc.max_speed = 400;
   dc.segments.clear();
-  dc.segments.emplace_back(-60, 18 * kTicksPerInch);
-  dc.segments.emplace_back(30, 18 * kTicksPerInch);
+  dc.segments.emplace_back(-60, 24 * kTicksPerInch);
+  dc.segments.emplace_back(30, 24 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // pivot back towards boiler
