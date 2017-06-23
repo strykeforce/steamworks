@@ -11,8 +11,8 @@ using namespace sidewinder;
 // TODO: put these in config
 namespace {
 const int kMinSpeed = 350;
-const int kMaxSpeed = 700;
-}
+const int kMaxSpeed = 900;
+}  // namespace
 
 /**
  * ShooterWheel constructor.
