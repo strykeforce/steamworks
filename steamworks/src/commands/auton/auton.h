@@ -12,3 +12,5 @@
 #include "sequence_0A.h"
 #include "sequence_0B.h"
 #include "sequence_0C.h"
+#include "sequence_0D.h"
+#include "sequence_0E.h"

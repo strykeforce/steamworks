@@ -138,6 +138,16 @@ void Robot::AutonomousInit() {
       autonomous_command_ = new auton::Sequence0C();
       gyro_offset_ = 0;
       break;
+    case 13:
+      // BLUE alliance right gear and dump 2 hoppers - 0D
+      autonomous_command_ = new auton::Sequence0D();
+      gyro_offset_ = 0;
+      break;
+    case 14:
+      // RED alliance left gear and shoot - 0E
+      autonomous_command_ = new auton::Sequence0E();
+      gyro_offset_ = 0;
+      break;
     default:
       autonomous_command_ = new LogCommand("unrecognized command");
   }

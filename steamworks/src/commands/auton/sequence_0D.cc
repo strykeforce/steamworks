@@ -1,4 +1,4 @@
-#include "sequence_0B.h"
+#include "sequence_0D.h"
 
 #include "commands/deadeye/gear_led.h"
 #include "commands/deadeye/mode.h"
@@ -25,13 +25,14 @@ const int kPrepareElevation = 4400;
 /**
  * Blue right gear, run down field
  */
-Sequence0B::Sequence0B() : frc::CommandGroup("Sequence0B") {
+Sequence0D::Sequence0D() : frc::CommandGroup("Sequence0D") {
   AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
 
   bool is_practice = RobotMap::IsPracticeRobot();
 
-  std::string msg = is_practice ? "RED alliance left gear on PRACTICE (0B)"
-                                : "RED alliance left gear on COMP (0B)";
+  std::string msg =
+      is_practice ? "BLUE alliance right gear, dump hoppers on PRACTICE (0D)"
+                  : "BLUE alliance right gear, dump hoppers on COMP (0D)";
   AddSequential(new LogCommand(msg));
 
   // stage the gear
@@ -45,14 +46,15 @@ Sequence0B::Sequence0B() : frc::CommandGroup("Sequence0B") {
   dc.acceleration = 200;
   dc.deacceleration = 60;
   dc.close_enough = 25;
+
   dc.segments.emplace_back(180, 96 * kTicksPerInch);  // drive out
   AddSequential(new drive::Drive(dc));
 
   // rotate to face gear Lift
-  AddSequential(new drive::GyroAzimuth(60));
+  AddSequential(new drive::GyroAzimuth(-60));
 
   // approach target
-  AddSequential(new gear::PlaceGear(gear::Lift::left));
+  AddSequential(new gear::PlaceGear(gear::Lift::right));
 
   // release gear
   AddParallel(new gear::ReleaseGear());
@@ -61,14 +63,25 @@ Sequence0B::Sequence0B() : frc::CommandGroup("Sequence0B") {
   //  back off
   dc.max_speed = 400;
   dc.segments.clear();
-  dc.segments.emplace_back(60, 24 * kTicksPerInch);
+  dc.segments.emplace_back(-60, 24 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // pivot into drive alignment
-  AddSequential(new drive::GyroAzimuth(90));
+  AddSequential(new drive::GyroAzimuth(0));
 
   // drive down field
+  dc.max_speed = 600;
   dc.segments.clear();
-  dc.segments.emplace_back(-180, 24 * 12 * kTicksPerInch);
+  dc.segments.emplace_back(-140, 127 * kTicksPerInch);
+  dc.segments.emplace_back(150, 16 * kTicksPerInch);
+  dc.segments.emplace_back(180, 16 * 12 * kTicksPerInch);
+  AddSequential(new drive::Drive(dc));
+
+  // pivot and back into hopper
+  AddSequential(new drive::GyroAzimuth(90));
+
+  dc.segments.clear();
+  dc.max_speed = 400;
+  dc.segments.emplace_back(-90, 24 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 }

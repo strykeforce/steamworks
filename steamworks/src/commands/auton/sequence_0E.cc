@@ -1,4 +1,4 @@
-#include "sequence_0B.h"
+#include "sequence_0E.h"
 
 #include "commands/deadeye/gear_led.h"
 #include "commands/deadeye/mode.h"
@@ -25,13 +25,14 @@ const int kPrepareElevation = 4400;
 /**
  * Blue right gear, run down field
  */
-Sequence0B::Sequence0B() : frc::CommandGroup("Sequence0B") {
+Sequence0E::Sequence0E() : frc::CommandGroup("Sequence0E") {
   AddSequential(new deadeye::EnableCamera(deadeye::EnableCamera::Mode::gear));
 
   bool is_practice = RobotMap::IsPracticeRobot();
 
-  std::string msg = is_practice ? "RED alliance left gear on PRACTICE (0B)"
-                                : "RED alliance left gear on COMP (0B)";
+  std::string msg = is_practice
+                        ? "RED alliance left gear, shoot on PRACTICE (0E)"
+                        : "RED alliance left gear, shoot on COMP (0E)";
   AddSequential(new LogCommand(msg));
 
   // stage the gear
