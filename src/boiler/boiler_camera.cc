@@ -28,9 +28,11 @@ BoilerCamera::BoilerCamera(std::shared_ptr<cpptoml::table> config)
 BoilerCamera::~BoilerCamera() {
   StopCapture();
   Disconnect();
+#ifdef DISPLAY_FRAME
   if (has_gui_) {
     cv::destroyAllWindows();
   }
+#endif
 }
 
 /** Connect to the hardware.
@@ -160,9 +162,12 @@ void BoilerCamera::StartCapture() {
     logger_->error("BoilerCamera::StartCapture: camera.StartCapture: {}",
                    error.GetDescription());
   }
+#ifdef DISPLAY_FRAME
   if (has_gui_) {
     cv::namedWindow("boiler");
+    cv::namedWindow("mask");
   }
+#endif
   capture_started_ = true;
 }
 
@@ -257,7 +262,7 @@ void BoilerCamera::DisplayFrame() {
 
   // display capture frame in GUI window
   cv::imshow("boiler", frame_);
-  // cv::imshow("boiler", frame_process_.mask);
+  cv::imshow("mask", frame_process_.mask);
   // }
   cv::waitKey(1);
 }
