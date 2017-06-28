@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.1.0 FATAL_ERROR)
 project(deadeye)
 
 set(VERSION_MAJOR 17)
-set(VERSION_MINOR 1)
+set(VERSION_MINOR 2)
 set(VERSION_PATCH 0)
 set(VERSION_META "")
 

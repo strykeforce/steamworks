@@ -1,7 +1,7 @@
 [DEADEYE.DEBUG]
 framerate = 200
 boiler = 0
-gear = 100
+gear = 0
 
 [BOILER]
 gui = true
@@ -10,14 +10,19 @@ gui = true
 width  = 1280
 height = 1024
 
-exposure = -1.1 # dark outside
-#exposure = -1.4 # bright light
-#exposure = 0.5 # checking field of view
+#exposure = 1.0 # kentwood afternoon
+#exposure = -2.2 # states 4/28
+#exposure = -2.2
+exposure = -1.0
 
 [BOILER.FRAME]
 hsv_lower = [80, 100, 100]
 hsv_upper = [100, 255, 255]
 min_arc_length = 250.0
+aspect_ratio_min = 2.0
+aspect_ratio_max = 5.0
+discontinuity_threshold = 50
+
 
 [GEAR.CAMERA]
 
@@ -30,4 +35,4 @@ azimuth_offset = 320
 [LINK]
 port = 5800
 address = "10.27.67.2"
-mode = "idle"
+mode = "boiler"
