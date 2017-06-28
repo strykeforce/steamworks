@@ -31,7 +31,7 @@ void Hopper::Start(double voltage) {
 
   RobotMap::hopper_talon->Set(voltage);
   is_running_ = true;
-  SPDLOG_DEBUG(logger_, "hopper started at {} volts", voltage);
+  logger_->info("hopper started at {} volts", voltage);
 #if !NDEBUG
   SmartDashboard::PutNumber("Hopper Voltage", voltage_);
 #endif

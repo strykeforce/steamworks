@@ -45,6 +45,7 @@ class Deadeye : public frc::Subsystem {
   double GetSolutionElevation();
   double GetSolutionWheelSpeed();
   double GetSolutionAzimuthOffset();
+  double GetSolutionHopperVoltage();
 
  private:
   // keep synced with deadeye
@@ -79,6 +80,7 @@ class Deadeye : public frc::Subsystem {
   // shooter solution outputs
   double solution_elevation_;
   double solution_wheel_speed_;
+  double solution_hopper_voltage_;
   double solution_range_;
   double solution_azimuth_offset_;
   double solution_range_in_delta_;

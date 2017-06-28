@@ -2,6 +2,8 @@
 
 #include "robot.h"
 #include "subsystems/hopper.h"
+#include "subsystems/deadeye.h"
+#include "robot.h"
 
 using namespace steamworks::command;
 
@@ -32,7 +34,8 @@ void StartHopper::Initialize() {
     Robot::hopper->Start(voltage_);
     return;
   }
-  Robot::hopper->Start();  // use config default
+  auto v = Robot::deadeye->GetSolutionHopperVoltage();
+  Robot::hopper->Start(v);  // use config default
 }
 
 //
@@ -70,13 +73,17 @@ void ToggleHopper::Initialize() {
 //
 // IncrementHopperVoltage
 //
+
+namespace {
+  double kVoltageIncrement = 0.1;
+}
 IncrementHopperVoltage::IncrementHopperVoltage()
     : frc::InstantCommand("IncrementHopperVoltage") {
   Requires(Robot::hopper);
 }
 
 void IncrementHopperVoltage::Initialize() {
-  double voltage = Robot::hopper->GetVoltage() + 1.0;
+  double voltage = Robot::hopper->GetVoltage() + kVoltageIncrement;
   if (voltage > 12.0) {
     voltage = 12.0;
   }
@@ -92,7 +99,7 @@ DecrementHopperVoltage::DecrementHopperVoltage()
 }
 
 void DecrementHopperVoltage::Initialize() {
-  double voltage = Robot::hopper->GetVoltage() - 1.0;
+  double voltage = Robot::hopper->GetVoltage() - kVoltageIncrement;
   if (voltage < 0.0) {
     voltage = 0.0;
   }

@@ -209,16 +209,18 @@ bool Deadeye::CalculateSolution(int centerline_elevation) {
     return false;
   }
   solution_elevation_ = shooter_data[range_lookup][kElevation];
+  solution_hopper_voltage_ = shooter_data[range_lookup][kHopper];
+  solution_azimuth_offset_ = shooter_data[range_lookup][kAzimuth];
 
   auto range_delta =
       solution_range_in_delta_ * shooter_data[range_lookup][kInDelta];
   solution_wheel_speed_ = shooter_data[range_lookup][kSpeed] + range_delta;
-  solution_azimuth_offset_ = shooter_data[range_lookup][kAzimuth];
   logger_->info(
       "Deadeye solution: range = {}, elevation = {}, speed = {}, "
-      "azimuth "
+      "hopper = {} "
       "range speed delta = {}",
-      solution_range_, solution_elevation_, solution_wheel_speed_, range_delta);
+      solution_range_, solution_elevation_, solution_wheel_speed_,
+      solution_hopper_voltage_, range_delta);
   return true;
 }
 
@@ -239,6 +241,12 @@ double Deadeye::GetSolutionElevation() { return solution_elevation_; }
  * targets centerline.
  */
 double Deadeye::GetSolutionWheelSpeed() { return solution_wheel_speed_; }
+
+/**
+ * Calculate the shooter solution based on camera angle and pixel distance from
+ * targets centerline.
+ */
+double Deadeye::GetSolutionHopperVoltage() { return solution_hopper_voltage_; }
 
 /**
  * Calculate the shooter solution based on camera angle and pixel distance from
