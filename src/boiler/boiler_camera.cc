@@ -261,8 +261,11 @@ void BoilerCamera::DisplayFrame() {
               1.0, cv::Scalar(255, 255, 255));
 
   // display capture frame in GUI window
-  cv::imshow("boiler", frame_);
-  cv::imshow("mask", frame_process_.mask);
+  cv::Mat frame_scaled, mask_scaled;
+  cv::resize(frame_, frame_scaled, cv::Size(), 0.5, 0.5);
+  cv::resize(frame_process_.mask, mask_scaled, cv::Size(), 0.5, 0.5);
+  cv::imshow("boiler", frame_scaled);
+  cv::imshow("mask", mask_scaled);
   // }
   cv::waitKey(1);
 }
