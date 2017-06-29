@@ -198,7 +198,13 @@ bool Deadeye::CalculateSolution(int centerline_elevation) {
       (centerline_height_ - camera_height_) / std::tan(aiming_angle);
 
   solution_range_ += 10;  // front of target to center of boiler
-  logger_->debug("Deadeye solution range = {}", solution_range_);
+  logger_->debug("Deadeye uncorrected solution range = {}", solution_range_);
+
+  if (solution_range_ >= 168.0) {
+    // apply a linearly-increasing correction from 168 -> 240 in (current
+    // maximum range) for empirically observed range error
+    solution_range_ += 3 * (1 - ((240 - solution_range_) / (240.0 - 168.0)));
+  }
 
   int range_lookup =
       static_cast<int>(std::round(solution_range_)) - shooter_range_offset;
