@@ -51,7 +51,7 @@ camera_angle = 56.9 # degrees
 degrees_per_tick = 0.00611
 
 azimuth_correction = 0 # pixels is 6 in to the left at 120 from goal
-range_in_delta = -7 # inches
+range_in_delta = 0 # inches
 
 
 [STEAMWORKS.GEAR]
