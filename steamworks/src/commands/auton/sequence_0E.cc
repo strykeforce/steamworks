@@ -19,7 +19,7 @@ using namespace steamworks::command;
 namespace {
 const double kTicksPerInch = 50.72;
 const int kPrepareSpeed = 500;
-const int kPrepareElevation = 4400;
+const int kPrepareElevation = 5400;
 }  // namespace
 
 /**
@@ -59,17 +59,19 @@ Sequence0E::Sequence0E() : frc::CommandGroup("Sequence0E") {
   AddParallel(new gear::ReleaseGear());
   AddParallel(new deadeye::GearLED(false));
 
+  // spin up shooter
+  AddParallel(new shooter::SetShooter(kPrepareSpeed, kPrepareElevation));
+
   //  back off
   dc.max_speed = 400;
   dc.segments.clear();
-  dc.segments.emplace_back(60, 24 * kTicksPerInch);
+  dc.segments.emplace_back(60, 28 * kTicksPerInch);
+  dc.segments.emplace_back(-35, 18 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // pivot into drive alignment
-  AddSequential(new drive::GyroAzimuth(90));
+  AddSequential(new drive::GyroAzimuth(-70));
 
-  // drive down field
-  dc.segments.clear();
-  dc.segments.emplace_back(-180, 24 * 12 * kTicksPerInch);
-  AddSequential(new drive::Drive(dc));
+  // and shoot
+  AddSequential(new StartShooting());
 }
