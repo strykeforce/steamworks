@@ -65,8 +65,8 @@ Sequence09::Sequence09() : frc::CommandGroup("Sequence09") {
   //  back off
   dc.max_speed = 400;
   dc.segments.clear();
-  dc.segments.emplace_back(-60, 24 * kTicksPerInch);
-  dc.segments.emplace_back(30, 24 * kTicksPerInch);
+  dc.segments.emplace_back(-60, 28 * kTicksPerInch);
+  dc.segments.emplace_back(35, 18 * kTicksPerInch);
   AddSequential(new drive::Drive(dc));
 
   // pivot back towards boiler
