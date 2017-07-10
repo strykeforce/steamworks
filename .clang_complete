@@ -1,0 +1,7 @@
+-Wno-pragma-once-outside-header
+-Isrc
+-Ivendor/include
+-Ivendor/serial/include
+-I/opt/flycapture/include
+-I/Users/jeff/LearnYouCode/msgpack-c/include
+-Ibuild/src
