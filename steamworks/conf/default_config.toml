@@ -50,7 +50,7 @@ camera_height = 19.25 # inches
 camera_angle = 56.9 # degrees
 degrees_per_tick = 0.00611
 
-azimuth_correction = 0 # pixels is 6 in to the left at 120 from goal
+azimuth_correction = 0 # +40 pixels is 6 in left at 120 in range
 range_in_delta = 3 # inches
 
 
