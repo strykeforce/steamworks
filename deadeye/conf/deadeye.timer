@@ -1,0 +1,8 @@
+[Unit]
+Description=Deadeye Start Timer
+
+[Timer]
+OnStartupSec=15
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,8 @@
+#pragma once
+
+#cmakedefine LOG_FPS
+#cmakedefine LOG_BOILER
+#cmakedefine LOG_GEAR
+#cmakedefine DISPLAY_FRAME
+#cmakedefine SNAP_ONETGT
+#cmakedefine SNAP_DISCON

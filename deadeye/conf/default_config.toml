@@ -1,0 +1,35 @@
+[DEADEYE.DEBUG]
+# display debug info if the settings below are set > 0
+# number is frame interval
+framerate = 100
+boiler = 100
+gear = 100
+
+[BOILER]
+gui = true
+
+[BOILER.CAMERA]
+width  = 1280
+height = 1024
+exposure = -1.0
+
+[BOILER.FRAME]
+hsv_lower = [80, 100, 100]
+hsv_upper = [100, 255, 255]
+min_arc_length = 250.0
+aspect_ratio_min = 2.0
+aspect_ratio_max = 4.2
+discontinuity_threshold = 10
+
+[GEAR.CAMERA]
+
+[GEAR.FRAME]
+hsv_lower = [70, 100, 100]
+hsv_upper = [90, 255, 255]
+min_arc_length = 50.0
+azimuth_offset = 0
+
+[LINK]
+port = 5800
+address = "10.27.67.2"
+mode = "gear"
