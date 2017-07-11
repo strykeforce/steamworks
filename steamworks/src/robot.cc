@@ -200,6 +200,9 @@ void Robot::Configure() {
 
   try {
     config_ = cpptoml::parse_file(path);
+    Log::GetInstance().Initialize(config_);
+    logger_ = spdlog::get("robot");
+    spdlog::drop("config");
     return;
   } catch (const std::exception& e) {
     logger_->warn(e.what());
