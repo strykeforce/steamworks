@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.5.0]
+
+This is the release for IRI.
+
+### Added
+
+- Boiler camera azimuth and range adjustments in config file. This allows correction for any problems that occur during a competition.
+- Full pit testing routine and logging for all motors.
+- New autons for red and blue retrieval-zone side gear placement and 10-ball shoot.
+- New auton for blue retrieval-zone size gear placement and double hopper dump down field.
+
+### Changed
+
+- Maximum allowed shooter wheel speed is now 900 ticks/100ms.
+- Increased maximum shooting range to 240 in. and adjust lookup table for new foam.
+- Adjust firing position for blue retrieval-zone side and shoot auton.
+
+### Fixed
+
+- Adjusted shooter elevation zero position.
+- Initialize logging properly when reading from config file on robot.
+
 ## [17.4.0]
 
 This is the release for the 2017 World Games.
@@ -149,11 +171,12 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 - SmartDashboard buttons for wheel zero setting.
 - SmartDashboard buttons for development.
 
+[17.5.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.4.0...steamworks-17.5.0
 [17.1.0]: https://github.com/strykeforce/steamworks/compare/db95a39e1200b61adbb51dc9eabe4e147ffd2796...v17.1.0
-[17.1.7]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.1.7
-[17.2.0]: https://github.com/strykeforce/steamworks/compare/v17.1.0...v17.2.0
-[17.2.10]: https://github.com/strykeforce/steamworks/compare/v17.2.0...v17.2.10
-[17.3.0]: https://github.com/strykeforce/steamworks/compare/v17.2.10...v17.3.0
-[17.3.8]: https://github.com/strykeforce/steamworks/compare/v17.3.0...v17.3.8
-[17.4.0]: https://github.com/strykeforce/steamworks/compare/v17.3.8...v17.4.0
+[17.1.7]: https://github.com/strykeforce/steamworks/compare/steamworks-17.1.0...steamworks-17.1.7
+[17.2.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.1.0...steamworks-17.2.0
+[17.2.10]: https://github.com/strykeforce/steamworks/compare/steamworks-17.2.0...steamworks-17.2.10
+[17.3.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.2.10...steamworks-17.3.0
+[17.3.8]: https://github.com/strykeforce/steamworks/compare/steamworks-17.3.0...steamworks-17.3.8
+[17.4.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.3.8...steamworks-17.4.0
 [unreleased]: https://github.com/strykeforce/steamworks/compare/v17.1.7...develop
