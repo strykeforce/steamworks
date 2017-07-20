@@ -1,5 +1,6 @@
 .vagrant
 .vault_pw
+.DS_Store
 
 # Prerequisites
 *.d
@@ -33,3 +34,5 @@
 *.exe
 *.out
 *.app
+
+

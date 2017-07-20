@@ -12,7 +12,7 @@ Override::Override()
 }
 
 void Override::Initialize() {
-  logger_->info("Override stopping climber with position {}",
+  logger_->info("Override starting climber with position {}",
                 Robot::climber->GetPosition());
   Robot::climber->StartClimb();
 }
