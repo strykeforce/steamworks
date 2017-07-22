@@ -47,11 +47,12 @@ remote = "10.27.67.6"
 elevation_zero_angle = 6.0 # degrees
 centerline_height = 83.91 # inches
 camera_height = 19.25 # inches
-camera_angle = 56.9 # degrees
+camera_angle = 57.4 # degrees
 degrees_per_tick = 0.00611
 
-azimuth_correction = 15 # +40 pixels is 6 in left at 120 in range
-range_in_delta = 3 # inches
+# 7/20 35 pix, 9 in
+azimuth_correction = 0 # +40 pixels is 6 in left at 120 in range
+range_in_delta = 4 # inches
 
 
 [STEAMWORKS.GEAR]
