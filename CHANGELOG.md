@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Calendar Versioning](http://calver.org).
 
+## [17.6.0]
+
+This is the release for the 2017 Festival of Champions.
+
+### Changed
+
+- Camera angle setting from 56.9 to 57.4 degrees, shooter azimuth correction changed from 35 to 0 pixels and range correction from 9 to 4 inches to account for shooter and frame repairs.
+- Aiming auto-azimuth control loop tuning updated.
+
 ## [17.5.0]
 
 This is the release for IRI.
@@ -72,6 +81,7 @@ This is the release for the 2017 Michigan State Games.
   - RED right gear (boiler), shoot
 
 - Autonomous will move the shooter elevation down to trip the new whale-tail pin.
+
 - Climber has a new high-speed override button.
 - Ability to collect detailed plot data for shooter elevation, azimuth targeting and gear placement control loops.
 
@@ -106,6 +116,7 @@ Updates made during the East Kentwood event.
   - high-speed climb distance from 26,000 to 28,000 encoder ticks
 
 - Drive tele-operated voltage-mode current limit changed from 60 to 50 A.
+
 - Hopper drop autons had strafe distance and wait time adjusted for the field.
 - Center gear placement offset.
 - Close-shot hopper voltage reduced from 6 to 4v.
@@ -171,7 +182,6 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 - SmartDashboard buttons for wheel zero setting.
 - SmartDashboard buttons for development.
 
-[17.5.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.4.0...steamworks-17.5.0
 [17.1.0]: https://github.com/strykeforce/steamworks/compare/db95a39e1200b61adbb51dc9eabe4e147ffd2796...v17.1.0
 [17.1.7]: https://github.com/strykeforce/steamworks/compare/steamworks-17.1.0...steamworks-17.1.7
 [17.2.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.1.0...steamworks-17.2.0
@@ -179,4 +189,6 @@ This is the release for the St. Joseph District Event on March 9, 2017.
 [17.3.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.2.10...steamworks-17.3.0
 [17.3.8]: https://github.com/strykeforce/steamworks/compare/steamworks-17.3.0...steamworks-17.3.8
 [17.4.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.3.8...steamworks-17.4.0
+[17.5.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.4.0...steamworks-17.5.0
+[17.6.0]: https://github.com/strykeforce/steamworks/compare/steamworks-17.5.0...steamworks-17.6.0
 [unreleased]: https://github.com/strykeforce/steamworks/compare/v17.1.7...develop
