@@ -8,6 +8,7 @@
 #include "log.h"
 #endif
 
+#include <sidewinder/swerve/talon_map.h>
 #include "robot.h"
 #include "robot_map.h"
 #include "subsystems/deadeye.h"
@@ -19,9 +20,9 @@ using namespace std;
 // tuning parameters
 namespace {
 const float kSetpointMax = 275.0;
-const double kMaxSpeed = 100.0 / kSetpointMax;
+const double kMaxSpeed = 75.0 / kSetpointMax;
 const double kMinSpeed = 20.0 / kSetpointMax;
-const double kMinSpeedExact = 25.0 / kSetpointMax;
+const double kMinSpeedExact = 15.0 / kSetpointMax;
 const double kDeadZone = 0.05 * kMinSpeed;
 const int kCloseEnough = 20;
 const int kCloseEnoughExact = 8;
@@ -50,6 +51,7 @@ void DeadeyeAzimuth::Initialize() {
   offset_ = has_offset_ ? Robot::deadeye->GetSolutionAzimuthOffset() : 0;
   logger_->info("DeadeyeAzimuth initialized with error {}", error_, offset_);
   stable_count_ = 0;
+  setpoint_ = 0;
 #ifdef LOG_DEADEYE
   InitializeTelemetry();
 #endif
@@ -146,7 +148,8 @@ void DeadeyeAzimuth::InitializeTelemetry() {
   string path = Log::GetTelemetryFilePath(kTelemetryPath);
   logger_->info("DeadeyeAzimuth logging telemetry to {}", path);
   telemetry_ = make_unique<ofstream>(path, ofstream::trunc);
-  *telemetry_ << "timestamp,has_target,error,setpoint,angle\n";
+  *telemetry_ << "timestamp,has_target,error,setpoint,angle,drive_voltage,"
+                 "drive_speed\n";
   telemetry_start_ = timer_.GetFPGATimestamp();
 }
 
@@ -154,11 +157,13 @@ void DeadeyeAzimuth::InitializeTelemetry() {
  * Log a line of telemetry.
  */
 void DeadeyeAzimuth::LogTelemetry() {
+  auto drive_voltage = RobotMap::swerve_talons->lf_drive->GetOutputVoltage();
+  auto drive_speed = RobotMap::swerve_talons->lf_drive->GetSpeed();
   *telemetry_ << setprecision(0) << fixed
               << (timer_.GetFPGATimestamp() - telemetry_start_) * 1000 << ","
               << has_target_ * 10 << "," << setprecision(2) << error_ << ","
               << setpoint_ * kSetpointMax << "," << RobotMap::gyro->GetAngle()
-              << "\n";
+              << "," << (drive_voltage * -20) << "," << -drive_speed << "\n";
 }
 
 /**
