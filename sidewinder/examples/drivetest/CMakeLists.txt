@@ -16,7 +16,8 @@ target_include_directories(${DRIVETEST}
 target_link_libraries(${DRIVETEST}
   PUBLIC
   sidewinder
-  TalonSRXLib
+  CTRLib
+  CTRLibDriver
   navx_frc_cpp
   wpi
 )

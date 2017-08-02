@@ -17,6 +17,7 @@ add_executable(BDC_Comm
 
 target_link_libraries(BDC_Comm
   grapher
-  TalonSRXLib
+  CTRLib
+  CTRLibDriver
   wpi
 )

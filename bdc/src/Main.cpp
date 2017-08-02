@@ -17,8 +17,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "CANTalon.h"
 #include "WPILib.h"
+#include "ctrlib/CANTalon.h"
 
 #include "RIOUtils.h"
 #include "TerminalEscapes.h"

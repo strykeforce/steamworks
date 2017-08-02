@@ -18,7 +18,8 @@ target_include_directories(${CMAKE_PROJECT_NAME}
 target_link_libraries(${CMAKE_PROJECT_NAME}
   PUBLIC
   sidewinder
-  TalonSRXLib
+  CTRLib
+  CTRLibDriver
   navx_frc_cpp
   wpi
 )

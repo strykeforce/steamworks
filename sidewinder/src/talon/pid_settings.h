@@ -1,7 +1,7 @@
 #pragma once
 
-#include "CANTalon.h"
 #include "cpptoml/cpptoml.h"
+#include "ctrlib/CANTalon.h"
 #include "spdlog/spdlog.h"
 
 #include "settings.h"

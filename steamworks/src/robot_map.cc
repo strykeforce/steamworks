@@ -5,7 +5,7 @@
 #ifdef LOG_GRAPHER
 #include <sidewinder/grapher/HostToObject.h>
 #endif
-#include <CANTalon.h>
+#include <ctrlib/CANTalon.h>
 #include <sidewinder/swerve/talon_map.h>
 #include <spdlog/spdlog.h>
 

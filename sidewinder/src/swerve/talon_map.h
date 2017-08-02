@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CANTalon.h"
+#include "ctrlib/CANTalon.h"
 
 namespace sidewinder {
 namespace swerve {

@@ -1,6 +1,6 @@
 #include "robot_map.h"
 
-#include "CANTalon.h"
+#include "ctrlib/CANTalon.h"
 #include "spdlog/spdlog.h"
 
 #include "grapher/HostToObject.h"

@@ -1,10 +1,10 @@
 #include <pthread.h>
 #include <stdio.h>
-#include "CANTalon.h"
 #include "CodeUtils.h"
 #include "DigitalInput.h"
 #include "ObjectToGrapher.h"
 #include "SocketHandler.h"
+#include "ctrlib/CANTalon.h"
 
 int JerrysGrapher_IndexOfBundleWithID(
     std::vector<JerrysGrapher_DeviceBundle>* JerrysGrapher_GraphableDevices,

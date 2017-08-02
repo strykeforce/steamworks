@@ -1,6 +1,6 @@
 #include "set_zero.h"
 
-#include "CANTalon.h"
+#include "ctrlib/CANTalon.h"
 
 #include "robot.h"
 #include "robot_map.h"

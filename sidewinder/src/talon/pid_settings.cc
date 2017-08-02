@@ -1,7 +1,7 @@
 #include "pid_settings.h"
 
-#include "CANTalon.h"
 #include "cpptoml/cpptoml.h"
+#include "ctrlib/CANTalon.h"
 #include "spdlog/spdlog.h"
 
 #include "settings.h"
