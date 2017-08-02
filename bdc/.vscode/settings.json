@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.sls": "yaml",
+        "Vagrantfile": "ruby",
+        "chrono": "cpp"
+    }
+}

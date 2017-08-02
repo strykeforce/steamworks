@@ -258,9 +258,9 @@ void SetStatusFrameRates_A() {
           CANTalon::StatusFrameRate::StatusFrameRateAnalogTempVbat, set);)
 }
 void GetTalonRegistors() {
-#define logrow(_string_, _func_)                          \
-  printf("%s", _string_);                                 \
-  ForEveryUsingTalonMUTI(printf("%f\t", Talon->_func_);); \
+#define logrow(_string_, _func_)                                               \
+  printf("%s ", _string_);                                                     \
+  ForEveryUsingTalonMUTI(printf("%f\t", static_cast<double>(Talon->_func_));); \
   printf("\n");
   // printf("TalonID:   ");
 
@@ -275,6 +275,10 @@ void GetTalonRegistors() {
                           logrow("Rev Hard:  ", IsRevLimitSwitchClosed())
                               logrow("SensorPos: ", GetPosition())
                                   logrow("CTR Pos:   ", GetPulseWidthPosition())
+                                      logrow("Vel Meas P:",
+                                             GetVelocityMeasurementPeriod())
+                                          logrow("Vel Meas W:",
+                                                 GetVelocityMeasurementWindow())
 }
 
 typedef void (*VoidFunction)(void);
@@ -433,6 +437,54 @@ void SetMotionMagicAcceleration() {
   ForEveryUsingTalon(SetMotionMagicAcceleration(accel));
 }
 
+void SetVelocityMeasurementPeriod() {
+  bool is_valid;
+  CANTalon::VelocityMeasurementPeriod period =
+      CANTalon::VelocityMeasurementPeriod::Period_100Ms;
+
+  do {
+    is_valid = true;
+    double p =
+        query("New Velocity Measurement Period (1, 2, 5, 10, 20, 25, 50, 100)");
+    switch (static_cast<int>(std::floor(p))) {
+      case 1:
+        period = CANTalon::VelocityMeasurementPeriod::Period_1Ms;
+        break;
+      case 2:
+        period = CANTalon::VelocityMeasurementPeriod::Period_2Ms;
+        break;
+      case 5:
+        period = CANTalon::VelocityMeasurementPeriod::Period_5Ms;
+        break;
+      case 10:
+        period = CANTalon::VelocityMeasurementPeriod::Period_10Ms;
+        break;
+      case 20:
+        period = CANTalon::VelocityMeasurementPeriod::Period_20Ms;
+        break;
+      case 25:
+        period = CANTalon::VelocityMeasurementPeriod::Period_25Ms;
+        break;
+      case 50:
+        period = CANTalon::VelocityMeasurementPeriod::Period_50Ms;
+        break;
+      case 100:
+        period = CANTalon::VelocityMeasurementPeriod::Period_100Ms;
+        break;
+      default:
+        is_valid = false;
+    }
+  } while (!is_valid);
+
+  ForEveryUsingTalon(SetVelocityMeasurementPeriod(period));
+}
+
+void SetVelocityMeasurementWindow() {
+  double w = query("New Volocity Measurement Window (1, 2, 4, 8, 16, 32, 64)");
+  uint32_t window = static_cast<uint32_t>(std::floor(w));
+  ForEveryUsingTalon(SetVelocityMeasurementWindow(window));
+}
+
 void Set() {
   char* FunctionNames[] = {
       "Control Mode",
@@ -463,6 +515,8 @@ void Set() {
       "Pulse Length",
       "Motion Magic Cruise Velocity",
       "Motion Magic Acceleration",
+      "Velocity Measurement Period",
+      "Velocity Measurement Window",
   };
   VoidFunction FunctionPointers[] = {
       SetTalonControlMode,
@@ -493,8 +547,10 @@ void Set() {
       SetPulseLength,
       SetMotionMagicCruiseVelocity,
       SetMotionMagicAcceleration,
+      SetVelocityMeasurementPeriod,
+      SetVelocityMeasurementWindow,
   };
-  menu(28, FunctionNames, "Set What?", FunctionPointers, true);
+  menu(30, FunctionNames, "Set What?", FunctionPointers, true);
 }
 void Get() {
   char* FunctionNames[] = {
