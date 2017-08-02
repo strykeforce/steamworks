@@ -572,7 +572,7 @@ class Robot : public SampleRobot {
     SetForgroundColor(TColor::Default);
     ClearScreen();
     printf("\n");
-    printf("Welcome to BDC_Comm v6.5\n");
+    printf("Welcome to BDC_Comm v6.6\n");
     SingularTalon();
     char* FunctionNames[] = {"Select One Single Talon",
                              "Select Additional Talon",
