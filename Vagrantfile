@@ -9,7 +9,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.provider 'virtualbox' do |v|
     v.name = hostname
-    v.memory = 2048
+    v.memory = 4096
     v.cpus = 4
     v.customize ['modifyvm', :id, '--paravirtprovider', 'kvm']
   end
