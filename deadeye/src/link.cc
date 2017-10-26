@@ -64,7 +64,7 @@ void Link::SendBoilerSolution(int azimuth_error, int centerline_error) {
   msgpack::pack(buf, t);
   ssize_t nwrite = buf.size();
   if (send(sendfd_, buf.data(), nwrite, 0) != nwrite) {
-    logger_->warn("Link error sending message: {}", strerror(errno));
+    logger_->warn("[01] Link error sending message: {}", strerror(errno));
   }
 }
 
@@ -79,7 +79,7 @@ void Link::SendGearSolution(int azimuth_error, int target_height) {
   msgpack::pack(buf, t);
   ssize_t nwrite = buf.size();
   if (send(sendfd_, buf.data(), nwrite, 0) != nwrite) {
-    logger_->warn("Link error sending message: {}", strerror(errno));
+    logger_->warn("[02] Link error sending message: {}", strerror(errno));
   }
 }
 
@@ -92,7 +92,7 @@ void Link::SendNoTarget() {
   msgpack::pack(buf, t);
   ssize_t nwrite = buf.size();
   if (send(sendfd_, buf.data(), nwrite, 0) != nwrite) {
-    logger_->warn("Link error sending message: {}", strerror(errno));
+    logger_->warn("[03] Link error sending message: {}", strerror(errno));
   }
 }
 

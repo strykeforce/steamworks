@@ -1,6 +1,6 @@
 [DEADEYE.DEBUG]
 framerate = 200
-boiler = 0
+boiler = 50
 gear = 0
 
 [BOILER]
@@ -18,7 +18,8 @@ exposure = -1.0
 [BOILER.FRAME]
 hsv_lower = [80, 100, 100]
 hsv_upper = [100, 255, 255]
-min_arc_length = 250.0
+#min_arc_length = 250.0
+min_arc_length = 200.0
 aspect_ratio_min = 2.0
 aspect_ratio_max = 5.0
 discontinuity_threshold = 50
