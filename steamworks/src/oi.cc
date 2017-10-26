@@ -174,7 +174,8 @@ void OI::AssignGamepadButtons() {
   intake_off_button_.WhenPressed(new StopIntake());
 
   // gamepad A button performs feed shot
-  shoot_feed_button_.WhenPressed(new LogCommand("gamepad feed shot button"));
+  shoot_feed_button_.WhenPressed(new StartCrowdShot());
+  shoot_feed_button_.WhenReleased(new StopShooting());
 
   // gamepad X button performs close shot
   shoot_close_button_.WhenPressed(new StartCloseShot());

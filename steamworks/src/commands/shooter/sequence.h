@@ -32,6 +32,20 @@ class StartCloseShot : public frc::CommandGroup {
 };
 
 /**
+ * Manually targeted shot.
+ */
+class StartCrowdShot : public frc::CommandGroup {
+ public:
+  StartCrowdShot();
+
+ protected:
+  void Interrupted() override;
+
+ private:
+  const std::shared_ptr<spdlog::logger> logger_;
+};
+
+/**
  * Stop or cancel shooting.
  */
 class StopShooting : public frc::CommandGroup {

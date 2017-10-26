@@ -75,6 +75,25 @@ void StartCloseShot::Interrupted() {
 }
 
 //
+// StartCrowdShot
+//
+StartCrowdShot::StartCrowdShot()
+    : frc::CommandGroup("StartCrowdShot"), logger_(spdlog::get("command")) {
+  SetInterruptible(true);
+  AddSequential(new shooter::SetShooter(900, 4000));
+  AddSequential(new WaitCommand(1.0));
+  AddSequential(new StartHopper(kCloseShotHopperVoltage));
+}
+
+/**
+ * Called if shooting sequence cancelled by button or bad solution.
+ */
+void StartCrowdShot::Interrupted() {
+  logger_->info("StartCloseShot shooting sequence cancelled");
+  End();
+}
+
+//
 // StopShooting
 //
 StopShooting::StopShooting() : frc::CommandGroup("StopShooting") {
