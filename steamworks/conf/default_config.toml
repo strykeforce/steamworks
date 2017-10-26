@@ -52,7 +52,7 @@ degrees_per_tick = 0.00611
 
 # 7/20 35 pix, 9 in
 azimuth_correction = 0 # +40 pixels is 6 in left at 120 in range
-range_in_delta = 4 # inches
+range_in_delta = 0 # inches
 
 
 [STEAMWORKS.GEAR]
@@ -154,7 +154,8 @@ voltage = 12.0
 # 4/26 3508
 # 4/28 3473
 # 6/26 3423
-elevation_zero = 3438
+# 10/14 3438 FOC0
+elevation_zero = 3390
 
     [[STEAMWORKS.SHOOTER.TALON]]
     # range 0-900 ticks/100ms

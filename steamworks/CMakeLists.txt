@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 project(steamworks)
 
 set(VERSION_MAJOR 17)
-set(VERSION_MINOR 6)
+set(VERSION_MINOR 7)
 set(VERSION_PATCH 0)
 set(VERSION_META "")
 
