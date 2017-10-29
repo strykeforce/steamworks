@@ -38,7 +38,7 @@ Sequence02::Sequence02() : frc::CommandGroup("Sequence02") {
   dc.acceleration = 300;
   dc.deacceleration = 10000;
   dc.close_enough = 10 * kTicksPerInch;
-  dc.segments.emplace_back(100, 68 * kTicksPerInch);  // drive out
+  dc.segments.emplace_back(100, 72 * kTicksPerInch);  // drive out
   double distance = is_practice ? 37 : 34;
   dc.segments.emplace_back(180, distance * kTicksPerInch);  // drive into hopper
   dc.timeout = 2.2;
